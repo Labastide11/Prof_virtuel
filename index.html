@@ -65,7 +65,6 @@
   }
   .badge.score { background: #FFF9E6; color: #D4A300; }
   
-  /* Animation de sursaut du score */
   @keyframes bump {
     0% { transform: scale(1); }
     50% { transform: scale(1.2); }
@@ -89,7 +88,7 @@
   .btn-round:hover { background: var(--primary-light); border-color: var(--primary); }
   .btn-round.muted { color: var(--text-muted); border-color: #ECEBF3; background: #F4F3F8; }
 
-  /* Sélecteur de Matières horizontal */
+  /* Sélecteur de Matières */
   .subjects-bar {
     display: flex;
     gap: 8px;
@@ -116,6 +115,34 @@
   }
   .subject-btn.active { background: var(--primary); color: white; }
   .subject-btn:not(.active):hover { transform: translateY(-2px); border-color: var(--primary-light); }
+
+  /* --- CADRE DÉDIÉ ET SÉPARÉ POUR LE QUIZ ALÉATOIRE D'ACCUEIL --- */
+  .welcome-quiz-container {
+    max-width: 768px;
+    width: calc(100% - 32px);
+    margin: 10px auto 5px auto;
+    background: linear-gradient(135deg, #FFFAEB 0%, #FFF5D1 100%);
+    border: 3px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 16px;
+    box-shadow: var(--shadow);
+    display: none; /* Affiché dynamiquement par le JS */
+    animation: fadeIn 0.4s ease-out;
+  }
+  .wq-title-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 2px dashed rgba(255,107,107,0.2); padding-bottom: 6px; }
+  .wq-label { font-family: 'Baloo 2', sans-serif; font-weight: 800; color: #7A5C00; font-size: 16px; }
+  .wq-subject { font-size: 12px; font-weight: 800; background: var(--primary); color: white; padding: 3px 8px; border-radius: 20px; text-transform: uppercase; }
+  .wq-question { font-weight: 800; font-size: 15px; margin-bottom: 12px; color: var(--text); }
+  .wq-options { display: flex; flex-direction: column; gap: 8px; }
+  .wq-option {
+    background: var(--card); border: 2px solid #ECEBF3; padding: 10px 14px; border-radius: 12px;
+    font-family: inherit; font-weight: 700; font-size: 14px; text-align: left; cursor: pointer; transition: all 0.2s; color: var(--text);
+  }
+  .wq-option:not(:disabled):hover { border-color: var(--primary); background: var(--primary-light); }
+  .wq-option.correct { background: #E6F7E9 !important; border-color: var(--green) !important; color: #1E5627 !important; font-weight: 800; }
+  .wq-option.wrong { background: #FFEAEA !important; border-color: var(--secondary) !important; color: #7A2222 !important; }
+  .wq-loading { font-weight: 700; font-size: 14px; color: var(--text-muted); text-align: center; padding: 10px 0; }
+  .wq-result { font-weight: 800; font-size: 14px; text-align: center; margin-top: 12px; }
 
   /* Zone de Chat */
   .chat-container {
@@ -158,12 +185,11 @@
     font-size: 15px;
     line-height: 1.5;
     font-weight: 600;
-    position: relative;
   }
-  .message.prof .bubble { border-top-left-radius: 4px; background: var(--card); }
+  .message.prof .bubble { border-top-left-radius: 4px; }
   .message.user .bubble { border-top-right-radius: 4px; background: var(--primary); color: white; }
 
-  /* Questions rapides pré-configurées */
+  /* Questions rapides */
   .quick-questions {
     display: flex;
     flex-wrap: wrap;
@@ -174,135 +200,72 @@
     margin: 0 auto;
   }
   .quick-btn {
-    background: #EAE8FF;
-    border: none;
-    color: var(--primary);
-    padding: 8px 14px;
-    border-radius: 14px;
-    font-weight: 700;
-    font-size: 13px;
-    cursor: pointer;
-    transition: all 0.2s;
+    background: #EAE8FF; border: none; color: var(--primary); padding: 8px 14px;
+    border-radius: 14px; font-weight: 700; font-size: 13px; cursor: pointer; transition: all 0.2s;
   }
   .quick-btn:hover { background: var(--primary); color: white; transform: scale(1.02); }
 
   /* Barre d'écriture fixe en bas */
   .input-area {
-    background: var(--card);
-    padding: 12px 16px;
-    box-shadow: 0 -4px 20px rgba(0,0,0,0.04);
-    position: sticky;
-    bottom: 0;
-    z-index: 10;
+    background: var(--card); padding: 12px 16px; box-shadow: 0 -4px 20px rgba(0,0,0,0.04);
+    position: sticky; bottom: 0; z-index: 10;
   }
   .input-wrapper {
-    max-width: 768px;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: #F4F3F8;
-    padding: 6px 10px;
-    border-radius: 30px;
-    border: 2px solid transparent;
-    transition: all 0.2s;
+    max-width: 768px; margin: 0 auto; display: flex; align-items: center; gap: 8px;
+    background: #F4F3F8; padding: 6px 10px; border-radius: 30px; border: 2px solid transparent; transition: all 0.2s;
   }
   .input-wrapper:focus-within { background: var(--card); border-color: var(--primary); box-shadow: 0 0 0 4px var(--primary-light); }
 
   .chat-input {
-    flex: 1;
-    background: none;
-    border: none;
-    outline: none;
-    font-family: inherit;
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--text);
-    padding: 6px 4px;
-    resize: none;
-    max-height: 100px;
+    flex: 1; background: none; border: none; outline: none; font-family: inherit;
+    font-size: 15px; font-weight: 600; color: var(--text); padding: 6px 4px; resize: none; max-height: 100px;
   }
-  .chat-input::placeholder { color: var(--text-muted); }
 
   .action-btn {
-    background: var(--primary);
-    color: white;
-    border: none;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    cursor: pointer;
-    transition: all 0.2s;
-    flex-shrink: 0;
+    background: var(--primary); color: white; border: none; width: 36px; height: 36px;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer;
   }
-  .action-btn:hover { transform: scale(1.08); }
   .action-btn.voice { background: var(--secondary); }
   .action-btn.voice.recording { animation: pulse 1.2s infinite; background: #ff3b3b; }
-  @keyframes pulse { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255,59,59,0.4); } 70% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(255,59,59,0); } 100% { transform: scale(1); } }
 
   .speech-status {
-    position: absolute;
-    top: -30px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--secondary);
-    color: white;
-    padding: 4px 14px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 700;
-    pointer-events: none;
-    box-shadow: var(--shadow);
+    position: absolute; top: -30px; left: 50%; transform: translateX(-50%);
+    background: var(--secondary); color: white; padding: 4px 14px; border-radius: 20px; font-size: 12px; font-weight: 700;
   }
 
-  /* Indicateur d'écriture (...) */
-  .typing-indicator { display: flex; gap: 4px; align-items: center; height: 20px; padding: 0 4px; }
+  .typing-indicator { display: flex; gap: 4px; align-items: center; height: 20px; }
   .typing-indicator span { width: 8px; height: 8px; background: var(--text-muted); border-radius: 50%; opacity: 0.4; animation: wave 1.2s infinite; }
   .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
   .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
   @keyframes wave { 0%, 100% { transform: translateY(0); opacity: 0.4; } 50% { transform: translateY(-6px); opacity: 1; } }
 
-  /* Modals plein écran élégants */
+  /* Modals */
   .modal-overlay {
-    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(45,43,85,0.6); backdrop-filter: blur(8px);
-    display: flex; align-items: center; justify-content: center;
-    z-index: 100; padding: 20px;
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(45,43,85,0.6);
+    backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 100; padding: 20px;
   }
   .modal-overlay.hidden { display: none !important; }
   .modal-box {
-    background: var(--card); padding: 30px; border-radius: 24px;
-    max-width: 440px; width: 100%; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.15);
-    animation: pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    background: var(--card); padding: 30px; border-radius: 24px; max-width: 440px; width: 100%; text-align: center;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.15); animation: pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
   @keyframes pop { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
   
   .modal-box h2 { font-family: 'Baloo 2', sans-serif; font-size: 24px; color: var(--primary); margin-bottom: 8px; }
   .modal-box p { font-weight: 600; font-size: 14px; color: var(--text-muted); margin-bottom: 20px; }
   .modal-input {
-    width: 100%; padding: 12px 16px; border-radius: 14px;
-    border: 2px solid var(--primary-light); font-family: inherit;
-    font-size: 15px; font-weight: 600; text-align: center; outline: none; margin-bottom: 12px;
+    width: 100%; padding: 12px 16px; border-radius: 14px; border: 2px solid var(--primary-light);
+    font-family: inherit; font-size: 15px; font-weight: 600; text-align: center; outline: none; margin-bottom: 12px;
   }
-  .modal-input:focus { border-color: var(--primary); }
-  .modal-btn {
-    background: var(--primary); color: white; border: none; width: 100%;
-    padding: 12px; border-radius: 14px; font-weight: 800; font-size: 15px; cursor: pointer;
-  }
-  .modal-btn:hover { background: #554be6; }
+  .modal-btn { background: var(--primary); color: white; border: none; width: 100%; padding: 12px; border-radius: 14px; font-weight: 800; font-size: 15px; cursor: pointer; }
   .modal-error { color: var(--secondary); font-size: 13px; font-weight: 700; margin-bottom: 12px; min-height: 18px; }
 
-  /* Styles de l'overlay prénom */
+  /* Prénom Overlay */
   .prenom-overlay {
-    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-    background: var(--bg); display: flex; align-items: center; justify-content: center; z-index: 99; padding: 20px;
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--bg); display: flex; align-items: center; justify-content: center; z-index: 99; padding: 20px;
   }
   .prenom-overlay.hidden { display: none !important; }
-  .prenom-box { text-align: center; max-width: 400px; width: 100%; animation: pop 0.4s ease; }
+  .prenom-box { text-align: center; max-width: 400px; width: 100%; }
   .prenom-box .owl { font-size: 70px; margin-bottom: 10px; animation: float 3s ease-in-out infinite; }
   @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
   .prenom-box h2 { font-family: 'Baloo 2', sans-serif; font-size: 32px; color: var(--text); margin-bottom: 6px; }

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Mon Prof Virtuel</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
+
+  :root {
+    --primary: #6C63FF;
+    --primary-light: #EAE8FF;
+    --secondary: #FF6B6B;
+    --accent: #FFD93D;
+    --green: #6BCB77;
+    --bg: #F7F6FF;
+    --card: #FFFFFF;
+    --text: #2D2B55;
+    --text-muted: #8B89A8;
+    --radius: 20px;
+    --shadow: 0 4px 20px rgba(108,99,255,0.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+  }
+
+  header {
+    background: var(--card);
+    padding: 12px 16px;
+    box-shadow: var(--shadow);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .logo-area { display: flex; align-items: center; gap: 8px; }
+  .logo-icon { font-size: 28px; }
+  .logo-text { font-family: 'Baloo 2', sans-serif; font-weight: 800; font-size: 20px; color: var(--primary); line-height: 1; }
+
+  .header-actions { display: flex; align-items: center; gap: 10px; }
+
+  .badge {
+    background: var(--primary-light);
+    color: var(--primary);
+    padding: 6px 12px;
+    border-radius: 50px;
+    font-weight: 800;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: inset 0 2px 4px rgba(108,99,255,0.06);
+  }
+  .badge.score { background: #FFF9E6; color: #D4A300; }
+  
+  @keyframes bump {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+  }
+  .badge.score.bump { animation: bump 0.3s ease-out; }
+
+  .btn-round {
+    background: var(--card);
+    border: 2px solid var(--primary-light);
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-round:hover { background: var(--primary-light); border-color: var(--primary); }
+  .btn-round.muted { color: var(--text-muted); border-color: #ECEBF3; background: #F4F3F8; }
+
+  /* Sélecteur de Matières */
+  .subjects-bar {
+    display: flex;
+    gap: 8px;
+    padding: 12px 16px;
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: none;
+  }
+  .subjects-bar::-webkit-scrollbar { display: none; }
+  
+  .subject-btn {
+    background: var(--card);
+    border: 2px solid transparent;
+    padding: 8px 14px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .subject-btn.active { background: var(--primary); color: white; }
+  .subject-btn:not(.active):hover { transform: translateY(-2px); border-color: var(--primary-light); }
+
+  /* CADRE DU QUIZ D'ACCUEIL */
+  .welcome-quiz-container {
+    max-width: 768px;
+    width: calc(100% - 32px);
+    margin: 10px auto 5px auto;
+    background: linear-gradient(135deg, #FFFAEB 0%, #FFF5D1 100%);
+    border: 3px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 16px;
+    box-shadow: var(--shadow);
+    display: none;
+    animation: fadeIn 0.4s ease-out;
+  }
+  .wq-title-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 2px dashed rgba(255,107,107,0.2); padding-bottom: 6px; }
+  .wq-label { font-family: 'Baloo 2', sans-serif; font-weight: 800; color: #7A5C00; font-size: 16px; }
+  .wq-subject { font-size: 12px; font-weight: 800; background: var(--primary); color: white; padding: 3px 8px; border-radius: 20px; text-transform: uppercase; }
+  .wq-question { font-weight: 800; font-size: 15px; margin-bottom: 12px; color: var(--text); }
+  .wq-options { display: flex; flex-direction: column; gap: 8px; }
+  .wq-option {
+    background: var(--card); border: 2px solid #ECEBF3; padding: 10px 14px; border-radius: 12px;
+    font-family: inherit; font-weight: 700; font-size: 14px; text-align: left; cursor: pointer; color: var(--text); transition: all 0.2s;
+  }
+  .wq-option:not(:disabled):hover { border-color: var(--primary); background: var(--primary-light); }
+  .wq-option.correct { background: #E6F7E9 !important; border-color: var(--green) !important; color: #1E5627 !important; font-weight: 800; }
+  .wq-option.wrong { background: #FFEAEA !important; border-color: var(--secondary) !important; color: #7A2222 !important; }
+  .wq-loading { font-weight: 700; font-size: 14px; color: var(--text-muted); text-align: center; padding: 10px 0; }
+  .wq-result { font-weight: 800; font-size: 14px; text-align: center; margin-top: 12px; }
+
+  /* Zone de Chat */
+  .chat-container {
+    flex: 1;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    overflow-y: auto;
+    max-width: 768px;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .message { display: flex; gap: 12px; max-width: 85%; animation: fadeIn 0.3s ease-out forwards; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  .message.prof { align-self: flex-start; }
+  .message.user { align-self: flex-end; flex-direction: row-reverse; }
+
+  .avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    box-shadow: var(--shadow);
+    flex-shrink: 0;
+  }
+  .avatar.prof { background: #EAE8FF; }
+  .avatar.user { background: #FFD93D; }
+
+  .bubble {
+    background: var(--card);
+    padding: 12px 16px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    font-size: 15px;
+    line-height: 1.5;
+    font-weight: 600;
+  }
+  .message.prof .bubble { border-top-left-radius: 4px; }
+  .message.user .bubble { border-top-right-radius: 4px; background: var(--primary); color: white; }
+
+  /* Questions rapides */
+  .quick-questions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 0 16px 12px 16px;
+    max-width: 768px;
+    width: 100%;
+    margin: 0 auto;
+  }
+  .quick-btn {
+    background: #EAE8FF; border: none; color: var(--primary); padding: 8px 14px;
+    border-radius: 14px; font-weight: 700; font-size: 13px; cursor: pointer; transition: all 0.2s;
+  }
+  .quick-btn:hover { background: var(--primary); color: white; transform: scale(1.02); }
+
+  /* Barre d'écriture fixe en bas */
+  .input-area {
+    background: var(--card); padding: 12px 16px; box-shadow: 0 -4px 20px rgba(0,0,0,0.04);
+    position: sticky; bottom: 0; z-index: 10;
+  }
+  .input-wrapper {
+    max-width: 768px; margin: 0 auto; display: flex; align-items: center; gap: 8px;
+    background: #F4F3F8; padding: 6px 10px; border-radius: 30px; border: 2px solid transparent; transition: all 0.2s;
+  }
+  .input-wrapper:focus-within { background: var(--card); border-color: var(--primary); box-shadow: 0 0 0 4px var(--primary-light); }
+
+  .chat-input {
+    flex: 1; background: none; border: none; outline: none; font-family: inherit;
+    font-size: 15px; font-weight: 600; color: var(--text); padding: 6px 4px; resize: none; max-height: 100px;
+  }
+
+  .action-btn {
+    background: var(--primary); color: white; border: none; width: 36px; height: 36px;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer;
+  }
+  .action-btn.voice { background: var(--

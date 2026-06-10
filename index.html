@@ -1539,7 +1539,7 @@ function showReviewWheel() {
   const container = document.getElementById('chatContainer');
   const div = document.createElement('div');
   div.className = 'message prof';
-  div.innerHTML = `<div class="avatar prof">🦉</div><div class="bubble"><strong>🎡 Roue du Hibou</strong><br><span style="font-size:12px;color:var(--text-muted);font-weight:800;">La roue lance un Défi Express : 2 maths, 2 français, 1 sciences. Fonctionne avec la banque locale, sans IA.</span><div class="review-wheel-box"><div class="review-wheel-wrap"><div class="review-pointer">🔻</div><div class="review-wheel" id="reviewWheel"><div class="review-wheel-center">Défi<br>Express</div></div></div><div class="review-wheel-labels"><span>🔢 Maths</span><span>✍️ Français</span><span>💡 Sciences</span><span>🦉 Surprise</span></div><button class="review-launch-btn" id="reviewWheelBtn" onclick="spinReviewWheel()">🎡 Faire tourner la roue</button><div class="review-wheel-result" id="reviewWheelResult"></div></div></div>`;
+  div.innerHTML = `<div class="avatar prof">🦉</div><div class="bubble"><strong>🎡 Roue du Hibou</strong><br><span style="font-size:12px;color:var(--text-muted);font-weight:800;">La roue lance un Défi Express : 2 maths, 2 français, 1 sciences. Fonctionne avec la banque locale, sans IA.</span><div class="review-wheel-box"><div class="review-wheel-wrap"><div class="review-pointer">🔻</div><div class="review-wheel" id="reviewWheel"><div class="review-wheel-center">Défi<br>Express</div></div></div><div class="review-wheel-labels"><span>🟨 Maths</span><span>🟪 Français</span><span>🟩 Sciences</span><span>🟦 Surprise</span></div><button class="review-launch-btn" id="reviewWheelBtn" onclick="spinReviewWheel()">🎡 Faire tourner la roue</button><div class="review-wheel-result" id="reviewWheelResult"></div></div></div>`;
   container.appendChild(div);
   container.scrollTop = container.scrollHeight;
 }
@@ -2060,8 +2060,7 @@ function updateQuickQuestions(subject) {
       <button class="quick-btn" onclick="window.open('https://www.logicieleducatif.fr/jeu/les-pays-d-europe','_blank')">🌐 Carte France / Europe — Logiciel éducatif</button>
       <button class="quick-btn" onclick="showReviewWheel()">🎡 Roue du Hibou : défi express</button>
       <button class="quick-btn" onclick="startDevinettesHibou()">🧩 Devinettes du Hibou</button>
-      <button class="quick-btn" onclick="sendQuick('Donne-moi un défi rapide de logique CE2')">🧠 Logique CE2</button>
-    `
+      `
   };
   container.innerHTML = sets[cleanSubject] || `
       <button class="quick-btn" onclick="showLocalQuizMenu()">📚 Banque CE2 Phase 4</button>

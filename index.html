@@ -552,6 +552,7 @@ let recognition = null;
 let conversationHistory = [];
 let soundEnabled = true;
 let prenomActuel = '';
+let welcomeQuizSubject = 'général';
 
 const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbzeHY0Vm-O923mZfgQjmvUdtJUIEVUVR99srqocBldvkl7JPWn49K7tqqEthQB4JDQm/exec';
 
@@ -1118,6 +1119,7 @@ async function loadWelcomeQuiz() {
   frame.style.display = 'block';
   const matieres = ['maths', 'français', 'sciences', 'géographie', 'anglais'];
   const matiereAlea = matieres[Math.floor(Math.random() * matieres.length)];
+  welcomeQuizSubject = matiereAlea;
   
   frame.innerHTML = `<div class="wq-loading">⏳ Préparation de ton défi d'accueil surprise de ${matiereAlea}... 🤔</div>`;
   
@@ -1144,9 +1146,13 @@ async function loadWelcomeQuiz() {
 }
 
 function answerWelcomeQuiz(btnClicked, selectedIndex, correctIndex) {
-  const container = btnClicked.closest('.wq-options');
+  selectedIndex = Number(selectedIndex);
+  correctIndex = Number(correctIndex);
+  const container = btnClicked ? btnClicked.closest('.wq-options') : null;
+  if (!container || Number.isNaN(correctIndex)) return;
   const buttons = container.querySelectorAll('.wq-option');
   const resultDiv = document.getElementById('wqResult');
+  if (!resultDiv) return;
   
   buttons.forEach((btn, i) => {
     btn.disabled = true; 
@@ -1158,11 +1164,12 @@ function answerWelcomeQuiz(btnClicked, selectedIndex, correctIndex) {
     resultDiv.innerHTML = "🏆 Superbe ! C'est la bonne réponse ! 🎉 (+20 pts)";
     resultDiv.style.color = "var(--green)";
     addScore(20, 'quiz accueil');
-    recordSkillResult(normalizeSubjectForStats(matiereAlea), 'accueil', true);
+    recordSkillResult(normalizeSubjectForStats(welcomeQuizSubject), 'accueil', true);
     speak("Bravo ! C'est la bonne réponse !");
   } else {
     resultDiv.innerHTML = "Mince ! Regarde la réponse en vert 🦉 Entraîne-toi bien aujourd'hui !";
     resultDiv.style.color = "var(--secondary)";
+    recordSkillResult(normalizeSubjectForStats(welcomeQuizSubject), 'accueil', false);
     speak("Dommage ! Regarde la bonne réponse.");
   }
   resultDiv.style.display = "block";

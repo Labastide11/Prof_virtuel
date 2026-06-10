@@ -483,6 +483,10 @@ animation:pop .25s ease-out;
 .review-launch-btn:disabled{opacity:.65;cursor:not-allowed;}
 .review-wheel-result{font-weight:900;color:var(--primary);min-height:22px;margin-top:6px;}
 
+
+/* Correctif : suppression complète du panneau élève "Vie de classe" */
+#classMotivationPanel, .class-motivation-panel { display: none !important; visibility: hidden !important; height: 0 !important; padding: 0 !important; margin: 0 !important; overflow: hidden !important; }
+
 </style>
 </head>
 <body>
@@ -2185,6 +2189,20 @@ window.addEventListener('DOMContentLoaded', () => {
 <script>
 // Dashboard V2 synchronisé avec le score de l’élève actif.
 window.addEventListener("load", () => { refreshScoreDisplays(); renderMasterChallengeCard(); renderStudentProgressPanel(); });
+</script>
+
+
+<script>
+/* Correctif final : le grand bloc "Vie de classe" ne doit plus apparaître côté élève. */
+function removeVieDeClassePanel(){
+  const panel = document.getElementById('classMotivationPanel');
+  if(panel){ panel.remove(); }
+}
+window.renderClassMotivationPanel = function(){ removeVieDeClassePanel(); return; };
+window.addEventListener('DOMContentLoaded', removeVieDeClassePanel);
+window.addEventListener('load', removeVieDeClassePanel);
+setTimeout(removeVieDeClassePanel, 200);
+setTimeout(removeVieDeClassePanel, 1000);
 </script>
 
 </body>

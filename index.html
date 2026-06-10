@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Maître Hibou V2 Phase 2</title>
+<title>Maître Hibou V3 Phase 3.1</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -340,6 +340,35 @@ animation:pop .25s ease-out;
 .history-item:last-child{border-bottom:none;}
 
 
+
+/* === V3 Phase 3.1 : Défis du maître, banque locale CE2, progression === */
+.master-challenge-card{
+  max-width:768px;width:calc(100% - 32px);margin:10px auto 0 auto;
+  background:linear-gradient(135deg,#FFF9E6 0%,#FFEFB0 100%);
+  border:3px solid var(--accent);border-radius:var(--radius);padding:14px 16px;
+  box-shadow:var(--shadow);display:none;animation:fadeIn .35s ease-out;
+}
+.master-challenge-card h3{font-family:'Baloo 2',sans-serif;color:#7A5C00;font-size:20px;margin-bottom:4px;}
+.master-challenge-card p{font-weight:800;font-size:14px;color:var(--text);margin:3px 0;}
+.challenge-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+.challenge-btn{border:none;border-radius:12px;padding:9px 12px;font-weight:900;cursor:pointer;font-family:inherit;background:var(--primary);color:white;}
+.challenge-btn.secondary{background:#fff;color:#7A5C00;border:2px solid var(--accent);}
+.progress-panel{
+  max-width:768px;width:calc(100% - 32px);margin:10px auto 0 auto;background:#fff;
+  border:2px solid var(--primary-light);border-radius:var(--radius);padding:12px 16px;box-shadow:var(--shadow);display:none;
+}
+.progress-title{font-family:'Baloo 2',sans-serif;font-size:18px;color:var(--primary);font-weight:900;margin-bottom:8px;}
+.progress-row{display:grid;grid-template-columns:90px 1fr 42px;gap:8px;align-items:center;margin:7px 0;font-size:13px;font-weight:900;}
+.progress-bar{height:12px;background:#ECEBF3;border-radius:999px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--primary),#9B95FF);border-radius:999px;}
+.teacher-section{background:#F7F6FF;border:2px solid #ECEBF3;border-radius:16px;padding:12px;margin:12px 0;}
+.teacher-section h3{font-family:'Baloo 2',sans-serif;color:var(--primary);font-size:19px;margin-bottom:8px;}
+.teacher-select,.teacher-input{padding:10px 12px;border:2px solid var(--primary-light);border-radius:12px;font-family:inherit;font-weight:800;background:white;color:var(--text);max-width:100%;}
+.teacher-form-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0;}
+.local-quiz-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-top:8px;}
+.local-quiz-card{border:none;background:#fff;border-radius:14px;padding:10px;font-weight:900;color:var(--primary);cursor:pointer;box-shadow:var(--shadow);font-family:inherit;text-align:left;}
+.local-quiz-card:hover{transform:translateY(-1px);}
+
 </style>
 </head>
 <body>
@@ -377,6 +406,11 @@ animation:pop .25s ease-out;
   <button class="subject-btn" onclick="selectSubject(this, 'anglais')">🇬🇧 Anglais</button>
 </div>
 
+
+
+<div class="master-challenge-card" id="masterChallengeCard"></div>
+<div class="progress-panel" id="progressPanel"></div>
+
 <div class="welcome-quiz-container" id="welcomeQuizFrame"></div>
 
 <div class="chat-container" id="chatContainer">
@@ -389,6 +423,7 @@ animation:pop .25s ease-out;
 <div class="quick-questions" id="quickQuestions">
   <button class="quick-btn" onclick="window.open('https://www.logicieleducatif.fr/jeu/tables-de-multiplication','_blank')">🧮 Tables de multiplication</button>
   <button class="quick-btn" onclick="startNomCommun()">✍️ Nom commun</button>
+  <button class="quick-btn" onclick="showLocalQuizMenu()">📚 Quiz CE2 local</button>
   <button class="quick-btn" onclick="window.open('https://www.logicieleducatif.fr/jeu/les-pays-d-europe','_blank')">🗺️ Géographie : la France</button>
   <button class="quick-btn" onclick="sendQuick('Explique-moi le système solaire pour un élève de CE2')">🪐 Système solaire</button>
 </div>
@@ -444,6 +479,7 @@ animation:pop .25s ease-out;
       <button class="teacher-btn secondary" onclick="renderTeacherDashboard()">🔄 Actualiser</button>
       <button class="teacher-btn danger" onclick="resetAllStudents()">🧹 Tout réinitialiser</button>
     </div>
+    <div id="teacherChallengeContent"></div>
     <div id="teacherDashboardContent"></div>
     <div class="teacher-small">Les données sont enregistrées dans le navigateur de l'appareil. Pour un suivi fiable en classe, utilise toujours la même tablette ou exporte régulièrement le CSV.</div>
   </div>
@@ -463,6 +499,86 @@ let soundEnabled = true;
 let prenomActuel = '';
 
 const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbzeHY0Vm-O923mZfgQjmvUdtJUIEVUVR99srqocBldvkl7JPWn49K7tqqEthQB4JDQm/exec';
+
+// === V3 Phase 3.1 : banque locale CE2 et défis du maître ===
+const MASTER_CHALLENGE_KEY = 'hibou_master_challenge_v31';
+
+const banqueCE2 = {
+  maths: [
+    {q:'Combien font 6 × 7 ?', options:['42','36','48','40'], correct:0, skill:'tables'},
+    {q:'Combien font 8 × 5 ?', options:['35','40','45','30'], correct:1, skill:'tables'},
+    {q:'Combien font 9 × 4 ?', options:['32','36','40','45'], correct:1, skill:'tables'},
+    {q:'Quel est le double de 24 ?', options:['42','48','46','50'], correct:1, skill:'calcul'},
+    {q:'Quel est le résultat de 350 + 120 ?', options:['460','470','480','570'], correct:1, skill:'calcul'},
+    {q:'Dans 4 582, quel chiffre est celui des centaines ?', options:['4','5','8','2'], correct:1, skill:'numération'},
+    {q:'Quel nombre est le plus grand ?', options:['4 099','4 900','4 090','4 009'], correct:1, skill:'numération'},
+    {q:'Combien y a-t-il de minutes dans une heure ?', options:['30','45','60','100'], correct:2, skill:'mesures'},
+    {q:'Un rectangle a 4 côtés. Combien a-t-il d’angles droits ?', options:['2','3','4','5'], correct:2, skill:'géométrie'},
+    {q:'Combien font 63 ÷ 7 ?', options:['7','8','9','10'], correct:2, skill:'calcul'}
+  ],
+  francais: [
+    {q:'Dans « Le chien aboie », quel mot est un nom commun ?', options:['Le','chien','aboie'], correct:1, skill:'nom commun'},
+    {q:'Quel mot est un verbe ?', options:['courir','cartable','rouge'], correct:0, skill:'verbe'},
+    {q:'Quel déterminant convient : ___ maison ?', options:['un','une','des'], correct:1, skill:'déterminant'},
+    {q:'Dans « Les enfants jouent », quel est le verbe ?', options:['Les','enfants','jouent'], correct:2, skill:'verbe'},
+    {q:'Quel mot est un adjectif ?', options:['petit','table','chanter'], correct:0, skill:'adjectif'},
+    {q:'Quel est le pluriel de « un cheval » ?', options:['des chevals','des chevaux','des cheval'], correct:1, skill:'pluriel'},
+    {q:'Quelle phrase est correcte ?', options:['Les fille joue.','Les filles jouent.','La filles joue.'], correct:1, skill:'accord'},
+    {q:'Quel mot commence par un son voyelle ?', options:['arbre','chien','train'], correct:0, skill:'lecture'},
+    {q:'Dans « Je mange une pomme », quel est le complément ?', options:['Je','mange','une pomme'], correct:2, skill:'phrase'},
+    {q:'Quel signe termine une question ?', options:['.','?','!'], correct:1, skill:'ponctuation'}
+  ],
+  sciences: [
+    {q:'De quoi une plante a-t-elle besoin pour grandir ?', options:['Eau, lumière, terre','Seulement de sable','Seulement de vent'], correct:0, skill:'vivant'},
+    {q:'Quelle planète est appelée la planète rouge ?', options:['Mars','Vénus','Jupiter'], correct:0, skill:'système solaire'},
+    {q:'La Terre tourne autour...', options:['du Soleil','de la Lune','de Mars'], correct:0, skill:'système solaire'},
+    {q:'Quel organe sert à respirer ?', options:['les poumons','l’estomac','les dents'], correct:0, skill:'corps humain'},
+    {q:'L’eau solide s’appelle...', options:['vapeur','glace','pluie'], correct:1, skill:'matière'},
+    {q:'Un animal qui mange des plantes est...', options:['herbivore','carnivore','minéral'], correct:0, skill:'vivant'},
+    {q:'Le squelette sert surtout à...', options:['soutenir le corps','digérer','voir'], correct:0, skill:'corps humain'},
+    {q:'La Lune est...', options:['une étoile','un satellite de la Terre','une planète'], correct:1, skill:'système solaire'}
+  ],
+  geographie: [
+    {q:'La capitale de la France est...', options:['Paris','Lyon','Marseille'], correct:0, skill:'France'},
+    {q:'Quel fleuve traverse Paris ?', options:['La Seine','La Loire','Le Rhône'], correct:0, skill:'France'},
+    {q:'La France se trouve en...', options:['Europe','Afrique','Asie'], correct:0, skill:'Europe'},
+    {q:'Quel océan borde l’ouest de la France ?', options:['Atlantique','Pacifique','Indien'], correct:0, skill:'France'},
+    {q:'Les Pyrénées sont...', options:['des montagnes','des fleuves','des mers'], correct:0, skill:'relief'},
+    {q:'Une carte sert à...', options:['se repérer','chanter','mesurer le temps'], correct:0, skill:'carte'},
+    {q:'Le nord est souvent placé...', options:['en haut de la carte','en bas','à droite seulement'], correct:0, skill:'carte'},
+    {q:'La Méditerranée borde la France au...', options:['sud','nord','centre'], correct:0, skill:'France'}
+  ],
+  anglais: [
+    {q:'Comment dit-on « rouge » en anglais ?', options:['red','blue','green'], correct:0, skill:'colors'},
+    {q:'Comment dit-on « bonjour » ?', options:['hello','bye','cat'], correct:0, skill:'salutations'},
+    {q:'Comment dit-on « chien » ?', options:['dog','cat','bird'], correct:0, skill:'animals'},
+    {q:'Comment dit-on « merci » ?', options:['please','thank you','good night'], correct:1, skill:'politesse'},
+    {q:'Comment dit-on « un » ?', options:['one','two','three'], correct:0, skill:'numbers'},
+    {q:'Comment dit-on « bleu » ?', options:['yellow','blue','black'], correct:1, skill:'colors'}
+  ]
+};
+
+const challengeCatalog = {
+  tables6: {id:'tables6', title:'Tables ×6', subject:'maths', reward:100, badge:'defi-tables6', badgeLabel:'🏆 Défi Tables ×6', questions:[
+    {q:'6 × 2 = ?', options:['12','14','10'], correct:0, skill:'tables'},
+    {q:'6 × 3 = ?', options:['18','16','20'], correct:0, skill:'tables'},
+    {q:'6 × 4 = ?', options:['22','24','26'], correct:1, skill:'tables'},
+    {q:'6 × 5 = ?', options:['30','35','25'], correct:0, skill:'tables'},
+    {q:'6 × 6 = ?', options:['42','36','30'], correct:1, skill:'tables'},
+    {q:'6 × 7 = ?', options:['42','40','48'], correct:0, skill:'tables'},
+    {q:'6 × 8 = ?', options:['46','48','54'], correct:1, skill:'tables'},
+    {q:'6 × 9 = ?', options:['54','56','63'], correct:0, skill:'tables'},
+    {q:'6 × 10 = ?', options:['60','66','56'], correct:0, skill:'tables'},
+    {q:'Combien font 3 paquets de 6 ?', options:['12','18','24'], correct:1, skill:'tables'}
+  ]},
+  nomCommun: {id:'nomCommun', title:'Nom commun', subject:'francais', reward:100, badge:'defi-nom-commun', badgeLabel:'🏆 Défi Nom commun', questions:null},
+  systemeSolaire: {id:'systemeSolaire', title:'Système solaire', subject:'sciences', reward:100, badge:'defi-systeme-solaire', badgeLabel:'🏆 Défi Système solaire', questions:null},
+  france: {id:'france', title:'Géographie : la France', subject:'geographie', reward:100, badge:'defi-france', badgeLabel:'🏆 Défi France', questions:null}
+};
+challengeCatalog.nomCommun.questions = banqueCE2.francais.filter(q => ['nom commun','déterminant','phrase','pluriel','accord'].includes(q.skill));
+challengeCatalog.systemeSolaire.questions = banqueCE2.sciences.filter(q => q.skill === 'système solaire');
+challengeCatalog.france.questions = banqueCE2.geographie.filter(q => ['France','Europe','relief','carte'].includes(q.skill));
+
 
 window.addEventListener('load', () => {
   document.getElementById('modalOverlay').classList.add('hidden');
@@ -488,6 +604,8 @@ function savePrenom() {
   
   loadStudentProgress();
   refreshScoreDisplays();
+  renderStudentProgressPanel();
+  renderMasterChallengeCard();
   
   const container = document.getElementById('chatContainer');
   const savedMsg = score > 0 ? ` Tu as déjà <strong>${score} points</strong> ! 🌟` : '';
@@ -562,7 +680,8 @@ function getStudentData(name) {
     score: Number(localStorage.getItem(getStudentKey('score')) || 0),
     badges: JSON.parse(localStorage.getItem(getStudentKey('badges')) || '[]'),
     streak: Number(localStorage.getItem(getStudentKey('streak')) || 1),
-    history: JSON.parse(localStorage.getItem(getStudentKey('history')) || '[]')
+    history: JSON.parse(localStorage.getItem(getStudentKey('history')) || '[]'),
+    skills: JSON.parse(localStorage.getItem(getStudentKey('skills')) || '{}')
   };
   prenomActuel = oldName;
   data.level = computeLevel(data.score);
@@ -581,6 +700,55 @@ function logActivity(type, points, detail) {
   localStorage.setItem(getStudentKey('history'), JSON.stringify(history.slice(0, 30)));
 }
 
+
+function getSkillStats() {
+  if (!prenomActuel) return {};
+  return JSON.parse(localStorage.getItem(getStudentKey('skills')) || '{}');
+}
+function saveSkillStats(stats) {
+  if (!prenomActuel) return;
+  localStorage.setItem(getStudentKey('skills'), JSON.stringify(stats));
+}
+function recordSkillResult(subject, skill, isCorrect) {
+  if (!prenomActuel) return;
+  const stats = getSkillStats();
+  const key = subject || 'general';
+  if (!stats[key]) stats[key] = {attempts:0, correct:0, skills:{}};
+  stats[key].attempts++;
+  if (isCorrect) stats[key].correct++;
+  const sk = skill || 'général';
+  if (!stats[key].skills[sk]) stats[key].skills[sk] = {attempts:0, correct:0};
+  stats[key].skills[sk].attempts++;
+  if (isCorrect) stats[key].skills[sk].correct++;
+  saveSkillStats(stats);
+  renderStudentProgressPanel();
+}
+function subjectPercent(stats, subject) {
+  const d = stats[subject];
+  if (!d || !d.attempts) return 0;
+  return Math.round((d.correct / d.attempts) * 100);
+}
+function renderStudentProgressPanel() {
+  const panel = document.getElementById('progressPanel');
+  if (!panel || !prenomActuel) return;
+  const stats = getSkillStats();
+  const subjects = [
+    ['maths','Maths'],['francais','Français'],['sciences','Sciences'],['geographie','Géo'],['anglais','Anglais']
+  ];
+  const hasAttempts = subjects.some(([k]) => stats[k] && stats[k].attempts);
+  if (!hasAttempts) { panel.style.display = 'none'; return; }
+  panel.style.display = 'block';
+  panel.innerHTML = '<div class="progress-title">📊 Mes progrès</div>' + subjects.map(([k,label]) => {
+    const pct = subjectPercent(stats,k);
+    return `<div class="progress-row"><span>${label}</span><div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div><span>${pct}%</span></div>`;
+  }).join('');
+}
+function getStudentSkillStats(name) {
+  const oldName = prenomActuel; prenomActuel = name;
+  const stats = JSON.parse(localStorage.getItem(getStudentKey('skills')) || '{}');
+  prenomActuel = oldName; return stats;
+}
+
 function openTeacherDashboard() {
   renderTeacherDashboard();
   document.getElementById('teacherDashboardOverlay').classList.remove('hidden');
@@ -590,7 +758,15 @@ function closeTeacherDashboard() {
   document.getElementById('teacherDashboardOverlay').classList.add('hidden');
 }
 
+function teacherSuccessRate(skills) {
+  const vals = Object.values(skills || {});
+  const attempts = vals.reduce((a,v)=>a+(v.attempts||0),0);
+  const correct = vals.reduce((a,v)=>a+(v.correct||0),0);
+  return attempts ? Math.round(correct/attempts*100) + '%' : '—';
+}
+
 function renderTeacherDashboard() {
+  renderTeacherChallenge();
   const content = document.getElementById('teacherDashboardContent');
   const roster = JSON.parse(localStorage.getItem('hibou_roster') || '[]');
   if (!content) return;
@@ -606,6 +782,7 @@ function renderTeacherDashboard() {
       <td>${s.level}</td>
       <td>${s.streak}</td>
       <td>${s.badges.length}</td>
+      <td>${teacherSuccessRate(s.skills)}</td>
       <td>${s.history[0] ? escapeHTML(s.history[0].type + ' · ' + s.history[0].date) : '—'}</td>
       <td><button class="teacher-btn danger" onclick="resetStudent('${encodeURIComponent(s.name)}')">Réinitialiser</button></td>
     </tr>`).join('');
@@ -620,7 +797,7 @@ function renderTeacherDashboard() {
     </div>
     <div class="teacher-table-wrap">
       <table class="teacher-table">
-        <thead><tr><th>Élève</th><th>Points</th><th>Niveau</th><th>Série</th><th>Badges</th><th>Dernière activité</th><th>Action</th></tr></thead>
+        <thead><tr><th>Élève</th><th>Points</th><th>Niveau</th><th>Série</th><th>Badges</th><th>Réussite</th><th>Dernière activité</th><th>Action</th></tr></thead>
         <tbody>${rows}</tbody>
       </table>
     </div>
@@ -633,7 +810,7 @@ function renderTeacherDashboard() {
 function exportTeacherCSV() {
   const roster = JSON.parse(localStorage.getItem('hibou_roster') || '[]');
   const students = roster.map(getStudentData);
-  const lines = [['Eleve','Score','Niveau','Serie','Nombre de badges','Badges','Derniere activite']];
+  const lines = [['Eleve','Score','Niveau','Serie','Nombre de badges','Taux reussite','Badges','Derniere activite']];
   students.forEach(s => {
     lines.push([
       s.name,
@@ -641,6 +818,7 @@ function exportTeacherCSV() {
       s.level,
       s.streak,
       s.badges.length,
+      teacherSuccessRate(s.skills),
       s.badges.join('|'),
       s.history[0] ? `${s.history[0].type} ${s.history[0].date}` : ''
     ]);
@@ -664,6 +842,7 @@ function resetStudent(encodedName) {
   localStorage.removeItem(getStudentKey('badges'));
   localStorage.removeItem(getStudentKey('streak'));
   localStorage.removeItem(getStudentKey('history'));
+  localStorage.removeItem(getStudentKey('skills'));
   prenomActuel = oldName;
   if (prenomActuel && prenomActuel.toLowerCase() === name.toLowerCase()) {
     score = 0; badges = []; streak = 1; refreshScoreDisplays();
@@ -681,6 +860,7 @@ function resetAllStudents() {
     localStorage.removeItem(getStudentKey('badges'));
     localStorage.removeItem(getStudentKey('streak'));
     localStorage.removeItem(getStudentKey('history'));
+  localStorage.removeItem(getStudentKey('skills'));
     prenomActuel = oldName;
   });
   localStorage.removeItem('hibou_roster');
@@ -776,6 +956,7 @@ function answerWelcomeQuiz(btnClicked, selectedIndex, correctIndex) {
     resultDiv.innerHTML = "🏆 Superbe ! C'est la bonne réponse ! 🎉 (+20 pts)";
     resultDiv.style.color = "var(--green)";
     addScore(20, 'quiz accueil');
+    recordSkillResult(normalizeSubjectForStats(matiereAlea), 'accueil', true);
     speak("Bravo ! C'est la bonne réponse !");
   } else {
     resultDiv.innerHTML = "Mince ! Regarde la réponse en vert 🦉 Entraîne-toi bien aujourd'hui !";
@@ -845,6 +1026,54 @@ let totalPointsEarnedThisSession = 0;
 let quizContainer = null;
 let originalQuizLength = 0;
 
+
+function getLocalQuestions(subject, count=10) {
+  const list = (banqueCE2[subject] || banqueCE2.maths).slice();
+  return list.sort(() => Math.random() - 0.5).slice(0, Math.min(count, list.length));
+}
+function startLocalQuiz(subject, title, questions=null, isChallenge=false) {
+  const data = questions && questions.length ? questions : getLocalQuestions(subject, 10);
+  currentQuizData = data.map(q => ({ ...q, isRetry:false, subject:subject, isChallenge:isChallenge }));
+  currentQuizIndex = 0; currentQuizScore = 0; totalPointsEarnedThisSession = 0; originalQuizLength = currentQuizData.length;
+  const container = document.getElementById('chatContainer');
+  const div = document.createElement('div');
+  div.className = 'message prof';
+  div.innerHTML = `<div class="avatar prof">🦉</div><div class="bubble"><strong>${escapeHTML(title || 'Quiz CE2 local')}</strong><br><span style="font-size:12px;color:var(--text-muted);font-weight:800;">Ce quiz fonctionne sans IA et sans Internet.</span><div class="quiz-container" id="quizBox"></div></div>`;
+  container.appendChild(div); container.scrollTop = container.scrollHeight; quizContainer = document.getElementById('quizBox');
+  renderRulesAndStart();
+}
+function getActiveChallenge() { return JSON.parse(localStorage.getItem(MASTER_CHALLENGE_KEY) || 'null'); }
+function setActiveChallenge(id) {
+  const c = challengeCatalog[id]; if (!c) return;
+  localStorage.setItem(MASTER_CHALLENGE_KEY, JSON.stringify({id:c.id, title:c.title, subject:c.subject, reward:c.reward, badge:c.badge, badgeLabel:c.badgeLabel, activeAt:new Date().toLocaleDateString('fr-FR')}));
+  renderTeacherChallenge(); renderMasterChallengeCard();
+}
+function clearActiveChallenge() { localStorage.removeItem(MASTER_CHALLENGE_KEY); renderTeacherChallenge(); renderMasterChallengeCard(); }
+function renderMasterChallengeCard() {
+  const card = document.getElementById('masterChallengeCard'); if (!card) return;
+  const c = getActiveChallenge();
+  if (!c) { card.style.display='none'; return; }
+  card.style.display='block';
+  const done = badges && badges.includes(c.badge);
+  card.innerHTML = `<h3>🏆 Défi du maître</h3><p>${escapeHTML(c.title)}</p><p>Récompense : +${c.reward} points et un badge spécial.</p><div class="challenge-actions"><button class="challenge-btn" onclick="startActiveChallenge()">${done ? '✅ Refaire le défi' : '🚀 Commencer le défi'}</button><button class="challenge-btn secondary" onclick="renderStudentProgressPanel()">📊 Voir mes progrès</button></div>`;
+}
+function startActiveChallenge() {
+  const c = getActiveChallenge(); if (!c) return;
+  const catalog = challengeCatalog[c.id]; if (!catalog) return;
+  startLocalQuiz(c.subject, '🏆 Défi du maître : ' + c.title, catalog.questions, true);
+}
+function renderTeacherChallenge() {
+  const box = document.getElementById('teacherChallengeContent'); if (!box) return;
+  const active = getActiveChallenge();
+  box.innerHTML = `<div class="teacher-section"><h3>🏆 Défi du maître</h3><div class="teacher-form-row"><select class="teacher-select" id="challengeSelect"><option value="tables6">Tables ×6</option><option value="nomCommun">Nom commun</option><option value="systemeSolaire">Système solaire</option><option value="france">Géographie : la France</option></select><button class="teacher-btn" onclick="setActiveChallenge(document.getElementById('challengeSelect').value)">Activer</button><button class="teacher-btn secondary" onclick="clearActiveChallenge()">Désactiver</button></div><div class="teacher-small">Défi actif : <strong>${active ? escapeHTML(active.title) + ' (+ ' + active.reward + ' pts)' : 'aucun'}</strong></div></div>`;
+}
+function showLocalQuizMenu() {
+  const container = document.getElementById('chatContainer');
+  const div = document.createElement('div'); div.className='message prof';
+  div.innerHTML = `<div class="avatar prof">🦉</div><div class="bubble"><strong>📚 Banque CE2 locale</strong><br>Choisis un entraînement sans IA :<div class="local-quiz-grid"><button class="local-quiz-card" onclick="startLocalQuiz('maths','🧮 Quiz local Maths CE2')">🧮 Maths CE2</button><button class="local-quiz-card" onclick="startLocalQuiz('francais','✍️ Quiz local Français CE2')">✍️ Français CE2</button><button class="local-quiz-card" onclick="startLocalQuiz('sciences','💡 Quiz local Sciences CE2')">💡 Sciences CE2</button><button class="local-quiz-card" onclick="startLocalQuiz('geographie','🌍 Quiz local Géographie CE2')">🌍 Géographie CE2</button><button class="local-quiz-card" onclick="startLocalQuiz('anglais','🇬🇧 Quiz local Anglais CE2')">🇬🇧 Anglais CE2</button></div></div>`;
+  container.appendChild(div); container.scrollTop=container.scrollHeight;
+}
+
 async function generateQuiz(topic) {
   const isWelcome = topic.includes('question surprise');
   const count = isWelcome ? 1 : 10;
@@ -892,6 +1121,14 @@ async function startQuiz(topic, btnEl) {
   
   const quizData = await generateQuiz(topic);
   if (!quizData || !quizData.questions) {
+    const fallbackSubject = normalizeSubjectForStats(currentSubject);
+    const local = getLocalQuestions(fallbackSubject, 10);
+    if (local.length) {
+      btnEl.textContent = '📚 Quiz local lancé !';
+      startLocalQuiz(fallbackSubject, '📚 Quiz local CE2', local, false);
+      btnEl.parentElement.style.display = 'none';
+      return;
+    }
     btnEl.textContent = '😕 Erreur, réessaie !';
     btnEl.disabled = false;
     return;
@@ -943,6 +1180,13 @@ function renderQuizQuestion() {
     </div>`;
 }
 
+function normalizeSubjectForStats(subject) {
+  if (subject === 'français') return 'francais';
+  if (subject === 'géographie') return 'geographie';
+  if (subject === 'général' || subject === 'jeux') return 'maths';
+  return subject || 'maths';
+}
+
 function answerQuiz(selectedIndex) {
   const q = currentQuizData[currentQuizIndex];
   const buttons = quizContainer.querySelectorAll('.quiz-option');
@@ -953,13 +1197,16 @@ function answerQuiz(selectedIndex) {
     else if (i === selectedIndex) btn.classList.add('wrong');
   });
 
+  const subjectForStats = q.subject || normalizeSubjectForStats(currentSubject);
+  recordSkillResult(subjectForStats, q.skill || 'général', selectedIndex === q.correct);
+
   if (selectedIndex === q.correct) {
     if (q.isRetry) {
       addScore(5, 'quiz rattrapage');
       totalPointsEarnedThisSession += 5;
     } else {
       currentQuizScore++; 
-      addScore(20, 'quiz');
+      addScore(20, 'quiz ' + subjectForStats);
       totalPointsEarnedThisSession += 20;
     }
   } else {
@@ -982,6 +1229,13 @@ function answerQuiz(selectedIndex) {
 }
 
 function showQuizResult() {
+  const activeChallenge = getActiveChallenge();
+  const isChallengeRun = currentQuizData && currentQuizData.some(q => q.isChallenge);
+  if (isChallengeRun && activeChallenge && currentQuizScore === originalQuizLength && !badges.includes(activeChallenge.badge)) {
+    addScore(activeChallenge.reward, 'défi du maître');
+    unlockBadge(activeChallenge.badge, activeChallenge.badgeLabel);
+    totalPointsEarnedThisSession += activeChallenge.reward;
+  }
   let emoji = currentQuizScore === originalQuizLength ? '🏆⭐🏆' : '💪🌟😊';
   let msg = currentQuizScore === originalQuizLength 
     ? 'Incroyable ! Un sans-faute parfait du premier coup ! 🦉' 
@@ -1013,31 +1267,16 @@ function showQuizResult() {
 }
 
 function startNomCommun() {
-  const data = {
-    questions: [
-      {q:"Dans la phrase « Le chat dort », quel mot est un nom commun ?", options:["chat","dort","le"], correct:0},
-      {q:"Quel mot est un nom commun ?", options:["courir","maison","très"], correct:1},
-      {q:"Dans « Une petite fille chante », quel est le nom commun ?", options:["petite","fille","chante"], correct:1},
-      {q:"Quel nom commun désigne une chose ?", options:["stylo","joyeux","manger"], correct:0},
-      {q:"Dans « Les élèves lisent », quel mot est un nom commun ?", options:["élèves","lisent","les"], correct:0}
-    ]
-  };
-  currentQuizData = data.questions.map(q => ({ ...q, isRetry:false }));
-  currentQuizIndex = 0;
-  currentQuizScore = 0;
-  totalPointsEarnedThisSession = 0;
-  originalQuizLength = currentQuizData.length;
-
-  const container = document.getElementById('chatContainer');
-  const div = document.createElement('div');
-  div.className = 'message prof';
-  div.innerHTML = `<div class="avatar prof">🦉</div><div class="bubble">Voici un exercice interactif sur les <strong>noms communs</strong>.<div class="quiz-container" id="quizBox"></div></div>`;
-  container.appendChild(div);
-  container.scrollTop = container.scrollHeight;
-  quizContainer = document.getElementById('quizBox');
+  const data = [
+      {q:"Dans la phrase « Le chat dort », quel mot est un nom commun ?", options:["chat","dort","le"], correct:0, skill:'nom commun'},
+      {q:"Quel mot est un nom commun ?", options:["courir","maison","très"], correct:1, skill:'nom commun'},
+      {q:"Dans « Une petite fille chante », quel est le nom commun ?", options:["petite","fille","chante"], correct:1, skill:'nom commun'},
+      {q:"Quel nom commun désigne une chose ?", options:["stylo","joyeux","manger"], correct:0, skill:'nom commun'},
+      {q:"Dans « Les élèves lisent », quel mot est un nom commun ?", options:["élèves","lisent","les"], correct:0, skill:'nom commun'}
+  ];
   checkBadges('nom commun');
-  logActivity('Nom commun', 0, 'Exercice interactif terminé');
-  renderRulesAndStart();
+  logActivity('Nom commun', 0, 'Exercice interactif lancé');
+  startLocalQuiz('francais', '✍️ Nom commun', data, false);
 }
 
 function toggleSound() {
@@ -1073,26 +1312,31 @@ function updateQuickQuestions(subject) {
       <button class="quick-btn" onclick="window.open('https://www.logicieleducatif.fr/jeu/tables-de-multiplication','_blank')">🧮 Tables de multiplication</button>
       <button class="quick-btn" onclick="sendQuick('Explique-moi une multiplication posée en CE2')">✏️ Multiplication posée</button>
       <button class="quick-btn" onclick="sendQuick('Donne-moi un petit défi de calcul mental CE2')">⚡ Calcul mental</button>
+      <button class="quick-btn" onclick="startLocalQuiz('maths','🧮 Quiz local Maths CE2')">📚 Quiz local</button>
     `,
     'français': `
       <button class="quick-btn" onclick="startNomCommun()">✍️ Nom commun</button>
       <button class="quick-btn" onclick="sendQuick('Explique-moi le verbe pour un CE2')">🏃 Le verbe</button>
       <button class="quick-btn" onclick="sendQuick('Aide-moi à écrire une histoire de super-héros')">🦸 Idées d'histoire</button>
+      <button class="quick-btn" onclick="startLocalQuiz('francais','✍️ Quiz local Français CE2')">📚 Quiz local</button>
     `,
     'sciences': `
       <button class="quick-btn" onclick="sendQuick('Comment poussent les plantes ?')">🌱 Les plantes</button>
       <button class="quick-btn" onclick="sendQuick('Explique-moi le système solaire pour un élève de CE2')">🪐 Système solaire</button>
       <button class="quick-btn" onclick="sendQuick('Explique-moi le squelette humain pour un CE2')">🦴 Le squelette</button>
+      <button class="quick-btn" onclick="startLocalQuiz('sciences','💡 Quiz local Sciences CE2')">📚 Quiz local</button>
     `,
     'géographie': `
       <button class="quick-btn" onclick="window.open('https://www.logicieleducatif.fr/jeu/les-pays-d-europe','_blank')">🌍 Carte interactive</button>
       <button class="quick-btn" onclick="sendQuick('Explique-moi la France en géographie pour un CE2')">🗺️ La France</button>
       <button class="quick-btn" onclick="sendQuick('Explique-moi les montagnes et les fleuves de France pour un CE2')">⛰️ Reliefs et fleuves</button>
+      <button class="quick-btn" onclick="startLocalQuiz('geographie','🌍 Quiz local Géographie CE2')">📚 Quiz local</button>
     `,
     'anglais': `
       <button class="quick-btn" onclick="sendQuick('Apprends-moi les couleurs en anglais niveau CE2')">🎨 Couleurs</button>
       <button class="quick-btn" onclick="sendQuick('Apprends-moi à me présenter en anglais niveau CE2')">👋 Se présenter</button>
       <button class="quick-btn" onclick="sendQuick('Fais-moi un mini quiz en anglais CE2')">🇬🇧 Mini quiz</button>
+      <button class="quick-btn" onclick="startLocalQuiz('anglais','🇬🇧 Quiz local Anglais CE2')">📚 Quiz local</button>
     `,
     'jeux': `
       <button class="quick-btn" onclick="sendQuick('Propose-moi un jeu de révision CE2 en classe')">🎮 Jeu de révision</button>
@@ -1215,7 +1459,7 @@ function toggleVoice() {
 
 <script>
 // Dashboard V2 synchronisé avec le score de l’élève actif.
-window.addEventListener("load", refreshScoreDisplays);
+window.addEventListener("load", () => { refreshScoreDisplays(); renderMasterChallengeCard(); renderStudentProgressPanel(); });
 </script>
 
 </body>

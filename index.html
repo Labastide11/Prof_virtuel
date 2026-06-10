@@ -1252,6 +1252,7 @@ function changerEleve() {
   if (confirm('Changer d\'élève ? Le score en cours est bien enregistré !')) {
     prenomActuel = '';
     score = 0;
+    window.hibouQuizInProgress = false;
     document.getElementById('scoreVal').textContent = 0;
     document.getElementById('eleveBadge').style.display = 'none';
     document.getElementById('welcomeQuizFrame').style.display = 'none';
@@ -1301,6 +1302,7 @@ let currentQuizScore = 0;
 let totalPointsEarnedThisSession = 0; 
 let quizContainer = null;
 let originalQuizLength = 0;
+window.hibouQuizInProgress = false;
 
 
 function getLocalQuestions(subject, count=10) {
@@ -1308,14 +1310,35 @@ function getLocalQuestions(subject, count=10) {
   return list.sort(() => Math.random() - 0.5).slice(0, Math.min(count, list.length));
 }
 function startLocalQuiz(subject, title, questions=null, isChallenge=false) {
+  // Sécurité d'usage : un seul quiz/défi actif à la fois.
+  // Cela évite que le bouton du défi du maître crée 20 cartes dans le chat.
+  if (window.hibouQuizInProgress) {
+    const active = document.querySelector('.quiz-container.active-quiz');
+    if (active) active.scrollIntoView({behavior:'smooth', block:'center'});
+    const btn = document.querySelector('.quiz-start-btn');
+    if (btn) btn.focus();
+    speak("Un quiz est déjà en cours. Termine-le avant d'en lancer un autre.");
+    return;
+  }
+
   const data = questions && questions.length ? questions : getLocalQuestions(subject, 10);
   currentQuizData = data.map(q => ({ ...q, isRetry:false, subject:subject, isChallenge:isChallenge }));
-  currentQuizIndex = 0; currentQuizScore = 0; totalPointsEarnedThisSession = 0; originalQuizLength = currentQuizData.length;
+  currentQuizIndex = 0;
+  currentQuizScore = 0;
+  totalPointsEarnedThisSession = 0;
+  originalQuizLength = currentQuizData.length;
+  window.hibouQuizInProgress = true;
+
   const container = document.getElementById('chatContainer');
   const div = document.createElement('div');
-  div.className = 'message prof';
-  div.innerHTML = `<div class="avatar prof">🦉</div><div class="bubble"><strong>${escapeHTML(title || 'Quiz CE2 local')}</strong><br><span style="font-size:12px;color:var(--text-muted);font-weight:800;">Ce quiz fonctionne sans IA et sans Internet.</span><div class="quiz-container" id="quizBox"></div></div>`;
-  container.appendChild(div); container.scrollTop = container.scrollHeight; quizContainer = document.getElementById('quizBox');
+  div.className = 'message prof active-quiz-message';
+  div.innerHTML = `<div class="avatar prof">🦉</div><div class="bubble"><strong>${escapeHTML(title || 'Quiz CE2 local')}</strong><br><span style="font-size:12px;color:var(--text-muted);font-weight:800;">Ce quiz fonctionne sans IA et sans Internet.</span><div class="quiz-container active-quiz"></div></div>`;
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+
+  // Important : on récupère le conteneur dans la carte qui vient d'être créée,
+  // pas avec getElementById('quizBox'), car plusieurs anciens quiz peuvent exister.
+  quizContainer = div.querySelector('.quiz-container');
   renderRulesAndStart();
 }
 function buildChallengeStorageObject(c) {
@@ -1520,7 +1543,7 @@ function renderRulesAndStart() {
       <div>🔄 <strong>Erreur ?</strong> La question revient à la fin pour t'aider à apprendre.</div>
       <div>💡 <strong>Réussie au rattrapage :</strong> +5 points !</div>
     </div>
-    <button class="quiz-trigger-btn" style="width:100%; justify-content:center; padding:12px;" onclick="renderQuizQuestion()">C'est parti, je suis prêt ! 🚀</button>
+    <button class="quiz-trigger-btn" style="width:100%; justify-content:center; padding:12px;" onclick="renderQuizQuestion()" class="quiz-start-btn">C'est parti, je suis prêt ! 🚀</button>
   `;
 }
 
@@ -1624,6 +1647,8 @@ function showQuizResult() {
       <div style="font-size:12px;color:var(--text-muted);margin-top:6px;font-weight:600;">Regarde ton badge en haut, tes points y sont ajoutés ! 🦉</div>
     </div>`;
   document.getElementById('chatContainer').scrollTop = document.getElementById('chatContainer').scrollHeight;
+  window.hibouQuizInProgress = false;
+  if (quizContainer) quizContainer.classList.remove('active-quiz');
 }
 
 function startNomCommun() {

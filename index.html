@@ -405,6 +405,21 @@ animation:pop .25s ease-out;
 .teacher-mini-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;margin-top:10px;}
 .teacher-metric-card{background:#fff;border:2px solid #ECEBF3;border-radius:14px;padding:10px;font-weight:900;font-size:13px;}
 
+
+/* === V3 Phase 3.4 : sécurité CE2 renforcée === */
+.security-panel{background:#FFF9E6;border:2px solid var(--accent);border-radius:16px;padding:12px;margin:12px 0;}
+.security-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px;margin-top:8px;}
+.security-card{background:#fff;border:2px solid #ECEBF3;border-radius:14px;padding:10px;font-weight:800;font-size:13px;}
+.security-card strong{color:var(--primary);}
+.security-status{display:inline-block;border-radius:999px;padding:4px 8px;font-size:12px;font-weight:900;}
+.security-status.strict{background:#FFEAEA;color:#7A2222;}
+.security-status.normal{background:#EAE8FF;color:var(--primary);}
+.security-status.local{background:#E6F7E9;color:#1E5627;}
+.blocked-log{max-height:180px;overflow:auto;background:#fff;border:2px solid #ECEBF3;border-radius:14px;padding:8px;margin-top:8px;font-size:12px;font-weight:700;}
+.blocked-item{border-bottom:1px dashed rgba(0,0,0,.1);padding:6px 0;line-height:1.35;}
+.blocked-item:last-child{border-bottom:none;}
+.security-toggle-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;align-items:center;}
+
 </style>
 </head>
 <body>
@@ -474,7 +489,7 @@ animation:pop .25s ease-out;
       <button class="action-btn" onclick="sendMessage()">🚀</button>
     </div>
   </div>
-  <div class="security-note">Mode CE2 : Maître Hibou reste volontairement sur des sujets scolaires adaptés.</div>
+  <div class="security-note">Mode CE2 sécurisé : questions filtrées, réponses contrôlées, journal enseignant disponible.</div>
   <div class="logout-area">
     <button class="logout-btn" onclick="changerEleve()">👤 Changer d'élève / Donner la tablette</button>
   </div>
@@ -519,6 +534,7 @@ animation:pop .25s ease-out;
     </div>
     <div id="teacherChallengeContent"></div>
     <div id="teacherPhase33Content"></div>
+    <div id="teacherSafetyContent"></div>
     <div id="teacherDashboardContent"></div>
     <div class="teacher-small">Les données sont enregistrées dans le navigateur de l'appareil. Pour un suivi fiable en classe, utilise toujours la même tablette ou exporte régulièrement le CSV.</div>
   </div>
@@ -597,19 +613,49 @@ const banqueCE2 = {
   ]
 };
 
+function shuffleHibouArray(arr) {
+  return arr.map(v => ({v, r: Math.random()})).sort((a,b) => a.r - b.r).map(o => o.v);
+}
+
+function makeMultiplicationOptions(answer) {
+  const candidates = [
+    answer,
+    answer + 2,
+    answer - 2,
+    answer + 5,
+    answer - 5,
+    answer + 10,
+    answer - 10
+  ].filter(n => n > 0 && n !== answer);
+  const uniqueWrong = [...new Set(candidates)].slice(0, 3);
+  while (uniqueWrong.length < 3) {
+    const extra = answer + (uniqueWrong.length + 1) * 3;
+    if (!uniqueWrong.includes(extra)) uniqueWrong.push(extra);
+  }
+  const optionsNumbers = shuffleHibouArray([answer, ...uniqueWrong.slice(0, 3)]);
+  return { options: optionsNumbers.map(String), correct: optionsNumbers.indexOf(answer) };
+}
+
+function makeAllTablesChallengeQuestions() {
+  const questions = [];
+  for (let a = 2; a <= 10; a++) {
+    for (let b = 2; b <= 10; b++) {
+      const answer = a * b;
+      const data = makeMultiplicationOptions(answer);
+      questions.push({
+        q: `${a} × ${b} = ?`,
+        options: data.options,
+        correct: data.correct,
+        skill: 'tables 2 à 10',
+        subject: 'maths'
+      });
+    }
+  }
+  return shuffleHibouArray(questions);
+}
+
 const challengeCatalog = {
-  tables6: {id:'tables6', title:'Tables ×6', subject:'maths', reward:100, badge:'defi-tables6', badgeLabel:'🏆 Défi Tables ×6', questions:[
-    {q:'6 × 2 = ?', options:['12','14','10'], correct:0, skill:'tables'},
-    {q:'6 × 3 = ?', options:['18','16','20'], correct:0, skill:'tables'},
-    {q:'6 × 4 = ?', options:['22','24','26'], correct:1, skill:'tables'},
-    {q:'6 × 5 = ?', options:['30','35','25'], correct:0, skill:'tables'},
-    {q:'6 × 6 = ?', options:['42','36','30'], correct:1, skill:'tables'},
-    {q:'6 × 7 = ?', options:['42','40','48'], correct:0, skill:'tables'},
-    {q:'6 × 8 = ?', options:['46','48','54'], correct:1, skill:'tables'},
-    {q:'6 × 9 = ?', options:['54','56','63'], correct:0, skill:'tables'},
-    {q:'6 × 10 = ?', options:['60','66','56'], correct:0, skill:'tables'},
-    {q:'Combien font 3 paquets de 6 ?', options:['12','18','24'], correct:1, skill:'tables'}
-  ]},
+  tables2a10: {id:'tables2a10', title:'Méga défi : tables de 2 à 10', subject:'maths', reward:300, badge:'defi-tables-2-10', badgeLabel:'🏆 Maître des tables de 2 à 10', questions: makeAllTablesChallengeQuestions()},
   nomCommun: {id:'nomCommun', title:'Nom commun', subject:'francais', reward:100, badge:'defi-nom-commun', badgeLabel:'🏆 Défi Nom commun', questions:null},
   systemeSolaire: {id:'systemeSolaire', title:'Système solaire', subject:'sciences', reward:100, badge:'defi-systeme-solaire', badgeLabel:'🏆 Défi Système solaire', questions:null},
   france: {id:'france', title:'Géographie : la France', subject:'geographie', reward:100, badge:'defi-france', badgeLabel:'🏆 Défi France', questions:null}
@@ -891,6 +937,7 @@ function startRemediationQuiz(subject, skill) {
 
 function renderTeacherDashboard() {
   renderTeacherChallenge();
+  renderTeacherSafetyPanel();
   const content = document.getElementById('teacherDashboardContent');
   const roster = JSON.parse(localStorage.getItem('hibou_roster') || '[]');
   if (!content) return;
@@ -944,7 +991,8 @@ function renderTeacherDashboard() {
 function exportTeacherCSV() {
   const roster = JSON.parse(localStorage.getItem('hibou_roster') || '[]');
   const students = roster.map(getStudentData);
-  const lines = [['Eleve','Score','Niveau','Nombre de badges','Taux reussite','Alerte','Competences a travailler','Conseil','Badges','Derniere activite']];
+  const blockedLogs = JSON.parse(localStorage.getItem('hibou_blocked_log') || '[]');
+  const lines = [['Eleve','Score','Niveau','Nombre de badges','Taux reussite','Alerte','Competences a travailler','Conseil','Questions bloquees','Badges','Derniere activite']];
   students.forEach(s => {
     const a = analyzeStudentSkills(s.skills);
     const weakText = (a.weak.length ? a.weak : a.watch).map(x => `${x.skill} ${x.pct}%`).join(' | ');
@@ -957,6 +1005,7 @@ function exportTeacherCSV() {
       a.alert,
       weakText,
       teacherAdviceFor(a),
+      blockedLogs.filter(l => String(l.student).toLowerCase() === String(s.name).toLowerCase()).length,
       s.badges.join('|'),
       s.history[0] ? `${s.history[0].type} ${s.history[0].date}` : ''
     ]);
@@ -1180,7 +1229,15 @@ function startLocalQuiz(subject, title, questions=null, isChallenge=false) {
   container.appendChild(div); container.scrollTop = container.scrollHeight; quizContainer = document.getElementById('quizBox');
   renderRulesAndStart();
 }
-function getActiveChallenge() { return JSON.parse(localStorage.getItem(MASTER_CHALLENGE_KEY) || 'null'); }
+function getActiveChallenge() {
+  const c = JSON.parse(localStorage.getItem(MASTER_CHALLENGE_KEY) || 'null');
+  if (c && c.id === 'tables6') {
+    const upgraded = challengeCatalog.tables2a10;
+    localStorage.setItem(MASTER_CHALLENGE_KEY, JSON.stringify({id:upgraded.id, title:upgraded.title, subject:upgraded.subject, reward:upgraded.reward, badge:upgraded.badge, badgeLabel:upgraded.badgeLabel, activeAt:new Date().toLocaleDateString('fr-FR')}));
+    return JSON.parse(localStorage.getItem(MASTER_CHALLENGE_KEY));
+  }
+  return c;
+}
 function setActiveChallenge(id) {
   const c = challengeCatalog[id]; if (!c) return;
   localStorage.setItem(MASTER_CHALLENGE_KEY, JSON.stringify({id:c.id, title:c.title, subject:c.subject, reward:c.reward, badge:c.badge, badgeLabel:c.badgeLabel, activeAt:new Date().toLocaleDateString('fr-FR')}));
@@ -1193,7 +1250,7 @@ function renderMasterChallengeCard() {
   if (!c) { card.style.display='none'; return; }
   card.style.display='block';
   const done = badges && badges.includes(c.badge);
-  card.innerHTML = `<h3>🏆 Défi du maître</h3><p>${escapeHTML(c.title)}</p><p>Récompense : +${c.reward} points et un badge spécial.</p><div class="challenge-actions"><button class="challenge-btn" onclick="startActiveChallenge()">${done ? '✅ Refaire le défi' : '🚀 Commencer le défi'}</button><button class="challenge-btn secondary" onclick="renderStudentProgressPanel()">📊 Voir mes progrès</button></div>`;
+  card.innerHTML = `<h3>🏆 Défi du maître</h3><p>${escapeHTML(c.title)}</p><p>${c.id === 'tables2a10' ? 'Objectif : réussir les 81 calculs des tables de 2 à 10 sans erreur au premier essai.' : 'Réussis le défi proposé.'}</p><p>Récompense : +${c.reward} points et un badge spécial.</p><div class="challenge-actions"><button class="challenge-btn" onclick="startActiveChallenge()">${done ? '✅ Refaire le défi' : '🚀 Commencer le défi'}</button><button class="challenge-btn secondary" onclick="renderStudentProgressPanel()">📊 Voir mes progrès</button></div>`;
 }
 function startActiveChallenge() {
   const c = getActiveChallenge(); if (!c) return;
@@ -1203,7 +1260,7 @@ function startActiveChallenge() {
 function renderTeacherChallenge() {
   const box = document.getElementById('teacherChallengeContent'); if (!box) return;
   const active = getActiveChallenge();
-  box.innerHTML = `<div class="teacher-section"><h3>🏆 Défi du maître</h3><div class="teacher-form-row"><select class="teacher-select" id="challengeSelect"><option value="tables6">Tables ×6</option><option value="nomCommun">Nom commun</option><option value="systemeSolaire">Système solaire</option><option value="france">Géographie : la France</option></select><button class="teacher-btn" onclick="setActiveChallenge(document.getElementById('challengeSelect').value)">Activer</button><button class="teacher-btn secondary" onclick="clearActiveChallenge()">Désactiver</button></div><div class="teacher-small">Défi actif : <strong>${active ? escapeHTML(active.title) + ' (+ ' + active.reward + ' pts)' : 'aucun'}</strong></div></div>`;
+  box.innerHTML = `<div class="teacher-section"><h3>🏆 Défi du maître</h3><div class="teacher-form-row"><select class="teacher-select" id="challengeSelect"><option value="tables2a10">Méga défi : tables de 2 à 10</option><option value="nomCommun">Nom commun</option><option value="systemeSolaire">Système solaire</option><option value="france">Géographie : la France</option></select><button class="teacher-btn" onclick="setActiveChallenge(document.getElementById('challengeSelect').value)">Activer</button><button class="teacher-btn secondary" onclick="clearActiveChallenge()">Désactiver</button></div><div class="teacher-small">Défi actif : <strong>${active ? escapeHTML(active.title) + ' (+ ' + active.reward + ' pts)' : 'aucun'}</strong></div></div>`;
 }
 function showLocalQuizMenu() {
   const container = document.getElementById('chatContainer');
@@ -1433,7 +1490,7 @@ function speak(text) {
   window.speechSynthesis.speak(utterance);
 }
 
-const SYSTEM_PROMPT = `Tu es Maître Hibou 🦉, un professeur virtuel pour élèves de CE2 (8-9 ans). Réponds en français simple, avec bienveillance et tutoiement. Reste dans un cadre scolaire primaire : français, maths, sciences, géographie, anglais, lecture, écriture, méthodes de travail et culture générale adaptée aux enfants. Si la question sort du cadre CE2 ou semble inadaptée, réponds gentiment que tu préfères revenir à un sujet d'école. Donne des réponses courtes, claires, structurées. Termine impérativement tes réponses explicatives de tchat par [QUIZ_DISPONIBLE]`;
+const SYSTEM_PROMPT = `Tu es Maître Hibou 🦉, un professeur virtuel pour élèves de CE2 (8-9 ans). Sécurité prioritaire : tu réponds uniquement à des demandes scolaires adaptées à des enfants de CE2. Domaines autorisés : maths, français, lecture, écriture, sciences simples, géographie, anglais, méthodes de travail, culture générale enfantine non sensible. Tu refuses gentiment toute demande violente, sexuelle, dangereuse, politique, religieuse, médicale, personnelle, adulte, choquante, illégale ou hors école primaire. Tu ne donnes jamais de mode d'emploi dangereux, jamais de contenu choquant, jamais de conseil médical/juridique, jamais de données personnelles. Si la demande est inadaptée, réponds : "Je préfère rester sur des sujets adaptés à l'école primaire. Choisis maths, français, sciences, géographie ou anglais. 🦉". Réponds en français simple, avec bienveillance et tutoiement. Donne des réponses courtes, claires, structurées. Termine impérativement tes réponses explicatives autorisées par [QUIZ_DISPONIBLE]`;
 
 function selectSubject(btn, subject) {
   document.querySelectorAll('.subject-btn').forEach(b => b.classList.remove('active'));
@@ -1520,13 +1577,114 @@ function showTyping() {
 
 function removeTyping() { const el = document.getElementById('typingIndicator'); if (el) el.remove(); }
 
-function isMessageAllowedForCE2(message) {
-  const blocked = [
-    'sexe','porn','drogue','cannabis','alcool','meurtre','tuer','suicide','arme','bombe',
-    'politique','président','religion','pari','casino','violent','sang'
-  ];
-  const text = message.toLowerCase();
-  return !blocked.some(word => text.includes(word));
+
+// === V3 Phase 3.4 : garde-fous CE2 ===
+const CE2_SECURITY = {
+  blockedCategories: [
+    {cat:'contenu adulte', words:['sexe','sexuel','porn','porno','nu','nue','embrasser avec la langue']},
+    {cat:'violence / danger', words:['tuer','meurtre','assassiner','sang','torture','arme','pistolet','fusil','couteau','bombe','explosif','poison','brûler','etrangler','étrangler']},
+    {cat:'automutilation', words:['suicide','me suicider','se suicider','mourir volontairement','me faire du mal']},
+    {cat:'drogue / alcool', words:['drogue','cannabis','cocaine','cocaïne','alcool','ivresse','joint','vape','cigarette']},
+    {cat:'piratage / illégal', words:['pirater','hack','hacker','mot de passe','voler un compte','tricher à un contrôle','arnaque']},
+    {cat:'politique / religion', words:['politique','président','élection','parti politique','religion','dieu','allah','jésus','juif','musulman','chrétien']},
+    {cat:'santé / vie privée', words:['médicament','maladie grave','diagnostic','dépression','adresse','numéro de téléphone','secret de famille']},
+    {cat:'insultes', words:['insulte','gros mot','con','connard','salope','putain','merde','fdp']}
+  ],
+  allowedKeywords: [
+    'math','maths','calcul','addition','soustraction','multiplication','division','table','nombre','problème','géométrie','mesure','fraction',
+    'français','grammaire','conjugaison','orthographe','lecture','écriture','dictée','nom commun','verbe','adjectif','phrase','sujet','accord',
+    'science','sciences','plante','animal','corps','squelette','système solaire','terre','soleil','lune','eau','matière',
+    'géographie','geographie','france','carte','fleuve','montagne','ville','région','pays','europe','continent',
+    'anglais','english','couleur','colors','hello','number','school','se présenter',
+    'ce2','école','ecole','classe','élève','eleve','devoir','exercice','quiz','révision','réviser','explique','aide-moi','apprendre'
+  ]
+};
+
+function getSecurityMode(){ return localStorage.getItem('hibou_security_mode') || 'strict'; }
+function setSecurityMode(mode){ localStorage.setItem('hibou_security_mode', mode); renderTeacherSafetyPanel(); }
+function isAiDisabled(){ return localStorage.getItem('hibou_ai_disabled') === '1'; }
+function setAiDisabled(value){ localStorage.setItem('hibou_ai_disabled', value ? '1' : '0'); renderTeacherSafetyPanel(); }
+
+function normalizeTextCE2(text){
+  return String(text || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+}
+function categoryMatch(text){
+  const normalized = normalizeTextCE2(text);
+  for (const group of CE2_SECURITY.blockedCategories) {
+    for (const word of group.words) {
+      if (normalized.includes(normalizeTextCE2(word))) return group.cat;
+    }
+  }
+  return null;
+}
+function hasAllowedSchoolTopic(text){
+  const normalized = normalizeTextCE2(text);
+  return CE2_SECURITY.allowedKeywords.some(word => normalized.includes(normalizeTextCE2(word)));
+}
+function analyzeQuestionForCE2(message){
+  const mode = getSecurityMode();
+  const category = categoryMatch(message);
+  if (category) return {allowed:false, category, reason:'mot ou thème sensible détecté'};
+  if (mode === 'strict' && !hasAllowedSchoolTopic(message)) {
+    return {allowed:false, category:'hors cadre CE2', reason:'question trop éloignée des matières scolaires'};
+  }
+  return {allowed:true, category:'autorisé', reason:'cadre scolaire'};
+}
+function isMessageAllowedForCE2(message) { return analyzeQuestionForCE2(message).allowed; }
+function safeRefusalMessage(){
+  return "Je préfère rester sur des sujets adaptés à l'école primaire : maths, français, sciences, géographie, anglais ou lecture. Choisis une matière et je t'aide avec plaisir ! 🦉";
+}
+function localOnlyMessage(){
+  return 'Le mode "banque locale uniquement" est activé. Je ne contacte pas l'IA. Tu peux utiliser les quiz locaux, les défis, les tables de multiplication, le nom commun et les révisions CE2. 🦉';
+}
+function logBlockedQuestion(question, category, reason){
+  const logs = JSON.parse(localStorage.getItem('hibou_blocked_log') || '[]');
+  logs.unshift({
+    date:new Date().toLocaleString('fr-FR'),
+    student:prenomActuel || 'Élève non identifié',
+    question:String(question).slice(0,180),
+    category:category || 'inconnu',
+    reason:reason || ''
+  });
+  localStorage.setItem('hibou_blocked_log', JSON.stringify(logs.slice(0,80)));
+}
+function clearBlockedLog(){
+  if (!confirm('Effacer le journal des questions bloquées ?')) return;
+  localStorage.removeItem('hibou_blocked_log');
+  renderTeacherSafetyPanel();
+}
+function isResponseSafeForCE2(response){
+  return !categoryMatch(response);
+}
+function renderTeacherSafetyPanel(){
+  const box = document.getElementById('teacherSafetyContent');
+  if (!box) return;
+  const mode = getSecurityMode();
+  const aiOff = isAiDisabled();
+  const logs = JSON.parse(localStorage.getItem('hibou_blocked_log') || '[]');
+  const modeLabel = mode === 'local' || aiOff ? 'Banque locale uniquement' : (mode === 'strict' ? 'Strict CE2' : 'Normal');
+  const modeClass = mode === 'local' || aiOff ? 'local' : (mode === 'strict' ? 'strict' : 'normal');
+  box.innerHTML = `
+    <div class="teacher-section security-panel">
+      <h3>🛡️ Sécurité CE2</h3>
+      <div class="security-grid">
+        <div class="security-card"><strong>Mode actuel</strong><br><span class="security-status ${modeClass}">${modeLabel}</span></div>
+        <div class="security-card"><strong>Questions bloquées</strong><br>${logs.length}</div>
+        <div class="security-card"><strong>IA Groq/Grok</strong><br>${aiOff || mode === 'local' ? 'Désactivée' : 'Autorisée avec filtres'}</div>
+      </div>
+      <div class="security-toggle-row">
+        <button class="teacher-btn secondary" onclick="setSecurityMode('normal')">Mode normal</button>
+        <button class="teacher-btn" onclick="setSecurityMode('strict')">Mode strict CE2</button>
+        <button class="teacher-btn" onclick="setSecurityMode('local'); setAiDisabled(true)">Banque locale uniquement</button>
+        <button class="teacher-btn secondary" onclick="setAiDisabled(false); if(getSecurityMode()==='local') setSecurityMode('strict')">Réactiver IA filtrée</button>
+        <button class="teacher-btn danger" onclick="clearBlockedLog()">Effacer journal</button>
+      </div>
+      <div class="teacher-small">Recommandation classe : <strong>Mode strict CE2</strong>. Pour une autonomie totale sur tablette, utiliser <strong>Banque locale uniquement</strong>.</div>
+      <div class="blocked-log">
+        <strong>Dernières questions bloquées</strong>
+        ${logs.length ? logs.slice(0,12).map(l => `<div class="blocked-item"><strong>${escapeHTML(l.student)}</strong> — ${escapeHTML(l.category)} — ${escapeHTML(l.date)}<br>« ${escapeHTML(l.question)} »<br><span style="color:var(--text-muted)">${escapeHTML(l.reason)}</span></div>`).join('') : '<div class="blocked-item">Aucune question bloquée pour le moment.</div>'}
+      </div>
+    </div>`;
 }
 
 async function askGemini(userMessage) {
@@ -1550,6 +1708,10 @@ async function askGemini(userMessage) {
       }
     }
     const reply = data.choices[0].message.content;
+    if (!isResponseSafeForCE2(reply)) {
+      logBlockedQuestion(userMessage, 'réponse IA filtrée', 'la réponse contenait un thème sensible');
+      return safeRefusalMessage();
+    }
     conversationHistory.push({ role: 'assistant', content: reply });
     return reply;
   } catch (err) {
@@ -1561,14 +1723,24 @@ async function sendMessage() {
   const input = document.getElementById('userInput');
   const text = input.value.trim();
   if (!text) return;
-  if (!GROQ_KEY) { document.getElementById('modalOverlay').classList.remove('hidden'); return; }
-  if (!isMessageAllowedForCE2(text)) {
+  const security = analyzeQuestionForCE2(text);
+  if (!security.allowed) {
     addMessage('user', text);
-    addMessage('prof', "Je préfère rester sur des sujets adaptés à l'école primaire : maths, français, sciences, géographie, anglais ou lecture. Choisis une matière et je t'aide avec plaisir ! 🦉");
+    logBlockedQuestion(text, security.category, security.reason);
+    addMessage('prof', safeRefusalMessage());
     input.value = '';
     input.style.height = 'auto';
     return;
   }
+  if (isAiDisabled() || getSecurityMode() === 'local') {
+    addMessage('user', text);
+    addMessage('prof', localOnlyMessage());
+    logActivity('Mode local uniquement', 0, text.slice(0,80));
+    input.value = '';
+    input.style.height = 'auto';
+    return;
+  }
+  if (!GROQ_KEY) { document.getElementById('modalOverlay').classList.remove('hidden'); return; }
 
   input.value = '';
   input.style.height = 'auto';

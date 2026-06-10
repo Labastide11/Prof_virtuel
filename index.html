@@ -716,8 +716,14 @@ function makeAllTablesChallengeQuestions() {
   return shuffleHibouArray(questions);
 }
 
+function makeTablesChallenge20Questions() {
+  // Les tables 2 à 10 contiennent 81 combinaisons possibles.
+  // Pour un vrai défi CE2 faisable sur tablette, on tire 20 calculs au hasard.
+  return makeAllTablesChallengeQuestions().slice(0, 20);
+}
+
 const challengeCatalog = {
-  tables2a10: {id:'tables2a10', title:'Méga défi : tables de 2 à 10', subject:'maths', reward:300, badge:'defi-tables-2-10', badgeLabel:'🏆 Maître des tables de 2 à 10', questions: makeAllTablesChallengeQuestions()},
+  tables2a10: {id:'tables2a10', title:'Méga défi : tables de 2 à 10', subject:'maths', reward:300, badge:'defi-tables-2-10', badgeLabel:'🏆 Maître des tables de 2 à 10', questions: makeTablesChallenge20Questions()},
   nomCommun: {id:'nomCommun', title:'Nom commun', subject:'francais', reward:100, badge:'defi-nom-commun', badgeLabel:'🏆 Défi Nom commun', questions:null},
   systemeSolaire: {id:'systemeSolaire', title:'Système solaire', subject:'sciences', reward:100, badge:'defi-systeme-solaire', badgeLabel:'🏆 Défi Système solaire', questions:null},
   france: {id:'france', title:'Géographie : la France', subject:'geographie', reward:100, badge:'defi-france', badgeLabel:'🏆 Défi France', questions:null}
@@ -1312,38 +1318,67 @@ function startLocalQuiz(subject, title, questions=null, isChallenge=false) {
   container.appendChild(div); container.scrollTop = container.scrollHeight; quizContainer = document.getElementById('quizBox');
   renderRulesAndStart();
 }
-function getActiveChallenge() {
-  const c = JSON.parse(localStorage.getItem(MASTER_CHALLENGE_KEY) || 'null');
-  if (c && c.id === 'tables6') {
+function buildChallengeStorageObject(c) {
+  return {id:c.id, title:c.title, subject:c.subject, reward:c.reward, badge:c.badge, badgeLabel:c.badgeLabel, activeAt:new Date().toLocaleDateString('fr-FR')};
+}
+
+function ensureDefaultMasterChallenge() {
+  let c = null;
+  try { c = JSON.parse(localStorage.getItem(MASTER_CHALLENGE_KEY) || 'null'); } catch(e) { c = null; }
+  if (!c || !challengeCatalog[c.id]) {
+    const def = challengeCatalog.tables2a10;
+    localStorage.setItem(MASTER_CHALLENGE_KEY, JSON.stringify(buildChallengeStorageObject(def)));
+    return buildChallengeStorageObject(def);
+  }
+  if (c.id === 'tables6') {
     const upgraded = challengeCatalog.tables2a10;
-    localStorage.setItem(MASTER_CHALLENGE_KEY, JSON.stringify({id:upgraded.id, title:upgraded.title, subject:upgraded.subject, reward:upgraded.reward, badge:upgraded.badge, badgeLabel:upgraded.badgeLabel, activeAt:new Date().toLocaleDateString('fr-FR')}));
-    return JSON.parse(localStorage.getItem(MASTER_CHALLENGE_KEY));
+    localStorage.setItem(MASTER_CHALLENGE_KEY, JSON.stringify(buildChallengeStorageObject(upgraded)));
+    return buildChallengeStorageObject(upgraded);
   }
   return c;
 }
+
+function getActiveChallenge() {
+  return ensureDefaultMasterChallenge();
+}
+
 function setActiveChallenge(id) {
   const c = challengeCatalog[id]; if (!c) return;
-  localStorage.setItem(MASTER_CHALLENGE_KEY, JSON.stringify({id:c.id, title:c.title, subject:c.subject, reward:c.reward, badge:c.badge, badgeLabel:c.badgeLabel, activeAt:new Date().toLocaleDateString('fr-FR')}));
+  localStorage.setItem(MASTER_CHALLENGE_KEY, JSON.stringify(buildChallengeStorageObject(c)));
   renderTeacherChallenge(); renderMasterChallengeCard();
 }
-function clearActiveChallenge() { localStorage.removeItem(MASTER_CHALLENGE_KEY); renderTeacherChallenge(); renderMasterChallengeCard(); }
+
+function clearActiveChallenge() {
+  localStorage.removeItem(MASTER_CHALLENGE_KEY);
+  renderTeacherChallenge(); renderMasterChallengeCard();
+}
+
 function renderMasterChallengeCard() {
   const card = document.getElementById('masterChallengeCard'); if (!card) return;
   const c = getActiveChallenge();
   if (!c) { card.style.display='none'; return; }
   card.style.display='block';
   const done = badges && badges.includes(c.badge);
-  card.innerHTML = `<h3>🏆 Défi du maître</h3><p>${escapeHTML(c.title)}</p><p>${c.id === 'tables2a10' ? 'Objectif : réussir les 81 calculs des tables de 2 à 10 sans erreur au premier essai.' : 'Réussis le défi proposé.'}</p><p>Récompense : +${c.reward} points et un badge spécial.</p><div class="challenge-actions"><button class="challenge-btn" onclick="startActiveChallenge()">${done ? '✅ Refaire le défi' : '🚀 Commencer le défi'}</button><button class="challenge-btn secondary" onclick="renderStudentProgressPanel()">📊 Voir mes progrès</button></div>`;
+  const objectif = c.id === 'tables2a10'
+    ? 'Objectif : réussir 20 calculs tirés au hasard dans les tables de 2 à 10.'
+    : 'Réussis le défi proposé.';
+  card.innerHTML = `<h3>🏆 Défi du maître</h3><p>${escapeHTML(c.title)}</p><p>${objectif}</p><p>Récompense : +${c.reward} points et un badge spécial.</p><div class="challenge-actions"><button type="button" class="challenge-btn" onclick="startActiveChallenge()">${done ? '✅ Refaire le défi' : '🚀 Commencer le défi'}</button><button type="button" class="challenge-btn secondary" onclick="renderStudentProgressPanel()">📊 Voir mes progrès</button></div>`;
 }
+
 function startActiveChallenge() {
-  const c = getActiveChallenge(); if (!c) return;
-  const catalog = challengeCatalog[c.id]; if (!catalog) return;
-  startLocalQuiz(c.subject, '🏆 Défi du maître : ' + c.title, catalog.questions, true);
+  const c = getActiveChallenge();
+  if (!c) { alert('Aucun défi actif.'); return; }
+  const catalog = challengeCatalog[c.id];
+  if (!catalog) { alert('Défi introuvable.'); return; }
+  let questions = catalog.questions || [];
+  if (c.id === 'tables2a10') questions = makeTablesChallenge20Questions();
+  if (!questions.length) questions = getLocalQuestions(catalog.subject || c.subject || 'maths', 10);
+  startLocalQuiz(catalog.subject || c.subject || 'maths', '🏆 Défi du maître : ' + c.title, questions, true);
 }
 function renderTeacherChallenge() {
   const box = document.getElementById('teacherChallengeContent'); if (!box) return;
   const active = getActiveChallenge();
-  box.innerHTML = `<div class="teacher-section"><h3>🏆 Défi du maître</h3><div class="teacher-form-row"><select class="teacher-select" id="challengeSelect"><option value="tables2a10">Méga défi : tables de 2 à 10</option><option value="nomCommun">Nom commun</option><option value="systemeSolaire">Système solaire</option><option value="france">Géographie : la France</option></select><button class="teacher-btn" onclick="setActiveChallenge(document.getElementById('challengeSelect').value)">Activer</button><button class="teacher-btn secondary" onclick="clearActiveChallenge()">Désactiver</button></div><div class="teacher-small">Défi actif : <strong>${active ? escapeHTML(active.title) + ' (+ ' + active.reward + ' pts)' : 'aucun'}</strong></div></div>`;
+  box.innerHTML = `<div class="teacher-section"><h3>🏆 Défi du maître</h3><div class="teacher-form-row"><select class="teacher-select" id="challengeSelect"><option value="tables2a10">Méga défi : 20 calculs tables 2 à 10</option><option value="nomCommun">Nom commun</option><option value="systemeSolaire">Système solaire</option><option value="france">Géographie : la France</option></select><button class="teacher-btn" onclick="setActiveChallenge(document.getElementById('challengeSelect').value)">Activer</button><button class="teacher-btn secondary" onclick="clearActiveChallenge()">Désactiver</button></div><div class="teacher-small">Défi actif : <strong>${active ? escapeHTML(active.title) + ' (+ ' + active.reward + ' pts)' : 'aucun'}</strong></div></div>`;
 }
 function showLocalQuizMenu() {
   const container = document.getElementById('chatContainer');

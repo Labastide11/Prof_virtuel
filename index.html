@@ -1881,13 +1881,123 @@ const devinettesHibouCE2 = [
   {q:"Je suis rusé dans les contes et j’ai souvent une queue rousse. Qui suis-je ?", options:["Le renard","Le loup","Le hérisson"], correct:0, skill:"devinettes"}
 ];
 
+let devinettesSession = [];
+let devinetteIndex = 0;
+let devinetteScore = 0;
+let devinetteContainer = null;
+
+function melangerOptionsDevinette(question) {
+  const options = question.options.map((texte, index) => ({ texte, originalIndex: index }));
+  options.sort(() => Math.random() - 0.5);
+  return {
+    ...question,
+    options: options.map(o => o.texte),
+    correct: options.findIndex(o => o.originalIndex === question.correct)
+  };
+}
+
 function startDevinettesHibou() {
-  const questions = devinettesHibouCE2
+  if (window.hibouQuizInProgress) {
+    const active = document.querySelector('.quiz-container.active-quiz');
+    if (active) active.scrollIntoView({behavior:'smooth', block:'center'});
+    speak("Une activité est déjà en cours. Termine-la avant d'en lancer une autre.");
+    return;
+  }
+
+  devinettesSession = devinettesHibouCE2
     .slice()
     .sort(() => Math.random() - 0.5)
-    .slice(0, 10);
-  startLocalQuiz('jeux', '🧩 Devinettes du Hibou — 10 devinettes CE2', questions, false);
+    .slice(0, 10)
+    .map(melangerOptionsDevinette);
+
+  devinetteIndex = 0;
+  devinetteScore = 0;
+  window.hibouQuizInProgress = true;
+
+  const container = document.getElementById('chatContainer');
+  const div = document.createElement('div');
+  div.className = 'message prof active-quiz-message';
+  div.innerHTML = `<div class="avatar prof">🦉</div><div class="bubble"><strong>🧩 Devinettes du Hibou</strong><br><span style="font-size:12px;color:var(--text-muted);font-weight:800;">Lis la devinette et choisis parmi les 3 réponses. C'est un jeu local, sans IA.</span><div class="quiz-container active-quiz" id="devinettesBox"></div></div>`;
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+  devinetteContainer = div.querySelector('#devinettesBox');
+
   logActivity('Devinettes du Hibou', 0, 'Activité locale CE2');
+  renderDevinetteQuestion();
+}
+
+function renderDevinetteQuestion() {
+  if (!devinetteContainer || !devinettesSession.length) return;
+  const q = devinettesSession[devinetteIndex];
+  devinetteContainer.innerHTML = `
+    <div class="quiz-progress">Devinette ${devinetteIndex + 1} / ${devinettesSession.length} 🦉</div>
+    <div class="quiz-question" style="font-size:16px;">🤔 ${escapeHTML(q.q)}</div>
+    <div class="quiz-options">
+      ${q.options.map((opt, i) => `<button class="quiz-option" onclick="answerDevinetteHibou(${i})">${escapeHTML(opt)}</button>`).join('')}
+    </div>
+    <div id="devinetteFeedback" class="wq-result" style="display:none;"></div>
+  `;
+}
+
+function answerDevinetteHibou(selectedIndex) {
+  const q = devinettesSession[devinetteIndex];
+  const buttons = devinetteContainer.querySelectorAll('.quiz-option');
+  const feedback = devinetteContainer.querySelector('#devinetteFeedback');
+
+  buttons.forEach((btn, i) => {
+    btn.disabled = true;
+    if (i === q.correct) btn.classList.add('correct');
+    else if (i === selectedIndex) btn.classList.add('wrong');
+  });
+
+  if (selectedIndex === q.correct) {
+    devinetteScore++;
+    addScore(10, 'devinettes');
+    if (feedback) {
+      feedback.innerHTML = '✅ Bravo ! Tu as trouvé la bonne réponse. +10 pts';
+      feedback.style.color = 'var(--green)';
+      feedback.style.display = 'block';
+    }
+    speak('Bravo ! Bonne réponse !');
+  } else {
+    if (feedback) {
+      feedback.innerHTML = `❌ Pas cette fois. La bonne réponse était : <strong>${escapeHTML(q.options[q.correct])}</strong>.`;
+      feedback.style.color = 'var(--secondary)';
+      feedback.style.display = 'block';
+    }
+    speak('Dommage ! Regarde la bonne réponse en vert.');
+  }
+
+  setTimeout(() => {
+    devinetteIndex++;
+    if (devinetteIndex < devinettesSession.length) {
+      renderDevinetteQuestion();
+    } else {
+      showDevinettesResult();
+    }
+  }, 1700);
+}
+
+function showDevinettesResult() {
+  window.hibouQuizInProgress = false;
+  if (!devinetteContainer) return;
+  let message = 'Bien joué ! Tu as terminé les devinettes du Hibou.';
+  if (devinetteScore >= 9) message = 'Excellent ! Tu es un vrai détective des devinettes !';
+  else if (devinetteScore >= 7) message = 'Très bien ! Tu as bien réfléchi.';
+  else if (devinetteScore >= 5) message = 'Pas mal ! Continue à t’entraîner.';
+  else message = 'Continue, les devinettes demandent de l’attention.';
+
+  checkBadges('devinettes');
+  devinetteContainer.innerHTML = `
+    <div class="quiz-result">
+      <div class="stars" style="font-size:26px; margin-bottom:8px;">🧩🦉✨</div>
+      <div style="font-size:17px; margin-bottom:10px; color:var(--text); line-height:1.4; font-weight:900;">${message}</div>
+      <div class="score-recap-box">
+        <div class="score-recap-row"><span>🧩 Devinettes réussies :</span><span style="color:var(--primary);font-weight:900;">${devinetteScore} / ${devinettesSession.length}</span></div>
+        <div class="score-recap-row"><span>🏆 Points gagnés :</span><span style="color:var(--green);font-weight:900;">+${devinetteScore * 10} pts</span></div>
+      </div>
+      <button class="quiz-trigger-btn" onclick="startDevinettesHibou()">🧩 Rejouer avec 10 autres devinettes</button>
+    </div>`;
 }
 
 function updateQuickQuestions(subject) {

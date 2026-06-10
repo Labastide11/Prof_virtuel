@@ -485,7 +485,9 @@ animation:pop .25s ease-out;
   text-align:center;font-weight:900;color:var(--primary);box-shadow:var(--shadow);font-size:13px;padding:8px;
 }
 .review-wheel.spin{transform:rotate(1480deg);}
-.review-wheel-labels{display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:12px;font-weight:900;color:var(--text);margin-top:8px;}
+ .review-wheel-labels{display:grid;grid-template-columns:repeat(auto-fit,minmax(95px,1fr));gap:6px;font-size:12px;font-weight:900;color:var(--text);margin-top:8px;align-items:center;}
+.wheel-legend-item{display:flex;align-items:center;justify-content:center;gap:6px;background:#fff;border:2px solid #ECEBF3;border-radius:12px;padding:6px 8px;}
+.wheel-color{width:16px;height:16px;border-radius:5px;display:inline-block;border:2px solid rgba(45,43,85,.14);flex-shrink:0;}
 .review-launch-btn{background:var(--primary);color:white;border:none;border-radius:14px;padding:10px 14px;font-weight:900;font-family:inherit;cursor:pointer;box-shadow:0 6px 16px rgba(108,99,255,.25);}
 .review-launch-btn:disabled{opacity:.65;cursor:not-allowed;}
 .review-wheel-result{font-weight:900;color:var(--primary);min-height:22px;margin-top:6px;}
@@ -1539,7 +1541,13 @@ function showReviewWheel() {
   const container = document.getElementById('chatContainer');
   const div = document.createElement('div');
   div.className = 'message prof';
-  div.innerHTML = `<div class="avatar prof">🦉</div><div class="bubble"><strong>🎡 Roue du Hibou</strong><br><span style="font-size:12px;color:var(--text-muted);font-weight:800;">La roue lance un Défi Express : 2 maths, 2 français, 1 sciences. Fonctionne avec la banque locale, sans IA.</span><div class="review-wheel-box"><div class="review-wheel-wrap"><div class="review-pointer">🔻</div><div class="review-wheel" id="reviewWheel"><div class="review-wheel-center">Défi<br>Express</div></div></div><div class="review-wheel-labels"><span>🟨 Maths</span><span>🟪 Français</span><span>🟩 Sciences</span><span>🟦 Surprise</span></div><button class="review-launch-btn" id="reviewWheelBtn" onclick="spinReviewWheel()">🎡 Faire tourner la roue</button><div class="review-wheel-result" id="reviewWheelResult"></div></div></div>`;
+  div.innerHTML = `<div class="avatar prof">🦉</div><div class="bubble"><strong>🎡 Roue du Hibou</strong><br><span style="font-size:12px;color:var(--text-muted);font-weight:800;">La roue lance un Défi Express avec la banque locale, sans IA. Les couleurs indiquent les matières possibles.</span><div class="review-wheel-box"><div class="review-wheel-wrap"><div class="review-pointer">🔻</div><div class="review-wheel" id="reviewWheel"><div class="review-wheel-center">Défi<br>Express</div></div></div><div class="review-wheel-labels">
+  <span class="wheel-legend-item"><span class="wheel-color" style="background:#FFD93D"></span>Maths</span>
+  <span class="wheel-legend-item"><span class="wheel-color" style="background:#EAE8FF"></span>Français</span>
+  <span class="wheel-legend-item"><span class="wheel-color" style="background:#6BCB77"></span>Sciences</span>
+  <span class="wheel-legend-item"><span class="wheel-color" style="background:#FFEAEA"></span>Géographie</span>
+  <span class="wheel-legend-item"><span class="wheel-color" style="background:#DFF3FF"></span>Anglais</span>
+</div><button class="review-launch-btn" id="reviewWheelBtn" onclick="spinReviewWheel()">🎡 Faire tourner la roue</button><div class="review-wheel-result" id="reviewWheelResult"></div></div></div>`;
   container.appendChild(div);
   container.scrollTop = container.scrollHeight;
 }

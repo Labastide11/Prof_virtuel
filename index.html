@@ -2091,7 +2091,7 @@ function addMessage(role, text) {
   if (hasQuiz) {
     const btn = document.createElement('button');
     btn.className = 'quiz-trigger-btn';
-    btn.textContent = '🎯 Faire le quiz !';
+    btn.textContent = '🎯  !';
     btn.onclick = function() { startQuiz(cleanText, btn); };
     div.querySelector('.bubble').appendChild(btn);
   }

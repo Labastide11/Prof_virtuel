@@ -487,16 +487,16 @@ animation:pop .25s ease-out;
   <button class="subject-btn" onclick="selectSubject(this, 'maths')" data-subject="maths">🔢 Maths</button>
   <button class="subject-btn" onclick="selectSubject(this, 'francais')" data-subject="francais">✍️ Français</button>
   <button class="subject-btn" onclick="selectSubject(this, 'sciences')" data-subject="sciences">💡 Sciences</button>
-  <button class="subject-btn" onclick="selectSubject(this, 'jeux')" data-subject="jeux">🎮 Jeux</button>
+  <button class="subject-btn" onclick="selectSubject(this, 'jeux')" data-subject="jeux">🌐 Jeux éducatifs sur Internet</button>
   <button class="subject-btn" onclick="selectSubject(this, 'geographie')" data-subject="geographie">🌍 Géo</button>
   <button class="subject-btn" onclick="selectSubject(this, 'anglais')" data-subject="anglais">🇬🇧 Anglais</button>
 </div>
 
 <div class="quick-questions" id="quickQuestions">
-  <button class="quick-btn" onclick="window.open('https://www.logicieleducatif.fr/jeu/tables-de-multiplication','_blank')">🧮 Tables de multiplication</button>
-  <button class="quick-btn" onclick="startNomCommun()">✍️ Nom commun</button>
   <button class="quick-btn" onclick="showLocalQuizMenu()">📚 Banque CE2 Phase 4</button>
-  <button class="quick-btn" onclick="window.open('https://www.logicieleducatif.fr/jeu/les-pays-d-europe','_blank')">🗺️ Géographie : la France</button>
+  <button class="quick-btn" onclick="startNomCommun()">✍️ Nom commun</button>
+  <button class="quick-btn" onclick="startLocalQuiz('maths','🧮 Quiz local Maths CE2')">🧮 Quiz Maths</button>
+  <button class="quick-btn" onclick="startLocalQuiz('geographie','🌍 Quiz local Géographie CE2')">🌍 Quiz Géographie</button>
   <button class="quick-btn" onclick="sendQuick('Explique-moi le système solaire pour un élève de CE2')">🪐 Système solaire</button>
 </div>
 
@@ -1574,45 +1574,47 @@ function updateQuickQuestions(subject) {
   if (!container) return;
   const sets = {
     'maths': `
-      <button class="quick-btn" onclick="window.open('https://www.logicieleducatif.fr/jeu/tables-de-multiplication','_blank')">🧮 Tables de multiplication</button>
+      <button class="quick-btn" onclick="startLocalQuiz('maths','🧮 Quiz local Maths CE2')">📚 Quiz local Maths</button>
       <button class="quick-btn" onclick="sendQuick('Explique-moi une multiplication posée en CE2')">✏️ Multiplication posée</button>
       <button class="quick-btn" onclick="sendQuick('Donne-moi un petit défi de calcul mental CE2')">⚡ Calcul mental</button>
-      <button class="quick-btn" onclick="startLocalQuiz('maths','🧮 Quiz local Maths CE2')">📚 Quiz local</button>
+      <button class="quick-btn" onclick="startMasterTablesChallenge()">🏆 Défi tables 2 à 10</button>
     `,
     'francais': `
       <button class="quick-btn" onclick="startNomCommun()">✍️ Nom commun</button>
       <button class="quick-btn" onclick="sendQuick('Explique-moi le verbe pour un CE2')">🏃 Le verbe</button>
       <button class="quick-btn" onclick="sendQuick('Aide-moi à écrire une histoire de super-héros')">🦸 Idées d'histoire</button>
-      <button class="quick-btn" onclick="startLocalQuiz('francais','✍️ Quiz local Français CE2')">📚 Quiz local</button>
+      <button class="quick-btn" onclick="startLocalQuiz('francais','✍️ Quiz local Français CE2')">📚 Quiz local Français</button>
     `,
     'sciences': `
       <button class="quick-btn" onclick="sendQuick('Comment poussent les plantes ?')">🌱 Les plantes</button>
       <button class="quick-btn" onclick="sendQuick('Explique-moi le système solaire pour un élève de CE2')">🪐 Système solaire</button>
       <button class="quick-btn" onclick="sendQuick('Explique-moi le squelette humain pour un CE2')">🦴 Le squelette</button>
-      <button class="quick-btn" onclick="startLocalQuiz('sciences','💡 Quiz local Sciences CE2')">📚 Quiz local</button>
+      <button class="quick-btn" onclick="startLocalQuiz('sciences','💡 Quiz local Sciences CE2')">📚 Quiz local Sciences</button>
     `,
     'geographie': `
-      <button class="quick-btn" onclick="window.open('https://www.logicieleducatif.fr/jeu/les-pays-d-europe','_blank')">🌍 Carte interactive</button>
       <button class="quick-btn" onclick="sendQuick('Explique-moi la France en géographie pour un CE2')">🗺️ La France</button>
       <button class="quick-btn" onclick="sendQuick('Explique-moi les montagnes et les fleuves de France pour un CE2')">⛰️ Reliefs et fleuves</button>
-      <button class="quick-btn" onclick="startLocalQuiz('geographie','🌍 Quiz local Géographie CE2')">📚 Quiz local</button>
+      <button class="quick-btn" onclick="startLocalQuiz('geographie','🌍 Quiz local Géographie CE2')">📚 Quiz local Géographie</button>
     `,
     'anglais': `
       <button class="quick-btn" onclick="sendQuick('Apprends-moi les couleurs en anglais niveau CE2')">🎨 Couleurs</button>
       <button class="quick-btn" onclick="sendQuick('Apprends-moi à me présenter en anglais niveau CE2')">👋 Se présenter</button>
       <button class="quick-btn" onclick="sendQuick('Fais-moi un mini quiz en anglais CE2')">🇬🇧 Mini quiz</button>
-      <button class="quick-btn" onclick="startLocalQuiz('anglais','🇬🇧 Quiz local Anglais CE2')">📚 Quiz local</button>
+      <button class="quick-btn" onclick="startLocalQuiz('anglais','🇬🇧 Quiz local Anglais CE2')">📚 Quiz local Anglais</button>
     `,
     'jeux': `
-      <button class="quick-btn" onclick="sendQuick('Propose-moi un jeu de révision CE2 en classe')">🎮 Jeu de révision</button>
-      <button class="quick-btn" onclick="sendQuick('Invente une devinette CE2')">🧩 Devinette</button>
-      <button class="quick-btn" onclick="sendQuick('Donne-moi un défi rapide de logique CE2')">🧠 Logique</button>
+      <button class="quick-btn" onclick="window.open('https://www.logicieleducatif.fr/jeu/tables-de-multiplication','_blank')">🌐 Tables de multiplication — Logiciel éducatif</button>
+      <button class="quick-btn" onclick="window.open('https://www.logicieleducatif.fr/jeu/les-pays-d-europe','_blank')">🌐 Carte France / Europe — Logiciel éducatif</button>
+      <button class="quick-btn" onclick="sendQuick('Propose-moi un jeu de révision CE2 en classe')">🎮 Jeu de révision dans Maître Hibou</button>
+      <button class="quick-btn" onclick="sendQuick('Invente une devinette CE2')">🧩 Devinette CE2</button>
+      <button class="quick-btn" onclick="sendQuick('Donne-moi un défi rapide de logique CE2')">🧠 Logique CE2</button>
     `
   };
   container.innerHTML = sets[cleanSubject] || `
-      <button class="quick-btn" onclick="window.open('https://www.logicieleducatif.fr/jeu/tables-de-multiplication','_blank')">🧮 Tables de multiplication</button>
+      <button class="quick-btn" onclick="showLocalQuizMenu()">📚 Banque CE2 Phase 4</button>
       <button class="quick-btn" onclick="startNomCommun()">✍️ Nom commun</button>
-      <button class="quick-btn" onclick="window.open('https://www.logicieleducatif.fr/jeu/les-pays-d-europe','_blank')">🗺️ Géographie : la France</button>
+      <button class="quick-btn" onclick="startLocalQuiz('maths','🧮 Quiz local Maths CE2')">🧮 Quiz Maths</button>
+      <button class="quick-btn" onclick="startLocalQuiz('geographie','🌍 Quiz local Géographie CE2')">🌍 Quiz Géographie</button>
       <button class="quick-btn" onclick="sendQuick('Explique-moi le système solaire pour un élève de CE2')">🪐 Système solaire</button>
     `;
 }

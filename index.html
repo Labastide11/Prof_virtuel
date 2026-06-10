@@ -529,7 +529,6 @@ animation:pop .25s ease-out;
 </div>
 
 <div class="master-challenge-card" id="masterChallengeCard"></div>
-<div class="class-motivation-panel" id="classMotivationPanel"></div>
 <div class="progress-panel" id="progressPanel"></div>
 <div class="diagnostic-panel" id="diagnosticPanel"></div>
 
@@ -1302,6 +1301,7 @@ let currentQuizScore = 0;
 let totalPointsEarnedThisSession = 0; 
 let quizContainer = null;
 let originalQuizLength = 0;
+let currentQuizIsChallenge = false;
 window.hibouQuizInProgress = false;
 
 
@@ -1327,6 +1327,7 @@ function startLocalQuiz(subject, title, questions=null, isChallenge=false) {
   currentQuizScore = 0;
   totalPointsEarnedThisSession = 0;
   originalQuizLength = currentQuizData.length;
+  currentQuizIsChallenge = !!isChallenge;
   window.hibouQuizInProgress = true;
 
   const container = document.getElementById('chatContainer');
@@ -1536,6 +1537,18 @@ async function startQuiz(topic, btnEl) {
 }
 
 function renderRulesAndStart() {
+  if (currentQuizIsChallenge) {
+    quizContainer.innerHTML = `
+      <div class="quiz-progress" style="font-size:14px; margin-bottom:10px;">🏆 Défi du maître : tables de 2 à 10</div>
+      <div class="rules-explainer">
+        <div>🎯 <strong>20 calculs</strong> tirés au hasard dans les tables de 2 à 10.</div>
+        <div>✅ <strong>Une seule réponse par question.</strong></div>
+        <div>📊 <strong>Pas de deuxième chance :</strong> le score final s'affiche à la fin.</div>
+      </div>
+      <button class="quiz-trigger-btn quiz-start-btn" style="width:100%; justify-content:center; padding:12px;" onclick="renderQuizQuestion()">Je commence le défi ! 🚀</button>
+    `;
+    return;
+  }
   quizContainer.innerHTML = `
     <div class="quiz-progress" style="font-size:14px; margin-bottom:10px;">📜 Les règles du Grand Quiz :</div>
     <div class="rules-explainer">
@@ -1543,7 +1556,7 @@ function renderRulesAndStart() {
       <div>🔄 <strong>Erreur ?</strong> La question revient à la fin pour t'aider à apprendre.</div>
       <div>💡 <strong>Réussie au rattrapage :</strong> +5 points !</div>
     </div>
-    <button class="quiz-trigger-btn" style="width:100%; justify-content:center; padding:12px;" onclick="renderQuizQuestion()" class="quiz-start-btn">C'est parti, je suis prêt ! 🚀</button>
+    <button class="quiz-trigger-btn quiz-start-btn" style="width:100%; justify-content:center; padding:12px;" onclick="renderQuizQuestion()">C'est parti, je suis prêt ! 🚀</button>
   `;
 }
 
@@ -1573,6 +1586,7 @@ function normalizeSubjectForStats(subject) {
 function answerQuiz(selectedIndex) {
   const q = currentQuizData[currentQuizIndex];
   const buttons = quizContainer.querySelectorAll('.quiz-option');
+  const isCorrect = selectedIndex === q.correct;
   
   buttons.forEach((btn, i) => {
     btn.disabled = true;
@@ -1581,9 +1595,11 @@ function answerQuiz(selectedIndex) {
   });
 
   const subjectForStats = q.subject || normalizeSubjectForStats(currentSubject);
-  recordSkillResult(subjectForStats, q.skill || 'général', selectedIndex === q.correct);
+  recordSkillResult(subjectForStats, q.skill || 'général', isCorrect);
 
-  if (selectedIndex === q.correct) {
+  if (currentQuizIsChallenge) {
+    if (isCorrect) currentQuizScore++;
+  } else if (isCorrect) {
     if (q.isRetry) {
       addScore(5, 'quiz rattrapage');
       totalPointsEarnedThisSession += 5;
@@ -1608,17 +1624,48 @@ function answerQuiz(selectedIndex) {
     } else {
       showQuizResult();
     }
-  }, 1200);
+  }, 900);
 }
 
 function showQuizResult() {
   const activeChallenge = getActiveChallenge();
-  const isChallengeRun = currentQuizData && currentQuizData.some(q => q.isChallenge);
-  if (isChallengeRun && activeChallenge && currentQuizScore === originalQuizLength && !badges.includes(activeChallenge.badge)) {
-    addScore(activeChallenge.reward, 'défi du maître');
-    unlockBadge(activeChallenge.badge, activeChallenge.badgeLabel);
-    totalPointsEarnedThisSession += activeChallenge.reward;
+  const isChallengeRun = currentQuizIsChallenge || (currentQuizData && currentQuizData.some(q => q.isChallenge));
+
+  if (isChallengeRun) {
+    const percent = originalQuizLength ? Math.round((currentQuizScore / originalQuizLength) * 100) : 0;
+    const pointsGagnes = currentQuizScore * 10;
+    if (pointsGagnes > 0) {
+      addScore(pointsGagnes, 'défi du maître');
+      totalPointsEarnedThisSession += pointsGagnes;
+    }
+    if (activeChallenge && currentQuizScore === originalQuizLength && !badges.includes(activeChallenge.badge)) {
+      addScore(activeChallenge.reward, 'défi du maître parfait');
+      unlockBadge(activeChallenge.badge, activeChallenge.badgeLabel);
+      totalPointsEarnedThisSession += activeChallenge.reward;
+    }
+
+    let appreciation = '💪 Continue à t’entraîner, tu progresses !';
+    if (currentQuizScore === originalQuizLength) appreciation = '🏆 Parfait ! Tu maîtrises très bien les tables !';
+    else if (currentQuizScore >= 16) appreciation = '🥇 Excellent résultat !';
+    else if (currentQuizScore >= 12) appreciation = '🌟 Bon travail, encore un peu d’entraînement.';
+
+    quizContainer.innerHTML = `
+      <div class="quiz-result">
+        <div class="stars" style="font-size:28px; margin-bottom:5px;">🏆🦉🏆</div>
+        <div style="font-size:17px; margin-bottom:10px; color:var(--text); line-height:1.4; font-weight:900;">Défi terminé !</div>
+        <div class="score-recap-box">
+          <div class="score-recap-row"><span>🎯 Score final :</span><span style="color:var(--primary); font-weight:900;">${currentQuizScore} / ${originalQuizLength}</span></div>
+          <div class="score-recap-row"><span>📊 Réussite :</span><span style="color:var(--green); font-weight:900;">${percent} %</span></div>
+          <div class="score-recap-row"><span>💎 Points gagnés :</span><span style="color:var(--primary); font-weight:900;">+${totalPointsEarnedThisSession} pts</span></div>
+        </div>
+        <div style="font-size:14px;color:var(--text);margin-top:8px;font-weight:800;">${appreciation}</div>
+      </div>`;
+    window.hibouQuizInProgress = false;
+    currentQuizIsChallenge = false;
+    document.getElementById('chatContainer').scrollTop = document.getElementById('chatContainer').scrollHeight;
+    return;
   }
+
   let emoji = currentQuizScore === originalQuizLength ? '🏆⭐🏆' : '💪🌟😊';
   let msg = currentQuizScore === originalQuizLength 
     ? 'Incroyable ! Un sans-faute parfait du premier coup ! 🦉' 
@@ -1628,27 +1675,16 @@ function showQuizResult() {
     <div class="quiz-result">
       <div class="stars" style="font-size:24px; margin-bottom:5px;">${emoji}</div>
       <div style="font-size:15px; margin-bottom:10px; color:var(--text); line-height:1.4; font-weight:800;">${msg}</div>
-      
       <div class="score-recap-box">
-        <div class="score-recap-row">
-          <span>🎯 Score initial (1er essai) :</span>
-          <span style="color:var(--secondary); font-weight:800;">${currentQuizScore} / ${originalQuizLength}</span>
-        </div>
-        <div class="score-recap-row">
-          <span>🔄 Score après correction :</span>
-          <span style="color:var(--green); font-weight:800;">${originalQuizLength} / ${originalQuizLength} (100% !)</span>
-        </div>
-        <div class="score-recap-row" style="border-top:2px dashed rgba(0,0,0,0.1); margin-top:5px; padding-top:8px;">
-          <span>💎 Super points gagnés :</span>
-          <span style="color:var(--primary); font-weight:900;">+${totalPointsEarnedThisSession} pts !</span>
-        </div>
+        <div class="score-recap-row"><span>🎯 Score initial (1er essai) :</span><span style="color:var(--secondary); font-weight:800;">${currentQuizScore} / ${originalQuizLength}</span></div>
+        <div class="score-recap-row"><span>🔄 Score après correction :</span><span style="color:var(--green); font-weight:800;">${originalQuizLength} / ${originalQuizLength} (100% !)</span></div>
+        <div class="score-recap-row" style="border-top:2px dashed rgba(0,0,0,0.1); margin-top:5px; padding-top:8px;"><span>💎 Super points gagnés :</span><span style="color:var(--primary); font-weight:900;">+${totalPointsEarnedThisSession} pts !</span></div>
       </div>
-      
       <div style="font-size:12px;color:var(--text-muted);margin-top:6px;font-weight:600;">Regarde ton badge en haut, tes points y sont ajoutés ! 🦉</div>
     </div>`;
-  document.getElementById('chatContainer').scrollTop = document.getElementById('chatContainer').scrollHeight;
   window.hibouQuizInProgress = false;
-  if (quizContainer) quizContainer.classList.remove('active-quiz');
+  currentQuizIsChallenge = false;
+  document.getElementById('chatContainer').scrollTop = document.getElementById('chatContainer').scrollHeight;
 }
 
 function startNomCommun() {
@@ -2128,6 +2164,10 @@ exportTeacherCSV = function(){
 };
 
 
+
+// Phase 4.1 : suppression du grand cadre "Vie de classe" côté élève.
+// Les données collectives restent disponibles côté enseignant, mais l'élève garde un écran plus simple.
+renderClassMotivationPanel = function(){ return; };
 
 
 // Sécurité supplémentaire : les boutons de matières fonctionnent même si un onclick inline est mal interprété par le navigateur.

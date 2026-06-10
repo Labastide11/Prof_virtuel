@@ -362,6 +362,13 @@ animation:pop .25s ease-out;
 .progress-row{display:grid;grid-template-columns:90px 1fr 42px;gap:8px;align-items:center;margin:7px 0;font-size:13px;font-weight:900;}
 .progress-bar{height:12px;background:#ECEBF3;border-radius:999px;overflow:hidden;}
 .progress-fill{height:100%;background:linear-gradient(90deg,var(--primary),#9B95FF);border-radius:999px;}
+.progress-mini-wrap{max-width:768px;width:calc(100% - 32px);margin:8px auto 0 auto;display:none;}
+.progress-mini-btn{width:100%;border:2px solid var(--primary-light);background:#fff;color:var(--primary);border-radius:16px;padding:9px 12px;font-family:inherit;font-weight:900;font-size:14px;box-shadow:var(--shadow);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;}
+.progress-mini-btn:hover{background:var(--primary-light);}
+.progress-modal .modal-box{max-width:560px;text-align:left;max-height:86vh;overflow:auto;}
+.progress-modal-header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:8px;}
+.progress-summary{background:#F7F6FF;border:2px solid #ECEBF3;border-radius:14px;padding:10px;margin-bottom:10px;font-weight:800;color:var(--text);}
+@media (max-width:520px){.progress-mini-wrap{margin-top:6px}.progress-mini-btn{font-size:13px;padding:8px 10px}.progress-modal .modal-box{padding:18px}}
 .teacher-section{background:#F7F6FF;border:2px solid #ECEBF3;border-radius:16px;padding:12px;margin:12px 0;}
 .teacher-section h3{font-family:'Baloo 2',sans-serif;color:var(--primary);font-size:19px;margin-bottom:8px;}
 .teacher-select,.teacher-input{padding:10px 12px;border:2px solid var(--primary-light);border-radius:12px;font-family:inherit;font-weight:800;background:white;color:var(--text);max-width:100%;}
@@ -487,6 +494,35 @@ animation:pop .25s ease-out;
 /* Correctif : suppression complète du panneau élève "Vie de classe" */
 #classMotivationPanel, .class-motivation-panel { display: none !important; visibility: hidden !important; height: 0 !important; padding: 0 !important; margin: 0 !important; overflow: hidden !important; }
 
+
+/* === V4.4 Ergonomie tablette : accueil allégé, chat prioritaire === */
+.dashboard-v2{display:none !important;}
+.tablet-stats-strip{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:8px 0 12px 0;}
+.tablet-stat-card{padding:9px 10px;border-radius:14px;background:#F7F6FF;border:2px solid #ECEBF3;font-weight:900;text-align:center;color:var(--text);}
+.tablet-layout-note{font-size:12px;color:var(--text-muted);font-weight:800;margin:6px 0 10px 0;text-align:center;}
+.chat-container{flex:0 0 52vh;min-height:320px;max-height:56vh;padding:12px 16px;}
+.master-challenge-card{margin-top:8px !important;margin-bottom:8px !important;}
+.progress-mini-wrap{display:block;}
+.progress-mini-btn{padding:8px 10px;}
+.quick-questions{padding-bottom:8px;}
+@media (max-width:768px){
+  header{padding:8px 12px;}
+  .logo-icon{font-size:24px}.logo-text{font-size:17px;}
+  .badge{font-size:12px;padding:5px 8px;}
+  .btn-round{width:34px;height:34px;}
+  .subjects-bar{padding:8px 12px;gap:6px;}
+  .subject-btn{font-size:12px;padding:7px 10px;}
+  .quick-questions{padding:0 12px 8px 12px;gap:6px;}
+  .quick-btn{font-size:12px;padding:7px 10px;}
+  .welcome-quiz-container{margin:6px auto;width:calc(100% - 24px);padding:12px;}
+  .chat-container{flex:0 0 50vh;min-height:300px;max-height:54vh;padding:10px 12px;gap:10px;}
+  .input-area{padding:8px 12px;}
+}
+@media (max-height:760px){
+  .chat-container{flex-basis:48vh;min-height:260px;max-height:52vh;}
+  .master-challenge-card{padding:10px !important;}
+}
+
 </style>
 </head>
 <body>
@@ -533,8 +569,7 @@ animation:pop .25s ease-out;
 </div>
 
 <div class="master-challenge-card" id="masterChallengeCard"></div>
-<div class="progress-panel" id="progressPanel"></div>
-<div class="diagnostic-panel" id="diagnosticPanel"></div>
+<div class="progress-mini-wrap" id="progressMiniWrap"><button class="progress-mini-btn" onclick="openProgressPopup()">📊 Voir mes progrès</button></div>
 
 <div class="welcome-quiz-container" id="welcomeQuizFrame"></div>
 
@@ -601,6 +636,19 @@ animation:pop .25s ease-out;
     <div id="teacherSafetyContent"></div>
     <div id="teacherDashboardContent"></div>
     <div class="teacher-small">Les données sont enregistrées dans le navigateur de l'appareil. Pour un suivi fiable en classe, utilise toujours la même tablette ou exporte régulièrement le CSV.</div>
+  </div>
+</div>
+
+<div class="modal-overlay hidden progress-modal" id="progressOverlay">
+  <div class="modal-box">
+    <div class="progress-modal-header">
+      <div>
+        <h2>Mes progrès 📊</h2>
+        <p>Un résumé clair de tes entraînements dans Maître Hibou.</p>
+      </div>
+      <button class="btn-round" onclick="closeProgressPopup()" title="Fermer">✖</button>
+    </div>
+    <div id="progressPopupContent"></div>
   </div>
 </div>
 
@@ -899,26 +947,51 @@ function subjectPercent(stats, subject) {
   return Math.round((d.correct / d.attempts) * 100);
 }
 function renderStudentProgressPanel() {
-  const panel = document.getElementById('progressPanel');
-  const diag = document.getElementById('diagnosticPanel');
-  if (!panel || !prenomActuel) return;
+  const mini = document.getElementById('progressMiniWrap');
+  if (!mini) return;
+  // V4.4 : le bouton Mes progrès reste disponible dès qu'un élève est connecté.
+  mini.style.display = prenomActuel ? 'block' : 'none';
+}
+
+function buildProgressPopupHTML() {
   const stats = getSkillStats();
   const subjects = [
     ['maths','Maths'],['francais','Français'],['sciences','Sciences'],['geographie','Géo'],['anglais','Anglais']
   ];
-  const hasAttempts = subjects.some(([k]) => stats[k] && stats[k].attempts);
-  if (!hasAttempts) {
-    panel.style.display = 'none';
-    if (diag) diag.style.display = 'none';
-    return;
-  }
-  panel.style.display = 'block';
-  panel.innerHTML = '<div class="progress-title">📊 Mes progrès</div>' + subjects.map(([k,label]) => {
+  const totalAttempts = Object.values(stats || {}).reduce((sum, item) => sum + (item.attempts || 0), 0);
+  const totalCorrect = Object.values(stats || {}).reduce((sum, item) => sum + (item.correct || 0), 0);
+  const globalPct = totalAttempts ? Math.round(totalCorrect / totalAttempts * 100) : 0;
+  const level = computeLevel(score);
+  let html = `
+    <div class="tablet-stats-strip">
+      <div class="tablet-stat-card">⭐ Niveau ${level}</div>
+      <div class="tablet-stat-card">🏆 ${score} pts</div>
+      <div class="tablet-stat-card">🔥 Série ${streak} jour${streak > 1 ? 's' : ''}</div>
+      <div class="tablet-stat-card">🎖️ ${badges.length} badge${badges.length > 1 ? 's' : ''}</div>
+    </div>
+    <div class="tablet-layout-note">Les statistiques sont rangées ici pour garder plus de place au chat sur tablette.</div>
+    <div class="progress-summary">🎯 Réussite globale : <strong>${globalPct}%</strong> · ${totalCorrect}/${totalAttempts} bonnes réponses</div>`;
+  html += subjects.map(([k,label]) => {
     const pct = subjectPercent(stats,k);
     return `<div class="progress-row"><span>${label}</span><div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div><span>${pct}%</span></div>`;
   }).join('');
-  renderStudentDiagnostic(stats);
+  html += buildStudentDiagnosticHTML(stats);
+  return html;
 }
+
+function openProgressPopup() {
+  const overlay = document.getElementById('progressOverlay');
+  const content = document.getElementById('progressPopupContent');
+  if (!overlay || !content) return;
+  content.innerHTML = buildProgressPopupHTML();
+  overlay.classList.remove('hidden');
+}
+
+function closeProgressPopup() {
+  const overlay = document.getElementById('progressOverlay');
+  if (overlay) overlay.classList.add('hidden');
+}
+
 function getStudentSkillStats(name) {
   const oldName = prenomActuel; prenomActuel = name;
   const stats = JSON.parse(localStorage.getItem(getStudentKey('skills')) || '{}');
@@ -974,45 +1047,27 @@ function analyzeStudentSkills(skills) {
 function subjectLabel(subject) {
   return ({maths:'Maths', francais:'Français', sciences:'Sciences', geographie:'Géographie', anglais:'Anglais', general:'Général'})[subject] || subject;
 }
-function renderStudentDiagnostic(stats) {
-  const diag = document.getElementById('diagnosticPanel');
-  if (!diag) return;
+function buildStudentDiagnosticHTML(stats) {
   const a = analyzeStudentSkills(stats);
-  if (!a.totalAttempts) { diag.style.display='none'; return; }
-  diag.style.display = 'block';
-  let content = '<div class="diagnostic-title">🦉 Conseil de Maître Hibou</div>';
+  if (!a.totalAttempts) return '';
+  let content = '<div class="diagnostic-title" style="margin-top:14px;">🦉 Conseil de Maître Hibou</div>';
   if (a.weak.length) {
     const w = a.weak[0];
-    content += `<div class="diagnostic-card alert">⚠️ À revoir en priorité : <strong>${escapeHTML(w.skill)}</strong> en ${escapeHTML(subjectLabel(w.subject))} (${w.pct}% de réussite).<br><button onclick="startRemediationQuiz('${escapeHTML(w.subject)}','${escapeHTML(w.skill)}')">🎯 Réviser cette compétence</button></div>`;
+    content += `<div class="diagnostic-card alert">⚠️ À revoir en priorité : <strong>${escapeHTML(w.skill)}</strong> en ${escapeHTML(subjectLabel(w.subject))} (${w.pct}% de réussite).<br><button onclick="closeProgressPopup(); startRemediationQuiz('${escapeHTML(w.subject)}','${escapeHTML(w.skill)}')">🎯 Réviser cette compétence</button></div>`;
   } else if (a.watch.length) {
     const w = a.watch[0];
-    content += `<div class="diagnostic-card">🔎 Presque acquis : <strong>${escapeHTML(w.skill)}</strong> en ${escapeHTML(subjectLabel(w.subject))} (${w.pct}%). Encore un petit entraînement !<br><button onclick="startRemediationQuiz('${escapeHTML(w.subject)}','${escapeHTML(w.skill)}')">💪 M'entraîner</button></div>`;
+    content += `<div class="diagnostic-card">🔎 Presque acquis : <strong>${escapeHTML(w.skill)}</strong> en ${escapeHTML(subjectLabel(w.subject))} (${w.pct}%). Encore un petit entraînement !<br><button onclick="closeProgressPopup(); startRemediationQuiz('${escapeHTML(w.subject)}','${escapeHTML(w.skill)}')">💪 M'entraîner</button></div>`;
   } else {
-    content += '<div class="diagnostic-card good">✅ Beau travail ! Les compétences travaillées sont bien réussies. Tu peux tenter un défi du maître ou un quiz local.</div>';
+    content += `<div class="diagnostic-card ok">✅ Bravo ! Tes résultats sont solides. Continue à t'entraîner régulièrement.</div>`;
   }
-  if (a.strong.length) {
-    content += `<div class="diagnostic-card good">🌟 Points forts : ${a.strong.map(s => `<span class="skill-chip strong">${escapeHTML(s.skill)} ${s.pct}%</span>`).join(' ')}</div>`;
-  }
-  diag.innerHTML = content;
+  return content;
 }
-function studentAlertBadge(analysis) {
-  if (!analysis.totalAttempts) return '<span class="teacher-alert warn">Peu de données</span>';
-  if (analysis.alert === 'danger') return '<span class="teacher-alert danger">À aider</span>';
-  if (analysis.alert === 'warn') return '<span class="teacher-alert warn">À surveiller</span>';
-  return '<span class="teacher-alert ok">OK</span>';
+
+function renderStudentDiagnostic(stats) {
+  // Depuis la V4.3, le diagnostic élève est affiché dans la popup Progrès.
+  return;
 }
-function formatWeakSkills(analysis) {
-  if (!analysis.totalAttempts) return '—';
-  const list = analysis.weak.length ? analysis.weak : analysis.watch;
-  if (!list.length) return '<span class="skill-chip strong">Aucune difficulté nette</span>';
-  return list.map(s => `<span class="skill-chip weak">${escapeHTML(s.skill)} ${s.pct}%</span>`).join(' ');
-}
-function teacherAdviceFor(analysis) {
-  if (!analysis.totalAttempts) return 'Faire au moins un quiz local pour obtenir un diagnostic.';
-  if (analysis.weak.length) return 'Prévoir une révision courte sur : ' + analysis.weak.map(s => s.skill).join(', ') + '.';
-  if (analysis.watch.length) return 'Consolider : ' + analysis.watch.map(s => s.skill).join(', ') + '.';
-  return 'Continuer avec un défi plus ambitieux.';
-}
+
 function startRemediationQuiz(subject, skill) {
   const pool = (banqueCE2[subject] || []).filter(q => (q.skill || 'général') === skill);
   const questions = pool.length ? pool : getLocalQuestions(subject, 5);
@@ -1419,7 +1474,7 @@ function renderMasterChallengeCard() {
   const objectif = c.id === 'tables2a10'
     ? 'Objectif : réussir 20 calculs tirés au hasard dans les tables de 2 à 10.'
     : 'Réussis le défi proposé.';
-  card.innerHTML = `<h3>🏆 Défi du maître</h3><p>${escapeHTML(c.title)}</p><p>${objectif}</p><p>Récompense : +${c.reward} points et un badge spécial.</p><div class="challenge-actions"><button type="button" class="challenge-btn" onclick="startActiveChallenge()">${done ? '✅ Refaire le défi' : '🚀 Commencer le défi'}</button><button type="button" class="challenge-btn secondary" onclick="renderStudentProgressPanel()">📊 Voir mes progrès</button></div>`;
+  card.innerHTML = `<h3>🏆 Défi du maître</h3><p>${escapeHTML(c.title)}</p><p>${objectif}</p><p>Récompense : +${c.reward} points et un badge spécial.</p><div class="challenge-actions"><button type="button" class="challenge-btn" onclick="startActiveChallenge()">${done ? '✅ Refaire le défi' : '🚀 Commencer le défi'}</button><button type="button" class="challenge-btn secondary" onclick="openProgressPopup()">📊 Voir mes progrès</button></div>`;
 }
 
 function startActiveChallenge() {

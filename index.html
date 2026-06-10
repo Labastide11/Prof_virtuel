@@ -1827,6 +1827,69 @@ function selectSubject(btn, subject) {
   updateQuickQuestions(cleanSubject);
 }
 
+
+const devinettesHibouCE2 = [
+  {q:"J’ai quatre pattes mais je ne marche pas. J’ai un dossier mais je ne suis pas un cahier. Qui suis-je ?", options:["Une chaise","Un chat","Une table"], correct:0, skill:"devinettes"},
+  {q:"Je suis jaune et je brille dans le ciel. Qui suis-je ?", options:["Le soleil","La lune","Un nuage"], correct:0, skill:"devinettes"},
+  {q:"J’ai des pages mais je ne suis pas un arbre. Qui suis-je ?", options:["Un livre","Une table","Une fenêtre"], correct:0, skill:"devinettes"},
+  {q:"Plus j’avance, plus je laisse de traces derrière moi. Qui suis-je ?", options:["Un escargot","Un avion","Une lampe"], correct:0, skill:"devinettes"},
+  {q:"Je monte mais je ne descends jamais. Qui suis-je ?", options:["Ton âge","Un ascenseur","Un ballon"], correct:0, skill:"devinettes"},
+  {q:"Je coule mais je ne suis pas fatigué. Qui suis-je ?", options:["Une rivière","Un vélo","Un livre"], correct:0, skill:"devinettes"},
+  {q:"Je peux être cassé sans être touché. Qui suis-je ?", options:["Une promesse","Une pierre","Un crayon"], correct:0, skill:"devinettes"},
+  {q:"J’ai une bouche mais je ne parle pas, un lit mais je ne dors pas. Qui suis-je ?", options:["Une rivière","Un enfant","Un chien"], correct:0, skill:"devinettes"},
+  {q:"Je suis plein de trous mais je peux retenir l’eau. Qui suis-je ?", options:["Une éponge","Un filet","Une passoire"], correct:0, skill:"devinettes"},
+  {q:"Je suis blanc quand je suis sale et noir quand je suis propre. Qui suis-je ?", options:["Un tableau","Un mouchoir","Un cahier"], correct:0, skill:"devinettes"},
+  {q:"Je donne du lait, je fais meuh. Qui suis-je ?", options:["Une vache","Un mouton","Une poule"], correct:0, skill:"devinettes"},
+  {q:"Je pond des œufs et je fais cot cot. Qui suis-je ?", options:["Une poule","Une tortue","Une abeille"], correct:0, skill:"devinettes"},
+  {q:"Je suis un fruit jaune que l’on épluche. Qui suis-je ?", options:["Une banane","Une fraise","Une pomme"], correct:0, skill:"devinettes"},
+  {q:"Je suis rouge, ronde, et je pousse sur un pommier. Qui suis-je ?", options:["Une pomme","Une tomate","Une cerise"], correct:0, skill:"devinettes"},
+  {q:"Je suis dans la classe, j’écris quand on me tient. Qui suis-je ?", options:["Un stylo","Une règle","Une gomme"], correct:0, skill:"devinettes"},
+  {q:"Je disparais quand on me frotte sur le papier. Qui suis-je ?", options:["Une gomme","Une trousse","Un livre"], correct:0, skill:"devinettes"},
+  {q:"Je mesure les lignes et je suis souvent graduée. Qui suis-je ?", options:["Une règle","Une craie","Une colle"], correct:0, skill:"devinettes"},
+  {q:"Je transporte les crayons et les stylos. Qui suis-je ?", options:["Une trousse","Une chaise","Une affiche"], correct:0, skill:"devinettes"},
+  {q:"Je sonne pour dire que la récréation commence. Qui suis-je ?", options:["La cloche","La fenêtre","Le tableau"], correct:0, skill:"devinettes"},
+  {q:"Je suis sur le mur et j’indique l’heure. Qui suis-je ?", options:["Une horloge","Une carte","Une porte"], correct:0, skill:"devinettes"},
+  {q:"Je suis une grande étendue d’eau salée. Qui suis-je ?", options:["La mer","Un lac","Une piscine"], correct:0, skill:"devinettes"},
+  {q:"Je suis une montagne qui peut cracher du feu. Qui suis-je ?", options:["Un volcan","Une colline","Une vallée"], correct:0, skill:"devinettes"},
+  {q:"Je tombe du ciel quand il fait froid, je suis blanche et légère. Qui suis-je ?", options:["La neige","La pluie","La grêle"], correct:0, skill:"devinettes"},
+  {q:"Je fais de la lumière la nuit dans le ciel, mais je ne suis pas le soleil. Qui suis-je ?", options:["La lune","Un nuage","Une étoile filante"], correct:0, skill:"devinettes"},
+  {q:"Je suis très loin, je brille dans le ciel et je ressemble à un petit point. Qui suis-je ?", options:["Une étoile","Un avion","Un oiseau"], correct:0, skill:"devinettes"},
+  {q:"Je tourne autour du Soleil et j’habite dessus. Qui suis-je ?", options:["La Terre","Mars","La Lune"], correct:0, skill:"devinettes"},
+  {q:"Je suis la planète rouge. Qui suis-je ?", options:["Mars","Vénus","Jupiter"], correct:0, skill:"devinettes"},
+  {q:"Je suis très grande, j’ai des anneaux autour de moi. Qui suis-je ?", options:["Saturne","Mercure","La Terre"], correct:0, skill:"devinettes"},
+  {q:"Je protège ton cerveau et il est dans ta tête. Qui suis-je ?", options:["Le crâne","Le bras","Le genou"], correct:0, skill:"devinettes"},
+  {q:"Je bats dans ta poitrine et j’envoie le sang dans ton corps. Qui suis-je ?", options:["Le cœur","L’estomac","Le poumon"], correct:0, skill:"devinettes"},
+  {q:"Je te permets de respirer, tu en as deux. Qui suis-je ?", options:["Les poumons","Les oreilles","Les mains"], correct:0, skill:"devinettes"},
+  {q:"Je suis une partie de la plante qui absorbe l’eau dans la terre. Qui suis-je ?", options:["La racine","La fleur","La feuille"], correct:0, skill:"devinettes"},
+  {q:"Je suis colorée et j’attire parfois les abeilles. Qui suis-je ?", options:["Une fleur","Une racine","Une branche"], correct:0, skill:"devinettes"},
+  {q:"Je suis vert et je tombe parfois des arbres en automne. Qui suis-je ?", options:["Une feuille","Une pomme","Une pierre"], correct:0, skill:"devinettes"},
+  {q:"Je suis le contraire de chaud. Qui suis-je ?", options:["Froid","Grand","Lent"], correct:0, skill:"devinettes"},
+  {q:"Je suis le contraire de nuit. Qui suis-je ?", options:["Jour","Soir","Ombre"], correct:0, skill:"devinettes"},
+  {q:"Je suis le contraire de petit. Qui suis-je ?", options:["Grand","Fin","Court"], correct:0, skill:"devinettes"},
+  {q:"Je suis le contraire de monter. Qui suis-je ?", options:["Descendre","Courir","Ranger"], correct:0, skill:"devinettes"},
+  {q:"Je peux être au chocolat, aux fruits ou nature, et on me mange en dessert. Qui suis-je ?", options:["Un gâteau","Une soupe","Un sandwich"], correct:0, skill:"devinettes"},
+  {q:"Je suis froid, sucré, et je fonds au soleil. Qui suis-je ?", options:["Une glace","Une baguette","Une pomme de terre"], correct:0, skill:"devinettes"},
+  {q:"Je suis un véhicule avec deux roues et des pédales. Qui suis-je ?", options:["Un vélo","Une voiture","Un train"], correct:0, skill:"devinettes"},
+  {q:"Je roule sur des rails et je transporte beaucoup de personnes. Qui suis-je ?", options:["Un train","Un bateau","Une trottinette"], correct:0, skill:"devinettes"},
+  {q:"Je flotte sur l’eau et je transporte des personnes ou des objets. Qui suis-je ?", options:["Un bateau","Un camion","Un avion"], correct:0, skill:"devinettes"},
+  {q:"Je vole dans le ciel avec des ailes et un moteur. Qui suis-je ?", options:["Un avion","Un poisson","Un bus"], correct:0, skill:"devinettes"},
+  {q:"Je suis un animal qui miaule. Qui suis-je ?", options:["Un chat","Un chien","Un cheval"], correct:0, skill:"devinettes"},
+  {q:"Je suis un animal qui aboie. Qui suis-je ?", options:["Un chien","Un lapin","Un coq"], correct:0, skill:"devinettes"},
+  {q:"Je suis un animal qui a une longue trompe. Qui suis-je ?", options:["Un éléphant","Une girafe","Un zèbre"], correct:0, skill:"devinettes"},
+  {q:"Je suis un animal au long cou. Qui suis-je ?", options:["Une girafe","Un lion","Un mouton"], correct:0, skill:"devinettes"},
+  {q:"Je suis le roi des animaux dans beaucoup d’histoires. Qui suis-je ?", options:["Le lion","Le renard","Le lapin"], correct:0, skill:"devinettes"},
+  {q:"Je suis rusé dans les contes et j’ai souvent une queue rousse. Qui suis-je ?", options:["Le renard","Le loup","Le hérisson"], correct:0, skill:"devinettes"}
+];
+
+function startDevinettesHibou() {
+  const questions = devinettesHibouCE2
+    .slice()
+    .sort(() => Math.random() - 0.5)
+    .slice(0, 10);
+  startLocalQuiz('jeux', '🧩 Devinettes du Hibou — 10 devinettes CE2', questions, false);
+  logActivity('Devinettes du Hibou', 0, 'Activité locale CE2');
+}
+
 function updateQuickQuestions(subject) {
   const cleanSubject = normalizeSubject(subject);
   const container = document.getElementById('quickQuestions');
@@ -1865,7 +1928,7 @@ function updateQuickQuestions(subject) {
       <button class="quick-btn" onclick="window.open('https://www.logicieleducatif.fr/jeu/tables-de-multiplication','_blank')">🌐 Tables de multiplication — Logiciel éducatif</button>
       <button class="quick-btn" onclick="window.open('https://www.logicieleducatif.fr/jeu/les-pays-d-europe','_blank')">🌐 Carte France / Europe — Logiciel éducatif</button>
       <button class="quick-btn" onclick="showReviewWheel()">🎡 Roue du Hibou : défi express</button>
-      <button class="quick-btn" onclick="sendQuick('Invente une devinette CE2')">🧩 Devinette CE2</button>
+      <button class="quick-btn" onclick="startDevinettesHibou()">🧩 Devinettes du Hibou</button>
       <button class="quick-btn" onclick="sendQuick('Donne-moi un défi rapide de logique CE2')">🧠 Logique CE2</button>
     `
   };

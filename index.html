@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Maître Hibou V3 Phase 3.2</title>
+<title>Maître Hibou V3 Phase 3.3</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -387,6 +387,24 @@ animation:pop .25s ease-out;
 .teacher-diagnostic-card{background:#fff;border:2px solid #ECEBF3;border-radius:14px;padding:10px;font-size:13px;font-weight:800;}
 .teacher-diagnostic-card h4{margin:0 0 6px 0;color:var(--primary);font-size:15px;}
 
+
+/* === V3 Phase 3.3 : motivation collective, équipes et classement positif === */
+.class-motivation-panel{
+  max-width:768px;width:calc(100% - 32px);margin:10px auto 0 auto;background:#fff;
+  border:2px solid var(--primary-light);border-radius:var(--radius);padding:12px 16px;box-shadow:var(--shadow);display:none;
+}
+.class-motivation-title{font-family:'Baloo 2',sans-serif;font-size:18px;color:var(--primary);font-weight:900;margin-bottom:8px;}
+.class-goal-card{background:#F7F6FF;border:2px solid #ECEBF3;border-radius:14px;padding:10px;margin:8px 0;font-weight:800;font-size:13px;}
+.house-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:8px;margin-top:8px;}
+.house-card{background:#F7F6FF;border:2px solid #ECEBF3;border-radius:14px;padding:10px;font-weight:900;text-align:center;}
+.house-card .house-emoji{font-size:24px;display:block;margin-bottom:3px;}
+.leaderboard-list{background:#fff;border:2px solid #ECEBF3;border-radius:14px;overflow:hidden;margin-top:8px;}
+.leaderboard-row{display:flex;justify-content:space-between;gap:10px;padding:8px 10px;border-bottom:1px solid #ECEBF3;font-size:13px;font-weight:900;}
+.leaderboard-row:last-child{border-bottom:none;}
+.leaderboard-row .rank{min-width:32px;color:var(--primary);}
+.teacher-mini-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;margin-top:10px;}
+.teacher-metric-card{background:#fff;border:2px solid #ECEBF3;border-radius:14px;padding:10px;font-weight:900;font-size:13px;}
+
 </style>
 </head>
 <body>
@@ -427,6 +445,7 @@ animation:pop .25s ease-out;
 
 
 <div class="master-challenge-card" id="masterChallengeCard"></div>
+<div class="class-motivation-panel" id="classMotivationPanel"></div>
 <div class="progress-panel" id="progressPanel"></div>
 <div class="diagnostic-panel" id="diagnosticPanel"></div>
 
@@ -499,6 +518,7 @@ animation:pop .25s ease-out;
       <button class="teacher-btn danger" onclick="resetAllStudents()">🧹 Tout réinitialiser</button>
     </div>
     <div id="teacherChallengeContent"></div>
+    <div id="teacherPhase33Content"></div>
     <div id="teacherDashboardContent"></div>
     <div class="teacher-small">Les données sont enregistrées dans le navigateur de l'appareil. Pour un suivi fiable en classe, utilise toujours la même tablette ou exporte régulièrement le CSV.</div>
   </div>
@@ -1573,6 +1593,162 @@ function toggleVoice() {
   recognition.onend = () => { isRecording = false; document.getElementById('voiceBtn').classList.remove('recording'); };
   recognition.start();
 }
+
+// === V3 Phase 3.3 : défi collectif, champion de la semaine et équipes ===
+const CLASS_GOAL_KEY = 'hibou_class_goal_v33';
+const CLASS_GOAL_PROGRESS_KEY = 'hibou_class_goal_progress_v33';
+const HOUSES = [
+  {id:'hiboux', name:'Hiboux', emoji:'🦉'},
+  {id:'dragons', name:'Dragons', emoji:'🐉'},
+  {id:'renards', name:'Renards', emoji:'🦊'},
+  {id:'tigres', name:'Tigres', emoji:'🐯'}
+];
+
+function getClassGoal(){
+  return JSON.parse(localStorage.getItem(CLASS_GOAL_KEY) || JSON.stringify({title:'500 bonnes réponses en classe', target:500, reward:'Badge collectif'}));
+}
+function getClassGoalProgress(){ return Number(localStorage.getItem(CLASS_GOAL_PROGRESS_KEY) || 0); }
+function setClassGoal(title, target){
+  const cleanTitle = (title || 'Objectif collectif').trim();
+  const cleanTarget = Math.max(10, Number(target) || 500);
+  localStorage.setItem(CLASS_GOAL_KEY, JSON.stringify({title:cleanTitle, target:cleanTarget, reward:'Badge collectif'}));
+  renderPhase33Teacher(); renderClassMotivationPanel();
+}
+function resetClassGoalProgress(){
+  if(!confirm('Remettre à zéro la progression du défi collectif ?')) return;
+  localStorage.setItem(CLASS_GOAL_PROGRESS_KEY, '0');
+  renderPhase33Teacher(); renderClassMotivationPanel();
+}
+function addClassCorrect(n=1){
+  const goal = getClassGoal();
+  const before = getClassGoalProgress();
+  const after = Math.min(goal.target, before + n);
+  localStorage.setItem(CLASS_GOAL_PROGRESS_KEY, String(after));
+  if(before < goal.target && after >= goal.target){
+    const toast = document.getElementById('badgeToast');
+    if(toast){ toast.innerHTML = '🏆 Objectif de classe atteint !<br>' + escapeHTML(goal.title); toast.style.display='block'; setTimeout(()=>toast.style.display='none',3200); }
+    logActivity('Défi collectif réussi', 0, goal.title);
+  }
+}
+function houseForName(name){
+  const old = prenomActuel; prenomActuel = name;
+  let h = localStorage.getItem(getStudentKey('house'));
+  prenomActuel = old;
+  if(h) return h;
+  let sum = 0; for(const ch of String(name).toLowerCase()) sum += ch.charCodeAt(0);
+  return HOUSES[sum % HOUSES.length].id;
+}
+function setStudentHouse(encodedName, houseId){
+  const name = decodeURIComponent(encodedName);
+  const old = prenomActuel; prenomActuel = name;
+  localStorage.setItem(getStudentKey('house'), houseId);
+  prenomActuel = old;
+  renderTeacherDashboard(); renderClassMotivationPanel();
+}
+function getHouseInfo(id){ return HOUSES.find(h=>h.id===id) || HOUSES[0]; }
+function parseFrDateTime(str){
+  const m = String(str||'').match(/(\d{2})\/(\d{2})\/(\d{4})[^\d]+(\d{2}):(\d{2})/);
+  if(!m) return null;
+  return new Date(Number(m[3]), Number(m[2])-1, Number(m[1]), Number(m[4]), Number(m[5]));
+}
+function weeklyPointsForStudent(s){
+  const now = new Date();
+  const limit = new Date(now.getFullYear(), now.getMonth(), now.getDate()-7);
+  return (s.history||[]).reduce((sum,h)=>{
+    const d = parseFrDateTime(h.date);
+    if(d && d >= limit) return sum + Math.max(0, Number(h.points)||0);
+    return sum;
+  },0);
+}
+function getAllStudentV33(){
+  const roster = JSON.parse(localStorage.getItem('hibou_roster') || '[]');
+  return roster.map(getStudentData).map(s => ({...s, house:houseForName(s.name), weeklyPoints:weeklyPointsForStudent(s)}));
+}
+function houseScores(students){
+  const scores = {}; HOUSES.forEach(h=>scores[h.id]={...h, score:0, count:0});
+  students.forEach(s=>{ const h=houseForName(s.name); scores[h].score += Number(s.score)||0; scores[h].count++; });
+  return Object.values(scores).sort((a,b)=>b.score-a.score);
+}
+function renderClassMotivationPanel(){
+  const panel = document.getElementById('classMotivationPanel');
+  if(!panel || !prenomActuel) return;
+  const students = getAllStudentV33();
+  if(!students.length){ panel.style.display='none'; return; }
+  const goal = getClassGoal(); const progress = getClassGoalProgress();
+  const pct = Math.min(100, Math.round((progress/goal.target)*100));
+  const currentHouse = getHouseInfo(houseForName(prenomActuel));
+  const houses = houseScores(students);
+  const champion = students.slice().sort((a,b)=>b.weeklyPoints-a.weeklyPoints)[0];
+  panel.style.display='block';
+  panel.innerHTML = `<div class="class-motivation-title">🏅 Vie de classe</div>
+    <div class="class-goal-card"><strong>🏆 Défi collectif :</strong> ${escapeHTML(goal.title)}<br>
+      <div class="progress-bar" style="margin-top:8px;"><div class="progress-fill" style="width:${pct}%"></div></div>
+      <div style="margin-top:5px;">${progress} / ${goal.target} bonnes réponses (${pct} %)</div></div>
+    <div class="class-goal-card"><strong>Ton équipe :</strong> ${currentHouse.emoji} ${escapeHTML(currentHouse.name)} ${champion && champion.weeklyPoints>0 ? '<br><strong>Champion de la semaine :</strong> 🥇 '+escapeHTML(champion.name)+' ('+champion.weeklyPoints+' pts)' : ''}</div>
+    <div class="house-grid">${houses.map(h=>`<div class="house-card"><span class="house-emoji">${h.emoji}</span>${escapeHTML(h.name)}<br>${h.score} pts</div>`).join('')}</div>`;
+}
+
+const recordSkillResultV32 = recordSkillResult;
+recordSkillResult = function(subject, skill, isCorrect){
+  recordSkillResultV32(subject, skill, isCorrect);
+  if(isCorrect) addClassCorrect(1);
+  renderClassMotivationPanel();
+};
+
+const renderMasterChallengeCardV32 = renderMasterChallengeCard;
+renderMasterChallengeCard = function(){
+  renderMasterChallengeCardV32();
+  renderClassMotivationPanel();
+};
+
+const savePrenomV32 = savePrenom;
+savePrenom = function(){
+  savePrenomV32();
+  if(prenomActuel){
+    const old = prenomActuel;
+    if(!localStorage.getItem(getStudentKey('house'))){ localStorage.setItem(getStudentKey('house'), houseForName(old)); }
+    renderClassMotivationPanel();
+  }
+};
+
+function renderPhase33Teacher(){
+  const box = document.getElementById('teacherPhase33Content'); if(!box) return;
+  const students = getAllStudentV33();
+  const goal = getClassGoal(); const progress = getClassGoalProgress(); const pct = Math.min(100, Math.round((progress/goal.target)*100));
+  const houses = houseScores(students);
+  const weekly = students.slice().sort((a,b)=>b.weeklyPoints-a.weeklyPoints).slice(0,5);
+  const houseOptions = (studentName) => HOUSES.map(h=>`<option value="${h.id}" ${houseForName(studentName)===h.id?'selected':''}>${h.emoji} ${h.name}</option>`).join('');
+  box.innerHTML = `<div class="teacher-section"><h3>🏆 Défi collectif de classe</h3>
+    <div class="teacher-form-row"><input class="teacher-input" id="classGoalTitle" value="${escapeHTML(goal.title)}" style="min-width:230px;"><input class="teacher-input" id="classGoalTarget" type="number" min="10" value="${goal.target}" style="width:120px;"><button class="teacher-btn" onclick="setClassGoal(document.getElementById('classGoalTitle').value, document.getElementById('classGoalTarget').value)">Enregistrer</button><button class="teacher-btn secondary" onclick="resetClassGoalProgress()">Remettre à zéro</button></div>
+    <div class="class-goal-card"><strong>Progression :</strong> ${progress} / ${goal.target} bonnes réponses (${pct} %)<div class="progress-bar" style="margin-top:8px;"><div class="progress-fill" style="width:${pct}%"></div></div></div></div>
+    <div class="teacher-section"><h3>🥇 Champion de la semaine</h3>${weekly.length ? '<div class="leaderboard-list">'+weekly.map((s,i)=>`<div class="leaderboard-row"><span><span class="rank">${['🥇','🥈','🥉','4.','5.'][i]}</span> ${escapeHTML(s.name)} <span class="teacher-small">${getHouseInfo(s.house).emoji} ${escapeHTML(getHouseInfo(s.house).name)}</span></span><strong>${s.weeklyPoints} pts</strong></div>`).join('')+'</div>' : '<div class="teacher-empty">Pas encore de points cette semaine.</div>'}</div>
+    <div class="teacher-section"><h3>🏠 Équipes / maisons</h3><div class="teacher-mini-grid">${houses.map(h=>`<div class="teacher-metric-card">${h.emoji} ${escapeHTML(h.name)}<br>${h.score} pts · ${h.count} élève(s)</div>`).join('')}</div>
+    ${students.length ? '<div class="teacher-table-wrap" style="margin-top:10px"><table class="teacher-table"><thead><tr><th>Élève</th><th>Équipe</th></tr></thead><tbody>'+students.map(s=>`<tr><td><strong>${escapeHTML(s.name)}</strong></td><td><select class="teacher-select" onchange="setStudentHouse('${encodeURIComponent(s.name)}', this.value)">${houseOptions(s.name)}</select></td></tr>`).join('')+'</tbody></table></div>' : '<div class="teacher-empty">Aucun élève enregistré.</div>'}</div>`;
+}
+
+const renderTeacherDashboardV32 = renderTeacherDashboard;
+renderTeacherDashboard = function(){
+  renderTeacherDashboardV32();
+  renderPhase33Teacher();
+};
+
+exportTeacherCSV = function(){
+  const students = getAllStudentV33();
+  const lines = [['Eleve','Equipe','Score','Points semaine','Niveau','Serie','Nombre de badges','Badges','Taux de reussite','Difficultes','Conseil','Derniere activite']];
+  students.forEach(s => {
+    const a = analyzeStudentSkills(s.skills);
+    const weakText = (a.weak.length ? a.weak : a.watch).map(x => `${x.skill} ${x.pct}%`).join(' | ');
+    lines.push([s.name, getHouseInfo(s.house).name, s.score, s.weeklyPoints, s.level, s.streak, s.badges.length, s.badges.join('|'), teacherSuccessRate(s.skills), weakText, teacherAdviceFor(a), s.history[0] ? `${s.history[0].type} ${s.history[0].date}` : '']);
+  });
+  const goal = getClassGoal();
+  lines.push([]); lines.push(['Defi collectif', goal.title, getClassGoalProgress(), '/', goal.target]);
+  const csv = lines.map(row => row.map(v => '"' + String(v).replaceAll('"','""') + '"').join(';')).join('\n');
+  const blob = new Blob(['\ufeff' + csv], {type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'maitre_hibou_v33_suivi_classe.csv'; a.click(); URL.revokeObjectURL(url);
+};
+
+
 </script>
 
 <script>

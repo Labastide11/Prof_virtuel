@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Maître Hibou V3 Phase 3.1</title>
+<title>Maître Hibou V3 Phase 3.2</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -341,7 +341,7 @@ animation:pop .25s ease-out;
 
 
 
-/* === V3 Phase 3.1 : Défis du maître, banque locale CE2, progression === */
+/* === V3 Phase 3.2 : Défis, banque locale, progression et diagnostic enseignant === */
 .master-challenge-card{
   max-width:768px;width:calc(100% - 32px);margin:10px auto 0 auto;
   background:linear-gradient(135deg,#FFF9E6 0%,#FFEFB0 100%);
@@ -368,6 +368,24 @@ animation:pop .25s ease-out;
 .local-quiz-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-top:8px;}
 .local-quiz-card{border:none;background:#fff;border-radius:14px;padding:10px;font-weight:900;color:var(--primary);cursor:pointer;box-shadow:var(--shadow);font-family:inherit;text-align:left;}
 .local-quiz-card:hover{transform:translateY(-1px);}
+
+/* === V3 Phase 3.2 : diagnostic et révisions ciblées === */
+.diagnostic-panel{max-width:768px;width:calc(100% - 32px);margin:10px auto 0 auto;background:#fff;border:2px solid #FFE1A3;border-radius:var(--radius);padding:12px 16px;box-shadow:var(--shadow);display:none;}
+.diagnostic-title{font-family:'Baloo 2',sans-serif;font-size:18px;color:#7A5C00;font-weight:900;margin-bottom:8px;}
+.diagnostic-card{background:#FFF9E6;border:2px solid var(--accent);border-radius:14px;padding:10px;margin-top:8px;font-size:13px;font-weight:800;}
+.diagnostic-card.good{background:#E6F7E9;border-color:var(--green);color:#1E5627;}
+.diagnostic-card.alert{background:#FFEAEA;border-color:var(--secondary);color:#7A2222;}
+.diagnostic-card button{margin-top:8px;border:none;background:var(--primary);color:white;border-radius:12px;padding:8px 10px;font-weight:900;font-family:inherit;cursor:pointer;}
+.teacher-alert{display:inline-block;border-radius:999px;padding:4px 8px;font-size:12px;font-weight:900;}
+.teacher-alert.ok{background:#E6F7E9;color:#1E5627;}
+.teacher-alert.warn{background:#FFF3CD;color:#7A5C00;}
+.teacher-alert.danger{background:#FFEAEA;color:#7A2222;}
+.skill-chip{display:inline-block;background:#ECEBF3;border-radius:999px;padding:4px 8px;margin:2px;font-size:12px;font-weight:900;color:var(--text);}
+.skill-chip.weak{background:#FFEAEA;color:#7A2222;}
+.skill-chip.strong{background:#E6F7E9;color:#1E5627;}
+.teacher-diagnostic-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px;margin-top:12px;}
+.teacher-diagnostic-card{background:#fff;border:2px solid #ECEBF3;border-radius:14px;padding:10px;font-size:13px;font-weight:800;}
+.teacher-diagnostic-card h4{margin:0 0 6px 0;color:var(--primary);font-size:15px;}
 
 </style>
 </head>
@@ -410,6 +428,7 @@ animation:pop .25s ease-out;
 
 <div class="master-challenge-card" id="masterChallengeCard"></div>
 <div class="progress-panel" id="progressPanel"></div>
+<div class="diagnostic-panel" id="diagnosticPanel"></div>
 
 <div class="welcome-quiz-container" id="welcomeQuizFrame"></div>
 
@@ -730,18 +749,24 @@ function subjectPercent(stats, subject) {
 }
 function renderStudentProgressPanel() {
   const panel = document.getElementById('progressPanel');
+  const diag = document.getElementById('diagnosticPanel');
   if (!panel || !prenomActuel) return;
   const stats = getSkillStats();
   const subjects = [
     ['maths','Maths'],['francais','Français'],['sciences','Sciences'],['geographie','Géo'],['anglais','Anglais']
   ];
   const hasAttempts = subjects.some(([k]) => stats[k] && stats[k].attempts);
-  if (!hasAttempts) { panel.style.display = 'none'; return; }
+  if (!hasAttempts) {
+    panel.style.display = 'none';
+    if (diag) diag.style.display = 'none';
+    return;
+  }
   panel.style.display = 'block';
   panel.innerHTML = '<div class="progress-title">📊 Mes progrès</div>' + subjects.map(([k,label]) => {
     const pct = subjectPercent(stats,k);
     return `<div class="progress-row"><span>${label}</span><div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div><span>${pct}%</span></div>`;
   }).join('');
+  renderStudentDiagnostic(stats);
 }
 function getStudentSkillStats(name) {
   const oldName = prenomActuel; prenomActuel = name;
@@ -765,6 +790,85 @@ function teacherSuccessRate(skills) {
   return attempts ? Math.round(correct/attempts*100) + '%' : '—';
 }
 
+
+
+function getSkillPercent(item) {
+  if (!item || !item.attempts) return null;
+  return Math.round((item.correct || 0) / item.attempts * 100);
+}
+function flattenSkillStats(skills) {
+  const rows = [];
+  Object.entries(skills || {}).forEach(([subject, data]) => {
+    Object.entries((data && data.skills) || {}).forEach(([skill, item]) => {
+      const pct = getSkillPercent(item);
+      rows.push({subject, skill, attempts:item.attempts || 0, correct:item.correct || 0, pct:pct === null ? 0 : pct});
+    });
+  });
+  return rows.sort((a,b) => a.pct - b.pct || b.attempts - a.attempts);
+}
+function analyzeStudentSkills(skills) {
+  const rows = flattenSkillStats(skills);
+  const practiced = rows.filter(r => r.attempts >= 2);
+  const weak = practiced.filter(r => r.pct < 60).slice(0,3);
+  const watch = practiced.filter(r => r.pct >= 60 && r.pct < 80).slice(0,3);
+  const strong = practiced.filter(r => r.pct >= 80).slice(-3).reverse();
+  const totalAttempts = Object.values(skills || {}).reduce((a,v)=>a+(v.attempts||0),0);
+  const totalCorrect = Object.values(skills || {}).reduce((a,v)=>a+(v.correct||0),0);
+  const globalPct = totalAttempts ? Math.round(totalCorrect / totalAttempts * 100) : null;
+  let alert = 'ok';
+  if (weak.length || (globalPct !== null && globalPct < 60)) alert = 'danger';
+  else if (watch.length || (globalPct !== null && globalPct < 80)) alert = 'warn';
+  return {rows, practiced, weak, watch, strong, totalAttempts, totalCorrect, globalPct, alert};
+}
+function subjectLabel(subject) {
+  return ({maths:'Maths', francais:'Français', sciences:'Sciences', geographie:'Géographie', anglais:'Anglais', general:'Général'})[subject] || subject;
+}
+function renderStudentDiagnostic(stats) {
+  const diag = document.getElementById('diagnosticPanel');
+  if (!diag) return;
+  const a = analyzeStudentSkills(stats);
+  if (!a.totalAttempts) { diag.style.display='none'; return; }
+  diag.style.display = 'block';
+  let content = '<div class="diagnostic-title">🦉 Conseil de Maître Hibou</div>';
+  if (a.weak.length) {
+    const w = a.weak[0];
+    content += `<div class="diagnostic-card alert">⚠️ À revoir en priorité : <strong>${escapeHTML(w.skill)}</strong> en ${escapeHTML(subjectLabel(w.subject))} (${w.pct}% de réussite).<br><button onclick="startRemediationQuiz('${escapeHTML(w.subject)}','${escapeHTML(w.skill)}')">🎯 Réviser cette compétence</button></div>`;
+  } else if (a.watch.length) {
+    const w = a.watch[0];
+    content += `<div class="diagnostic-card">🔎 Presque acquis : <strong>${escapeHTML(w.skill)}</strong> en ${escapeHTML(subjectLabel(w.subject))} (${w.pct}%). Encore un petit entraînement !<br><button onclick="startRemediationQuiz('${escapeHTML(w.subject)}','${escapeHTML(w.skill)}')">💪 M'entraîner</button></div>`;
+  } else {
+    content += '<div class="diagnostic-card good">✅ Beau travail ! Les compétences travaillées sont bien réussies. Tu peux tenter un défi du maître ou un quiz local.</div>';
+  }
+  if (a.strong.length) {
+    content += `<div class="diagnostic-card good">🌟 Points forts : ${a.strong.map(s => `<span class="skill-chip strong">${escapeHTML(s.skill)} ${s.pct}%</span>`).join(' ')}</div>`;
+  }
+  diag.innerHTML = content;
+}
+function studentAlertBadge(analysis) {
+  if (!analysis.totalAttempts) return '<span class="teacher-alert warn">Peu de données</span>';
+  if (analysis.alert === 'danger') return '<span class="teacher-alert danger">À aider</span>';
+  if (analysis.alert === 'warn') return '<span class="teacher-alert warn">À surveiller</span>';
+  return '<span class="teacher-alert ok">OK</span>';
+}
+function formatWeakSkills(analysis) {
+  if (!analysis.totalAttempts) return '—';
+  const list = analysis.weak.length ? analysis.weak : analysis.watch;
+  if (!list.length) return '<span class="skill-chip strong">Aucune difficulté nette</span>';
+  return list.map(s => `<span class="skill-chip weak">${escapeHTML(s.skill)} ${s.pct}%</span>`).join(' ');
+}
+function teacherAdviceFor(analysis) {
+  if (!analysis.totalAttempts) return 'Faire au moins un quiz local pour obtenir un diagnostic.';
+  if (analysis.weak.length) return 'Prévoir une révision courte sur : ' + analysis.weak.map(s => s.skill).join(', ') + '.';
+  if (analysis.watch.length) return 'Consolider : ' + analysis.watch.map(s => s.skill).join(', ') + '.';
+  return 'Continuer avec un défi plus ambitieux.';
+}
+function startRemediationQuiz(subject, skill) {
+  const pool = (banqueCE2[subject] || []).filter(q => (q.skill || 'général') === skill);
+  const questions = pool.length ? pool : getLocalQuestions(subject, 5);
+  startLocalQuiz(subject, '🎯 Révision ciblée : ' + skill, questions.slice(0, Math.min(8, questions.length)), false);
+  logActivity('Révision ciblée', 0, skill);
+}
+
 function renderTeacherDashboard() {
   renderTeacherChallenge();
   const content = document.getElementById('teacherDashboardContent');
@@ -774,32 +878,42 @@ function renderTeacherDashboard() {
     content.innerHTML = '<div class="teacher-empty">Aucun élève enregistré pour le moment.</div>';
     return;
   }
-  const students = roster.map(getStudentData);
+  const students = roster.map(getStudentData).map(s => ({...s, analysis: analyzeStudentSkills(s.skills)}));
   const rows = students.map(s => `
     <tr>
       <td><strong>${escapeHTML(s.name)}</strong></td>
       <td>${s.score}</td>
       <td>${s.level}</td>
-      <td>${s.streak}</td>
       <td>${s.badges.length}</td>
       <td>${teacherSuccessRate(s.skills)}</td>
+      <td>${studentAlertBadge(s.analysis)}</td>
+      <td>${formatWeakSkills(s.analysis)}</td>
       <td>${s.history[0] ? escapeHTML(s.history[0].type + ' · ' + s.history[0].date) : '—'}</td>
       <td><button class="teacher-btn danger" onclick="resetStudent('${encodeURIComponent(s.name)}')">Réinitialiser</button></td>
     </tr>`).join('');
   const total = students.reduce((sum, s) => sum + s.score, 0);
   const best = students.slice().sort((a,b) => b.score - a.score)[0];
+  const toHelp = students.filter(s => s.analysis.alert === 'danger');
+  const toWatch = students.filter(s => s.analysis.alert === 'warn');
   const history = students.flatMap(s => s.history.map(h => ({...h, name:s.name}))).slice(0, 12);
+  const diagnosticCards = students.map(s => `<div class="teacher-diagnostic-card"><h4>${escapeHTML(s.name)} ${studentAlertBadge(s.analysis)}</h4><div>${formatWeakSkills(s.analysis)}</div><div class="teacher-small">${escapeHTML(teacherAdviceFor(s.analysis))}</div></div>`).join('');
   content.innerHTML = `
     <div class="teacher-actions">
       <div class="stat-card">👥 ${students.length} élève(s)</div>
       <div class="stat-card">🏆 ${total} points cumulés</div>
       <div class="stat-card">⭐ Meilleur score : ${best ? escapeHTML(best.name) + ' (' + best.score + ')' : '—'}</div>
+      <div class="stat-card">⚠️ ${toHelp.length} à aider</div>
+      <div class="stat-card">🔎 ${toWatch.length} à surveiller</div>
     </div>
     <div class="teacher-table-wrap">
       <table class="teacher-table">
-        <thead><tr><th>Élève</th><th>Points</th><th>Niveau</th><th>Série</th><th>Badges</th><th>Réussite</th><th>Dernière activité</th><th>Action</th></tr></thead>
+        <thead><tr><th>Élève</th><th>Points</th><th>Niveau</th><th>Badges</th><th>Réussite</th><th>Alerte</th><th>À travailler</th><th>Dernière activité</th><th>Action</th></tr></thead>
         <tbody>${rows}</tbody>
       </table>
+    </div>
+    <div class="teacher-section">
+      <h3>🧠 Diagnostic automatique</h3>
+      <div class="teacher-diagnostic-grid">${diagnosticCards}</div>
     </div>
     <div class="history-list">
       <strong>Dernières activités</strong>
@@ -810,15 +924,19 @@ function renderTeacherDashboard() {
 function exportTeacherCSV() {
   const roster = JSON.parse(localStorage.getItem('hibou_roster') || '[]');
   const students = roster.map(getStudentData);
-  const lines = [['Eleve','Score','Niveau','Serie','Nombre de badges','Taux reussite','Badges','Derniere activite']];
+  const lines = [['Eleve','Score','Niveau','Nombre de badges','Taux reussite','Alerte','Competences a travailler','Conseil','Badges','Derniere activite']];
   students.forEach(s => {
+    const a = analyzeStudentSkills(s.skills);
+    const weakText = (a.weak.length ? a.weak : a.watch).map(x => `${x.skill} ${x.pct}%`).join(' | ');
     lines.push([
       s.name,
       s.score,
       s.level,
-      s.streak,
       s.badges.length,
       teacherSuccessRate(s.skills),
+      a.alert,
+      weakText,
+      teacherAdviceFor(a),
       s.badges.join('|'),
       s.history[0] ? `${s.history[0].type} ${s.history[0].date}` : ''
     ]);
@@ -828,7 +946,7 @@ function exportTeacherCSV() {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = 'maitre_hibou_suivi_eleves.csv';
+  a.download = 'maitre_hibou_diagnostic_eleves.csv';
   a.click();
   URL.revokeObjectURL(url);
 }

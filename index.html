@@ -546,6 +546,21 @@ animation:pop .25s ease-out;
 .devinette-option.correct{background:#E6F7E9!important;border-color:var(--green)!important;color:#1E5627!important;}
 .devinette-option.wrong{background:#FFEAEA!important;border-color:var(--secondary)!important;color:#7A2222!important;}
 
+
+/* Mini-activité Français : Idées pour écrire */
+.writing-idea-box{
+  background:#F8F7FF;
+  border:2px solid var(--primary-light);
+  border-radius:16px;
+  padding:16px;
+  margin-top:10px;
+  width:100%;
+}
+.writing-idea-title{font-size:14px;font-weight:900;color:var(--primary);margin-bottom:8px;}
+.writing-idea-prompt{font-size:17px;font-weight:900;color:var(--text);line-height:1.45;margin-bottom:12px;background:#fff;border:2px solid #ECEBF3;border-radius:14px;padding:12px;}
+.writing-idea-example{background:#FFFCEB;border:2px solid var(--accent);border-radius:14px;padding:12px;font-size:14px;font-weight:800;color:var(--text);line-height:1.45;margin-bottom:10px;}
+.writing-idea-btn{background:var(--primary);color:white;border:none;border-radius:14px;padding:10px 14px;font-weight:900;font-family:inherit;cursor:pointer;box-shadow:0 6px 16px rgba(108,99,255,.25);}
+
 </style>
 </head>
 <body>
@@ -1817,6 +1832,269 @@ function startNomCommun() {
   startLocalQuiz('francais', '✍️ Nom commun', data, false);
 }
 
+const ideesPourEcrireCE2 = [
+  {
+    "idee": "Mon animal préféré est ...",
+    "exemple": "Mon animal préféré est le chien parce qu'il est fidèle. J'aime jouer avec lui dans le jardin."
+  },
+  {
+    "idee": "Mon meilleur ami / Ma meilleure amie est ...",
+    "exemple": "Mon meilleur ami est gentil et drôle. Avec lui, je ne m'ennuie jamais."
+  },
+  {
+    "idee": "J’ai regardé dans le miroir et ...",
+    "exemple": "J’ai regardé dans le miroir et j’ai vu une petite étoile sur mon front. Elle brillait comme une luciole."
+  },
+  {
+    "idee": "Je suis magicien(ne) et j’aime ...",
+    "exemple": "Je suis magicien et j’aime faire apparaître des fleurs. Tout le monde applaudit quand je sors ma baguette."
+  },
+  {
+    "idee": "Mon plus grand rêve est ...",
+    "exemple": "Mon plus grand rêve est de voyager dans l’espace. Je voudrais voir la Terre depuis la Lune."
+  },
+  {
+    "idee": "Je me rappelle ...",
+    "exemple": "Je me rappelle d’un jour à la plage. Le soleil brillait et je construisais un château de sable."
+  },
+  {
+    "idee": "J’allume la télévision et ...",
+    "exemple": "J’allume la télévision et un hibou me parle. Il me propose une mission secrète."
+  },
+  {
+    "idee": "Mon pire cauchemar est ...",
+    "exemple": "Mon pire cauchemar est de perdre mon cartable. Heureusement, je le retrouve toujours près de mon bureau."
+  },
+  {
+    "idee": "Si j’avais un pouvoir, ce serait de ...",
+    "exemple": "Si j’avais un pouvoir, ce serait de voler. Je pourrais passer au-dessus des montagnes."
+  },
+  {
+    "idee": "Je suis fier / fière de moi quand ...",
+    "exemple": "Je suis fier de moi quand je réussis un exercice difficile. Je sens que j’ai progressé."
+  },
+  {
+    "idee": "Cela fait longtemps que ...",
+    "exemple": "Cela fait longtemps que je veux apprendre à dessiner un dragon. Aujourd’hui, je commence enfin."
+  },
+  {
+    "idee": "Il fait nuit, j’ouvre les yeux et ...",
+    "exemple": "Il fait nuit, j’ouvre les yeux et j’entends un bruit doux. C’est mon chat qui marche dans le couloir."
+  },
+  {
+    "idee": "Mon plat préféré est ... parce que ...",
+    "exemple": "Mon plat préféré est la pizza parce qu’elle sent très bon. J’aime surtout quand le fromage fond."
+  },
+  {
+    "idee": "Voici ma formule magique pour ...",
+    "exemple": "Voici ma formule magique pour ranger ma chambre : abracadabra, les chaussettes dans le tiroir !"
+  },
+  {
+    "idee": "Ce matin, j’ai croqué dans une biscotte et ...",
+    "exemple": "Ce matin, j’ai croqué dans une biscotte et elle a fait un énorme crac. Mon petit frère a éclaté de rire."
+  },
+  {
+    "idee": "Mon sport préféré est ... parce que ...",
+    "exemple": "Mon sport préféré est le football parce que j’aime courir. J’aime aussi faire des passes à mes amis."
+  },
+  {
+    "idee": "J’ai un crayon magique, il peut ...",
+    "exemple": "J’ai un crayon magique, il peut dessiner des portes. Quand j’en trace une, elle s’ouvre vraiment."
+  },
+  {
+    "idee": "Dans ma maison, j’aime ...",
+    "exemple": "Dans ma maison, j’aime mon coin lecture. Il est calme et confortable."
+  },
+  {
+    "idee": "Ma plus grande qualité est ...",
+    "exemple": "Ma plus grande qualité est d’aider les autres. Quand un camarade a besoin de moi, je viens l’aider."
+  },
+  {
+    "idee": "Mon pire défaut est ...",
+    "exemple": "Mon pire défaut est d’être parfois impatient. J’essaie d’attendre mon tour calmement."
+  },
+  {
+    "idee": "Si j’étais astronaute, je ...",
+    "exemple": "Si j’étais astronaute, je marcherais sur la Lune. Je rapporterais une photo de la Terre."
+  },
+  {
+    "idee": "Pour le goûter, j’aime ... parce que ...",
+    "exemple": "Pour le goûter, j’aime les tartines parce qu’elles sont croustillantes. Avec du chocolat, c’est encore meilleur."
+  },
+  {
+    "idee": "Ce qui me fait peur dans les films, c’est ...",
+    "exemple": "Ce qui me fait peur dans les films, c’est la musique mystérieuse. Elle annonce souvent une surprise."
+  },
+  {
+    "idee": "Quand j’étais bébé, ...",
+    "exemple": "Quand j’étais bébé, je dormais beaucoup. Mes parents disent que je souriais souvent."
+  },
+  {
+    "idee": "Demain, j’aimerai ...",
+    "exemple": "Demain, j’aimerai apprendre une nouvelle chanson. Je la chanterai à la maison."
+  },
+  {
+    "idee": "J’adore / Je déteste la neige parce que ...",
+    "exemple": "J’adore la neige parce qu’elle rend tout blanc. J’aime faire des traces avec mes bottes."
+  },
+  {
+    "idee": "Je reconnais une maison hantée car ...",
+    "exemple": "Je reconnais une maison hantée car les volets claquent tout seuls. Une lumière verte brille à la fenêtre."
+  },
+  {
+    "idee": "La mer est salée parce que ...",
+    "exemple": "La mer est salée parce qu’elle garde des grains de sel secrets. Les vagues les mélangent toute la journée."
+  },
+  {
+    "idee": "Sur une île déserte, j’apporterais ...",
+    "exemple": "Sur une île déserte, j’apporterais une gourde et un livre. Comme ça, je pourrais boire et lire."
+  },
+  {
+    "idee": "Les oiseaux chantent parce que ...",
+    "exemple": "Les oiseaux chantent parce qu’ils saluent le matin. Leur chanson réveille doucement le jardin."
+  },
+  {
+    "idee": "Ce que je préfère pendant les vacances, c’est ...",
+    "exemple": "Ce que je préfère pendant les vacances, c’est me lever plus tard. J’aime aussi jouer dehors longtemps."
+  },
+  {
+    "idee": "Mon livre préféré est ... parce que ...",
+    "exemple": "Mon livre préféré est un livre d’aventure parce qu’il me fait voyager. Je veux toujours connaître la suite."
+  },
+  {
+    "idee": "Si j’étais inventeur, je ...",
+    "exemple": "Si j’étais inventeur, je créerais un cartable qui se range tout seul. Il retrouverait même les crayons perdus."
+  },
+  {
+    "idee": "Dans le réfrigérateur, il y a ...",
+    "exemple": "Dans le réfrigérateur, il y a un yaourt qui tremble. Il a peur d’être mangé au dessert."
+  },
+  {
+    "idee": "Le ciel est bleu parce que ...",
+    "exemple": "Le ciel est bleu parce qu’il porte son manteau du jour. Le soir, il change de couleur."
+  },
+  {
+    "idee": "Je me souviendrai toujours de ...",
+    "exemple": "Je me souviendrai toujours de mon premier but. Tout le monde m’a encouragé."
+  },
+  {
+    "idee": "Si je pouvais voler, je ...",
+    "exemple": "Si je pouvais voler, je passerais au-dessus de mon école. Je ferais coucou à mes amis."
+  },
+  {
+    "idee": "Mon film préféré est ... parce que ...",
+    "exemple": "Mon film préféré est drôle parce qu’il me fait rire. Je connais même certaines phrases par cœur."
+  },
+  {
+    "idee": "Le caméléon change de couleur parce que ...",
+    "exemple": "Le caméléon change de couleur parce qu’il veut se cacher. Il devient presque invisible sur une feuille."
+  },
+  {
+    "idee": "Si mon miroir pouvait parler, il me dirait ...",
+    "exemple": "Si mon miroir pouvait parler, il me dirait de sourire. Il me rappellerait que je suis capable de réussir."
+  },
+  {
+    "idee": "Mon jeu de société préféré est ... parce que ...",
+    "exemple": "Mon jeu de société préféré est le jeu de l’oie parce qu’il est amusant. J’aime avancer mon pion."
+  },
+  {
+    "idee": "Si j’étais un insecte, je serais ... parce que ...",
+    "exemple": "Si j’étais un insecte, je serais une coccinelle parce qu’elle est jolie. Je volerais de feuille en feuille."
+  },
+  {
+    "idee": "Mon jour de la semaine préféré est ... parce que ...",
+    "exemple": "Mon jour préféré est le samedi parce que je peux me reposer. Je joue aussi plus longtemps."
+  },
+  {
+    "idee": "Dans le grenier, j’ai ouvert une vieille malle et ...",
+    "exemple": "Dans le grenier, j’ai ouvert une vieille malle et j’ai trouvé une carte. Elle menait à un trésor caché."
+  },
+  {
+    "idee": "Quand je serai grand, je serai ...",
+    "exemple": "Quand je serai grand, je serai vétérinaire. J’aimerais soigner les animaux."
+  },
+  {
+    "idee": "Si j’étais Président de la République, je ...",
+    "exemple": "Si j’étais président, je planterais plus d’arbres dans les villes. Je voudrais que les enfants aient des parcs."
+  },
+  {
+    "idee": "L’été, c’est ...",
+    "exemple": "L’été, c’est le soleil et les glaces. On entend les cigales et on joue dehors."
+  },
+  {
+    "idee": "Ma gourmandise préférée est ... parce que ...",
+    "exemple": "Ma gourmandise préférée est le chocolat parce qu’il fond dans la bouche. J’en mange surtout au goûter."
+  },
+  {
+    "idee": "Si j’étais maître / maîtresse d’école, je ...",
+    "exemple": "Si j’étais maître d’école, je ferais un défi lecture. Chaque élève choisirait un livre amusant."
+  },
+  {
+    "idee": "Dans mon jardin, j’aime ...",
+    "exemple": "Dans mon jardin, j’aime regarder les fleurs. Parfois, un papillon se pose tout près de moi."
+  },
+  {
+    "idee": "Si j’étais un gentil sorcier / une gentille sorcière, je ...",
+    "exemple": "Si j’étais un gentil sorcier, je fabriquerais une potion de courage. Je la donnerais aux enfants timides."
+  },
+  {
+    "idee": "Ma musique préférée est ... parce que ...",
+    "exemple": "Ma musique préférée est douce parce qu’elle me calme. Je l’écoute quand je dessine."
+  },
+  {
+    "idee": "Pendant la récréation, je ...",
+    "exemple": "Pendant la récréation, je joue avec mes amis. Nous inventons parfois de nouvelles règles."
+  },
+  {
+    "idee": "Hier, j’ai fait mes lacets et ...",
+    "exemple": "Hier, j’ai fait mes lacets et ils se sont mis à briller. Mes chaussures voulaient courir toutes seules."
+  },
+  {
+    "idee": "À la fête, j’ai adoré ...",
+    "exemple": "À la fête, j’ai adoré les lumières et la musique. J’ai aussi gagné un petit cadeau."
+  },
+  {
+    "idee": "J’ai rêvé que je ...",
+    "exemple": "J’ai rêvé que je parlais aux animaux. Mon chat me racontait ses aventures."
+  },
+  {
+    "idee": "À la piscine, je ...",
+    "exemple": "À la piscine, je saute doucement dans l’eau. J’aime nager avec une frite."
+  },
+  {
+    "idee": "À la plage, j’adore ...",
+    "exemple": "À la plage, j’adore chercher des coquillages. Certains ressemblent à de petits trésors."
+  },
+  {
+    "idee": "En CM1, j’aimerais ...",
+    "exemple": "En CM1, j’aimerais apprendre encore plus de choses. Je voudrais aussi lire des livres plus longs."
+  },
+  {
+    "idee": "Cet été, ...",
+    "exemple": "Cet été, je voudrais faire un pique-nique. Je choisirais un endroit à l’ombre avec ma famille."
+  }
+];
+
+function startIdeesPourEcrire() {
+  const idee = ideesPourEcrireCE2[Math.floor(Math.random() * ideesPourEcrireCE2.length)];
+  const container = document.getElementById('chatContainer');
+  const div = document.createElement('div');
+  div.className = 'message prof writing-idea-message';
+  div.innerHTML = `<div class="avatar prof">🦉</div>
+    <div class="bubble">
+      <div class="writing-idea-box">
+        <div class="writing-idea-title">✏️ Idées pour écrire</div>
+        <div class="writing-idea-prompt">${escapeHTML(idee.idee)}</div>
+        <div class="writing-idea-example"><strong>💡 Exemple :</strong><br>${escapeHTML(idee.exemple)}</div>
+        <button class="writing-idea-btn" onclick="startIdeesPourEcrire()">🔄 Une autre idée</button>
+      </div>
+    </div>`;
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+  speak("Voici une idée pour écrire.");
+}
+
+
 function toggleSound() {
   soundEnabled = !soundEnabled;
   document.getElementById('soundBtn').textContent = soundEnabled ? '🔊' : '🔇';
@@ -2043,7 +2321,7 @@ function updateQuickQuestions(subject) {
     'francais': `
       <button class="quick-btn" onclick="startNomCommun()">✍️ Nom commun</button>
       <button class="quick-btn" onclick="sendQuick('Explique-moi le verbe pour un CE2')">🏃 Le verbe</button>
-      <button class="quick-btn" onclick="sendQuick('Aide-moi à écrire une histoire de super-héros')">🦸 Idées d'histoire</button>
+      <button class="quick-btn" onclick="startIdeesPourEcrire()">✏️ Idées pour écrire</button>
       <button class="quick-btn" onclick="startLocalQuiz('francais','✍️ Quiz local Français CE2')">📚 Quiz local Français</button>
     `,
     'sciences': `

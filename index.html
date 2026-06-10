@@ -189,10 +189,11 @@
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    padding: 0 16px 12px 16px;
+    padding: 4px 16px 12px 16px;
     max-width: 768px;
     width: 100%;
-    margin: 0 auto;
+    margin: 0 auto 4px auto;
+    animation: fadeIn 0.2s ease-out;
   }
   .quick-btn {
     background: #EAE8FF; border: none; color: var(--primary); padding: 8px 14px;
@@ -457,7 +458,13 @@ animation:pop .25s ease-out;
   <button class="subject-btn" onclick="selectSubject(this, 'anglais')" data-subject="anglais">🇬🇧 Anglais</button>
 </div>
 
-
+<div class="quick-questions" id="quickQuestions">
+  <button class="quick-btn" onclick="window.open('https://www.logicieleducatif.fr/jeu/tables-de-multiplication','_blank')">🧮 Tables de multiplication</button>
+  <button class="quick-btn" onclick="startNomCommun()">✍️ Nom commun</button>
+  <button class="quick-btn" onclick="showLocalQuizMenu()">📚 Banque CE2 Phase 4</button>
+  <button class="quick-btn" onclick="window.open('https://www.logicieleducatif.fr/jeu/les-pays-d-europe','_blank')">🗺️ Géographie : la France</button>
+  <button class="quick-btn" onclick="sendQuick('Explique-moi le système solaire pour un élève de CE2')">🪐 Système solaire</button>
+</div>
 
 <div class="master-challenge-card" id="masterChallengeCard"></div>
 <div class="class-motivation-panel" id="classMotivationPanel"></div>
@@ -471,14 +478,6 @@ animation:pop .25s ease-out;
     <div class="avatar prof">🦉</div>
     <div class="bubble">Coucou ! Je suis Maître Hibou, ton instituteur virtuel. La banque CE2 locale est maintenant enrichie : tu peux t’entraîner même sans IA !</div>
   </div>
-</div>
-
-<div class="quick-questions" id="quickQuestions">
-  <button class="quick-btn" onclick="window.open('https://www.logicieleducatif.fr/jeu/tables-de-multiplication','_blank')">🧮 Tables de multiplication</button>
-  <button class="quick-btn" onclick="startNomCommun()">✍️ Nom commun</button>
-  <button class="quick-btn" onclick="showLocalQuizMenu()">📚 Banque CE2 Phase 4</button>
-  <button class="quick-btn" onclick="window.open('https://www.logicieleducatif.fr/jeu/les-pays-d-europe','_blank')">🗺️ Géographie : la France</button>
-  <button class="quick-btn" onclick="sendQuick('Explique-moi le système solaire pour un élève de CE2')">🪐 Système solaire</button>
 </div>
 
 <div class="input-area">

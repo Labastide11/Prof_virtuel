@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Maître Hibou V2 Phase 1.5</title>
+<title>Maître Hibou V2 Phase 2</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -322,6 +322,24 @@ animation:pop .25s ease-out;
 }
 .security-note{font-size:12px;color:var(--text-muted);font-weight:700;margin-top:6px;text-align:center;}
 
+.teacher-dashboard-modal .modal-box{max-width:860px;text-align:left;max-height:88vh;overflow:auto;}
+.teacher-top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px;}
+.teacher-actions{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 14px 0;}
+.teacher-btn{border:none;border-radius:12px;padding:9px 12px;font-weight:900;cursor:pointer;background:var(--primary);color:white;font-family:inherit;}
+.teacher-btn.secondary{background:#ECEBF3;color:var(--text);}
+.teacher-btn.danger{background:var(--secondary);color:white;}
+.teacher-table-wrap{overflow-x:auto;border:2px solid #ECEBF3;border-radius:14px;background:#fff;}
+.teacher-table{width:100%;border-collapse:collapse;font-size:13px;}
+.teacher-table th,.teacher-table td{padding:10px;border-bottom:1px solid #ECEBF3;text-align:left;white-space:nowrap;}
+.teacher-table th{background:#F7F6FF;color:var(--primary);font-weight:900;}
+.teacher-table tr:last-child td{border-bottom:none;}
+.teacher-empty{background:#F7F6FF;border-radius:14px;padding:14px;font-weight:800;color:var(--text-muted);text-align:center;}
+.teacher-small{font-size:12px;color:var(--text-muted);font-weight:700;line-height:1.4;margin-top:8px;}
+.history-list{margin-top:14px;background:#F7F6FF;border-radius:14px;padding:10px;max-height:180px;overflow:auto;font-size:13px;font-weight:700;}
+.history-item{padding:6px 0;border-bottom:1px dashed rgba(0,0,0,.1);}
+.history-item:last-child{border-bottom:none;}
+
+
 </style>
 </head>
 <body>
@@ -336,6 +354,7 @@ animation:pop .25s ease-out;
       👤 <span id="eleveNom">Élève</span>
     </div>
     <div class="badge score" id="scoreBadge">🎯 <span id="scoreVal">0</span> pts</div>
+    <button class="btn-round" id="teacherBtn" onclick="openTeacherDashboard()" title="Tableau de bord enseignant">👨‍🏫</button>
     <button class="btn-round" id="soundBtn" onclick="toggleSound()">🔊</button>
   </div>
 </header>
@@ -369,7 +388,7 @@ animation:pop .25s ease-out;
 
 <div class="quick-questions" id="quickQuestions">
   <button class="quick-btn" onclick="window.open('https://www.logicieleducatif.fr/jeu/tables-de-multiplication','_blank')">🧮 Tables de multiplication</button>
-  <button class="quick-btn" onclick="startNomCommun()">✍️ Nom commun interactif</button>
+  <button class="quick-btn" onclick="startNomCommun()">✍️ Nom commun</button>
   <button class="quick-btn" onclick="window.open('https://www.logicieleducatif.fr/jeu/les-pays-d-europe','_blank')">🗺️ Géographie : la France</button>
   <button class="quick-btn" onclick="sendQuick('Explique-moi le système solaire pour un élève de CE2')">🪐 Système solaire</button>
 </div>
@@ -411,6 +430,26 @@ animation:pop .25s ease-out;
 
 <div class="badge-toast" id="badgeToast"></div>
 
+<div class="modal-overlay hidden teacher-dashboard-modal" id="teacherDashboardOverlay">
+  <div class="modal-box">
+    <div class="teacher-top">
+      <div>
+        <h2>Tableau de bord enseignant 📊</h2>
+        <p>Suivi local des élèves, scores, niveaux, badges et derniers entraînements.</p>
+      </div>
+      <button class="btn-round" onclick="closeTeacherDashboard()" title="Fermer">✖</button>
+    </div>
+    <div class="teacher-actions">
+      <button class="teacher-btn" onclick="exportTeacherCSV()">⬇️ Export CSV</button>
+      <button class="teacher-btn secondary" onclick="renderTeacherDashboard()">🔄 Actualiser</button>
+      <button class="teacher-btn danger" onclick="resetAllStudents()">🧹 Tout réinitialiser</button>
+    </div>
+    <div id="teacherDashboardContent"></div>
+    <div class="teacher-small">Les données sont enregistrées dans le navigateur de l'appareil. Pour un suivi fiable en classe, utilise toujours la même tablette ou exporte régulièrement le CSV.</div>
+  </div>
+</div>
+
+
 <script>
 let GROQ_KEY = '';
 let currentSubject = 'général';
@@ -442,6 +481,7 @@ function savePrenom() {
   if (!input) { error.textContent = 'Entre ton prénom !'; return; }
   
   prenomActuel = input;
+  addStudentToRoster(prenomActuel);
   document.getElementById('prenomOverlay').classList.add('hidden');
   document.getElementById('eleveBadge').style.display = 'flex';
   document.getElementById('eleveNom').textContent = prenomActuel;
@@ -500,6 +540,156 @@ function saveStudentProgress() {
   localStorage.setItem(getStudentKey('score'), score);
   localStorage.setItem(getStudentKey('badges'), JSON.stringify(badges));
   localStorage.setItem(getStudentKey('streak'), streak);
+}
+
+function addStudentToRoster(name) {
+  const clean = name.trim();
+  if (!clean) return;
+  const roster = JSON.parse(localStorage.getItem('hibou_roster') || '[]');
+  const exists = roster.some(n => n.toLowerCase() === clean.toLowerCase());
+  if (!exists) {
+    roster.push(clean);
+    roster.sort((a,b) => a.localeCompare(b, 'fr'));
+    localStorage.setItem('hibou_roster', JSON.stringify(roster));
+  }
+}
+
+function getStudentData(name) {
+  const oldName = prenomActuel;
+  prenomActuel = name;
+  const data = {
+    name,
+    score: Number(localStorage.getItem(getStudentKey('score')) || 0),
+    badges: JSON.parse(localStorage.getItem(getStudentKey('badges')) || '[]'),
+    streak: Number(localStorage.getItem(getStudentKey('streak')) || 1),
+    history: JSON.parse(localStorage.getItem(getStudentKey('history')) || '[]')
+  };
+  prenomActuel = oldName;
+  data.level = computeLevel(data.score);
+  return data;
+}
+
+function logActivity(type, points, detail) {
+  if (!prenomActuel) return;
+  const history = JSON.parse(localStorage.getItem(getStudentKey('history')) || '[]');
+  history.unshift({
+    date: new Date().toLocaleString('fr-FR'),
+    type,
+    points,
+    detail: detail || ''
+  });
+  localStorage.setItem(getStudentKey('history'), JSON.stringify(history.slice(0, 30)));
+}
+
+function openTeacherDashboard() {
+  renderTeacherDashboard();
+  document.getElementById('teacherDashboardOverlay').classList.remove('hidden');
+}
+
+function closeTeacherDashboard() {
+  document.getElementById('teacherDashboardOverlay').classList.add('hidden');
+}
+
+function renderTeacherDashboard() {
+  const content = document.getElementById('teacherDashboardContent');
+  const roster = JSON.parse(localStorage.getItem('hibou_roster') || '[]');
+  if (!content) return;
+  if (roster.length === 0) {
+    content.innerHTML = '<div class="teacher-empty">Aucun élève enregistré pour le moment.</div>';
+    return;
+  }
+  const students = roster.map(getStudentData);
+  const rows = students.map(s => `
+    <tr>
+      <td><strong>${escapeHTML(s.name)}</strong></td>
+      <td>${s.score}</td>
+      <td>${s.level}</td>
+      <td>${s.streak}</td>
+      <td>${s.badges.length}</td>
+      <td>${s.history[0] ? escapeHTML(s.history[0].type + ' · ' + s.history[0].date) : '—'}</td>
+      <td><button class="teacher-btn danger" onclick="resetStudent('${encodeURIComponent(s.name)}')">Réinitialiser</button></td>
+    </tr>`).join('');
+  const total = students.reduce((sum, s) => sum + s.score, 0);
+  const best = students.slice().sort((a,b) => b.score - a.score)[0];
+  const history = students.flatMap(s => s.history.map(h => ({...h, name:s.name}))).slice(0, 12);
+  content.innerHTML = `
+    <div class="teacher-actions">
+      <div class="stat-card">👥 ${students.length} élève(s)</div>
+      <div class="stat-card">🏆 ${total} points cumulés</div>
+      <div class="stat-card">⭐ Meilleur score : ${best ? escapeHTML(best.name) + ' (' + best.score + ')' : '—'}</div>
+    </div>
+    <div class="teacher-table-wrap">
+      <table class="teacher-table">
+        <thead><tr><th>Élève</th><th>Points</th><th>Niveau</th><th>Série</th><th>Badges</th><th>Dernière activité</th><th>Action</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+    <div class="history-list">
+      <strong>Dernières activités</strong>
+      ${history.length ? history.map(h => `<div class="history-item">${escapeHTML(h.name)} — ${escapeHTML(h.type)} — ${h.points >= 0 ? '+' : ''}${h.points} pts — ${escapeHTML(h.date)}</div>`).join('') : '<div class="history-item">Aucune activité enregistrée.</div>'}
+    </div>`;
+}
+
+function exportTeacherCSV() {
+  const roster = JSON.parse(localStorage.getItem('hibou_roster') || '[]');
+  const students = roster.map(getStudentData);
+  const lines = [['Eleve','Score','Niveau','Serie','Nombre de badges','Badges','Derniere activite']];
+  students.forEach(s => {
+    lines.push([
+      s.name,
+      s.score,
+      s.level,
+      s.streak,
+      s.badges.length,
+      s.badges.join('|'),
+      s.history[0] ? `${s.history[0].type} ${s.history[0].date}` : ''
+    ]);
+  });
+  const csv = lines.map(row => row.map(v => '"' + String(v).replaceAll('"','""') + '"').join(';')).join('\n');
+  const blob = new Blob(['\ufeff' + csv], {type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'maitre_hibou_suivi_eleves.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function resetStudent(encodedName) {
+  const name = decodeURIComponent(encodedName);
+  if (!confirm('Réinitialiser les données de ' + name + ' ?')) return;
+  const oldName = prenomActuel;
+  prenomActuel = name;
+  localStorage.removeItem(getStudentKey('score'));
+  localStorage.removeItem(getStudentKey('badges'));
+  localStorage.removeItem(getStudentKey('streak'));
+  localStorage.removeItem(getStudentKey('history'));
+  prenomActuel = oldName;
+  if (prenomActuel && prenomActuel.toLowerCase() === name.toLowerCase()) {
+    score = 0; badges = []; streak = 1; refreshScoreDisplays();
+  }
+  renderTeacherDashboard();
+}
+
+function resetAllStudents() {
+  if (!confirm('Tout réinitialiser ? Scores, badges et historiques seront supprimés sur cet appareil.')) return;
+  const roster = JSON.parse(localStorage.getItem('hibou_roster') || '[]');
+  roster.forEach(name => {
+    const oldName = prenomActuel;
+    prenomActuel = name;
+    localStorage.removeItem(getStudentKey('score'));
+    localStorage.removeItem(getStudentKey('badges'));
+    localStorage.removeItem(getStudentKey('streak'));
+    localStorage.removeItem(getStudentKey('history'));
+    prenomActuel = oldName;
+  });
+  localStorage.removeItem('hibou_roster');
+  score = 0; badges = []; streak = 1; refreshScoreDisplays();
+  renderTeacherDashboard();
+}
+
+function escapeHTML(str) {
+  return String(str).replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
 }
 
 function refreshScoreDisplays() {
@@ -628,6 +818,7 @@ function addScore(pts, context='quiz') {
     setTimeout(() => badge.classList.remove('bump'), 300);
   }
   checkBadges(context);
+  logActivity(context, pts, 'Points gagnés');
   sauvegarderScore();
 }
 
@@ -845,6 +1036,7 @@ function startNomCommun() {
   container.scrollTop = container.scrollHeight;
   quizContainer = document.getElementById('quizBox');
   checkBadges('nom commun');
+  logActivity('Nom commun', 0, 'Exercice interactif terminé');
   renderRulesAndStart();
 }
 
@@ -883,7 +1075,7 @@ function updateQuickQuestions(subject) {
       <button class="quick-btn" onclick="sendQuick('Donne-moi un petit défi de calcul mental CE2')">⚡ Calcul mental</button>
     `,
     'français': `
-      <button class="quick-btn" onclick="startNomCommun()">✍️ Nom commun interactif</button>
+      <button class="quick-btn" onclick="startNomCommun()">✍️ Nom commun</button>
       <button class="quick-btn" onclick="sendQuick('Explique-moi le verbe pour un CE2')">🏃 Le verbe</button>
       <button class="quick-btn" onclick="sendQuick('Aide-moi à écrire une histoire de super-héros')">🦸 Idées d'histoire</button>
     `,
@@ -910,7 +1102,7 @@ function updateQuickQuestions(subject) {
   };
   container.innerHTML = sets[subject] || `
       <button class="quick-btn" onclick="window.open('https://www.logicieleducatif.fr/jeu/tables-de-multiplication','_blank')">🧮 Tables de multiplication</button>
-      <button class="quick-btn" onclick="startNomCommun()">✍️ Nom commun interactif</button>
+      <button class="quick-btn" onclick="startNomCommun()">✍️ Nom commun</button>
       <button class="quick-btn" onclick="window.open('https://www.logicieleducatif.fr/jeu/les-pays-d-europe','_blank')">🗺️ Géographie : la France</button>
       <button class="quick-btn" onclick="sendQuick('Explique-moi le système solaire pour un élève de CE2')">🪐 Système solaire</button>
     `;

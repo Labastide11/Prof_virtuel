@@ -455,6 +455,34 @@ animation:pop .25s ease-out;
   .quick-btn { font-size: 12px; padding: 8px 10px; }
 }
 
+
+.review-wheel-box{
+  background:linear-gradient(135deg,#fff 0%,#F7F6FF 100%);
+  border:3px solid var(--primary-light);
+  border-radius:18px;
+  padding:14px;
+  margin-top:10px;
+  text-align:center;
+}
+.review-wheel-wrap{display:flex;flex-direction:column;align-items:center;gap:10px;margin:10px 0;}
+.review-pointer{font-size:30px;line-height:1;filter:drop-shadow(0 2px 3px rgba(0,0,0,.15));}
+.review-wheel{
+  width:170px;height:170px;border-radius:50%;border:6px solid #fff;
+  box-shadow:0 8px 24px rgba(0,0,0,.16), inset 0 0 0 3px rgba(45,43,85,.08);
+  display:flex;align-items:center;justify-content:center;
+  background:conic-gradient(#FFD93D 0 72deg,#EAE8FF 72deg 144deg,#6BCB77 144deg 216deg,#FFEAEA 216deg 288deg,#DFF3FF 288deg 360deg);
+  transition:transform 2.6s cubic-bezier(.12,.82,.18,1);
+}
+.review-wheel-center{
+  width:82px;height:82px;border-radius:50%;background:white;display:flex;align-items:center;justify-content:center;
+  text-align:center;font-weight:900;color:var(--primary);box-shadow:var(--shadow);font-size:13px;padding:8px;
+}
+.review-wheel.spin{transform:rotate(1480deg);}
+.review-wheel-labels{display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:12px;font-weight:900;color:var(--text);margin-top:8px;}
+.review-launch-btn{background:var(--primary);color:white;border:none;border-radius:14px;padding:10px 14px;font-weight:900;font-family:inherit;cursor:pointer;box-shadow:0 6px 16px rgba(108,99,255,.25);}
+.review-launch-btn:disabled{opacity:.65;cursor:not-allowed;}
+.review-wheel-result{font-weight:900;color:var(--primary);min-height:22px;margin-top:6px;}
+
 </style>
 </head>
 <body>
@@ -1324,6 +1352,53 @@ function showLocalQuizMenu() {
   container.appendChild(div); container.scrollTop=container.scrollHeight;
 }
 
+
+function pickRandomQuestions(subject, count) {
+  const pool = (banqueCE2[subject] || []).slice().sort(() => Math.random() - 0.5);
+  return pool.slice(0, Math.min(count, pool.length)).map(q => ({ ...q, subject: subject }));
+}
+
+function buildDefiExpressQuestions() {
+  // Proposition 1 : 2 maths + 2 français + 1 sciences, issus de la banque locale CE2.
+  return [
+    ...pickRandomQuestions('maths', 2),
+    ...pickRandomQuestions('francais', 2),
+    ...pickRandomQuestions('sciences', 1)
+  ].sort(() => Math.random() - 0.5);
+}
+
+function showReviewWheel() {
+  const container = document.getElementById('chatContainer');
+  const div = document.createElement('div');
+  div.className = 'message prof';
+  div.innerHTML = `<div class="avatar prof">🦉</div><div class="bubble"><strong>🎡 Roue du Hibou</strong><br><span style="font-size:12px;color:var(--text-muted);font-weight:800;">La roue lance un Défi Express : 2 maths, 2 français, 1 sciences. Fonctionne avec la banque locale, sans IA.</span><div class="review-wheel-box"><div class="review-wheel-wrap"><div class="review-pointer">🔻</div><div class="review-wheel" id="reviewWheel"><div class="review-wheel-center">Défi<br>Express</div></div></div><div class="review-wheel-labels"><span>🔢 Maths</span><span>✍️ Français</span><span>💡 Sciences</span><span>🦉 Surprise</span></div><button class="review-launch-btn" id="reviewWheelBtn" onclick="spinReviewWheel()">🎡 Faire tourner la roue</button><div class="review-wheel-result" id="reviewWheelResult"></div></div></div>`;
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+}
+
+function spinReviewWheel() {
+  const wheel = document.getElementById('reviewWheel');
+  const btn = document.getElementById('reviewWheelBtn');
+  const result = document.getElementById('reviewWheelResult');
+  if (!wheel || !btn) return;
+  btn.disabled = true;
+  if (result) result.textContent = 'La roue tourne... 🦉';
+  wheel.classList.remove('spin');
+  void wheel.offsetWidth;
+  wheel.classList.add('spin');
+  setTimeout(() => {
+    if (result) result.textContent = 'Défi Express choisi ! 5 questions mélangées 🎯';
+    const questions = buildDefiExpressQuestions();
+    if (!questions.length) {
+      if (result) result.textContent = 'Oups, la banque locale est vide.';
+      btn.disabled = false;
+      return;
+    }
+    logActivity('Roue du Hibou', 0, 'Défi express lancé');
+    startLocalQuiz('revision', '🎮 Défi Express Maître Hibou', questions, false);
+  }, 2800);
+}
+
 async function generateQuiz(topic) {
   const isWelcome = topic.includes('question surprise');
   const count = isWelcome ? 1 : 10;
@@ -1605,7 +1680,7 @@ function updateQuickQuestions(subject) {
     'jeux': `
       <button class="quick-btn" onclick="window.open('https://www.logicieleducatif.fr/jeu/tables-de-multiplication','_blank')">🌐 Tables de multiplication — Logiciel éducatif</button>
       <button class="quick-btn" onclick="window.open('https://www.logicieleducatif.fr/jeu/les-pays-d-europe','_blank')">🌐 Carte France / Europe — Logiciel éducatif</button>
-      <button class="quick-btn" onclick="sendQuick('Propose-moi un jeu de révision CE2 en classe')">🎮 Jeu de révision dans Maître Hibou</button>
+      <button class="quick-btn" onclick="showReviewWheel()">🎡 Roue du Hibou : défi express</button>
       <button class="quick-btn" onclick="sendQuick('Invente une devinette CE2')">🧩 Devinette CE2</button>
       <button class="quick-btn" onclick="sendQuick('Donne-moi un défi rapide de logique CE2')">🧠 Logique CE2</button>
     `

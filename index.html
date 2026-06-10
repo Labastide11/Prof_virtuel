@@ -448,13 +448,13 @@ animation:pop .25s ease-out;
 
 
 <div class="subjects-bar">
-  <button class="subject-btn active" onclick="selectSubject(this, 'général')">🏠 Général</button>
-  <button class="subject-btn" onclick="selectSubject(this, 'maths')">🔢 Maths</button>
-  <button class="subject-btn" onclick="selectSubject(this, 'français')">✍️ Français</button>
-  <button class="subject-btn" onclick="selectSubject(this, 'sciences')">💡 Sciences</button>
-  <button class="subject-btn" onclick="selectSubject(this, 'jeux')">🎮 Jeux</button>
-  <button class="subject-btn" onclick="selectSubject(this, 'géographie')">🌍 Géo</button>
-  <button class="subject-btn" onclick="selectSubject(this, 'anglais')">🇬🇧 Anglais</button>
+  <button class="subject-btn active" onclick="selectSubject(this, 'general')" data-subject="general">🏠 Général</button>
+  <button class="subject-btn" onclick="selectSubject(this, 'maths')" data-subject="maths">🔢 Maths</button>
+  <button class="subject-btn" onclick="selectSubject(this, 'francais')" data-subject="francais">✍️ Français</button>
+  <button class="subject-btn" onclick="selectSubject(this, 'sciences')" data-subject="sciences">💡 Sciences</button>
+  <button class="subject-btn" onclick="selectSubject(this, 'jeux')" data-subject="jeux">🎮 Jeux</button>
+  <button class="subject-btn" onclick="selectSubject(this, 'geographie')" data-subject="geographie">🌍 Géo</button>
+  <button class="subject-btn" onclick="selectSubject(this, 'anglais')" data-subject="anglais">🇬🇧 Anglais</button>
 </div>
 
 
@@ -543,7 +543,7 @@ animation:pop .25s ease-out;
 
 <script>
 let GROQ_KEY = '';
-let currentSubject = 'général';
+let currentSubject = 'general';
 let score = 0;
 let badges = [];
 let streak = 1;
@@ -1514,16 +1514,31 @@ function speak(text) {
 
 const SYSTEM_PROMPT = `Tu es Maître Hibou 🦉, un professeur virtuel pour élèves de CE2 (8-9 ans). Sécurité prioritaire : tu réponds uniquement à des demandes scolaires adaptées à des enfants de CE2. Domaines autorisés : maths, français, lecture, écriture, sciences simples, géographie, anglais, méthodes de travail, culture générale enfantine non sensible. Tu refuses gentiment toute demande violente, sexuelle, dangereuse, politique, religieuse, médicale, personnelle, adulte, choquante, illégale ou hors école primaire. Tu ne donnes jamais de mode d'emploi dangereux, jamais de contenu choquant, jamais de conseil médical/juridique, jamais de données personnelles. Si la demande est inadaptée, réponds : "Je préfère rester sur des sujets adaptés à l'école primaire. Choisis maths, français, sciences, géographie ou anglais. 🦉". Réponds en français simple, avec bienveillance et tutoiement. Donne des réponses courtes, claires, structurées. Termine impérativement tes réponses explicatives autorisées par [QUIZ_DISPONIBLE]`;
 
+function normalizeSubject(subject) {
+  const aliases = {
+    'général': 'general',
+    'general': 'general',
+    'français': 'francais',
+    'francais': 'francais',
+    'géographie': 'geographie',
+    'geographie': 'geographie'
+  };
+  return aliases[subject] || subject;
+}
+
 function selectSubject(btn, subject) {
+  const cleanSubject = normalizeSubject(subject);
   document.querySelectorAll('.subject-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  currentSubject = subject;
+  if (btn) btn.classList.add('active');
+  currentSubject = cleanSubject;
   conversationHistory = [];
-  updateQuickQuestions(subject);
+  updateQuickQuestions(cleanSubject);
 }
 
 function updateQuickQuestions(subject) {
+  const cleanSubject = normalizeSubject(subject);
   const container = document.getElementById('quickQuestions');
+  if (!container) return;
   const sets = {
     'maths': `
       <button class="quick-btn" onclick="window.open('https://www.logicieleducatif.fr/jeu/tables-de-multiplication','_blank')">🧮 Tables de multiplication</button>
@@ -1531,7 +1546,7 @@ function updateQuickQuestions(subject) {
       <button class="quick-btn" onclick="sendQuick('Donne-moi un petit défi de calcul mental CE2')">⚡ Calcul mental</button>
       <button class="quick-btn" onclick="startLocalQuiz('maths','🧮 Quiz local Maths CE2')">📚 Quiz local</button>
     `,
-    'français': `
+    'francais': `
       <button class="quick-btn" onclick="startNomCommun()">✍️ Nom commun</button>
       <button class="quick-btn" onclick="sendQuick('Explique-moi le verbe pour un CE2')">🏃 Le verbe</button>
       <button class="quick-btn" onclick="sendQuick('Aide-moi à écrire une histoire de super-héros')">🦸 Idées d'histoire</button>
@@ -1543,7 +1558,7 @@ function updateQuickQuestions(subject) {
       <button class="quick-btn" onclick="sendQuick('Explique-moi le squelette humain pour un CE2')">🦴 Le squelette</button>
       <button class="quick-btn" onclick="startLocalQuiz('sciences','💡 Quiz local Sciences CE2')">📚 Quiz local</button>
     `,
-    'géographie': `
+    'geographie': `
       <button class="quick-btn" onclick="window.open('https://www.logicieleducatif.fr/jeu/les-pays-d-europe','_blank')">🌍 Carte interactive</button>
       <button class="quick-btn" onclick="sendQuick('Explique-moi la France en géographie pour un CE2')">🗺️ La France</button>
       <button class="quick-btn" onclick="sendQuick('Explique-moi les montagnes et les fleuves de France pour un CE2')">⛰️ Reliefs et fleuves</button>
@@ -1561,7 +1576,7 @@ function updateQuickQuestions(subject) {
       <button class="quick-btn" onclick="sendQuick('Donne-moi un défi rapide de logique CE2')">🧠 Logique</button>
     `
   };
-  container.innerHTML = sets[subject] || `
+  container.innerHTML = sets[cleanSubject] || `
       <button class="quick-btn" onclick="window.open('https://www.logicieleducatif.fr/jeu/tables-de-multiplication','_blank')">🧮 Tables de multiplication</button>
       <button class="quick-btn" onclick="startNomCommun()">✍️ Nom commun</button>
       <button class="quick-btn" onclick="window.open('https://www.logicieleducatif.fr/jeu/les-pays-d-europe','_blank')">🗺️ Géographie : la France</button>
@@ -1942,6 +1957,18 @@ exportTeacherCSV = function(){
   const a = document.createElement('a'); a.href = url; a.download = 'maitre_hibou_v33_suivi_classe.csv'; a.click(); URL.revokeObjectURL(url);
 };
 
+
+
+
+// Sécurité supplémentaire : les boutons de matières fonctionnent même si un onclick inline est mal interprété par le navigateur.
+window.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.subject-btn').forEach(btn => {
+    const subject = btn.getAttribute('data-subject');
+    if (subject) {
+      btn.addEventListener('click', () => selectSubject(btn, subject));
+    }
+  });
+});
 
 </script>
 

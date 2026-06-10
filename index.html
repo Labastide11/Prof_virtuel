@@ -786,10 +786,9 @@ function savePrenom() {
   container.appendChild(div);
   
   const savedKey = localStorage.getItem('groq_key');
-  if (savedKey) {
-    GROQ_KEY = savedKey;
-    loadWelcomeQuiz(); 
-  } else {
+  if (savedKey) GROQ_KEY = savedKey;
+  loadWelcomeQuiz();
+  if (!savedKey && (typeof securityMode === 'undefined' || securityMode !== 'local')) {
     document.getElementById('modalOverlay').classList.remove('hidden');
     document.getElementById('apiKeyInput').focus();
   }
@@ -1182,34 +1181,60 @@ function checkBadges(context='') {
   if (context.includes('quiz')) unlockBadge('quiz', '🎯 Premier quiz terminé');
 }
 
+function hideWelcomeQuizFrame() {
+  const frame = document.getElementById('welcomeQuizFrame');
+  if (!frame) return;
+  frame.style.display = 'none';
+  frame.style.opacity = '1';
+  frame.style.transform = 'scale(1)';
+  frame.innerHTML = '';
+}
+
+function buildDailyChallengeQuestion() {
+  const days = [
+    {subject:'maths', label:'Maths'},
+    {subject:'francais', label:'Français'},
+    {subject:'geographie', label:'Géographie'},
+    {subject:'sciences', label:'Sciences'},
+    {subject:'anglais', label:'Anglais'}
+  ];
+  const d = days[new Date().getDay() % days.length];
+  const pool = banqueCE2[d.subject] || [];
+  const q = pool.length ? pool[Math.floor(Math.random() * pool.length)] : (banqueCE2.maths || [])[0];
+  return { subject:d.subject, label:d.label, question:{...q, subject:d.subject} };
+}
+
 async function loadWelcomeQuiz() {
   const frame = document.getElementById('welcomeQuizFrame');
   if (!frame) return;
-  
-  frame.style.display = 'block';
-  const matieres = ['maths', 'français', 'sciences', 'géographie', 'anglais'];
-  const matiereAlea = matieres[Math.floor(Math.random() * matieres.length)];
-  welcomeQuizSubject = matiereAlea;
-  
-  frame.innerHTML = `<div class="wq-loading">⏳ Préparation de ton défi d'accueil surprise de ${matiereAlea}... 🤔</div>`;
-  
-  const quizData = await generateQuiz(`Une question surprise de niveau CE2 en ${matiereAlea}`);
-  
-  if (!quizData || !quizData.questions || quizData.questions.length === 0) {
-    frame.style.display = 'none';
+
+  // Règle Phase 4.2 : un seul défi visible.
+  // Si le défi du maître est actif, le défi du jour/bienvenue disparaît.
+  const activeChallenge = getActiveChallenge();
+  if (activeChallenge) {
+    hideWelcomeQuizFrame();
     return;
   }
-  
-  const q = quizData.questions[0]; 
-  
+
+  const daily = buildDailyChallengeQuestion();
+  const q = daily.question;
+  if (!q || !q.options) {
+    hideWelcomeQuizFrame();
+    return;
+  }
+
+  welcomeQuizSubject = daily.subject;
+  frame.style.display = 'block';
+  frame.style.opacity = '1';
+  frame.style.transform = 'scale(1)';
   frame.innerHTML = `
     <div class="wq-title-bar">
-      <span class="wq-label">☀️ Défi de bienvenue (Niveau CE2) !</span>
-      <span class="wq-subject">${matiereAlea}</span>
+      <span class="wq-label">🎯 Défi du jour</span>
+      <span class="wq-subject">${daily.label}</span>
     </div>
-    <div class="wq-question">${q.q}</div>
+    <div class="wq-question">${escapeHTML(q.q)}</div>
     <div class="wq-options">
-      ${q.options.map((opt, i) => `<button class="wq-option" onclick="answerWelcomeQuiz(this, ${i}, ${q.correct})">${opt}</button>`).join('')}
+      ${q.options.map((opt, i) => `<button class="wq-option" onclick="answerWelcomeQuiz(this, ${i}, ${q.correct})">${escapeHTML(opt)}</button>`).join('')}
     </div>
     <div id="wqResult" class="wq-result" style="display:none;"></div>
   `;
@@ -1351,13 +1376,12 @@ function buildChallengeStorageObject(c) {
 }
 
 function ensureDefaultMasterChallenge() {
+  // Phase 4.2 : plus de défi du maître activé automatiquement.
+  // Si aucun défi n'a été choisi par l'enseignant, on retourne null
+  // et Maître Hibou affiche le défi du jour à la place.
   let c = null;
   try { c = JSON.parse(localStorage.getItem(MASTER_CHALLENGE_KEY) || 'null'); } catch(e) { c = null; }
-  if (!c || !challengeCatalog[c.id]) {
-    const def = challengeCatalog.tables2a10;
-    localStorage.setItem(MASTER_CHALLENGE_KEY, JSON.stringify(buildChallengeStorageObject(def)));
-    return buildChallengeStorageObject(def);
-  }
+  if (!c || !challengeCatalog[c.id]) return null;
   if (c.id === 'tables6') {
     const upgraded = challengeCatalog.tables2a10;
     localStorage.setItem(MASTER_CHALLENGE_KEY, JSON.stringify(buildChallengeStorageObject(upgraded)));
@@ -1373,18 +1397,23 @@ function getActiveChallenge() {
 function setActiveChallenge(id) {
   const c = challengeCatalog[id]; if (!c) return;
   localStorage.setItem(MASTER_CHALLENGE_KEY, JSON.stringify(buildChallengeStorageObject(c)));
-  renderTeacherChallenge(); renderMasterChallengeCard();
+  hideWelcomeQuizFrame();
+  renderTeacherChallenge();
+  renderMasterChallengeCard();
 }
 
 function clearActiveChallenge() {
   localStorage.removeItem(MASTER_CHALLENGE_KEY);
-  renderTeacherChallenge(); renderMasterChallengeCard();
+  renderTeacherChallenge();
+  renderMasterChallengeCard();
+  loadWelcomeQuiz();
 }
 
 function renderMasterChallengeCard() {
   const card = document.getElementById('masterChallengeCard'); if (!card) return;
   const c = getActiveChallenge();
   if (!c) { card.style.display='none'; return; }
+  hideWelcomeQuizFrame();
   card.style.display='block';
   const done = badges && badges.includes(c.badge);
   const objectif = c.id === 'tables2a10'

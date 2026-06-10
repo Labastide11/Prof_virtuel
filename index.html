@@ -806,6 +806,32 @@ let streak = 1;
 let isRecording = false;
 let recognition = null;
 let conversationHistory = [];
+
+const hibouCompetences = {
+ 'mult_ligne':0,
+ 'mult_1_sans':0,
+ 'mult_1_avec':0,
+ 'mult_2_avec':0
+};
+
+function getMedalLabel(v){
+ if(v>=5) return '🥇 OR';
+ if(v>=3) return '🥈 ARGENT';
+ if(v>=1) return '🥉 BRONZE';
+ return '⬜ À DÉCOUVRIR';
+}
+
+function renderCompetencesHTML(){
+ return `
+ <div class="progress-summary">
+ <h3>🎯 Compétences Multiplication</h3>
+ <p><strong>${getMedalLabel(hibouCompetences.mult_ligne)}</strong> Je sais multiplier en ligne</p>
+ <p><strong>${getMedalLabel(hibouCompetences.mult_1_sans)}</strong> Je sais multiplier à 1 chiffre sans retenue</p>
+ <p><strong>${getMedalLabel(hibouCompetences.mult_1_avec)}</strong> Je sais multiplier à 1 chiffre avec retenue</p>
+ <p><strong>${getMedalLabel(hibouCompetences.mult_2_avec)}</strong> Je sais multiplier à 2 chiffres avec retenue</p>
+ </div>`;
+}
+
 let soundEnabled = true;
 let prenomActuel = '';
 let welcomeQuizSubject = 'général';
@@ -3295,7 +3321,12 @@ window.sendMessage=function(){
       multiplicationMode.index++;
       multiplicationMode.tries=0;
       if(multiplicationMode.index>=multiplicationMode.exos.length){
-          addMessage('prof','🏆 Résultat : '+multiplicationMode.score+'/'+multiplicationMode.exos.length);
+          if(multiplicationMode.score===multiplicationMode.exos.length){
+        if(multiplicationMode.level===1) hibouCompetences.mult_ligne++;
+        if(multiplicationMode.level===2) hibouCompetences.mult_1_sans++;
+        if(multiplicationMode.level===3) hibouCompetences.mult_1_avec++;
+      }
+      addMessage('prof','🏆 Résultat : '+multiplicationMode.score+'/'+multiplicationMode.exos.length);
           multiplicationMode=null;
       }else{
           askMultiQuestion();
@@ -3310,7 +3341,12 @@ window.sendMessage=function(){
          multiplicationMode.index++;
          multiplicationMode.tries=0;
          if(multiplicationMode.index>=multiplicationMode.exos.length){
-            addMessage('prof','🏆 Résultat : '+multiplicationMode.score+'/'+multiplicationMode.exos.length);
+            if(multiplicationMode.score===multiplicationMode.exos.length){
+        if(multiplicationMode.level===1) hibouCompetences.mult_ligne++;
+        if(multiplicationMode.level===2) hibouCompetences.mult_1_sans++;
+        if(multiplicationMode.level===3) hibouCompetences.mult_1_avec++;
+      }
+      addMessage('prof','🏆 Résultat : '+multiplicationMode.score+'/'+multiplicationMode.exos.length);
             multiplicationMode=null;
          }else{
             askMultiQuestion();

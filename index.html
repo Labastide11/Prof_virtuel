@@ -661,6 +661,13 @@ animation:pop .25s ease-out;
 }
 
 </style>
+
+<style id="multiplication-posee-v48">
+.multi-box{background:#F8F7FF;border:2px solid #EAE8FF;border-radius:16px;padding:16px;margin-top:10px}
+.multi-levels{display:flex;gap:8px;flex-wrap:wrap}
+.multi-btn{border:none;border-radius:12px;padding:10px 12px;font-weight:900;cursor:pointer}
+</style>
+
 </head>
 <body>
 
@@ -2697,6 +2704,7 @@ function updateQuickQuestions(subject) {
       <button class="quick-btn" onclick="startLocalQuiz('maths','🧮 Quiz local Maths CE2')">📚 Quiz local Maths</button>
       <button class="quick-btn" onclick="sendQuick('Explique-moi une multiplication posée en CE2')">✏️ Multiplication posée</button>
       <button class="quick-btn" onclick="startCalculMentalCE2()">⚡ Calcul mental</button>
+      <button class="quick-btn" onclick="startMultiplicationPosee()">✖️ Multiplication posée</button>
       <button class="quick-btn" onclick="startMasterTablesChallenge()">🏆 Défi tables 2 à 10</button>
     `,
     'francais': `
@@ -3242,6 +3250,77 @@ setTimeout(removeVieDeClassePanel, 1000);
     setTimeout(patchCalculMentalButtons, 200);
   });
 })();
+</script>
+
+
+<script id="multiplication-posee-js-v48">
+let multiplicationMode=null;
+
+function startMultiplicationPosee(){
+ const c=document.getElementById('chatContainer');
+ const d=document.createElement('div');
+ d.className='message prof';
+ d.innerHTML='<div class="avatar prof">🦉</div><div class="bubble"><div class="multi-box"><b>✖️ Multiplication posée</b><br><br>🎯 Choisis ton niveau :<div class="multi-levels"><button class="multi-btn" onclick="launchMultiLevel(1)">🤖 Petits robots</button><button class="multi-btn" onclick="launchMultiLevel(2)">✏️ Sans retenue</button><button class="multi-btn" onclick="launchMultiLevel(3)">🚀 Avec retenue</button></div></div></div>';
+ c.appendChild(d); c.scrollTop=c.scrollHeight;
+}
+
+function launchMultiLevel(level){
+ const sets={
+ 1:[{q:'24 × 3',a:72},{q:'57 × 4',a:228}],
+ 2:[{q:'21 × 3',a:63},{q:'32 × 2',a:64},{q:'41 × 4',a:164}],
+ 3:[{q:'28 × 4',a:112},{q:'53 × 6',a:318},{q:'79 × 5',a:395}]
+ };
+ multiplicationMode={level:level,index:0,score:0,tries:0,exos:sets[level]};
+ askMultiQuestion();
+}
+
+function askMultiQuestion(){
+ const ex=multiplicationMode.exos[multiplicationMode.index];
+ addMessage('prof','🎯 Compétence : ' + (multiplicationMode.level===1?'Comprendre la multiplication':'Multiplier un nombre à 2 chiffres par un nombre à 1 chiffre') + '<br><br>Exercice ' + (multiplicationMode.index+1) + '/' + multiplicationMode.exos.length + '<br><br><b>' + ex.q + '</b><br>Écris uniquement le résultat dans le chat.');
+}
+
+const oldSendMessageMulti = window.sendMessage;
+window.sendMessage=function(){
+ if(multiplicationMode){
+   const input=document.getElementById('userInput');
+   const v=input.value.trim();
+   if(!v) return;
+   addMessage('user',v);
+   input.value='';
+   const ex=multiplicationMode.exos[multiplicationMode.index];
+   multiplicationMode.tries++;
+   if(Number(v)===ex.a){
+      multiplicationMode.score++;
+      addMessage('prof','✅ Bravo !');
+      multiplicationMode.index++;
+      multiplicationMode.tries=0;
+      if(multiplicationMode.index>=multiplicationMode.exos.length){
+          addMessage('prof','🏆 Résultat : '+multiplicationMode.score+'/'+multiplicationMode.exos.length);
+          multiplicationMode=null;
+      }else{
+          askMultiQuestion();
+      }
+   }else{
+      if(multiplicationMode.tries===1){
+         addMessage('prof','❌ Ce n\'est pas correct. Recalcule.');
+      }else if(multiplicationMode.tries===2){
+         addMessage('prof','💡 Indice : attention aux retenues et aux tables.');
+      }else{
+         addMessage('prof','🦉 Correction : '+ex.q+' = '+ex.a);
+         multiplicationMode.index++;
+         multiplicationMode.tries=0;
+         if(multiplicationMode.index>=multiplicationMode.exos.length){
+            addMessage('prof','🏆 Résultat : '+multiplicationMode.score+'/'+multiplicationMode.exos.length);
+            multiplicationMode=null;
+         }else{
+            askMultiQuestion();
+         }
+      }
+   }
+   return;
+ }
+ return oldSendMessageMulti();
+}
 </script>
 
 </body>

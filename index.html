@@ -662,39 +662,55 @@ animation:pop .25s ease-out;
 
 </style>
 
-<style id="multiplication-posee-v48">
-.multi-box{background:#F8F7FF;border:2px solid #EAE8FF;border-radius:16px;padding:16px;margin-top:10px}
-.multi-levels{display:flex;gap:8px;flex-wrap:wrap}
-.multi-btn{border:none;border-radius:12px;padding:10px 12px;font-weight:900;cursor:pointer}
-</style>
 
 
-<style id="competences-multiplication-v49-safe">
-.competences-box{
-  background:#F7F6FF;
+
+
+
+
+<style id="multiplication-posee-v50">
+.multi-box{
+  background:#F8F7FF;
   border:2px solid #EAE8FF;
   border-radius:16px;
-  padding:12px;
-  margin:12px 0;
-  font-weight:800;
+  padding:16px;
+  margin-top:10px;
 }
-.competences-box h3{
+.multi-box h3{
   margin:0 0 8px 0;
   color:var(--primary);
   font-family:'Baloo 2',sans-serif;
+  font-size:20px;
 }
-.competence-row{
-  background:#fff;
-  border:2px solid #ECEBF3;
-  border-radius:12px;
-  padding:8px 10px;
-  margin:6px 0;
-  line-height:1.35;
-}
-.competence-medal{
-  display:inline-block;
-  min-width:96px;
+.multi-desc{
+  background:#FFFCEB;
+  border:2px solid var(--accent);
+  border-radius:14px;
+  padding:10px;
+  margin:10px 0;
   font-weight:900;
+  color:#7A5C00;
+}
+.multi-levels{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:10px;
+}
+.multi-btn{
+  border:none;
+  border-radius:12px;
+  padding:10px 12px;
+  font-weight:900;
+  cursor:pointer;
+  font-family:inherit;
+  background:var(--primary);
+  color:white;
+}
+.multi-btn.secondary{
+  background:#fff;
+  color:var(--primary);
+  border:2px solid var(--primary-light);
 }
 </style>
 
@@ -3283,99 +3299,68 @@ setTimeout(removeVieDeClassePanel, 1000);
 </script>
 
 
-<script id="multiplication-posee-js-v48">
-let multiplicationMode=null;
 
-function startMultiplicationPosee(){
- const c=document.getElementById('chatContainer');
- const d=document.createElement('div');
- d.className='message prof';
- d.innerHTML='<div class="avatar prof">🦉</div><div class="bubble"><div class="multi-box"><b>✖️ Multiplication posée</b><br><br>🎯 Choisis ton niveau :<div class="multi-levels"><button class="multi-btn" onclick="launchMultiLevel(1)">🤖 Petits robots</button><button class="multi-btn" onclick="launchMultiLevel(2)">✏️ Sans retenue</button><button class="multi-btn" onclick="launchMultiLevel(3)">🚀 Avec retenue</button></div></div></div>';
- c.appendChild(d); c.scrollTop=c.scrollHeight;
-}
 
-function launchMultiLevel(level){
- const sets={
- 1:[{q:'24 × 3',a:72},{q:'57 × 4',a:228}],
- 2:[{q:'21 × 3',a:63},{q:'32 × 2',a:64},{q:'41 × 4',a:164}],
- 3:[{q:'28 × 4',a:112},{q:'53 × 6',a:318},{q:'79 × 5',a:395}]
- };
- multiplicationMode={level:level,index:0,score:0,tries:0,exos:sets[level]};
- askMultiQuestion();
-}
 
-function askMultiQuestion(){
- const ex=multiplicationMode.exos[multiplicationMode.index];
- addMessage('prof','🎯 Compétence : ' + (multiplicationMode.level===1?'Comprendre la multiplication':'Multiplier un nombre à 2 chiffres par un nombre à 1 chiffre') + '<br><br>Exercice ' + (multiplicationMode.index+1) + '/' + multiplicationMode.exos.length + '<br><br><b>' + ex.q + '</b><br>Écris uniquement le résultat dans le chat.');
-}
 
-const oldSendMessageMulti = window.sendMessage;
-window.sendMessage=function(){
- if(multiplicationMode){
-   const input=document.getElementById('userInput');
-   const v=input.value.trim();
-   if(!v) return;
-   addMessage('user',v);
-   input.value='';
-   const ex=multiplicationMode.exos[multiplicationMode.index];
-   multiplicationMode.tries++;
-   if(Number(v)===ex.a){
-      multiplicationMode.score++;
-      addMessage('prof','✅ Bravo !');
-      multiplicationMode.index++;
-      multiplicationMode.tries=0;
-      if(multiplicationMode.index>=multiplicationMode.exos.length){
-          addMessage('prof','🏆 Résultat : '+multiplicationMode.score+'/'+multiplicationMode.exos.length);
-          multiplicationMode=null;
-      }else{
-          askMultiQuestion();
-      }
-   }else{
-      if(multiplicationMode.tries===1){
-         addMessage('prof','❌ Ce n\'est pas correct. Recalcule.');
-      }else if(multiplicationMode.tries===2){
-         addMessage('prof','💡 Indice : attention aux retenues et aux tables.');
-      }else{
-         addMessage('prof','🦉 Correction : '+ex.q+' = '+ex.a);
-         multiplicationMode.index++;
-         multiplicationMode.tries=0;
-         if(multiplicationMode.index>=multiplicationMode.exos.length){
-            addMessage('prof','🏆 Résultat : '+multiplicationMode.score+'/'+multiplicationMode.exos.length);
-            multiplicationMode=null;
-         }else{
-            askMultiQuestion();
-         }
-      }
-   }
-   return;
- }
- return oldSendMessageMulti();
-}
+
+
+<script id="patch-menu-multiplication-posee-v50">
+(function(){
+  function patchMathsMenu(){
+    const q = document.getElementById("quickQuestions");
+    if(!q) return;
+
+    // Si le menu Maths est affiché, on force un sous-menu clair.
+    const active = document.querySelector(".subject-btn.active");
+    const subject = active ? active.getAttribute("data-subject") : "";
+    if(subject === "maths"){
+      q.innerHTML = `
+        <button class="quick-btn" onclick="startCalculMentalCE2()">⚡ Calcul mental</button>
+        <button class="quick-btn" onclick="startMultiplicationPosee()">✖️ Multiplication posée</button>
+        <button class="quick-btn" onclick="startLocalQuiz('maths','🧮 Quiz local Maths CE2')">🧮 Quiz Maths</button>
+        <button class="quick-btn" onclick="window.open('https://www.logicieleducatif.fr/jeu/tables-de-multiplication','_blank')">🌐 Tables de multiplication</button>
+      `;
+    }
+  }
+
+  const oldSelect = window.selectSubject;
+  if(typeof oldSelect === "function" && !window.__patchMenuMultiV50){
+    window.__patchMenuMultiV50 = true;
+    window.selectSubject = function(btn, subject){
+      oldSelect(btn, subject);
+      setTimeout(patchMathsMenu, 0);
+      setTimeout(patchMathsMenu, 100);
+    };
+  }
+
+  document.addEventListener("DOMContentLoaded", patchMathsMenu);
+  window.addEventListener("load", patchMathsMenu);
+})();
 </script>
 
 
-<script id="competences-multiplication-v49-safe">
+<script id="multiplication-posee-js-v50">
 (function(){
-  const KEY = "hibou_competences_multiplication_v49";
+  const COMP_KEY = "hibou_competences_multiplication_v50";
+  window.multiplicationPoseeSession = null;
 
   function loadCompetences(){
-    try{
-      return JSON.parse(localStorage.getItem(KEY)) || {};
-    }catch(e){ return {}; }
+    try { return JSON.parse(localStorage.getItem(COMP_KEY)) || {}; }
+    catch(e){ return {}; }
   }
 
   function saveCompetences(data){
-    localStorage.setItem(KEY, JSON.stringify(data));
+    localStorage.setItem(COMP_KEY, JSON.stringify(data));
   }
 
   function getCompetences(){
-    const data = loadCompetences();
     return Object.assign({
       mult_ligne:0,
       mult_1_sans:0,
       mult_1_avec:0,
       mult_2_avec:0
-    }, data);
+    }, loadCompetences());
   }
 
   function medal(count){
@@ -3388,77 +3373,205 @@ window.sendMessage=function(){
   window.hibouRenderCompetencesMultiplication = function(){
     const c = getCompetences();
     return `
-      <div class="competences-box">
-        <h3>🎯 Compétences Multiplication</h3>
-        <div class="competence-row"><span class="competence-medal">${medal(c.mult_ligne)}</span> Je sais multiplier en ligne</div>
-        <div class="competence-row"><span class="competence-medal">${medal(c.mult_1_sans)}</span> Je sais multiplier à 1 chiffre sans retenue</div>
-        <div class="competence-row"><span class="competence-medal">${medal(c.mult_1_avec)}</span> Je sais multiplier à 1 chiffre avec retenue</div>
-        <div class="competence-row"><span class="competence-medal">${medal(c.mult_2_avec)}</span> Je sais multiplier à 2 chiffres avec retenue</div>
+      <div class="competences-box" style="background:#F7F6FF;border:2px solid #EAE8FF;border-radius:16px;padding:12px;margin:12px 0;font-weight:800;">
+        <h3 style="margin:0 0 8px 0;color:var(--primary);font-family:'Baloo 2',sans-serif;">🎯 Compétences Multiplication</h3>
+        <div class="competence-row" style="background:#fff;border:2px solid #ECEBF3;border-radius:12px;padding:8px 10px;margin:6px 0;"><strong>${medal(c.mult_ligne)}</strong> Je sais multiplier en ligne</div>
+        <div class="competence-row" style="background:#fff;border:2px solid #ECEBF3;border-radius:12px;padding:8px 10px;margin:6px 0;"><strong>${medal(c.mult_1_sans)}</strong> Je sais multiplier à 1 chiffre sans retenue</div>
+        <div class="competence-row" style="background:#fff;border:2px solid #ECEBF3;border-radius:12px;padding:8px 10px;margin:6px 0;"><strong>${medal(c.mult_1_avec)}</strong> Je sais multiplier à 1 chiffre avec retenue</div>
+        <div class="competence-row" style="background:#fff;border:2px solid #ECEBF3;border-radius:12px;padding:8px 10px;margin:6px 0;"><strong>${medal(c.mult_2_avec)}</strong> Je sais multiplier à 2 chiffres avec retenue</div>
       </div>
     `;
   };
 
-  window.hibouValiderCompetenceMultiplication = function(level, score, total){
-    if(score < total) return;
+  function validateCompetence(kind, score, total){
+    if(score < total) return false;
     const c = getCompetences();
-
-    if(level === 1) c.mult_ligne++;
-    if(level === 2) c.mult_1_sans++;
-    if(level === 3) c.mult_1_avec++;
-    if(level === 4) c.mult_2_avec++;
-
+    c[kind] = (c[kind] || 0) + 1;
     saveCompetences(c);
+    if(typeof addScore === "function") addScore(20, "compétence multiplication validée");
+    return true;
+  }
 
-    if(typeof addScore === "function") {
-      addScore(20, "compétence multiplication validée");
+  function getSessionConfig(level){
+    if(level === "ligne"){
+      return {
+        title:"🤖 Multiplier en ligne",
+        competence:"Je sais multiplier en ligne",
+        kind:"mult_ligne",
+        exos:[
+          {q:"24 × 3", a:72, hint:"Décompose : 20 × 3 puis 4 × 3."},
+          {q:"57 × 4", a:228, hint:"Décompose : 50 × 4 puis 7 × 4."}
+        ]
+      };
+    }
+    if(level === "sans"){
+      return {
+        title:"✏️ Multiplication posée sans retenue",
+        competence:"Je sais multiplier à 1 chiffre sans retenue",
+        kind:"mult_1_sans",
+        exos:[
+          {q:"21 × 3", a:63, hint:"Multiplie les unités puis les dizaines."},
+          {q:"32 × 2", a:64, hint:"2 × 2 unités, puis 3 dizaines × 2."},
+          {q:"41 × 4", a:164, hint:"4 × 1 puis 4 × 4 dizaines."}
+        ]
+      };
+    }
+    if(level === "avec"){
+      return {
+        title:"🚀 Multiplication posée avec retenue",
+        competence:"Je sais multiplier à 1 chiffre avec retenue",
+        kind:"mult_1_avec",
+        exos:[
+          {q:"28 × 4", a:112, hint:"8 × 4 = 32 : je pose 2 et je retiens 3."},
+          {q:"53 × 6", a:318, hint:"3 × 6 = 18 : je pose 8 et je retiens 1."},
+          {q:"79 × 5", a:395, hint:"9 × 5 = 45 : je pose 5 et je retiens 4."}
+        ]
+      };
+    }
+    return {
+      title:"🥇 Multiplication posée à 2 chiffres avec retenue",
+      competence:"Je sais multiplier à 2 chiffres avec retenue",
+      kind:"mult_2_avec",
+      exos:[
+        {q:"24 × 12", a:288, hint:"Calcule 24 × 2 puis 24 × 10, puis additionne."},
+        {q:"38 × 24", a:912, hint:"Calcule 38 × 4 puis 38 × 20, puis additionne."}
+      ]
+    };
+  }
+
+  window.startMultiplicationPosee = function(){
+    const c = document.getElementById("chatContainer");
+    const d = document.createElement("div");
+    d.className = "message prof";
+    d.innerHTML = `
+      <div class="avatar prof">🦉</div>
+      <div class="bubble">
+        <div class="multi-box">
+          <h3>✖️ Multiplication posée</h3>
+          <div class="multi-desc">
+            Sens : une multiplication, c'est une addition répétée.<br>
+            Exemple : 4 × 3, c'est 3 + 3 + 3 + 3.
+          </div>
+          Choisis une compétence. Tu répondras directement dans le chat.
+          <div class="multi-levels">
+            <button class="multi-btn" onclick="launchMultiplicationPosee('ligne')">🤖 En ligne</button>
+            <button class="multi-btn" onclick="launchMultiplicationPosee('sans')">✏️ Sans retenue</button>
+            <button class="multi-btn" onclick="launchMultiplicationPosee('avec')">🚀 Avec retenue</button>
+            <button class="multi-btn secondary" onclick="launchMultiplicationPosee('deux')">🥇 2 chiffres avec retenue</button>
+          </div>
+        </div>
+      </div>`;
+    c.appendChild(d);
+    c.scrollTop = c.scrollHeight;
+  };
+
+  window.launchMultiplicationPosee = function(level){
+    const cfg = getSessionConfig(level);
+    window.multiplicationPoseeSession = {
+      level,
+      title:cfg.title,
+      competence:cfg.competence,
+      kind:cfg.kind,
+      exos:cfg.exos,
+      index:0,
+      score:0,
+      tries:0
+    };
+    addMessage("prof", `${cfg.title}<br><br>🎯 Compétence travaillée : <b>${cfg.competence}</b><br><br>Tu auras ${cfg.exos.length} calculs. Écris seulement le résultat dans le chat.`);
+    askMultiplicationPosee();
+  };
+
+  function askMultiplicationPosee(){
+    const s = window.multiplicationPoseeSession;
+    if(!s) return;
+    const ex = s.exos[s.index];
+    addMessage("prof", `Exercice ${s.index+1}/${s.exos.length}<br><br><b>${ex.q}</b><br><br>Écris uniquement le résultat.`);
+  }
+
+  const previousSend = window.sendMessage;
+  window.sendMessage = function(){
+    const s = window.multiplicationPoseeSession;
+    if(!s) return previousSend();
+
+    const input = document.getElementById("userInput");
+    const raw = (input.value || "").trim();
+    if(!raw) return;
+
+    addMessage("user", raw);
+    input.value = "";
+
+    const normalized = raw.replace(/\s/g,"").replace(",",".");
+    const answer = Number(normalized);
+    const ex = s.exos[s.index];
+
+    if(!Number.isFinite(answer)){
+      addMessage("prof", "Écris seulement un nombre, par exemple : 318.");
+      return;
     }
 
-    if(typeof addMessage === "function") {
-      const label = level === 1 ? "Je sais multiplier en ligne" :
-                    level === 2 ? "Je sais multiplier à 1 chiffre sans retenue" :
-                    level === 3 ? "Je sais multiplier à 1 chiffre avec retenue" :
-                    "Je sais multiplier à 2 chiffres avec retenue";
-      addMessage("prof", "🏅 Compétence validée : <b>" + label + "</b><br>+20 points bonus !");
+    s.tries++;
+
+    if(answer === ex.a){
+      s.score++;
+      if(typeof addScore === "function") addScore(s.tries === 1 ? 5 : 2, "multiplication posée");
+      addMessage("prof", s.tries === 1 ? "✅ Bravo, bonne réponse !" : "✅ Bien corrigé !");
+      s.index++;
+      s.tries = 0;
+
+      if(s.index >= s.exos.length){
+        finishMultiplicationPosee();
+      }else{
+        askMultiplicationPosee();
+      }
+      return;
+    }
+
+    if(s.tries === 1){
+      addMessage("prof", "❌ Ce n'est pas encore ça. Recalcule, je te repropose le même calcul.");
+      askMultiplicationPosee();
+    }else if(s.tries === 2){
+      addMessage("prof", `💡 Indice : ${ex.hint}`);
+      askMultiplicationPosee();
+    }else{
+      addMessage("prof", `🦉 Correction : <b>${ex.q} = ${ex.a}</b>`);
+      s.index++;
+      s.tries = 0;
+      if(s.index >= s.exos.length){
+        finishMultiplicationPosee();
+      }else{
+        askMultiplicationPosee();
+      }
     }
   };
 
-  // Patch de Mes progrès : ajoute le bloc compétences sans modifier le code existant.
-  const oldOpenProgressPopup = window.openProgressPopup;
-  if(typeof oldOpenProgressPopup === "function"){
+  function finishMultiplicationPosee(){
+    const s = window.multiplicationPoseeSession;
+    const total = s.exos.length;
+    const perfect = s.score === total;
+    let msg = `🏆 Résultat : <b>${s.score}/${total}</b><br>🎯 Compétence travaillée : <b>${s.competence}</b>`;
+    if(perfect){
+      const ok = validateCompetence(s.kind, s.score, total);
+      if(ok) msg += `<br><br>🏅 Compétence validée ! +20 points bonus.`;
+    }else{
+      msg += `<br><br>🟡 Compétence pas encore validée. Tu peux recommencer plus tard.`;
+    }
+    addMessage("prof", msg);
+    if(typeof logActivity === "function") logActivity("Multiplication posée", s.score, `${s.competence} · ${s.score}/${total}`);
+    window.multiplicationPoseeSession = null;
+  }
+
+  // Ajoute le bloc compétences dans Mes progrès sans modifier le reste.
+  const oldOpenProgress = window.openProgressPopup;
+  if(typeof oldOpenProgress === "function" && !window.__multiProgressV50){
+    window.__multiProgressV50 = true;
     window.openProgressPopup = function(){
-      oldOpenProgressPopup();
+      oldOpenProgress();
       setTimeout(function(){
         const zone = document.getElementById("progressPopupContent");
         if(zone && !zone.querySelector(".competences-box")){
           zone.innerHTML += window.hibouRenderCompetencesMultiplication();
         }
-      }, 50);
-    };
-  }
-
-  // Patch non destructif de sendMessage :
-  // on observe la fin d'une session multiplicationMode, sans remplacer l'exercice.
-  const oldSendMessage = window.sendMessage;
-  if(typeof oldSendMessage === "function" && !window.__hibouCompetencesSendPatched){
-    window.__hibouCompetencesSendPatched = true;
-    window.sendMessage = function(){
-      const before = window.multiplicationMode ? {
-        active:true,
-        level: window.multiplicationMode.level,
-        score: window.multiplicationMode.score,
-        total: window.multiplicationMode.exos ? window.multiplicationMode.exos.length : 0
-      } : {active:false};
-
-      const result = oldSendMessage.apply(this, arguments);
-
-      setTimeout(function(){
-        if(before.active && !window.multiplicationMode){
-          // La session vient de se terminer. On ajoute la compétence si score parfait.
-          window.hibouValiderCompetenceMultiplication(before.level, before.score, before.total);
-        }
-      }, 20);
-
-      return result;
+      }, 80);
     };
   }
 })();

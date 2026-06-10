@@ -1928,7 +1928,7 @@ function startDevinettesHibou() {
   devinettesSession = devinettesHibouCE2
     .slice()
     .sort(() => Math.random() - 0.5)
-    .slice(0, 10)
+    .slice(0, 3)
     .map(melangerOptionsDevinette);
 
   devinetteIndex = 0;
@@ -1938,7 +1938,7 @@ function startDevinettesHibou() {
   const container = document.getElementById('chatContainer');
   const div = document.createElement('div');
   div.className = 'message prof active-quiz-message';
-  div.innerHTML = `<div class="avatar prof">🦉</div><div class="bubble"><strong>🧩 Devinettes du Hibou</strong><br><span style="font-size:12px;color:var(--text-muted);font-weight:800;">Une devinette, 3 réponses. À toi de jouer !</span><div class="devinette-game-container active-quiz" id="devinettesBox"></div></div>`;
+  div.innerHTML = `<div class="avatar prof">🦉</div><div class="bubble"><strong>🧩 Devinettes du Hibou</strong><br><span style="font-size:12px;color:var(--text-muted);font-weight:800;">3 devinettes rapides, 3 réponses à chaque fois !</span><div class="devinette-game-container active-quiz" id="devinettesBox"></div></div>`;
   container.appendChild(div);
   container.scrollTop = container.scrollHeight;
   devinetteContainer = div.querySelector('#devinettesBox');
@@ -2003,9 +2003,9 @@ function showDevinettesResult() {
   window.hibouQuizInProgress = false;
   if (!devinetteContainer) return;
   let message = 'Bien joué ! Tu as terminé les devinettes du Hibou.';
-  if (devinetteScore >= 9) message = 'Excellent ! Tu es un vrai détective des devinettes !';
-  else if (devinetteScore >= 7) message = 'Très bien ! Tu as bien réfléchi.';
-  else if (devinetteScore >= 5) message = 'Pas mal ! Continue à t’entraîner.';
+  if (devinetteScore === 3) message = 'Excellent ! 3 sur 3, tu es un vrai détective des devinettes !';
+  else if (devinetteScore === 2) message = 'Très bien ! 2 sur 3, tu as bien réfléchi.';
+  else if (devinetteScore === 1) message = 'Bien essayé ! 1 sur 3, continue à t’entraîner.';
   else message = 'Continue, les devinettes demandent de l’attention.';
 
   checkBadges('devinettes');
@@ -2017,7 +2017,7 @@ function showDevinettesResult() {
         <div class="score-recap-row"><span>🧩 Devinettes réussies :</span><span style="color:var(--primary);font-weight:900;">${devinetteScore} / ${devinettesSession.length}</span></div>
         <div class="score-recap-row"><span>🏆 Points gagnés :</span><span style="color:var(--green);font-weight:900;">+${devinetteScore * 10} pts</span></div>
       </div>
-      <button class="quiz-trigger-btn" onclick="startDevinettesHibou()">🧩 Rejouer avec 10 autres devinettes</button>
+      <button class="quiz-trigger-btn" onclick="startDevinettesHibou()">🧩 Rejouer avec 3 autres devinettes</button>
     </div>`;
 }
 

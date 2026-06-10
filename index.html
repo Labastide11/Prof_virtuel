@@ -668,6 +668,36 @@ animation:pop .25s ease-out;
 .multi-btn{border:none;border-radius:12px;padding:10px 12px;font-weight:900;cursor:pointer}
 </style>
 
+
+<style id="competences-multiplication-v49-safe">
+.competences-box{
+  background:#F7F6FF;
+  border:2px solid #EAE8FF;
+  border-radius:16px;
+  padding:12px;
+  margin:12px 0;
+  font-weight:800;
+}
+.competences-box h3{
+  margin:0 0 8px 0;
+  color:var(--primary);
+  font-family:'Baloo 2',sans-serif;
+}
+.competence-row{
+  background:#fff;
+  border:2px solid #ECEBF3;
+  border-radius:12px;
+  padding:8px 10px;
+  margin:6px 0;
+  line-height:1.35;
+}
+.competence-medal{
+  display:inline-block;
+  min-width:96px;
+  font-weight:900;
+}
+</style>
+
 </head>
 <body>
 
@@ -806,32 +836,6 @@ let streak = 1;
 let isRecording = false;
 let recognition = null;
 let conversationHistory = [];
-
-const hibouCompetences = {
- 'mult_ligne':0,
- 'mult_1_sans':0,
- 'mult_1_avec':0,
- 'mult_2_avec':0
-};
-
-function getMedalLabel(v){
- if(v>=5) return '🥇 OR';
- if(v>=3) return '🥈 ARGENT';
- if(v>=1) return '🥉 BRONZE';
- return '⬜ À DÉCOUVRIR';
-}
-
-function renderCompetencesHTML(){
- return `
- <div class="progress-summary">
- <h3>🎯 Compétences Multiplication</h3>
- <p><strong>${getMedalLabel(hibouCompetences.mult_ligne)}</strong> Je sais multiplier en ligne</p>
- <p><strong>${getMedalLabel(hibouCompetences.mult_1_sans)}</strong> Je sais multiplier à 1 chiffre sans retenue</p>
- <p><strong>${getMedalLabel(hibouCompetences.mult_1_avec)}</strong> Je sais multiplier à 1 chiffre avec retenue</p>
- <p><strong>${getMedalLabel(hibouCompetences.mult_2_avec)}</strong> Je sais multiplier à 2 chiffres avec retenue</p>
- </div>`;
-}
-
 let soundEnabled = true;
 let prenomActuel = '';
 let welcomeQuizSubject = 'général';
@@ -3321,12 +3325,7 @@ window.sendMessage=function(){
       multiplicationMode.index++;
       multiplicationMode.tries=0;
       if(multiplicationMode.index>=multiplicationMode.exos.length){
-          if(multiplicationMode.score===multiplicationMode.exos.length){
-        if(multiplicationMode.level===1) hibouCompetences.mult_ligne++;
-        if(multiplicationMode.level===2) hibouCompetences.mult_1_sans++;
-        if(multiplicationMode.level===3) hibouCompetences.mult_1_avec++;
-      }
-      addMessage('prof','🏆 Résultat : '+multiplicationMode.score+'/'+multiplicationMode.exos.length);
+          addMessage('prof','🏆 Résultat : '+multiplicationMode.score+'/'+multiplicationMode.exos.length);
           multiplicationMode=null;
       }else{
           askMultiQuestion();
@@ -3341,12 +3340,7 @@ window.sendMessage=function(){
          multiplicationMode.index++;
          multiplicationMode.tries=0;
          if(multiplicationMode.index>=multiplicationMode.exos.length){
-            if(multiplicationMode.score===multiplicationMode.exos.length){
-        if(multiplicationMode.level===1) hibouCompetences.mult_ligne++;
-        if(multiplicationMode.level===2) hibouCompetences.mult_1_sans++;
-        if(multiplicationMode.level===3) hibouCompetences.mult_1_avec++;
-      }
-      addMessage('prof','🏆 Résultat : '+multiplicationMode.score+'/'+multiplicationMode.exos.length);
+            addMessage('prof','🏆 Résultat : '+multiplicationMode.score+'/'+multiplicationMode.exos.length);
             multiplicationMode=null;
          }else{
             askMultiQuestion();
@@ -3357,6 +3351,117 @@ window.sendMessage=function(){
  }
  return oldSendMessageMulti();
 }
+</script>
+
+
+<script id="competences-multiplication-v49-safe">
+(function(){
+  const KEY = "hibou_competences_multiplication_v49";
+
+  function loadCompetences(){
+    try{
+      return JSON.parse(localStorage.getItem(KEY)) || {};
+    }catch(e){ return {}; }
+  }
+
+  function saveCompetences(data){
+    localStorage.setItem(KEY, JSON.stringify(data));
+  }
+
+  function getCompetences(){
+    const data = loadCompetences();
+    return Object.assign({
+      mult_ligne:0,
+      mult_1_sans:0,
+      mult_1_avec:0,
+      mult_2_avec:0
+    }, data);
+  }
+
+  function medal(count){
+    if(count >= 5) return "🥇 OR";
+    if(count >= 3) return "🥈 ARGENT";
+    if(count >= 1) return "🥉 BRONZE";
+    return "⬜ À DÉCOUVRIR";
+  }
+
+  window.hibouRenderCompetencesMultiplication = function(){
+    const c = getCompetences();
+    return `
+      <div class="competences-box">
+        <h3>🎯 Compétences Multiplication</h3>
+        <div class="competence-row"><span class="competence-medal">${medal(c.mult_ligne)}</span> Je sais multiplier en ligne</div>
+        <div class="competence-row"><span class="competence-medal">${medal(c.mult_1_sans)}</span> Je sais multiplier à 1 chiffre sans retenue</div>
+        <div class="competence-row"><span class="competence-medal">${medal(c.mult_1_avec)}</span> Je sais multiplier à 1 chiffre avec retenue</div>
+        <div class="competence-row"><span class="competence-medal">${medal(c.mult_2_avec)}</span> Je sais multiplier à 2 chiffres avec retenue</div>
+      </div>
+    `;
+  };
+
+  window.hibouValiderCompetenceMultiplication = function(level, score, total){
+    if(score < total) return;
+    const c = getCompetences();
+
+    if(level === 1) c.mult_ligne++;
+    if(level === 2) c.mult_1_sans++;
+    if(level === 3) c.mult_1_avec++;
+    if(level === 4) c.mult_2_avec++;
+
+    saveCompetences(c);
+
+    if(typeof addScore === "function") {
+      addScore(20, "compétence multiplication validée");
+    }
+
+    if(typeof addMessage === "function") {
+      const label = level === 1 ? "Je sais multiplier en ligne" :
+                    level === 2 ? "Je sais multiplier à 1 chiffre sans retenue" :
+                    level === 3 ? "Je sais multiplier à 1 chiffre avec retenue" :
+                    "Je sais multiplier à 2 chiffres avec retenue";
+      addMessage("prof", "🏅 Compétence validée : <b>" + label + "</b><br>+20 points bonus !");
+    }
+  };
+
+  // Patch de Mes progrès : ajoute le bloc compétences sans modifier le code existant.
+  const oldOpenProgressPopup = window.openProgressPopup;
+  if(typeof oldOpenProgressPopup === "function"){
+    window.openProgressPopup = function(){
+      oldOpenProgressPopup();
+      setTimeout(function(){
+        const zone = document.getElementById("progressPopupContent");
+        if(zone && !zone.querySelector(".competences-box")){
+          zone.innerHTML += window.hibouRenderCompetencesMultiplication();
+        }
+      }, 50);
+    };
+  }
+
+  // Patch non destructif de sendMessage :
+  // on observe la fin d'une session multiplicationMode, sans remplacer l'exercice.
+  const oldSendMessage = window.sendMessage;
+  if(typeof oldSendMessage === "function" && !window.__hibouCompetencesSendPatched){
+    window.__hibouCompetencesSendPatched = true;
+    window.sendMessage = function(){
+      const before = window.multiplicationMode ? {
+        active:true,
+        level: window.multiplicationMode.level,
+        score: window.multiplicationMode.score,
+        total: window.multiplicationMode.exos ? window.multiplicationMode.exos.length : 0
+      } : {active:false};
+
+      const result = oldSendMessage.apply(this, arguments);
+
+      setTimeout(function(){
+        if(before.active && !window.multiplicationMode){
+          // La session vient de se terminer. On ajoute la compétence si score parfait.
+          window.hibouValiderCompetenceMultiplication(before.level, before.score, before.total);
+        }
+      }, 20);
+
+      return result;
+    };
+  }
+})();
 </script>
 
 </body>

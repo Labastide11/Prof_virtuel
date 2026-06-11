@@ -5168,5 +5168,54 @@ setTimeout(removeVieDeClassePanel, 1000);
 })();
 </script>
 
+
+<script id="patch-valider-competence-unique-v58">
+(function(){
+  function scrollToExistingSkillBlock(){
+    const existing = document.querySelector(".skill-check-box[data-skill-menu='true'], .skill-check-box");
+    const chat = document.getElementById("chatContainer");
+    if(existing){
+      existing.scrollIntoView({behavior:"smooth", block:"center"});
+      if(chat) chat.scrollTop = chat.scrollHeight;
+      return true;
+    }
+    return false;
+  }
+
+  const oldStartSkillCheckMenu = window.startSkillCheckMenu;
+  if(typeof oldStartSkillCheckMenu === "function" && !window.__uniqueSkillCheckMenuV58){
+    window.__uniqueSkillCheckMenuV58 = true;
+    window.startSkillCheckMenu = function(){
+      if(scrollToExistingSkillBlock()){
+        return;
+      }
+
+      const result = oldStartSkillCheckMenu.apply(this, arguments);
+
+      setTimeout(function(){
+        const boxes = document.querySelectorAll(".skill-check-box");
+        if(boxes.length){
+          boxes[boxes.length - 1].setAttribute("data-skill-menu", "true");
+        }
+      }, 50);
+
+      return result;
+    };
+  }
+
+  // Quand une compétence démarre, on autorise ensuite un nouveau menu plus tard.
+  const oldStartSkillCheck = window.startSkillCheck;
+  if(typeof oldStartSkillCheck === "function" && !window.__uniqueSkillCheckStartV58){
+    window.__uniqueSkillCheckStartV58 = true;
+    window.startSkillCheck = function(skillId){
+      document.querySelectorAll(".skill-check-box[data-skill-menu='true']").forEach(function(box){
+        box.removeAttribute("data-skill-menu");
+      });
+      return oldStartSkillCheck.apply(this, arguments);
+    };
+  }
+})();
+</script>
+
 </body>
 </html>

@@ -963,9 +963,7 @@ html, body {
   <button class="subject-btn" onclick="selectSubject(this, 'anglais')" data-subject="anglais">🇬🇧 Anglais</button>
 </div>
 
-<div class="quick-questions" id="quickQuestions">
-  <button class="quick-btn" onclick="openCompetenceValidation()">🏅 Valider une compétence</button>
-</div>
+<div class="quick-questions" id="quickQuestions" style="display:none;"></div>
 
 <div class="master-challenge-card" id="masterChallengeCard"></div>
 <div class="progress-mini-wrap" id="progressMiniWrap"><button class="progress-mini-btn" onclick="openProgressPopup()">📊 Voir mes progrès</button></div>
@@ -5089,6 +5087,83 @@ setTimeout(removeVieDeClassePanel, 1000);
     patchMenu();
     setTimeout(patchMenu, 100);
     setTimeout(patchMenu, 500);
+  });
+})();
+</script>
+
+
+<script id="menu-valider-competence-v57c">
+(function(){
+  function hideQuickQuestionsForCompetence(){
+    const q = document.getElementById("quickQuestions");
+    if(q){
+      q.innerHTML = "";
+      q.style.display = "none";
+    }
+  }
+
+  function showQuickQuestionsForSubjects(){
+    const q = document.getElementById("quickQuestions");
+    if(q){
+      q.style.display = "";
+    }
+  }
+
+  function openCompetenceValidationClean(){
+    document.querySelectorAll(".subject-btn").forEach(function(b){ b.classList.remove("active"); });
+    const btn = document.querySelector('.subject-btn[data-subject="competences"], .subject-btn[data-subject="general"]');
+    if(btn) btn.classList.add("active");
+
+    hideQuickQuestionsForCompetence();
+
+    if(typeof startSkillCheckMenu === "function"){
+      startSkillCheckMenu();
+    }else if(typeof addMessage === "function"){
+      addMessage("prof", "La validation des compétences est en cours de chargement. Réessaie dans un instant.");
+    }
+  }
+
+  window.openCompetenceValidation = openCompetenceValidationClean;
+
+  function patchMainButton(){
+    document.querySelectorAll(".subject-btn").forEach(function(btn){
+      const txt = (btn.textContent || "").toLowerCase();
+      const subject = btn.getAttribute("data-subject");
+      if(txt.includes("général") || txt.includes("general") || subject === "general" || subject === "competences"){
+        btn.textContent = "🏅 Valider une compétence";
+        btn.setAttribute("data-subject", "competences");
+        btn.onclick = openCompetenceValidationClean;
+      }
+    });
+  }
+
+  const oldSelect = window.selectSubject;
+  if(typeof oldSelect === "function" && !window.__v57cMenu){
+    window.__v57cMenu = true;
+    window.selectSubject = function(btn, subject){
+      if(subject === "general" || subject === "competences"){
+        openCompetenceValidationClean();
+        return;
+      }
+      showQuickQuestionsForSubjects();
+      return oldSelect.apply(this, arguments);
+    };
+  }
+
+  document.addEventListener("DOMContentLoaded", function(){
+    patchMainButton();
+    const active = document.querySelector(".subject-btn.active");
+    if(active && active.getAttribute("data-subject") === "competences"){
+      hideQuickQuestionsForCompetence();
+    }
+  });
+
+  window.addEventListener("load", function(){
+    patchMainButton();
+    const active = document.querySelector(".subject-btn.active");
+    if(active && active.getAttribute("data-subject") === "competences"){
+      hideQuickQuestionsForCompetence();
+    }
   });
 })();
 </script>

@@ -1029,53 +1029,36 @@ html, body {
 
 
 
-<style id="patch-anti-coupure-tablette-v67">
-/* V6.7 - Anti-coupure tablette : aucun élément forcé en fixed */
+
+<style id="patch-tablette-minimal-v68">
+/* V6.8 - Correctif minimal tablette : on ne force plus la mise en page */
 html, body{
   overflow-x:hidden !important;
 }
 
-body{
-  min-height:100vh !important;
-}
-
-/* On garde le comportement naturel de la page */
-header{
-  position:sticky !important;
-  top:0 !important;
-  z-index:30 !important;
-}
-
+/* La barre de matières reste naturelle : pas de fixed */
 .subjects-bar{
   position:relative !important;
   top:auto !important;
-  z-index:20 !important;
-  background:var(--bg);
 }
 
-/* Le chat ne doit plus être coupé artificiellement */
+/* Le chat garde sa hauteur d'origine et ne doit pas être coupé horizontalement */
 .chat-container{
-  min-height:320px !important;
-  max-height:none !important;
-  height:auto !important;
-  overflow-y:visible !important;
+  overflow-x:hidden !important;
 }
 
-/* La zone de saisie reste accessible sans masquer tout le bas */
+/* La zone de saisie reste simplement collante en bas, comme avant */
 .input-area{
   position:sticky !important;
   bottom:0 !important;
-  z-index:30 !important;
 }
 
-/* Sur tablette paysage, on compacte seulement un peu sans changer la structure */
+/* Sur tablette paysage : on compacte sans changer la structure */
 @media (max-width:1100px) and (orientation:landscape){
   header{padding:8px 12px !important;}
   .subjects-bar{padding:8px 12px !important;}
   .subject-btn{font-size:13px !important; padding:7px 11px !important;}
-  .progress-mini-wrap{margin-top:6px !important; margin-bottom:6px !important;}
-  .progress-mini-btn{padding:7px 10px !important;}
-  .chat-container{padding-top:10px !important; padding-bottom:12px !important;}
+  .quick-btn{font-size:12px !important; padding:7px 10px !important;}
 }
 </style>
 

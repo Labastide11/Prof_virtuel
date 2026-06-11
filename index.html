@@ -714,6 +714,22 @@ animation:pop .25s ease-out;
 }
 </style>
 
+
+<style id="patch-tablette-anti-refresh-v50c">
+html, body {
+  overscroll-behavior-y: none;
+  overscroll-behavior-x: none;
+  touch-action: pan-y;
+}
+.chat-container,
+.quick-questions,
+.modal-box,
+.teacher-dashboard-modal .modal-box,
+.progress-modal .modal-box {
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+</style>
 </head>
 <body>
 
@@ -3645,5 +3661,44 @@ setTimeout(removeVieDeClassePanel, 1000);
 })();
 </script>
 
+<script id="patch-tablette-anti-refresh-v50c">
+(function(){
+  // Empêche le pull-to-refresh accidentel sur tablette Android/Chrome,
+  // sans bloquer le scroll normal des zones internes.
+  let startY = 0;
+
+  function isScrollable(el){
+    while(el && el !== document.body){
+      const style = window.getComputedStyle(el);
+      const canScroll = /(auto|scroll)/.test(style.overflowY) && el.scrollHeight > el.clientHeight;
+      if(canScroll) return el;
+      el = el.parentElement;
+    }
+    return null;
+  }
+
+  document.addEventListener("touchstart", function(e){
+    if(e.touches && e.touches.length === 1){
+      startY = e.touches[0].clientY;
+    }
+  }, {passive:true});
+
+  document.addEventListener("touchmove", function(e){
+    if(!e.touches || e.touches.length !== 1) return;
+
+    const currentY = e.touches[0].clientY;
+    const pullingDown = currentY > startY;
+    const scrollable = isScrollable(e.target);
+
+    // Si on est dans une zone scrollable qui n'est pas tout en haut, on laisse scroller.
+    if(scrollable && scrollable.scrollTop > 0) return;
+
+    // Si on tire vers le bas depuis le haut, on bloque le geste de rafraîchissement.
+    if(pullingDown && (window.scrollY <= 0 || !scrollable || scrollable.scrollTop <= 0)){
+      e.preventDefault();
+    }
+  }, {passive:false});
+})();
+</script>
 </body>
 </html>

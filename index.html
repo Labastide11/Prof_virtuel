@@ -835,6 +835,67 @@ html, body {
 }
 </style>
 
+
+<style id="quiz-verification-competences-v52">
+.skill-check-box{
+  background:#F8F7FF;
+  border:2px solid var(--primary-light);
+  border-radius:16px;
+  padding:16px;
+  margin-top:10px;
+  width:100%;
+}
+.skill-check-box h3{
+  font-family:'Baloo 2',sans-serif;
+  color:var(--primary);
+  font-size:20px;
+  margin:0 0 8px 0;
+}
+.skill-check-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+  gap:8px;
+  margin-top:10px;
+}
+.skill-check-btn{
+  border:2px solid #ECEBF3;
+  background:#fff;
+  color:var(--primary);
+  border-radius:14px;
+  padding:10px;
+  font-family:inherit;
+  font-weight:900;
+  cursor:pointer;
+  text-align:left;
+  line-height:1.25;
+}
+.skill-check-btn:hover{
+  border-color:var(--primary);
+  background:var(--primary-light);
+}
+.skill-check-question{
+  background:#fff;
+  border:2px solid #ECEBF3;
+  border-radius:14px;
+  padding:12px;
+  font-size:16px;
+  font-weight:900;
+  margin:10px 0;
+}
+.skill-check-option{
+  background:#fff;
+  border:2px solid #ECEBF3;
+  border-radius:12px;
+  padding:10px 14px;
+  font-family:inherit;
+  font-weight:900;
+  cursor:pointer;
+  text-align:left;
+}
+.skill-check-option.correct{background:#E6F7E9!important;border-color:var(--green)!important;color:#1E5627!important;}
+.skill-check-option.wrong{background:#FFEAEA!important;border-color:var(--secondary)!important;color:#7A2222!important;}
+</style>
+
 </head>
 <body>
 
@@ -4289,6 +4350,481 @@ setTimeout(removeVieDeClassePanel, 1000);
 
   document.addEventListener("DOMContentLoaded", patchTeacherButtons);
   window.addEventListener("load", patchTeacherButtons);
+})();
+</script>
+
+
+<script id="quiz-verification-competences-v52">
+(function(){
+  const skillCheckBank = {
+    verbe: {
+      title:"Je reconnais un verbe",
+      domain:"Français",
+      questions:[
+        {q:"Dans la phrase « Le chat dort », quel mot est le verbe ?", options:["chat","dort","Le"], correct:1},
+        {q:"Quel mot est un verbe ?", options:["courir","cartable","bleu"], correct:0},
+        {q:"Dans « Les enfants jouent », le verbe est...", options:["Les","enfants","jouent"], correct:2}
+      ]
+    },
+    genre_nombre: {
+      title:"Je trouve le genre et le nombre",
+      domain:"Français",
+      questions:[
+        {q:"« une maison » est...", options:["féminin singulier","masculin singulier","féminin pluriel"], correct:0},
+        {q:"« des chiens » est...", options:["masculin pluriel","féminin singulier","masculin singulier"], correct:0},
+        {q:"Quel groupe nominal est au féminin pluriel ?", options:["les grandes fleurs","un petit chat","la grande table"], correct:0}
+      ]
+    },
+    phrase_ecrite: {
+      title:"Je sais écrire une phrase",
+      domain:"Français",
+      questions:[
+        {q:"Quelle phrase est correcte ?", options:["le chien joue.","Le chien joue.","Le chien joue"], correct:1},
+        {q:"Une phrase commence par...", options:["une minuscule","une majuscule","un chiffre"], correct:1},
+        {q:"Une phrase se termine souvent par...", options:["un point","une virgule","une lettre"], correct:0}
+      ]
+    },
+    carte: {
+      title:"Je sais lire une carte",
+      domain:"Géographie",
+      questions:[
+        {q:"Sur une carte, le nord est souvent placé...", options:["en haut","en bas","à gauche"], correct:0},
+        {q:"Une légende de carte sert à...", options:["expliquer les symboles","chanter","mesurer le poids"], correct:0},
+        {q:"Pour se repérer sur une carte, on peut utiliser...", options:["les points cardinaux","une fourchette","un ballon"], correct:0}
+      ]
+    },
+    anglais_couleurs: {
+      title:"Je connais des couleurs en anglais",
+      domain:"Anglais",
+      questions:[
+        {q:"Comment dit-on rouge en anglais ?", options:["red","blue","green"], correct:0},
+        {q:"Comment dit-on bleu en anglais ?", options:["yellow","blue","black"], correct:1},
+        {q:"Comment dit-on vert en anglais ?", options:["green","white","pink"], correct:0}
+      ]
+    },
+    anglais_saluer: {
+      title:"Je sais saluer en anglais",
+      domain:"Anglais",
+      questions:[
+        {q:"Comment dit-on bonjour en anglais ?", options:["hello","bye","dog"], correct:0},
+        {q:"Comment dit-on au revoir en anglais ?", options:["goodbye","red","cat"], correct:0},
+        {q:"Comment dit-on merci en anglais ?", options:["thank you","please","blue"], correct:0}
+      ]
+    }
+  };
+
+  // Ajoute aussi des quiz de vérification pour des compétences déjà présentes, au cas où l'enseignant veut les forcer.
+  skillCheckBank.nom_commun = {
+    title:"Je reconnais un nom commun",
+    domain:"Français",
+    questions:[
+      {q:"Dans « Le chien aboie », le nom commun est...", options:["Le","chien","aboie"], correct:1},
+      {q:"Quel mot est un nom commun ?", options:["table","Paris","courir"], correct:0},
+      {q:"Un nom commun désigne souvent...", options:["une personne, un animal ou une chose","seulement une ville","un signe de ponctuation"], correct:0}
+    ]
+  };
+  skillCheckBank.systeme_solaire = {
+    title:"Je connais le système solaire",
+    domain:"Sciences",
+    questions:[
+      {q:"La Terre tourne autour...", options:["du Soleil","de Mars","de la Lune"], correct:0},
+      {q:"Quelle planète est appelée la planète rouge ?", options:["Mars","Vénus","Jupiter"], correct:0},
+      {q:"Le Soleil est...", options:["une étoile","une planète","un satellite"], correct:0}
+    ]
+  };
+  skillCheckBank.france = {
+    title:"Je connais la France",
+    domain:"Géographie",
+    questions:[
+      {q:"La capitale de la France est...", options:["Paris","Lyon","Marseille"], correct:0},
+      {q:"La France se trouve en...", options:["Europe","Afrique","Asie"], correct:0},
+      {q:"Quel océan borde l'ouest de la France ?", options:["Atlantique","Pacifique","Indien"], correct:0}
+    ]
+  };
+
+  window.skillCheckState = null;
+
+  window.startSkillCheckMenu = function(){
+    const c = document.getElementById("chatContainer");
+    const d = document.createElement("div");
+    d.className = "message prof";
+    const buttons = Object.entries(skillCheckBank).map(function(entry){
+      const id = entry[0], data = entry[1];
+      return `<button class="skill-check-btn" onclick="startSkillCheck('${id}')"><small>${data.domain}</small><br>🎯 ${data.title}</button>`;
+    }).join("");
+
+    d.innerHTML = `
+      <div class="avatar prof">🦉</div>
+      <div class="bubble">
+        <div class="skill-check-box">
+          <h3>🎯 Vérifier une compétence</h3>
+          Choisis une compétence. Tu auras 3 questions. Si tu réussis tout, la compétence est validée.
+          <div class="skill-check-grid">${buttons}</div>
+        </div>
+      </div>`;
+    c.appendChild(d);
+    c.scrollTop = c.scrollHeight;
+  };
+
+  window.startSkillCheck = function(skillId){
+    const bank = skillCheckBank[skillId];
+    if(!bank) return;
+    window.skillCheckState = {
+      skillId,
+      title:bank.title,
+      domain:bank.domain,
+      questions: bank.questions.slice(),
+      index:0,
+      score:0
+    };
+    renderSkillCheckQuestion();
+  };
+
+  function renderSkillCheckQuestion(){
+    const s = window.skillCheckState;
+    if(!s) return;
+    const q = s.questions[s.index];
+    const c = document.getElementById("chatContainer");
+    const d = document.createElement("div");
+    d.className = "message prof";
+    d.innerHTML = `
+      <div class="avatar prof">🦉</div>
+      <div class="bubble">
+        <div class="skill-check-box">
+          <h3>🎯 ${s.title}</h3>
+          <div style="font-weight:900;color:var(--text-muted);font-size:12px;">Question ${s.index+1}/3</div>
+          <div class="skill-check-question">${q.q}</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            ${q.options.map((opt,i)=>`<button class="skill-check-option" onclick="answerSkillCheck(${i})">${opt}</button>`).join("")}
+          </div>
+        </div>
+      </div>`;
+    c.appendChild(d);
+    c.scrollTop = c.scrollHeight;
+  }
+
+  window.answerSkillCheck = function(choice){
+    const s = window.skillCheckState;
+    if(!s) return;
+    const q = s.questions[s.index];
+    const buttons = document.querySelectorAll(".message.prof:last-child .skill-check-option");
+    buttons.forEach(function(btn,i){
+      btn.disabled = true;
+      if(i === q.correct) btn.classList.add("correct");
+      else if(i === choice) btn.classList.add("wrong");
+    });
+
+    if(choice === q.correct){
+      s.score++;
+      if(typeof addScore === "function") addScore(3, "quiz compétence");
+    }
+
+    setTimeout(function(){
+      s.index++;
+      if(s.index >= s.questions.length){
+        finishSkillCheck();
+      }else{
+        renderSkillCheckQuestion();
+      }
+    }, 800);
+  };
+
+  function finishSkillCheck(){
+    const s = window.skillCheckState;
+    if(!s) return;
+    const ok = s.score === s.questions.length;
+    if(ok && typeof window.hibouValidateSkill === "function"){
+      window.hibouValidateSkill(s.skillId, {bonus:20, message:true});
+    }else{
+      if(typeof addMessage === "function"){
+        addMessage("prof", `🏁 Résultat : <b>${s.score}/3</b><br>La compétence n'est pas encore validée. Tu peux recommencer plus tard.`);
+      }
+    }
+    window.skillCheckState = null;
+  }
+
+  // Ajoute le bouton dans le menu général et dans Mes progrès.
+  function patchSkillButtons(){
+    const q = document.getElementById("quickQuestions");
+    if(q && !q.querySelector("#skillCheckQuickBtn") && document.querySelector(".subject-btn.active")?.getAttribute("data-subject") === "general"){
+      q.insertAdjacentHTML("afterbegin", `<button id="skillCheckQuickBtn" class="quick-btn" onclick="startSkillCheckMenu()">🎯 Vérifier une compétence</button>`);
+    }
+  }
+
+  const oldSelect = window.selectSubject;
+  if(typeof oldSelect === "function" && !window.__skillCheckMenuPatchV52){
+    window.__skillCheckMenuPatchV52 = true;
+    window.selectSubject = function(btn, subject){
+      oldSelect(btn, subject);
+      setTimeout(patchSkillButtons, 0);
+      setTimeout(patchSkillButtons, 100);
+    };
+  }
+
+  const oldOpenProgress = window.openProgressPopup;
+  if(typeof oldOpenProgress === "function" && !window.__skillCheckProgressPatchV52){
+    window.__skillCheckProgressPatchV52 = true;
+    window.openProgressPopup = function(){
+      oldOpenProgress();
+      setTimeout(function(){
+        const zone = document.getElementById("progressPopupContent");
+        if(zone && !zone.querySelector("#skillCheckFromProgressBtn")){
+          zone.insertAdjacentHTML("afterbegin", `<button id="skillCheckFromProgressBtn" class="teacher-btn" onclick="closeProgressPopup(); startSkillCheckMenu();" style="margin:0 0 10px 0;">🎯 Vérifier une compétence</button>`);
+        }
+      }, 120);
+    };
+  }
+
+  document.addEventListener("DOMContentLoaded", patchSkillButtons);
+  window.addEventListener("load", patchSkillButtons);
+})();
+</script>
+
+
+<script id="patch-quiz-competences-10q-v53">
+(function(){
+  // Banque étendue à 10 questions par compétence pour validation plus fiable.
+  const skillCheckBank10 = {
+    nom_commun: {
+      title:"Je reconnais un nom commun", domain:"Français",
+      questions:[
+        {q:"Dans « Le chien aboie », le nom commun est...", options:["Le","chien","aboie"], correct:1},
+        {q:"Quel mot est un nom commun ?", options:["table","Paris","courir"], correct:0},
+        {q:"Un nom commun désigne souvent...", options:["une personne, un animal ou une chose","seulement une ville","un signe"], correct:0},
+        {q:"Quel mot n'est PAS un nom commun ?", options:["stylo","maison","chanter"], correct:2},
+        {q:"Dans « La maîtresse écrit », le nom commun est...", options:["maîtresse","écrit","La"], correct:0},
+        {q:"Quel nom commun désigne un animal ?", options:["chat","rouge","vite"], correct:0},
+        {q:"Quel nom commun désigne un objet ?", options:["cartable","Carcassonne","dormir"], correct:0},
+        {q:"Dans « un arbre vert », le nom commun est...", options:["un","arbre","vert"], correct:1},
+        {q:"Quel mot peut avoir un déterminant devant lui ?", options:["courir","maison","très"], correct:1},
+        {q:"Dans « Les élèves lisent », le nom commun est...", options:["Les","élèves","lisent"], correct:1}
+      ]
+    },
+    verbe: {
+      title:"Je reconnais un verbe", domain:"Français",
+      questions:[
+        {q:"Dans « Le chat dort », le verbe est...", options:["chat","dort","Le"], correct:1},
+        {q:"Quel mot est un verbe ?", options:["courir","cartable","bleu"], correct:0},
+        {q:"Dans « Les enfants jouent », le verbe est...", options:["Les","enfants","jouent"], correct:2},
+        {q:"Quel mot indique une action ?", options:["manger","maison","petit"], correct:0},
+        {q:"Dans « Je chante », le verbe est...", options:["Je","chante","."], correct:1},
+        {q:"Quel mot peut se conjuguer ?", options:["dormir","table","rouge"], correct:0},
+        {q:"Dans « Nous écrivons », le verbe est...", options:["Nous","écrivons","dans"], correct:1},
+        {q:"Quel mot est un verbe à l'infinitif ?", options:["jouer","joue","jouet"], correct:0},
+        {q:"Dans « Elle regarde un livre », le verbe est...", options:["Elle","regarde","livre"], correct:1},
+        {q:"Quel mot n'est PAS un verbe ?", options:["parler","lire","trousse"], correct:2}
+      ]
+    },
+    genre_nombre: {
+      title:"Je trouve le genre et le nombre", domain:"Français",
+      questions:[
+        {q:"« une maison » est...", options:["féminin singulier","masculin singulier","féminin pluriel"], correct:0},
+        {q:"« des chiens » est...", options:["masculin pluriel","féminin singulier","masculin singulier"], correct:0},
+        {q:"Quel groupe nominal est au féminin pluriel ?", options:["les grandes fleurs","un petit chat","la grande table"], correct:0},
+        {q:"« le cahier » est...", options:["masculin singulier","féminin singulier","masculin pluriel"], correct:0},
+        {q:"« les tables » est...", options:["féminin pluriel","féminin singulier","masculin pluriel"], correct:0},
+        {q:"Quel déterminant indique le pluriel ?", options:["un","la","des"], correct:2},
+        {q:"« une voiture » est...", options:["féminin singulier","masculin singulier","féminin pluriel"], correct:0},
+        {q:"Quel groupe est masculin pluriel ?", options:["les garçons","la fille","une table"], correct:0},
+        {q:"Dans « des maisons », le nombre est...", options:["singulier","pluriel","féminin"], correct:1},
+        {q:"Dans « le vélo », le genre est...", options:["masculin","féminin","pluriel"], correct:0}
+      ]
+    },
+    phrase_ecrite: {
+      title:"Je sais écrire une phrase", domain:"Français",
+      questions:[
+        {q:"Quelle phrase est correcte ?", options:["le chien joue.","Le chien joue.","Le chien joue"], correct:1},
+        {q:"Une phrase commence par...", options:["une minuscule","une majuscule","un chiffre"], correct:1},
+        {q:"Une phrase se termine souvent par...", options:["un point","une virgule","une lettre"], correct:0},
+        {q:"Quelle phrase est complète ?", options:["Dans la cour.","Le garçon court.","Très vite."], correct:1},
+        {q:"Quel signe termine une question ?", options:[".","?","!"], correct:1},
+        {q:"Quelle phrase est correcte ?", options:["Ma soeur lit un livre.","ma soeur lit un livre.","Ma soeur lit un livre"], correct:0},
+        {q:"Dans une phrase, on doit souvent trouver...", options:["un verbe","toujours 20 mots","jamais de point"], correct:0},
+        {q:"Quelle phrase raconte quelque chose ?", options:["Le chat dort.","Le chat.","Très joli."], correct:0},
+        {q:"Quelle phrase est bien ponctuée ?", options:["Où vas-tu ?","Où vas-tu","où vas-tu ?"], correct:0},
+        {q:"Une phrase doit avoir du sens. Laquelle a du sens ?", options:["La chaise mange le ciel.","Le chien aboie.","Bleu très le."], correct:1}
+      ]
+    },
+    systeme_solaire: {
+      title:"Je connais le système solaire", domain:"Sciences",
+      questions:[
+        {q:"La Terre tourne autour...", options:["du Soleil","de Mars","de la Lune"], correct:0},
+        {q:"Quelle planète est appelée la planète rouge ?", options:["Mars","Vénus","Jupiter"], correct:0},
+        {q:"Le Soleil est...", options:["une étoile","une planète","un satellite"], correct:0},
+        {q:"La Lune est...", options:["un satellite de la Terre","une étoile","une planète"], correct:0},
+        {q:"Nous vivons sur...", options:["Mars","la Terre","Jupiter"], correct:1},
+        {q:"La planète la plus proche du Soleil est...", options:["Mercure","Neptune","Saturne"], correct:0},
+        {q:"Une planète tourne autour...", options:["d'une étoile","d'un cahier","d'une montagne"], correct:0},
+        {q:"Le système solaire contient...", options:["le Soleil et des planètes","seulement la Terre","seulement la Lune"], correct:0},
+        {q:"Jupiter est...", options:["une planète","une étoile","un océan"], correct:0},
+        {q:"Le jour et la nuit sont liés à...", options:["la rotation de la Terre","la pluie","la couleur des nuages"], correct:0}
+      ]
+    },
+    france: {
+      title:"Je connais la France", domain:"Géographie",
+      questions:[
+        {q:"La capitale de la France est...", options:["Paris","Lyon","Marseille"], correct:0},
+        {q:"La France se trouve en...", options:["Europe","Afrique","Asie"], correct:0},
+        {q:"Quel océan borde l'ouest de la France ?", options:["Atlantique","Pacifique","Indien"], correct:0},
+        {q:"Quel fleuve traverse Paris ?", options:["La Seine","Le Rhône","La Garonne"], correct:0},
+        {q:"Les Pyrénées sont...", options:["des montagnes","des fleuves","des mers"], correct:0},
+        {q:"La Méditerranée borde la France au...", options:["sud","nord","centre"], correct:0},
+        {q:"La France a des frontières avec...", options:["l'Espagne","le Japon","le Brésil"], correct:0},
+        {q:"Une grande ville française est...", options:["Toulouse","Madrid","Rome"], correct:0},
+        {q:"La France métropolitaine ressemble souvent à...", options:["un hexagone","un cercle parfait","une étoile"], correct:0},
+        {q:"Les Alpes sont...", options:["des montagnes","un océan","une ville"], correct:0}
+      ]
+    },
+    carte: {
+      title:"Je sais lire une carte", domain:"Géographie",
+      questions:[
+        {q:"Sur une carte, le nord est souvent placé...", options:["en haut","en bas","à gauche"], correct:0},
+        {q:"Une légende de carte sert à...", options:["expliquer les symboles","chanter","mesurer le poids"], correct:0},
+        {q:"Pour se repérer sur une carte, on peut utiliser...", options:["les points cardinaux","une fourchette","un ballon"], correct:0},
+        {q:"Le symbole d'une carte représente...", options:["un lieu ou une information","un bruit","une opération"], correct:0},
+        {q:"L'échelle d'une carte aide à comprendre...", options:["les distances","les couleurs des yeux","la température"], correct:0},
+        {q:"Le sud est opposé au...", options:["nord","ouest","centre"], correct:0},
+        {q:"L'est est souvent à...", options:["droite si le nord est en haut","gauche si le nord est en haut","toujours en bas"], correct:0},
+        {q:"Une carte sert surtout à...", options:["se repérer","dormir","faire du sport"], correct:0},
+        {q:"Les couleurs sur une carte peuvent représenter...", options:["des reliefs ou des zones","des notes de musique","des animaux seulement"], correct:0},
+        {q:"Pour trouver une ville sur une carte, je cherche...", options:["son nom ou son symbole","le prix","la météo seulement"], correct:0}
+      ]
+    },
+    anglais_couleurs: {
+      title:"Je connais des couleurs en anglais", domain:"Anglais",
+      questions:[
+        {q:"Comment dit-on rouge en anglais ?", options:["red","blue","green"], correct:0},
+        {q:"Comment dit-on bleu en anglais ?", options:["yellow","blue","black"], correct:1},
+        {q:"Comment dit-on vert en anglais ?", options:["green","white","pink"], correct:0},
+        {q:"Comment dit-on jaune ?", options:["yellow","purple","brown"], correct:0},
+        {q:"Comment dit-on noir ?", options:["black","white","orange"], correct:0},
+        {q:"Comment dit-on blanc ?", options:["white","red","grey"], correct:0},
+        {q:"Comment dit-on rose ?", options:["pink","blue","green"], correct:0},
+        {q:"Comment dit-on violet ?", options:["purple","yellow","black"], correct:0},
+        {q:"Comment dit-on orange ?", options:["orange","red","white"], correct:0},
+        {q:"Comment dit-on marron ?", options:["brown","blue","green"], correct:0}
+      ]
+    },
+    anglais_saluer: {
+      title:"Je sais saluer en anglais", domain:"Anglais",
+      questions:[
+        {q:"Comment dit-on bonjour en anglais ?", options:["hello","bye","dog"], correct:0},
+        {q:"Comment dit-on au revoir en anglais ?", options:["goodbye","red","cat"], correct:0},
+        {q:"Comment dit-on merci en anglais ?", options:["thank you","please","blue"], correct:0},
+        {q:"Comment dit-on s'il te plaît ?", options:["please","goodbye","green"], correct:0},
+        {q:"Comment dit-on bonsoir ?", options:["good evening","good cat","red evening"], correct:0},
+        {q:"Comment dit-on bonne nuit ?", options:["good night","hello night","please night"], correct:0},
+        {q:"Pour demander le prénom, on peut dire...", options:["What's your name?","What's your color?","Goodbye!"], correct:0},
+        {q:"Pour répondre « Je m'appelle Tom », on dit...", options:["My name is Tom.","Goodbye Tom.","Blue Tom."], correct:0},
+        {q:"Quand on arrive, on peut dire...", options:["Hello!","Goodbye!","Thank you!"], correct:0},
+        {q:"Quand quelqu'un aide, on dit...", options:["Thank you!","Blue!","Dog!"], correct:0}
+      ]
+    }
+  };
+
+  function shuffle(arr){
+    return arr.map(v => ({v, r:Math.random()})).sort((a,b)=>a.r-b.r).map(o=>o.v);
+  }
+
+  // Remplace les anciennes fonctions du quiz compétences si elles existent.
+  window.startSkillCheck = function(skillId){
+    const bank = skillCheckBank10[skillId];
+    if(!bank) return;
+    window.skillCheckState = {
+      skillId,
+      title:bank.title,
+      domain:bank.domain,
+      questions: shuffle(bank.questions).slice(0,10),
+      index:0,
+      score:0
+    };
+    renderSkillCheckQuestion10();
+  };
+
+  function renderSkillCheckQuestion10(){
+    const s = window.skillCheckState;
+    if(!s) return;
+    const q = s.questions[s.index];
+    const c = document.getElementById("chatContainer");
+    const d = document.createElement("div");
+    d.className = "message prof";
+    d.innerHTML = `
+      <div class="avatar prof">🦉</div>
+      <div class="bubble">
+        <div class="skill-check-box">
+          <h3>🎯 ${s.title}</h3>
+          <div style="font-weight:900;color:var(--text-muted);font-size:12px;">Question ${s.index+1}/10 · Validation à 8/10</div>
+          <div class="skill-check-question">${q.q}</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            ${q.options.map((opt,i)=>`<button class="skill-check-option" onclick="answerSkillCheck(${i})">${opt}</button>`).join("")}
+          </div>
+        </div>
+      </div>`;
+    c.appendChild(d);
+    c.scrollTop = c.scrollHeight;
+  }
+
+  window.answerSkillCheck = function(choice){
+    const s = window.skillCheckState;
+    if(!s) return;
+    const q = s.questions[s.index];
+    const buttons = document.querySelectorAll(".message.prof:last-child .skill-check-option");
+    buttons.forEach(function(btn,i){
+      btn.disabled = true;
+      if(i === q.correct) btn.classList.add("correct");
+      else if(i === choice) btn.classList.add("wrong");
+    });
+
+    if(choice === q.correct){
+      s.score++;
+      if(typeof addScore === "function") addScore(2, "quiz compétence");
+    }
+
+    setTimeout(function(){
+      s.index++;
+      if(s.index >= s.questions.length){
+        finishSkillCheck10();
+      }else{
+        renderSkillCheckQuestion10();
+      }
+    }, 700);
+  };
+
+  function finishSkillCheck10(){
+    const s = window.skillCheckState;
+    if(!s) return;
+    const ok = s.score >= 8;
+    if(ok && typeof window.hibouValidateSkill === "function"){
+      window.hibouValidateSkill(s.skillId, {bonus:20, message:true});
+      if(typeof addMessage === "function"){
+        addMessage("prof", `🏆 Validation réussie : <b>${s.score}/10</b><br>La compétence est validée car tu as au moins 8 bonnes réponses.`);
+      }
+    }else{
+      if(typeof addMessage === "function"){
+        addMessage("prof", `🏁 Résultat : <b>${s.score}/10</b><br>La compétence n'est pas encore validée. Il faut au moins <b>8/10</b>.`);
+      }
+    }
+    window.skillCheckState = null;
+  }
+
+  // Remplace le texte du menu s'il existe.
+  const oldStartSkillCheckMenu = window.startSkillCheckMenu;
+  window.startSkillCheckMenu = function(){
+    if(typeof oldStartSkillCheckMenu === "function"){
+      oldStartSkillCheckMenu();
+      setTimeout(function(){
+        const boxes = document.querySelectorAll(".skill-check-box");
+        const box = boxes[boxes.length-1];
+        if(box){
+          box.innerHTML = box.innerHTML
+            .replace("Tu auras 3 questions. Si tu réussis tout, la compétence est validée.", "Tu auras 10 questions. La compétence est validée à partir de 8 bonnes réponses.")
+            .replace("3 questions", "10 questions")
+            .replace("réussis tout", "réussis au moins 8/10");
+        }
+      }, 50);
+      return;
+    }
+  };
 })();
 </script>
 

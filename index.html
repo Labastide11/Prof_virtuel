@@ -1030,218 +1030,18 @@ html, body {
 
 
 
-<style id="patch-tablette-shell-v69">
-/* V6.9 - Vraie structure tablette : haut / chat / bas */
-html, body{
-  height:100dvh !important;
-  max-height:100dvh !important;
-  overflow:hidden !important;
-}
 
-body{
-  display:flex !important;
-  flex-direction:column !important;
+<style id="patch-competence-chat-unique-v72">
+/* V7.2 - Validation de compétence : ouverture au clic, une seule occurrence */
+body.competence-mode #quickQuestions{
+  display:none !important;
 }
-
-/* Le haut reste dans le flux, pas en fixed */
-header{
-  position:relative !important;
-  top:auto !important;
-  flex:0 0 auto !important;
-  z-index:30 !important;
-}
-
-.subjects-bar{
-  position:relative !important;
-  top:auto !important;
-  flex:0 0 auto !important;
-  z-index:25 !important;
-  background:var(--bg) !important;
-}
-
-/* Le sous-menu ne doit pas flotter ni couvrir le chat */
-.quick-questions{
-  position:relative !important;
-  top:auto !important;
-  transform:none !important;
-  flex:0 0 auto !important;
-  max-height:76px !important;
-  overflow-y:auto !important;
-}
-
-/* En mode validation compétence, on ne montre jamais le défi du maître */
 body.competence-mode #masterChallengeCard,
 body.competence-mode .master-challenge-card{
   display:none !important;
 }
-
-/* Le bouton progrès reste compact */
-.progress-mini-wrap{
-  flex:0 0 auto !important;
-  margin:6px auto 6px auto !important;
-}
-.progress-mini-btn{
-  padding:7px 10px !important;
-}
-
-/* Le chat devient la vraie zone centrale de scroll */
-.chat-container{
-  flex:1 1 auto !important;
-  min-height:0 !important;
-  height:auto !important;
-  max-height:none !important;
-  overflow-y:auto !important;
-  overflow-x:hidden !important;
-  padding-top:10px !important;
-  padding-bottom:12px !important;
-}
-
-/* La saisie reste en bas dans le flux, sans masquer le chat */
-.input-area{
-  position:relative !important;
-  bottom:auto !important;
-  flex:0 0 auto !important;
-  z-index:30 !important;
-  padding:8px 16px !important;
-}
-
-.security-note{
-  font-size:11px !important;
-  margin-top:4px !important;
-}
-.logout-area{
-  margin-top:2px !important;
-}
-.logout-btn{
-  font-size:12px !important;
-  padding:2px 8px !important;
-}
-
-/* Compactage tablette paysage */
-@media (max-width:1100px) and (orientation:landscape){
-  header{
-    padding:7px 12px !important;
-  }
-  .logo-icon{font-size:23px !important;}
-  .logo-text{font-size:17px !important;}
-  .badge{font-size:12px !important; padding:5px 8px !important;}
-  .btn-round{width:34px !important; height:34px !important;}
-
-  .subjects-bar{
-    padding:7px 12px !important;
-    gap:6px !important;
-  }
-  .subject-btn{
-    font-size:12px !important;
-    padding:7px 10px !important;
-  }
-
-  .quick-questions{
-    padding:4px 12px 6px 12px !important;
-    max-height:62px !important;
-  }
-  .quick-btn{
-    font-size:12px !important;
-    padding:6px 9px !important;
-  }
-
-  .message{
-    max-width:82% !important;
-  }
-  .bubble{
-    font-size:14px !important;
-    padding:10px 14px !important;
-  }
-
-  .input-area{
-    padding:7px 12px !important;
-  }
-  .input-wrapper{
-    padding:5px 9px !important;
-  }
-}
-
-/* Le bloc compétence doit tenir mieux sur tablette */
-.skill-check-box{
-  padding:12px !important;
-}
-.skill-check-grid{
-  grid-template-columns:repeat(auto-fit,minmax(190px,1fr)) !important;
-  gap:8px !important;
-}
-.skill-check-btn{
-  padding:9px !important;
-  font-size:13px !important;
-  line-height:1.22 !important;
-}
-</style>
-
-
-<style id="patch-tablette-competence-fix-v70">
-/* V7.0 - Correction réelle tablette : mode Valider compétence prioritaire */
-body.competence-mode #masterChallengeCard,
-body.competence-mode .master-challenge-card,
-body.competence-mode #welcomeQuizFrame,
-body.competence-mode .welcome-quiz-container{
-  display:none !important;
-}
-
-/* En mode validation, on garde l’écran clair : pas de sous-menu, pas de défi */
-body.competence-mode #quickQuestions{
-  display:none !important;
-}
-
-/* On évite le doublon "Voir mes progrès" en plein écran de validation */
-body.competence-mode #progressMiniWrap{
-  display:none !important;
-}
-
-/* Le chat prend toute la place disponible */
-body.competence-mode .chat-container{
-  flex:1 1 auto !important;
-  min-height:0 !important;
-  overflow-y:auto !important;
-}
-
-/* La grille de compétences reste lisible sur tablette paysage */
-body.competence-mode .skill-check-box{
-  margin-top:6px !important;
-  padding:12px !important;
-}
-body.competence-mode .skill-check-grid{
-  grid-template-columns:repeat(auto-fit,minmax(210px,1fr)) !important;
-  gap:8px !important;
-}
-body.competence-mode .skill-check-btn{
-  padding:9px !important;
-  font-size:13px !important;
-}
-</style>
-
-
-<style id="patch-competence-only-on-click-v71">
-/* V7.1 - Le cadre compétence n’apparaît qu’après clic */
-body:not(.competence-mode) #quickQuestions{
-  display:flex;
-}
-
-body.competence-mode #masterChallengeCard,
-body.competence-mode .master-challenge-card,
-body.competence-mode #welcomeQuizFrame,
-body.competence-mode .welcome-quiz-container,
-body.competence-mode #quickQuestions{
-  display:none !important;
-}
-
-body.competence-mode .chat-container{
-  flex:1 1 auto !important;
-  min-height:0 !important;
-  overflow-y:auto !important;
-}
-
-body.competence-mode .skill-check-box{
-  margin-top:6px !important;
-  padding:12px !important;
+.skill-check-box[data-unique-skill-menu="true"]{
+  margin-top:10px;
 }
 </style>
 
@@ -5351,245 +5151,6 @@ setTimeout(removeVieDeClassePanel, 1000);
 
 
 
-<script id="menu-valider-competence-v57b">
-(function(){
-  function openCompetenceValidation(){
-    document.querySelectorAll(".subject-btn").forEach(function(b){ b.classList.remove("active"); });
-    const btn = document.querySelector('.subject-btn[data-subject="competences"], .subject-btn[data-subject="general"]');
-    if(btn) btn.classList.add("active");
-
-    const q = document.getElementById("quickQuestions");
-    if(q){
-      q.innerHTML = '<button class="quick-btn" onclick="openCompetenceValidation()">🏅 Valider une compétence</button>';
-    }
-
-    if(typeof startSkillCheckMenu === "function"){
-      startSkillCheckMenu();
-    }else if(typeof addMessage === "function"){
-      addMessage("prof", "La validation des compétences est en cours de chargement. Réessaie dans un instant.");
-    }
-  }
-
-  window.openCompetenceValidation = openCompetenceValidation;
-
-  function patchMenu(){
-    document.querySelectorAll(".subject-btn").forEach(function(btn){
-      const txt = (btn.textContent || "").toLowerCase();
-      const subject = btn.getAttribute("data-subject");
-      if(txt.includes("général") || txt.includes("general") || subject === "general" || subject === "competences"){
-        btn.textContent = "🏅 Valider une compétence";
-        btn.setAttribute("data-subject", "competences");
-        btn.onclick = openCompetenceValidation;
-      }
-    });
-  }
-
-  const oldSelect = window.selectSubject;
-  if(typeof oldSelect === "function" && !window.__v57bmenu){
-    window.__v57bmenu = true;
-    window.selectSubject = function(btn, subject){
-      if(subject === "general" || subject === "competences"){
-        openCompetenceValidation();
-        return;
-      }
-      return oldSelect.apply(this, arguments);
-    };
-  }
-
-  document.addEventListener("DOMContentLoaded", function(){
-    patchMenu();
-    setTimeout(patchMenu, 100);
-    setTimeout(patchMenu, 500);
-  });
-  window.addEventListener("load", function(){
-    patchMenu();
-    setTimeout(patchMenu, 100);
-    setTimeout(patchMenu, 500);
-  });
-})();
-</script>
-
-
-<script id="menu-valider-competence-v57c">
-(function(){
-  function hideQuickQuestionsForCompetence(){
-    const q = document.getElementById("quickQuestions");
-    if(q){
-      q.innerHTML = "";
-      q.style.display = "none";
-    }
-  }
-
-  function showQuickQuestionsForSubjects(){
-    const q = document.getElementById("quickQuestions");
-    if(q){
-      q.style.display = "";
-    }
-  }
-
-  function openCompetenceValidationClean(){
-    document.querySelectorAll(".subject-btn").forEach(function(b){ b.classList.remove("active"); });
-    const btn = document.querySelector('.subject-btn[data-subject="competences"], .subject-btn[data-subject="general"]');
-    if(btn) btn.classList.add("active");
-
-    hideQuickQuestionsForCompetence();
-
-    if(typeof startSkillCheckMenu === "function"){
-      startSkillCheckMenu();
-    }else if(typeof addMessage === "function"){
-      addMessage("prof", "La validation des compétences est en cours de chargement. Réessaie dans un instant.");
-    }
-  }
-
-  window.openCompetenceValidation = openCompetenceValidationClean;
-
-  function patchMainButton(){
-    document.querySelectorAll(".subject-btn").forEach(function(btn){
-      const txt = (btn.textContent || "").toLowerCase();
-      const subject = btn.getAttribute("data-subject");
-      if(txt.includes("général") || txt.includes("general") || subject === "general" || subject === "competences"){
-        btn.textContent = "🏅 Valider une compétence";
-        btn.setAttribute("data-subject", "competences");
-        btn.onclick = openCompetenceValidationClean;
-      }
-    });
-  }
-
-  const oldSelect = window.selectSubject;
-  if(typeof oldSelect === "function" && !window.__v57cMenu){
-    window.__v57cMenu = true;
-    window.selectSubject = function(btn, subject){
-      if(subject === "general" || subject === "competences"){
-        openCompetenceValidationClean();
-        return;
-      }
-      showQuickQuestionsForSubjects();
-      return oldSelect.apply(this, arguments);
-    };
-  }
-
-  document.addEventListener("DOMContentLoaded", function(){
-    patchMainButton();
-    const active = document.querySelector(".subject-btn.active");
-    if(active && active.getAttribute("data-subject") === "competences"){
-      hideQuickQuestionsForCompetence();
-    }
-  });
-
-  window.addEventListener("load", function(){
-    patchMainButton();
-    const active = document.querySelector(".subject-btn.active");
-    if(active && active.getAttribute("data-subject") === "competences"){
-      hideQuickQuestionsForCompetence();
-    }
-  });
-})();
-</script>
-
-
-<script id="patch-valider-competence-unique-v58b">
-(function(){
-  function getSkillMenuBoxes(){
-    return Array.from(document.querySelectorAll(".skill-check-box")).filter(function(box){
-      const title = (box.querySelector("h3")?.textContent || box.textContent || "").toLowerCase();
-      return title.includes("vérifier une compétence") || title.includes("valider une compétence") || box.getAttribute("data-skill-menu") === "true";
-    });
-  }
-
-  function getMessageWrapper(el){
-    while(el && el !== document.body){
-      if(el.classList && el.classList.contains("message")) return el;
-      el = el.parentElement;
-    }
-    return null;
-  }
-
-  function cleanupDuplicateSkillMenus(){
-    const boxes = getSkillMenuBoxes();
-    if(boxes.length <= 1) return boxes[0] || null;
-
-    const first = boxes[0];
-    boxes.slice(1).forEach(function(box){
-      const msg = getMessageWrapper(box);
-      if(msg) msg.remove();
-      else box.remove();
-    });
-    return first;
-  }
-
-  function scrollToSkillMenu(box){
-    const chat = document.getElementById("chatContainer");
-    if(box){
-      box.setAttribute("data-skill-menu", "true");
-      box.scrollIntoView({behavior:"smooth", block:"center"});
-      if(chat) setTimeout(function(){ chat.scrollTop = chat.scrollHeight; }, 80);
-      return true;
-    }
-    return false;
-  }
-
-  const originalStartSkillCheckMenu = window.startSkillCheckMenu;
-  if(typeof originalStartSkillCheckMenu === "function" && !window.__uniqueSkillCheckMenuV58B){
-    window.__uniqueSkillCheckMenuV58B = true;
-
-    window.startSkillCheckMenu = function(){
-      let existing = cleanupDuplicateSkillMenus();
-      if(existing){
-        scrollToSkillMenu(existing);
-        return;
-      }
-
-      const result = originalStartSkillCheckMenu.apply(this, arguments);
-
-      setTimeout(function(){
-        const boxes = getSkillMenuBoxes();
-        if(boxes.length){
-          boxes[0].setAttribute("data-skill-menu", "true");
-          cleanupDuplicateSkillMenus();
-        }
-      }, 60);
-
-      return result;
-    };
-  }
-
-  // Remplace l'ouverture principale pour qu'elle passe forcément par le startSkillCheckMenu verrouillé.
-  window.openCompetenceValidation = function(){
-    document.querySelectorAll(".subject-btn").forEach(function(b){ b.classList.remove("active"); });
-    const btn = document.querySelector('.subject-btn[data-subject="competences"], .subject-btn[data-subject="general"]');
-    if(btn) btn.classList.add("active");
-
-    const q = document.getElementById("quickQuestions");
-    if(q){
-      q.innerHTML = "";
-      q.style.display = "none";
-    }
-
-    if(typeof window.startSkillCheckMenu === "function"){
-      window.startSkillCheckMenu();
-    }
-  };
-
-  // Quand l'élève choisit vraiment une compétence, on ne supprime pas les questions,
-  // mais on autorise plus tard un nouveau menu si l'ancien menu est retiré.
-  const originalStartSkillCheck = window.startSkillCheck;
-  if(typeof originalStartSkillCheck === "function" && !window.__uniqueSkillCheckStartV58B){
-    window.__uniqueSkillCheckStartV58B = true;
-    window.startSkillCheck = function(skillId){
-      getSkillMenuBoxes().forEach(function(box){
-        box.setAttribute("data-skill-menu", "used");
-      });
-      return originalStartSkillCheck.apply(this, arguments);
-    };
-  }
-
-  document.addEventListener("DOMContentLoaded", function(){
-    cleanupDuplicateSkillMenus();
-  });
-})();
-</script>
-
-
 <script id="patch-nom-commun-lecon-v59">
 (function(){
   window.showNomCommunLesson = function(){
@@ -5864,152 +5425,114 @@ setTimeout(removeVieDeClassePanel, 1000);
 
 
 
-<script id="patch-tablette-shell-v69">
+
+<script id="patch-competence-chat-unique-v72">
 (function(){
-  if("scrollRestoration" in history){
-    history.scrollRestoration = "manual";
+  function getSkillMenuBox(){
+    const boxes = Array.from(document.querySelectorAll(".skill-check-box"));
+    return boxes.find(function(box){
+      const text = (box.textContent || "").toLowerCase();
+      return box.getAttribute("data-unique-skill-menu") === "true"
+        || text.includes("vérifier une compétence")
+        || text.includes("valider une compétence")
+        || text.includes("choisis une compétence");
+    }) || null;
   }
 
-  function isCompetenceActive(){
-    const active = document.querySelector(".subject-btn.active");
-    return active && active.getAttribute("data-subject") === "competences";
+  function removeDuplicateSkillMenus(keep){
+    Array.from(document.querySelectorAll(".skill-check-box")).forEach(function(box){
+      if(box === keep) return;
+      const text = (box.textContent || "").toLowerCase();
+      const isMenu = text.includes("vérifier une compétence")
+        || text.includes("valider une compétence")
+        || text.includes("choisis une compétence")
+        || box.getAttribute("data-unique-skill-menu") === "true";
+      if(isMenu){
+        const msg = box.closest(".message");
+        if(msg) msg.remove();
+        else box.remove();
+      }
+    });
   }
 
-  function applyTabletShell(){
-    const competence = isCompetenceActive();
-    document.body.classList.toggle("competence-mode", !!competence);
+  function scrollToSkillMenu(box){
+    const chat = document.getElementById("chatContainer");
+    if(!box) return;
+    box.setAttribute("data-unique-skill-menu", "true");
+    removeDuplicateSkillMenus(box);
+    box.scrollIntoView({behavior:"smooth", block:"center"});
+    if(chat){
+      setTimeout(function(){ chat.scrollTop = chat.scrollHeight; }, 80);
+    }
+  }
 
+  function hideSubjectSubmenu(){
     const q = document.getElementById("quickQuestions");
-    if(q && competence){
+    if(q){
       q.style.display = "none";
       q.innerHTML = "";
     }
-
     const challenge = document.getElementById("masterChallengeCard");
-    if(challenge && competence){
+    if(challenge){
       challenge.style.display = "none";
     }
-
-    const chat = document.getElementById("chatContainer");
-    if(chat){
-      chat.style.overflowY = "auto";
-      chat.style.minHeight = "0";
-    }
-
-    window.scrollTo(0,0);
   }
 
-  const oldSelect = window.selectSubject;
-  if(typeof oldSelect === "function" && !window.__tabletShellSelectV69){
-    window.__tabletShellSelectV69 = true;
-    window.selectSubject = function(btn, subject){
-      document.body.classList.remove("competence-mode");
-      const result = oldSelect.apply(this, arguments);
-      setTimeout(applyTabletShell, 0);
-      setTimeout(applyTabletShell, 120);
+  const originalStartSkillCheckMenu = window.startSkillCheckMenu;
+  if(typeof originalStartSkillCheckMenu === "function" && !window.__uniqueSkillMenuV72){
+    window.__uniqueSkillMenuV72 = true;
+    window.startSkillCheckMenu = function(){
+      const existing = getSkillMenuBox();
+      if(existing){
+        scrollToSkillMenu(existing);
+        return;
+      }
+
+      const result = originalStartSkillCheckMenu.apply(this, arguments);
+
+      setTimeout(function(){
+        const created = getSkillMenuBox();
+        if(created){
+          created.setAttribute("data-unique-skill-menu", "true");
+          removeDuplicateSkillMenus(created);
+          scrollToSkillMenu(created);
+        }
+      }, 60);
+
       return result;
     };
   }
 
-  const oldOpenCompetence = window.openCompetenceValidation;
-  if(typeof oldOpenCompetence === "function" && !window.__tabletShellCompetenceV69){
-    window.__tabletShellCompetenceV69 = true;
-    window.openCompetenceValidation = function(){
-      document.body.classList.add("competence-mode");
-      const result = oldOpenCompetence.apply(this, arguments);
-      setTimeout(applyTabletShell, 0);
-      setTimeout(applyTabletShell, 120);
-      return result;
-    };
-  }
+  window.openCompetenceValidation = function(){
+    document.body.classList.add("competence-mode");
 
-  function startInCompetenceModeIfNeeded(){
-    applyTabletShell();
-    const active = document.querySelector(".subject-btn.active");
-    const hasSkillBox = document.querySelector(".skill-check-box");
-    if(active && active.getAttribute("data-subject") === "competences" && !hasSkillBox && typeof window.openCompetenceValidation === "function"){
-      window.openCompetenceValidation();
-    }
-    setTimeout(applyTabletShell, 200);
-  }
-
-  document.addEventListener("DOMContentLoaded", function(){
-    setTimeout(startInCompetenceModeIfNeeded, 100);
-    setTimeout(startInCompetenceModeIfNeeded, 500);
-  });
-  window.addEventListener("load", function(){
-    setTimeout(startInCompetenceModeIfNeeded, 100);
-    setTimeout(startInCompetenceModeIfNeeded, 500);
-  });
-})();
-</script>
-
-
-
-<script id="patch-competence-only-on-click-v71">
-(function(){
-  function cleanCompetenceScreenV71(){
-    const competence = document.body.classList.contains("competence-mode");
-
-    if(competence){
-      const q = document.getElementById("quickQuestions");
-      if(q){ q.style.display = "none"; q.innerHTML = ""; }
-
-      const challenge = document.getElementById("masterChallengeCard");
-      if(challenge){ challenge.style.display = "none"; }
-
-      const welcome = document.getElementById("welcomeQuizFrame");
-      if(welcome){ welcome.style.display = "none"; }
-    }
-  }
-
-  const oldOpenCompetence = window.openCompetenceValidation;
-  if(typeof oldOpenCompetence === "function" && !window.__competenceOnlyClickV71){
-    window.__competenceOnlyClickV71 = true;
-    window.openCompetenceValidation = function(){
-      document.body.classList.add("competence-mode");
-
-      document.querySelectorAll(".subject-btn").forEach(function(b){ b.classList.remove("active"); });
-      const btn = document.querySelector('.subject-btn[data-subject="competences"]');
-      if(btn) btn.classList.add("active");
-
-      cleanCompetenceScreenV71();
-
-      const result = oldOpenCompetence.apply(this, arguments);
-
-      setTimeout(cleanCompetenceScreenV71, 0);
-      setTimeout(cleanCompetenceScreenV71, 150);
-      return result;
-    };
-  }
-
-  const oldSelectSubject = window.selectSubject;
-  if(typeof oldSelectSubject === "function" && !window.__subjectLeavesCompetenceV71){
-    window.__subjectLeavesCompetenceV71 = true;
-    window.selectSubject = function(btn, subject){
-      document.body.classList.remove("competence-mode");
-      const result = oldSelectSubject.apply(this, arguments);
-      return result;
-    };
-  }
-
-  document.addEventListener("DOMContentLoaded", function(){
-    document.body.classList.remove("competence-mode");
-
-    // Si un cadre compétence a été créé par un ancien chargement automatique, on le retire.
-    document.querySelectorAll(".skill-check-box").forEach(function(box){
-      const msg = box.closest(".message");
-      if(msg) msg.remove();
-      else box.remove();
+    document.querySelectorAll(".subject-btn").forEach(function(btn){
+      btn.classList.remove("active");
     });
 
-    // On laisse l’accueil normal.
-    const active = document.querySelector(".subject-btn.active");
-    if(active && active.getAttribute("data-subject") === "competences"){
-      active.classList.remove("active");
-      const maths = document.querySelector('.subject-btn[data-subject="maths"]');
-      if(maths) maths.classList.add("active");
+    const competenceBtn = document.querySelector('.subject-btn[data-subject="competences"]');
+    if(competenceBtn) competenceBtn.classList.add("active");
+
+    hideSubjectSubmenu();
+
+    if(typeof window.startSkillCheckMenu === "function"){
+      window.startSkillCheckMenu();
     }
+  };
+
+  const originalSelectSubject = window.selectSubject;
+  if(typeof originalSelectSubject === "function" && !window.__leaveSkillModeV72){
+    window.__leaveSkillModeV72 = true;
+    window.selectSubject = function(btn, subject){
+      document.body.classList.remove("competence-mode");
+      return originalSelectSubject.apply(this, arguments);
+    };
+  }
+
+  // Au démarrage, le cadre ne doit pas apparaître tout seul.
+  document.addEventListener("DOMContentLoaded", function(){
+    document.body.classList.remove("competence-mode");
+    removeDuplicateSkillMenus(null);
   });
 })();
 </script>

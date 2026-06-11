@@ -730,6 +730,111 @@ html, body {
   -webkit-overflow-scrolling: touch;
 }
 </style>
+
+<style id="tableau-competences-v51">
+.skills-tabs{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin:10px 0;
+}
+.skills-tab{
+  border:none;
+  border-radius:999px;
+  padding:8px 12px;
+  font-weight:900;
+  font-family:inherit;
+  cursor:pointer;
+  background:#EAE8FF;
+  color:var(--primary);
+}
+.skills-tab.active{
+  background:var(--primary);
+  color:white;
+}
+.skills-panel{
+  background:#F7F6FF;
+  border:2px solid #EAE8FF;
+  border-radius:16px;
+  padding:12px;
+  margin:12px 0;
+}
+.skills-panel h3{
+  font-family:'Baloo 2',sans-serif;
+  color:var(--primary);
+  margin:0 0 8px 0;
+  font-size:20px;
+}
+.skills-domain-title{
+  margin:12px 0 8px 0;
+  font-weight:900;
+  color:var(--text);
+  font-size:15px;
+}
+.skill-row{
+  display:grid;
+  grid-template-columns:118px 1fr 44px;
+  gap:8px;
+  align-items:center;
+  background:#fff;
+  border:2px solid #ECEBF3;
+  border-radius:14px;
+  padding:8px 10px;
+  margin:6px 0;
+  font-weight:800;
+  line-height:1.3;
+}
+.skill-medal{
+  font-weight:900;
+  white-space:nowrap;
+}
+.skill-count{
+  color:var(--text-muted);
+  font-size:12px;
+  text-align:right;
+  font-weight:900;
+}
+.skills-note{
+  font-size:12px;
+  color:var(--text-muted);
+  font-weight:800;
+  line-height:1.4;
+  margin-top:8px;
+}
+.teacher-skills-wrap{
+  overflow-x:auto;
+  border:2px solid #ECEBF3;
+  border-radius:14px;
+  background:white;
+  margin-top:10px;
+}
+.teacher-skills-table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:12px;
+}
+.teacher-skills-table th,
+.teacher-skills-table td{
+  padding:8px;
+  border-bottom:1px solid #ECEBF3;
+  text-align:left;
+  white-space:nowrap;
+}
+.teacher-skills-table th{
+  background:#F7F6FF;
+  color:var(--primary);
+  font-weight:900;
+}
+.teacher-skills-table tr:last-child td{border-bottom:none;}
+@media (max-width:600px){
+  .skill-row{
+    grid-template-columns:1fr;
+    gap:4px;
+  }
+  .skill-count{text-align:left;}
+}
+</style>
+
 </head>
 <body>
 
@@ -3700,5 +3805,290 @@ setTimeout(removeVieDeClassePanel, 1000);
   }, {passive:false});
 })();
 </script>
+
+<script id="tableau-competences-v51">
+(function(){
+  const SKILL_KEY_PREFIX = "hibou_skills_v51_";
+  const LEGACY_MULTI_KEY = "hibou_competences_multiplication_v50";
+
+  const skillCatalog = [
+    {id:"calc_mental", domain:"Maths", label:"Je sais calculer mentalement"},
+    {id:"mult_ligne", domain:"Maths", label:"Je sais multiplier en ligne"},
+    {id:"mult_1_sans", domain:"Maths", label:"Je sais multiplier à 1 chiffre sans retenue"},
+    {id:"mult_1_avec", domain:"Maths", label:"Je sais multiplier à 1 chiffre avec retenue"},
+    {id:"mult_2_avec", domain:"Maths", label:"Je sais multiplier à 2 chiffres avec retenue"},
+    {id:"nom_commun", domain:"Français", label:"Je reconnais un nom commun"},
+    {id:"verbe", domain:"Français", label:"Je reconnais un verbe"},
+    {id:"genre_nombre", domain:"Français", label:"Je trouve le genre et le nombre"},
+    {id:"phrase_ecrite", domain:"Français", label:"Je sais écrire une phrase"},
+    {id:"systeme_solaire", domain:"Sciences", label:"Je connais le système solaire"},
+    {id:"france", domain:"Géographie", label:"Je connais la France"},
+    {id:"carte", domain:"Géographie", label:"Je sais lire une carte"},
+    {id:"anglais_couleurs", domain:"Anglais", label:"Je connais des couleurs en anglais"},
+    {id:"anglais_saluer", domain:"Anglais", label:"Je sais saluer en anglais"}
+  ];
+
+  function cleanStudentName(name){
+    return String(name || "eleve").trim().toLowerCase()
+      .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+      .replace(/[^a-z0-9_-]/g,"_") || "eleve";
+  }
+
+  function currentStudentKey(){
+    const name = window.prenomActuel || localStorage.getItem("hibou_prenom") || "eleve";
+    return SKILL_KEY_PREFIX + cleanStudentName(name);
+  }
+
+  function loadSkillsForKey(key){
+    try { return JSON.parse(localStorage.getItem(key) || "{}") || {}; }
+    catch(e){ return {}; }
+  }
+
+  function saveSkillsForKey(key, data){
+    localStorage.setItem(key, JSON.stringify(data));
+  }
+
+  function loadCurrentSkills(){
+    const data = loadSkillsForKey(currentStudentKey());
+
+    // Migration douce depuis l'ancien stockage multiplication si présent.
+    try{
+      const legacy = JSON.parse(localStorage.getItem(LEGACY_MULTI_KEY) || "{}") || {};
+      ["mult_ligne","mult_1_sans","mult_1_avec","mult_2_avec"].forEach(function(id){
+        if(legacy[id] && !data[id]) data[id] = legacy[id];
+      });
+    }catch(e){}
+
+    return data;
+  }
+
+  function saveCurrentSkills(data){
+    saveSkillsForKey(currentStudentKey(), data);
+  }
+
+  function medal(count){
+    count = Number(count || 0);
+    if(count >= 5) return "🥇 OR";
+    if(count >= 3) return "🥈 ARGENT";
+    if(count >= 1) return "🥉 BRONZE";
+    return "⬜ À DÉCOUVRIR";
+  }
+
+  function shortMedal(count){
+    count = Number(count || 0);
+    if(count >= 5) return "🥇";
+    if(count >= 3) return "🥈";
+    if(count >= 1) return "🥉";
+    return "⬜";
+  }
+
+  window.hibouValidateSkill = function(skillId, options){
+    options = options || {};
+    const data = loadCurrentSkills();
+    data[skillId] = (Number(data[skillId] || 0) + 1);
+    saveCurrentSkills(data);
+
+    if(options.points !== false && typeof addScore === "function"){
+      addScore(options.bonus || 20, "compétence validée");
+    }
+
+    const skill = skillCatalog.find(s => s.id === skillId);
+    if(options.message !== false && skill && typeof addMessage === "function"){
+      addMessage("prof", "🏅 Compétence validée : <b>" + skill.label + "</b><br>" + medal(data[skillId]) + "<br>+" + (options.bonus || 20) + " points bonus !");
+    }
+    return data[skillId];
+  };
+
+  window.hibouGetSkillsHTML = function(domainFilter){
+    const data = loadCurrentSkills();
+    const domains = [...new Set(skillCatalog.map(s => s.domain))];
+    let html = `
+      <div class="skills-panel">
+        <h3>🎯 Mes compétences</h3>
+        <div class="skills-note">
+          Les points motivent. Les compétences montrent ce que tu sais faire.<br>
+          🥉 BRONZE = réussi 1 fois · 🥈 ARGENT = réussi 3 fois · 🥇 OR = réussi 5 fois
+        </div>
+    `;
+
+    domains.forEach(function(domain){
+      if(domainFilter && domain !== domainFilter) return;
+      const skills = skillCatalog.filter(s => s.domain === domain);
+      html += `<div class="skills-domain-title">${domain}</div>`;
+      skills.forEach(function(skill){
+        const count = Number(data[skill.id] || 0);
+        html += `
+          <div class="skill-row">
+            <div class="skill-medal">${medal(count)}</div>
+            <div>${skill.label}</div>
+            <div class="skill-count">${count}/5</div>
+          </div>`;
+      });
+    });
+
+    html += `</div>`;
+    return html;
+  };
+
+  window.hibouShowSkillsTab = function(domain){
+    const zone = document.getElementById("progressPopupContent");
+    if(!zone) return;
+    zone.innerHTML = `
+      <div class="skills-tabs">
+        <button class="skills-tab ${!domain ? "active" : ""}" onclick="hibouShowSkillsTab()">Tout</button>
+        <button class="skills-tab ${domain==="Maths" ? "active" : ""}" onclick="hibouShowSkillsTab('Maths')">Maths</button>
+        <button class="skills-tab ${domain==="Français" ? "active" : ""}" onclick="hibouShowSkillsTab('Français')">Français</button>
+        <button class="skills-tab ${domain==="Sciences" ? "active" : ""}" onclick="hibouShowSkillsTab('Sciences')">Sciences</button>
+        <button class="skills-tab ${domain==="Géographie" ? "active" : ""}" onclick="hibouShowSkillsTab('Géographie')">Géo</button>
+        <button class="skills-tab ${domain==="Anglais" ? "active" : ""}" onclick="hibouShowSkillsTab('Anglais')">Anglais</button>
+      </div>
+      ${window.hibouGetSkillsHTML(domain)}
+    `;
+  };
+
+  // Ajoute un onglet compétences dans Mes progrès, sans supprimer le contenu existant.
+  const oldOpenProgress = window.openProgressPopup;
+  if(typeof oldOpenProgress === "function" && !window.__skillsProgressV51){
+    window.__skillsProgressV51 = true;
+    window.openProgressPopup = function(){
+      oldOpenProgress();
+      setTimeout(function(){
+        const zone = document.getElementById("progressPopupContent");
+        if(zone && !zone.querySelector("#skillsOpenBtnV51")){
+          zone.innerHTML = `
+            <button id="skillsOpenBtnV51" class="teacher-btn" onclick="hibouShowSkillsTab()" style="margin:0 0 10px 0;">🎯 Voir mes compétences</button>
+          ` + zone.innerHTML + window.hibouGetSkillsHTML();
+        }
+      }, 80);
+    };
+  }
+
+  function getKnownStudents(){
+    const names = new Set();
+    const current = window.prenomActuel || localStorage.getItem("hibou_prenom");
+    if(current) names.add(current);
+
+    try{
+      const roster = JSON.parse(localStorage.getItem("hibou_roster") || "[]") || [];
+      roster.forEach(function(x){
+        if(typeof x === "string") names.add(x);
+        else if(x && x.name) names.add(x.name);
+        else if(x && x.prenom) names.add(x.prenom);
+      });
+    }catch(e){}
+
+    // Repère aussi les clés de compétences déjà créées.
+    for(let i=0;i<localStorage.length;i++){
+      const k = localStorage.key(i);
+      if(k && k.startsWith(SKILL_KEY_PREFIX)){
+        names.add(k.replace(SKILL_KEY_PREFIX,"").replace(/_/g," "));
+      }
+    }
+    return Array.from(names).filter(Boolean);
+  }
+
+  window.hibouTeacherSkillsHTML = function(){
+    const students = getKnownStudents();
+    let html = `
+      <div class="teacher-section">
+        <h3>🎯 Tableau de compétences</h3>
+        <p class="teacher-small">Suivi des savoir-faire. Les médailles sont lisibles pour l'élève et utiles pour l'enseignant.</p>
+        <div class="teacher-skills-wrap">
+          <table class="teacher-skills-table">
+            <thead>
+              <tr>
+                <th>Élève</th>
+                <th>Calcul mental</th>
+                <th>Mult. ligne</th>
+                <th>×1 sans retenue</th>
+                <th>×1 avec retenue</th>
+                <th>×2 avec retenue</th>
+                <th>Nom commun</th>
+                <th>Verbe</th>
+                <th>Système solaire</th>
+                <th>France</th>
+              </tr>
+            </thead>
+            <tbody>
+    `;
+
+    if(students.length === 0){
+      html += `<tr><td colspan="10">Aucun élève enregistré pour l'instant.</td></tr>`;
+    }else{
+      students.forEach(function(name){
+        const data = loadSkillsForKey(SKILL_KEY_PREFIX + cleanStudentName(name));
+        html += `
+          <tr>
+            <td><strong>${String(name).replace(/[<>&]/g,"")}</strong></td>
+            <td>${shortMedal(data.calc_mental)}</td>
+            <td>${shortMedal(data.mult_ligne)}</td>
+            <td>${shortMedal(data.mult_1_sans)}</td>
+            <td>${shortMedal(data.mult_1_avec)}</td>
+            <td>${shortMedal(data.mult_2_avec)}</td>
+            <td>${shortMedal(data.nom_commun)}</td>
+            <td>${shortMedal(data.verbe)}</td>
+            <td>${shortMedal(data.systeme_solaire)}</td>
+            <td>${shortMedal(data.france)}</td>
+          </tr>`;
+      });
+    }
+
+    html += `
+            </tbody>
+          </table>
+        </div>
+        <p class="teacher-small">Légende : ⬜ À découvrir · 🥉 Bronze · 🥈 Argent · 🥇 Or</p>
+      </div>
+    `;
+    return html;
+  };
+
+  // Ajoute le tableau compétences dans le bouton enseignant.
+  const oldOpenTeacher = window.openTeacherDashboard;
+  if(typeof oldOpenTeacher === "function" && !window.__skillsTeacherV51){
+    window.__skillsTeacherV51 = true;
+    window.openTeacherDashboard = function(){
+      oldOpenTeacher();
+      setTimeout(function(){
+        const target = document.getElementById("teacherPhase33Content") || document.getElementById("teacherDashboardContent");
+        if(target && !document.getElementById("teacherSkillsBlockV51")){
+          const wrap = document.createElement("div");
+          wrap.id = "teacherSkillsBlockV51";
+          wrap.innerHTML = window.hibouTeacherSkillsHTML();
+          target.parentNode.insertBefore(wrap, target);
+        }
+      }, 100);
+    };
+  }
+
+  // Connexions automatiques simples avec des activités déjà présentes.
+  // Calcul mental : si un élève fait 9/10 ou 10/10, compétence validée.
+  const oldLogActivity = window.logActivity;
+  if(typeof oldLogActivity === "function" && !window.__skillsLogActivityV51){
+    window.__skillsLogActivityV51 = true;
+    window.logActivity = function(activity, score, detail){
+      const result = oldLogActivity.apply(this, arguments);
+      try{
+        const a = String(activity || "").toLowerCase();
+        const d = String(detail || "").toLowerCase();
+        if(a.includes("calcul mental") && Number(score) >= 9){
+          window.hibouValidateSkill("calc_mental", {message:false, bonus:10});
+        }
+        if((a.includes("nom commun") || d.includes("nom commun")) && Number(score) >= 3){
+          window.hibouValidateSkill("nom_commun", {message:false, bonus:10});
+        }
+        if((a.includes("système solaire") || d.includes("système solaire")) && Number(score) >= 3){
+          window.hibouValidateSkill("systeme_solaire", {message:false, bonus:10});
+        }
+        if((a.includes("géographie") || d.includes("france")) && Number(score) >= 3){
+          window.hibouValidateSkill("france", {message:false, bonus:10});
+        }
+      }catch(e){}
+      return result;
+    };
+  }
+})();
+</script>
+
 </body>
 </html>

@@ -978,108 +978,6 @@ html, body {
 
 
 
-<style id="patch-menu-fixe-v61">
-/* V6.1 - Bandeau et menu matières vraiment fixes */
-:root{
-  --hibou-top-fixed: 116px;
-  --hibou-bottom-fixed: 92px;
-}
-
-html, body{
-  height:100%;
-  overflow:hidden !important;
-}
-
-body{
-  padding-top:var(--hibou-top-fixed) !important;
-  padding-bottom:var(--hibou-bottom-fixed) !important;
-}
-
-/* Le bandeau du haut reste toujours visible */
-header{
-  position:fixed !important;
-  top:0 !important;
-  left:0 !important;
-  right:0 !important;
-  z-index:300 !important;
-}
-
-/* La barre des matières reste toujours visible sous le bandeau */
-.subjects-bar{
-  position:fixed !important;
-  top:var(--hibou-header-h, 58px) !important;
-  left:0 !important;
-  right:0 !important;
-  z-index:299 !important;
-  background:var(--bg) !important;
-  box-shadow:0 4px 14px rgba(108,99,255,.12);
-}
-
-/* Le sous-menu reste visible seulement quand il sert à une matière */
-.quick-questions{
-  position:fixed !important;
-  top:var(--hibou-subjects-bottom, 110px) !important;
-  left:50% !important;
-  transform:translateX(-50%) !important;
-  z-index:298 !important;
-  max-height:84px !important;
-  overflow-y:auto !important;
-}
-
-/* Sur Valider une compétence, aucun sous-menu */
-.quick-questions[style*="display:none"],
-.quick-questions.is-hidden{
-  display:none !important;
-}
-
-/* Le chat est LA zone de scroll */
-.chat-container{
-  flex:1 1 auto !important;
-  height:calc(100dvh - var(--hibou-top-fixed) - var(--hibou-bottom-fixed)) !important;
-  min-height:0 !important;
-  max-height:none !important;
-  overflow-y:auto !important;
-  padding-top:10px !important;
-  padding-bottom:18px !important;
-}
-
-/* Le bouton voir mes progrès reste juste au-dessus du chat, sans pousser le menu */
-.progress-mini-wrap{
-  flex:0 0 auto !important;
-}
-
-/* Zone de saisie toujours visible */
-.input-area{
-  position:fixed !important;
-  left:0 !important;
-  right:0 !important;
-  bottom:0 !important;
-  z-index:300 !important;
-}
-
-/* Les blocs intermédiaires ne prennent pas le contrôle du scroll */
-.master-challenge-card,
-.welcome-quiz-container{
-  flex-shrink:0 !important;
-}
-
-/* Sécurité : annule les anciennes hauteurs tablette qui bloquaient le scroll */
-@media (max-width:768px){
-  .chat-container{
-    height:calc(100dvh - var(--hibou-top-fixed) - var(--hibou-bottom-fixed)) !important;
-    min-height:0 !important;
-    max-height:none !important;
-  }
-}
-
-@media (max-height:760px){
-  .quick-questions{
-    max-height:64px !important;
-  }
-}
-</style>
-
-
 <style id="patch-verbe-lecon-v63">
 .verbe-lesson{
   background:#F8F7FF;
@@ -1125,6 +1023,162 @@ header{
   cursor:pointer;
   width:100%;
   margin-top:8px;
+}
+</style>
+
+
+<style id="patch-layout-tablette-v65">
+/* V6.5 - Correction affichage tablette : menu propre + chat lisible */
+:root{
+  --hibou-header-h: 72px;
+  --hibou-subjects-h: 58px;
+  --hibou-input-h: 132px;
+  --hibou-top-space: 130px;
+  --hibou-bottom-space: 132px;
+}
+
+html, body{
+  height:100%;
+  overflow:hidden !important;
+}
+
+body{
+  padding-top:var(--hibou-top-space) !important;
+  padding-bottom:var(--hibou-bottom-space) !important;
+}
+
+/* Bandeau toujours visible */
+header{
+  position:fixed !important;
+  top:0 !important;
+  left:0 !important;
+  right:0 !important;
+  z-index:500 !important;
+  min-height:var(--hibou-header-h);
+}
+
+/* Matières toujours visibles */
+.subjects-bar{
+  position:fixed !important;
+  top:var(--hibou-header-h) !important;
+  left:0 !important;
+  right:0 !important;
+  z-index:499 !important;
+  background:var(--bg) !important;
+  box-shadow:0 4px 14px rgba(108,99,255,.12);
+  padding-top:8px !important;
+  padding-bottom:8px !important;
+}
+
+/* Sous-menu : seulement pour les vraies matières */
+.quick-questions{
+  position:fixed !important;
+  top:calc(var(--hibou-header-h) + var(--hibou-subjects-h)) !important;
+  left:50% !important;
+  transform:translateX(-50%) !important;
+  z-index:498 !important;
+  max-height:70px !important;
+  overflow-y:auto !important;
+}
+.quick-questions[style*="display:none"],
+.quick-questions.is-hidden{
+  display:none !important;
+}
+
+/* En mode tablette, le défi jaune ne doit pas écraser le chat */
+.master-challenge-card{
+  display:none !important;
+}
+
+/* On garde un seul bouton progrès : celui sous forme de mini-bouton */
+.progress-mini-wrap{
+  position:fixed !important;
+  left:50% !important;
+  transform:translateX(-50%) !important;
+  top:calc(var(--hibou-header-h) + var(--hibou-subjects-h) + 6px) !important;
+  z-index:497 !important;
+  width:calc(100% - 32px) !important;
+  max-width:768px !important;
+  margin:0 !important;
+}
+.progress-mini-btn{
+  padding:8px 10px !important;
+}
+
+/* Chat : vraie zone de travail */
+.chat-container{
+  height:calc(100dvh - var(--hibou-top-space) - var(--hibou-bottom-space)) !important;
+  min-height:0 !important;
+  max-height:none !important;
+  overflow-y:auto !important;
+  flex:1 1 auto !important;
+  padding-top:12px !important;
+  padding-bottom:18px !important;
+}
+
+/* Bloc validation compétence plus compact sur tablette */
+.skill-check-box{
+  padding:12px !important;
+}
+.skill-check-grid{
+  grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  gap:8px !important;
+}
+.skill-check-btn{
+  padding:9px !important;
+  font-size:13px !important;
+  line-height:1.2 !important;
+}
+
+/* Zone de saisie toujours visible */
+.input-area{
+  position:fixed !important;
+  left:0 !important;
+  right:0 !important;
+  bottom:0 !important;
+  z-index:500 !important;
+}
+
+/* Évite que le bouton flottant du navigateur gêne trop la zone */
+.logout-area{
+  margin-top:4px !important;
+}
+
+@media(max-width:768px){
+  :root{
+    --hibou-header-h: 70px;
+    --hibou-subjects-h: 56px;
+    --hibou-input-h: 126px;
+    --hibou-top-space: 174px;
+    --hibou-bottom-space: 126px;
+  }
+  .logo-text{font-size:17px !important;}
+  .subject-btn{
+    font-size:13px !important;
+    padding:8px 12px !important;
+  }
+  .progress-mini-wrap{
+    top:calc(var(--hibou-header-h) + var(--hibou-subjects-h) + 8px) !important;
+  }
+}
+
+@media(max-width:520px){
+  .skill-check-grid{
+    grid-template-columns:1fr !important;
+  }
+}
+
+@media(max-height:760px){
+  :root{
+    --hibou-top-space: 164px;
+    --hibou-bottom-space: 118px;
+  }
+  .progress-mini-btn{
+    padding:6px 10px !important;
+  }
+  .security-note{
+    font-size:11px !important;
+  }
 }
 </style>
 
@@ -5555,77 +5609,6 @@ setTimeout(removeVieDeClassePanel, 1000);
 
 
 
-<script id="patch-menu-fixe-v61">
-(function(){
-  function px(n){ return Math.ceil(n || 0) + "px"; }
-
-  function updateFixedLayout(){
-    const root = document.documentElement;
-    const header = document.querySelector("header");
-    const subjects = document.querySelector(".subjects-bar");
-    const quick = document.getElementById("quickQuestions");
-    const input = document.querySelector(".input-area");
-
-    const headerH = header ? header.getBoundingClientRect().height : 58;
-    const subjectsH = subjects ? subjects.getBoundingClientRect().height : 52;
-    const quickVisible = quick && getComputedStyle(quick).display !== "none" && quick.innerHTML.trim() !== "";
-    const quickH = quickVisible ? Math.min(quick.getBoundingClientRect().height || 0, 84) : 0;
-    const inputH = input ? input.getBoundingClientRect().height : 92;
-
-    root.style.setProperty("--hibou-header-h", px(headerH));
-    root.style.setProperty("--hibou-subjects-bottom", px(headerH + subjectsH));
-    root.style.setProperty("--hibou-top-fixed", px(headerH + subjectsH + quickH));
-    root.style.setProperty("--hibou-bottom-fixed", px(inputH));
-
-    const active = document.querySelector(".subject-btn.active");
-    if(quick && active && active.getAttribute("data-subject") === "competences"){
-      quick.classList.add("is-hidden");
-      quick.style.display = "none";
-      quick.innerHTML = "";
-      root.style.setProperty("--hibou-top-fixed", px(headerH + subjectsH));
-    }
-  }
-
-  const oldSelect = window.selectSubject;
-  if(typeof oldSelect === "function" && !window.__menuFixeV61){
-    window.__menuFixeV61 = true;
-    window.selectSubject = function(btn, subject){
-      const result = oldSelect.apply(this, arguments);
-      setTimeout(updateFixedLayout, 0);
-      setTimeout(updateFixedLayout, 120);
-      return result;
-    };
-  }
-
-  const oldOpenCompetence = window.openCompetenceValidation;
-  if(typeof oldOpenCompetence === "function" && !window.__menuFixeCompetenceV61){
-    window.__menuFixeCompetenceV61 = true;
-    window.openCompetenceValidation = function(){
-      const result = oldOpenCompetence.apply(this, arguments);
-      setTimeout(updateFixedLayout, 0);
-      setTimeout(updateFixedLayout, 120);
-      return result;
-    };
-  }
-
-  window.addEventListener("resize", updateFixedLayout);
-  window.addEventListener("orientationchange", function(){
-    setTimeout(updateFixedLayout, 200);
-  });
-  document.addEventListener("DOMContentLoaded", function(){
-    updateFixedLayout();
-    setTimeout(updateFixedLayout, 200);
-    setTimeout(updateFixedLayout, 800);
-  });
-  window.addEventListener("load", function(){
-    updateFixedLayout();
-    setTimeout(updateFixedLayout, 200);
-    setTimeout(updateFixedLayout, 800);
-  });
-})();
-</script>
-
-
 <script id="patch-nom-commun-unique-v62">
 (function(){
   function getNomCommunLesson(){
@@ -5811,6 +5794,80 @@ setTimeout(removeVieDeClassePanel, 1000);
   });
   window.addEventListener("load", function(){
     setTimeout(patchVerbeButtonDirect, 100);
+  });
+})();
+</script>
+
+
+<script id="patch-layout-tablette-v65">
+(function(){
+  function updateTabletLayout(){
+    const root = document.documentElement;
+    const header = document.querySelector("header");
+    const subjects = document.querySelector(".subjects-bar");
+    const input = document.querySelector(".input-area");
+    const progress = document.getElementById("progressMiniWrap");
+    const quick = document.getElementById("quickQuestions");
+    const active = document.querySelector(".subject-btn.active");
+
+    const headerH = header ? Math.ceil(header.getBoundingClientRect().height) : 70;
+    const subjectsH = subjects ? Math.ceil(subjects.getBoundingClientRect().height) : 56;
+    const inputH = input ? Math.ceil(input.getBoundingClientRect().height) : 126;
+    const progressH = progress ? Math.ceil(progress.getBoundingClientRect().height) + 12 : 44;
+
+    const competenceMode = active && active.getAttribute("data-subject") === "competences";
+
+    if(quick && competenceMode){
+      quick.classList.add("is-hidden");
+      quick.style.display = "none";
+      quick.innerHTML = "";
+    }
+
+    root.style.setProperty("--hibou-header-h", headerH + "px");
+    root.style.setProperty("--hibou-subjects-h", subjectsH + "px");
+    root.style.setProperty("--hibou-input-h", inputH + "px");
+    root.style.setProperty("--hibou-bottom-space", inputH + "px");
+    root.style.setProperty("--hibou-top-space", (headerH + subjectsH + progressH) + "px");
+
+    const chat = document.getElementById("chatContainer");
+    if(chat){
+      chat.style.overflowY = "auto";
+    }
+  }
+
+  const oldSelect = window.selectSubject;
+  if(typeof oldSelect === "function" && !window.__layoutTabletteV65Select){
+    window.__layoutTabletteV65Select = true;
+    window.selectSubject = function(btn, subject){
+      const result = oldSelect.apply(this, arguments);
+      setTimeout(updateTabletLayout, 0);
+      setTimeout(updateTabletLayout, 150);
+      return result;
+    };
+  }
+
+  const oldOpenCompetence = window.openCompetenceValidation;
+  if(typeof oldOpenCompetence === "function" && !window.__layoutTabletteV65Competence){
+    window.__layoutTabletteV65Competence = true;
+    window.openCompetenceValidation = function(){
+      const result = oldOpenCompetence.apply(this, arguments);
+      setTimeout(updateTabletLayout, 0);
+      setTimeout(updateTabletLayout, 150);
+      return result;
+    };
+  }
+
+  window.addEventListener("resize", updateTabletLayout);
+  window.addEventListener("orientationchange", function(){ setTimeout(updateTabletLayout, 250); });
+  document.addEventListener("DOMContentLoaded", function(){
+    updateTabletLayout();
+    setTimeout(updateTabletLayout, 200);
+    setTimeout(updateTabletLayout, 900);
+  });
+  window.addEventListener("load", function(){
+    updateTabletLayout();
+    setTimeout(updateTabletLayout, 200);
+    setTimeout(updateTabletLayout, 900);
   });
 })();
 </script>

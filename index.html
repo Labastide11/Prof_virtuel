@@ -976,6 +976,80 @@ html, body {
 }
 </style>
 
+
+<style id="patch-menu-visible-tablette-v60">
+/* V6.0 - Menu toujours visible sur tablette */
+body{
+  height:100vh;
+  overflow:hidden !important;
+}
+
+header{
+  position:sticky !important;
+  top:0 !important;
+  z-index:50 !important;
+}
+
+.subjects-bar{
+  position:sticky !important;
+  top:62px !important;
+  z-index:49 !important;
+  background:var(--bg);
+  box-shadow:0 3px 12px rgba(108,99,255,0.08);
+}
+
+/* Le sous-menu reste seulement pour les matières, jamais pour Valider une compétence */
+.quick-questions{
+  position:sticky !important;
+  top:116px !important;
+  z-index:48 !important;
+  max-height:92px;
+  overflow-y:auto;
+}
+
+/* Le chat devient la zone principale de scroll */
+.chat-container{
+  flex:1 1 auto !important;
+  min-height:0 !important;
+  max-height:none !important;
+  overflow-y:auto !important;
+  padding-bottom:18px !important;
+}
+
+/* Les éléments intermédiaires ne doivent pas pousser le menu hors écran */
+.master-challenge-card,
+.welcome-quiz-container{
+  flex-shrink:0;
+}
+
+/* Zone de saisie toujours accessible */
+.input-area{
+  position:sticky !important;
+  bottom:0 !important;
+  z-index:50 !important;
+}
+
+@media (max-width:768px){
+  .subjects-bar{
+    top:54px !important;
+  }
+  .quick-questions{
+    top:104px !important;
+    max-height:78px;
+  }
+  .chat-container{
+    min-height:0 !important;
+    max-height:none !important;
+  }
+}
+
+@media (max-height:760px){
+  .quick-questions{
+    max-height:68px;
+  }
+}
+</style>
+
 </head>
 <body>
 
@@ -5397,6 +5471,48 @@ setTimeout(removeVieDeClassePanel, 1000);
   });
   window.addEventListener("load", function(){
     setTimeout(patchNomCommunButtons, 100);
+  });
+})();
+</script>
+
+
+<script id="patch-menu-visible-tablette-v60">
+(function(){
+  function keepMenuVisible(){
+    const q = document.getElementById("quickQuestions");
+    const active = document.querySelector(".subject-btn.active");
+
+    // Si on est sur Valider une compétence, pas de sous-menu.
+    if(q && active && active.getAttribute("data-subject") === "competences"){
+      q.style.display = "none";
+      q.innerHTML = "";
+    }
+
+    // Sécurise le scroll : on garde le scroll dans le chat, pas dans toute la page.
+    const chat = document.getElementById("chatContainer");
+    if(chat){
+      chat.style.overflowY = "auto";
+    }
+  }
+
+  const oldSelect = window.selectSubject;
+  if(typeof oldSelect === "function" && !window.__menuVisibleTabletteV60){
+    window.__menuVisibleTabletteV60 = true;
+    window.selectSubject = function(btn, subject){
+      const result = oldSelect.apply(this, arguments);
+      setTimeout(keepMenuVisible, 0);
+      setTimeout(keepMenuVisible, 100);
+      return result;
+    };
+  }
+
+  document.addEventListener("DOMContentLoaded", function(){
+    keepMenuVisible();
+    setTimeout(keepMenuVisible, 200);
+  });
+  window.addEventListener("load", function(){
+    keepMenuVisible();
+    setTimeout(keepMenuVisible, 200);
   });
 })();
 </script>

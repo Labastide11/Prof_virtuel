@@ -1046,8 +1046,9 @@ body.competence-mode .master-challenge-card{
 </style>
 
 
-<style id="patch-plantes-local-v73">
-.plantes-lesson{
+
+<style id="patch-sciences-local-direct-v75">
+.plantes-lesson,.systeme-lesson{
   background:#F8F7FF;
   border:2px solid var(--primary-light);
   border-radius:16px;
@@ -1055,13 +1056,13 @@ body.competence-mode .master-challenge-card{
   margin-top:10px;
   width:100%;
 }
-.plantes-lesson h3{
+.plantes-lesson h3,.systeme-lesson h3{
   font-family:'Baloo 2',sans-serif;
   color:var(--primary);
   font-size:20px;
   margin:0 0 8px 0;
 }
-.plantes-rule{
+.plantes-rule,.systeme-rule{
   background:#FFFCEB;
   border:2px solid var(--accent);
   border-radius:14px;
@@ -1071,7 +1072,7 @@ body.competence-mode .master-challenge-card{
   margin:10px 0;
   line-height:1.4;
 }
-.plantes-examples{
+.plantes-examples,.systeme-examples{
   background:white;
   border:2px solid #ECEBF3;
   border-radius:14px;
@@ -1080,56 +1081,7 @@ body.competence-mode .master-challenge-card{
   line-height:1.45;
   margin:10px 0;
 }
-.plantes-quiz-btn{
-  background:var(--primary);
-  color:white;
-  border:none;
-  border-radius:14px;
-  padding:10px 14px;
-  font-weight:900;
-  font-family:inherit;
-  cursor:pointer;
-  width:100%;
-  margin-top:8px;
-}
-</style>
-
-
-<style id="patch-systeme-solaire-local-v74">
-.systeme-lesson{
-  background:#F8F7FF;
-  border:2px solid var(--primary-light);
-  border-radius:16px;
-  padding:16px;
-  margin-top:10px;
-  width:100%;
-}
-.systeme-lesson h3{
-  font-family:'Baloo 2',sans-serif;
-  color:var(--primary);
-  font-size:20px;
-  margin:0 0 8px 0;
-}
-.systeme-rule{
-  background:#FFFCEB;
-  border:2px solid var(--accent);
-  border-radius:14px;
-  padding:10px 12px;
-  font-weight:900;
-  color:#7A5C00;
-  margin:10px 0;
-  line-height:1.4;
-}
-.systeme-examples{
-  background:white;
-  border:2px solid #ECEBF3;
-  border-radius:14px;
-  padding:10px 12px;
-  font-weight:800;
-  line-height:1.45;
-  margin:10px 0;
-}
-.systeme-quiz-btn{
+.plantes-quiz-btn,.systeme-quiz-btn{
   background:var(--primary);
   color:white;
   border:none;
@@ -3183,7 +3135,7 @@ function updateQuickQuestions(subject) {
       <button class="quick-btn" onclick="startLocalQuiz('francais','✍️ Quiz local Français CE2')">📚 Quiz local Français</button>
     `,
     'sciences': `
-      <button class="quick-btn" onclick="sendQuick('Comment poussent les plantes ?')">🌱 Les plantes</button>
+      <button class="quick-btn" onclick="startPlantes()">🌱 Les plantes</button>
       <button class="quick-btn" onclick="startSystemeSolaire()">🪐 Système solaire</button>
       <button class="quick-btn" onclick="sendQuick('Explique-moi le squelette humain pour un CE2')">🦴 Le squelette</button>
       <button class="quick-btn" onclick="startLocalQuiz('sciences','💡 Quiz local Sciences CE2')">📚 Quiz local Sciences</button>
@@ -5636,39 +5588,30 @@ setTimeout(removeVieDeClassePanel, 1000);
 </script>
 
 
-<script id="patch-plantes-local-v73">
+
+<script id="patch-sciences-local-direct-v75">
 (function(){
-  function getPlantesLesson(){
-    return document.querySelector(".plantes-lesson[data-plantes='true'], .plantes-lesson");
-  }
-
-  function scrollToPlantesLesson(box){
+  function addLessonOnce(selector, htmlContent){
+    const existing = document.querySelector(selector);
     const chat = document.getElementById("chatContainer");
-    if(box){
-      box.setAttribute("data-plantes", "true");
-      box.scrollIntoView({behavior:"smooth", block:"center"});
-      if(chat) setTimeout(function(){ chat.scrollTop = chat.scrollHeight; }, 80);
-      return true;
-    }
-    return false;
-  }
-
-  window.showPlantesLesson = function(){
-    const existing = getPlantesLesson();
     if(existing){
-      scrollToPlantesLesson(existing);
+      existing.scrollIntoView({behavior:"smooth", block:"center"});
+      if(chat) setTimeout(function(){ chat.scrollTop = chat.scrollHeight; }, 80);
       return;
     }
-
-    const c = document.getElementById("chatContainer");
-    if(!c) return;
-
+    if(!chat) return;
     const d = document.createElement("div");
     d.className = "message prof";
-    d.innerHTML = `
+    d.innerHTML = htmlContent;
+    chat.appendChild(d);
+    chat.scrollTop = chat.scrollHeight;
+  }
+
+  window.startPlantes = function(){
+    addLessonOnce(".plantes-lesson", `
       <div class="avatar prof">🦉</div>
       <div class="bubble">
-        <div class="plantes-lesson" data-plantes="true">
+        <div class="plantes-lesson">
           <h3>🌱 Les plantes</h3>
           <div class="plantes-rule">
             Une plante est un être vivant : elle naît, grandit, se nourrit et peut se reproduire.
@@ -5681,113 +5624,22 @@ setTimeout(removeVieDeClassePanel, 1000);
             ✅ <b>terre ou sels minéraux</b><br><br>
             Exemple : si une plante manque d’eau ou de lumière, elle pousse mal.
           </div>
-          Quand tu as relu la leçon, tu peux faire le quiz.
           <button class="plantes-quiz-btn" onclick="startPlantesQuizFromLesson()">➡️ Faire le quiz Plantes</button>
         </div>
-      </div>`;
-    c.appendChild(d);
-    c.scrollTop = c.scrollHeight;
-  };
-
-  window.startPlantes = function(){
-    showPlantesLesson();
+      </div>`);
   };
 
   window.startPlantesQuizFromLesson = function(){
-    if(typeof startSkillCheck === "function"){
-      startSkillCheck("plantes");
-    }else if(typeof startLocalQuiz === "function"){
+    if(typeof startLocalQuiz === "function"){
       startLocalQuiz("sciences", "💡 Quiz local Sciences CE2");
     }
   };
 
-  function patchPlantesButtons(){
-    document.querySelectorAll("button.quick-btn, button.local-quiz-card").forEach(function(btn){
-      const label = (btn.textContent || "").toLowerCase();
-      const action = (btn.getAttribute("onclick") || "").toLowerCase();
-      if(label.includes("plante") || action.includes("plante")){
-        btn.setAttribute("onclick", "startPlantes()");
-      }
-    });
-
-    const q = document.getElementById("quickQuestions");
-    const active = document.querySelector(".subject-btn.active");
-    if(q && active && active.getAttribute("data-subject") === "sciences" && !q.querySelector("#plantesQuickBtnV73")){
-      // Ajoute seulement si absent
-      const already = Array.from(q.querySelectorAll("button")).some(function(b){
-        return (b.textContent || "").toLowerCase().includes("plante");
-      });
-      if(!already){
-        q.insertAdjacentHTML("beforeend", '<button id="plantesQuickBtnV73" class="quick-btn" onclick="startPlantes()">🌱 Plantes</button>');
-      }
-    }
-  }
-
-  const oldSelect = window.selectSubject;
-  if(typeof oldSelect === "function" && !window.__patchPlantesSelectV73){
-    window.__patchPlantesSelectV73 = true;
-    window.selectSubject = function(btn, subject){
-      const result = oldSelect.apply(this, arguments);
-      setTimeout(patchPlantesButtons, 0);
-      setTimeout(patchPlantesButtons, 120);
-      return result;
-    };
-  }
-
-  const oldUpdateQuickQuestions = window.updateQuickQuestions;
-  if(typeof oldUpdateQuickQuestions === "function" && !window.__patchPlantesQuickV73){
-    window.__patchPlantesQuickV73 = true;
-    window.updateQuickQuestions = function(subject){
-      const result = oldUpdateQuickQuestions.apply(this, arguments);
-      setTimeout(patchPlantesButtons, 0);
-      setTimeout(patchPlantesButtons, 120);
-      return result;
-    };
-  }
-
-  document.addEventListener("DOMContentLoaded", function(){
-    setTimeout(patchPlantesButtons, 100);
-  });
-  window.addEventListener("load", function(){
-    setTimeout(patchPlantesButtons, 100);
-  });
-})();
-</script>
-
-
-<script id="patch-systeme-solaire-local-v74">
-(function(){
-  function getSystemeLesson(){
-    return document.querySelector(".systeme-lesson[data-systeme='true'], .systeme-lesson");
-  }
-
-  function scrollToSystemeLesson(box){
-    const chat = document.getElementById("chatContainer");
-    if(box){
-      box.setAttribute("data-systeme", "true");
-      box.scrollIntoView({behavior:"smooth", block:"center"});
-      if(chat) setTimeout(function(){ chat.scrollTop = chat.scrollHeight; }, 80);
-      return true;
-    }
-    return false;
-  }
-
-  window.showSystemeSolaireLesson = function(){
-    const existing = getSystemeLesson();
-    if(existing){
-      scrollToSystemeLesson(existing);
-      return;
-    }
-
-    const c = document.getElementById("chatContainer");
-    if(!c) return;
-
-    const d = document.createElement("div");
-    d.className = "message prof";
-    d.innerHTML = `
+  window.startSystemeSolaire = function(){
+    addLessonOnce(".systeme-lesson", `
       <div class="avatar prof">🦉</div>
       <div class="bubble">
-        <div class="systeme-lesson" data-systeme="true">
+        <div class="systeme-lesson">
           <h3>🪐 Le système solaire</h3>
           <div class="systeme-rule">
             Le <b>système solaire</b>, c’est le Soleil et les astres qui tournent autour de lui.
@@ -5800,63 +5652,31 @@ setTimeout(removeVieDeClassePanel, 1000);
             Une journée correspond au tour de la Terre sur elle-même.<br>
             Une année correspond au tour de la Terre autour du Soleil.
           </div>
-          Quand tu as relu la leçon, tu peux faire le quiz.
           <button class="systeme-quiz-btn" onclick="startSystemeSolaireQuizFromLesson()">➡️ Faire le quiz Système solaire</button>
         </div>
-      </div>`;
-    c.appendChild(d);
-    c.scrollTop = c.scrollHeight;
-  };
-
-  window.startSystemeSolaire = function(){
-    showSystemeSolaireLesson();
+      </div>`);
   };
 
   window.startSystemeSolaireQuizFromLesson = function(){
-    if(typeof startSkillCheck === "function"){
-      startSkillCheck("systeme_solaire");
-    }else if(typeof startLocalQuiz === "function"){
+    if(typeof startLocalQuiz === "function"){
       startLocalQuiz("sciences", "💡 Quiz local Sciences CE2");
     }
   };
 
-  function patchSystemeButtons(){
-    document.querySelectorAll("button.quick-btn, button.local-quiz-card").forEach(function(btn){
-      const label = (btn.textContent || "").toLowerCase();
-      const action = (btn.getAttribute("onclick") || "").toLowerCase();
-      if(label.includes("système solaire") || label.includes("systeme solaire") || action.includes("système solaire") || action.includes("systeme solaire")){
-        btn.setAttribute("onclick", "startSystemeSolaire()");
-      }
-    });
-  }
-
-  const oldSelect = window.selectSubject;
-  if(typeof oldSelect === "function" && !window.__patchSystemeSelectV74){
-    window.__patchSystemeSelectV74 = true;
-    window.selectSubject = function(btn, subject){
-      const result = oldSelect.apply(this, arguments);
-      setTimeout(patchSystemeButtons, 0);
-      setTimeout(patchSystemeButtons, 120);
-      return result;
-    };
-  }
-
-  const oldUpdateQuickQuestions = window.updateQuickQuestions;
-  if(typeof oldUpdateQuickQuestions === "function" && !window.__patchSystemeQuickV74){
-    window.__patchSystemeQuickV74 = true;
-    window.updateQuickQuestions = function(subject){
-      const result = oldUpdateQuickQuestions.apply(this, arguments);
-      setTimeout(patchSystemeButtons, 0);
-      setTimeout(patchSystemeButtons, 120);
-      return result;
-    };
-  }
-
+  // Sécurité : si une matière est active au chargement, on montre son sous-menu.
   document.addEventListener("DOMContentLoaded", function(){
-    setTimeout(patchSystemeButtons, 100);
-  });
-  window.addEventListener("load", function(){
-    setTimeout(patchSystemeButtons, 100);
+    setTimeout(function(){
+      const active = document.querySelector(".subject-btn.active");
+      const q = document.getElementById("quickQuestions");
+      if(active && q && typeof updateQuickQuestions === "function"){
+        const subject = active.getAttribute("data-subject");
+        if(subject && subject !== "competences"){
+          document.body.classList.remove("competence-mode");
+          updateQuickQuestions(subject);
+          q.style.display = "flex";
+        }
+      }
+    }, 120);
   });
 })();
 </script>

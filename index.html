@@ -5169,51 +5169,105 @@ setTimeout(removeVieDeClassePanel, 1000);
 </script>
 
 
-<script id="patch-valider-competence-unique-v58">
+<script id="patch-valider-competence-unique-v58b">
 (function(){
-  function scrollToExistingSkillBlock(){
-    const existing = document.querySelector(".skill-check-box[data-skill-menu='true'], .skill-check-box");
+  function getSkillMenuBoxes(){
+    return Array.from(document.querySelectorAll(".skill-check-box")).filter(function(box){
+      const title = (box.querySelector("h3")?.textContent || box.textContent || "").toLowerCase();
+      return title.includes("vérifier une compétence") || title.includes("valider une compétence") || box.getAttribute("data-skill-menu") === "true";
+    });
+  }
+
+  function getMessageWrapper(el){
+    while(el && el !== document.body){
+      if(el.classList && el.classList.contains("message")) return el;
+      el = el.parentElement;
+    }
+    return null;
+  }
+
+  function cleanupDuplicateSkillMenus(){
+    const boxes = getSkillMenuBoxes();
+    if(boxes.length <= 1) return boxes[0] || null;
+
+    const first = boxes[0];
+    boxes.slice(1).forEach(function(box){
+      const msg = getMessageWrapper(box);
+      if(msg) msg.remove();
+      else box.remove();
+    });
+    return first;
+  }
+
+  function scrollToSkillMenu(box){
     const chat = document.getElementById("chatContainer");
-    if(existing){
-      existing.scrollIntoView({behavior:"smooth", block:"center"});
-      if(chat) chat.scrollTop = chat.scrollHeight;
+    if(box){
+      box.setAttribute("data-skill-menu", "true");
+      box.scrollIntoView({behavior:"smooth", block:"center"});
+      if(chat) setTimeout(function(){ chat.scrollTop = chat.scrollHeight; }, 80);
       return true;
     }
     return false;
   }
 
-  const oldStartSkillCheckMenu = window.startSkillCheckMenu;
-  if(typeof oldStartSkillCheckMenu === "function" && !window.__uniqueSkillCheckMenuV58){
-    window.__uniqueSkillCheckMenuV58 = true;
+  const originalStartSkillCheckMenu = window.startSkillCheckMenu;
+  if(typeof originalStartSkillCheckMenu === "function" && !window.__uniqueSkillCheckMenuV58B){
+    window.__uniqueSkillCheckMenuV58B = true;
+
     window.startSkillCheckMenu = function(){
-      if(scrollToExistingSkillBlock()){
+      let existing = cleanupDuplicateSkillMenus();
+      if(existing){
+        scrollToSkillMenu(existing);
         return;
       }
 
-      const result = oldStartSkillCheckMenu.apply(this, arguments);
+      const result = originalStartSkillCheckMenu.apply(this, arguments);
 
       setTimeout(function(){
-        const boxes = document.querySelectorAll(".skill-check-box");
+        const boxes = getSkillMenuBoxes();
         if(boxes.length){
-          boxes[boxes.length - 1].setAttribute("data-skill-menu", "true");
+          boxes[0].setAttribute("data-skill-menu", "true");
+          cleanupDuplicateSkillMenus();
         }
-      }, 50);
+      }, 60);
 
       return result;
     };
   }
 
-  // Quand une compétence démarre, on autorise ensuite un nouveau menu plus tard.
-  const oldStartSkillCheck = window.startSkillCheck;
-  if(typeof oldStartSkillCheck === "function" && !window.__uniqueSkillCheckStartV58){
-    window.__uniqueSkillCheckStartV58 = true;
+  // Remplace l'ouverture principale pour qu'elle passe forcément par le startSkillCheckMenu verrouillé.
+  window.openCompetenceValidation = function(){
+    document.querySelectorAll(".subject-btn").forEach(function(b){ b.classList.remove("active"); });
+    const btn = document.querySelector('.subject-btn[data-subject="competences"], .subject-btn[data-subject="general"]');
+    if(btn) btn.classList.add("active");
+
+    const q = document.getElementById("quickQuestions");
+    if(q){
+      q.innerHTML = "";
+      q.style.display = "none";
+    }
+
+    if(typeof window.startSkillCheckMenu === "function"){
+      window.startSkillCheckMenu();
+    }
+  };
+
+  // Quand l'élève choisit vraiment une compétence, on ne supprime pas les questions,
+  // mais on autorise plus tard un nouveau menu si l'ancien menu est retiré.
+  const originalStartSkillCheck = window.startSkillCheck;
+  if(typeof originalStartSkillCheck === "function" && !window.__uniqueSkillCheckStartV58B){
+    window.__uniqueSkillCheckStartV58B = true;
     window.startSkillCheck = function(skillId){
-      document.querySelectorAll(".skill-check-box[data-skill-menu='true']").forEach(function(box){
-        box.removeAttribute("data-skill-menu");
+      getSkillMenuBoxes().forEach(function(box){
+        box.setAttribute("data-skill-menu", "used");
       });
-      return oldStartSkillCheck.apply(this, arguments);
+      return originalStartSkillCheck.apply(this, arguments);
     };
   }
+
+  document.addEventListener("DOMContentLoaded", function(){
+    cleanupDuplicateSkillMenus();
+  });
 })();
 </script>
 

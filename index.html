@@ -4090,5 +4090,207 @@ setTimeout(removeVieDeClassePanel, 1000);
 })();
 </script>
 
+
+<script id="patch-teacher-actions-v51b">
+(function(){
+  function sanitizeCSV(value){
+    return '"' + String(value ?? '').replace(/"/g, '""') + '"';
+  }
+
+  function getStudentNamesForTeacher(){
+    const names = new Set();
+
+    try{
+      const current = window.prenomActuel || localStorage.getItem("hibou_prenom") || localStorage.getItem("prenomActuel");
+      if(current) names.add(current);
+    }catch(e){}
+
+    try{
+      const roster = JSON.parse(localStorage.getItem("hibou_roster") || "[]") || [];
+      roster.forEach(function(item){
+        if(typeof item === "string") names.add(item);
+        else if(item && item.name) names.add(item.name);
+        else if(item && item.prenom) names.add(item.prenom);
+      });
+    }catch(e){}
+
+    try{
+      for(let i=0;i<localStorage.length;i++){
+        const k = localStorage.key(i);
+        if(!k) continue;
+        if(k.startsWith("hibou_student_")){
+          names.add(k.replace("hibou_student_","").replace(/_/g," "));
+        }
+        if(k.startsWith("hibou_skills_v51_")){
+          names.add(k.replace("hibou_skills_v51_","").replace(/_/g," "));
+        }
+      }
+    }catch(e){}
+
+    return Array.from(names).filter(Boolean);
+  }
+
+  function rerenderTeacherSafely(){
+    const overlay = document.getElementById("teacherDashboardOverlay");
+    if(overlay) overlay.classList.remove("hidden");
+
+    try{
+      if(typeof renderTeacherDashboard === "function"){
+        renderTeacherDashboard();
+      }
+    }catch(err){
+      console.warn("renderTeacherDashboard a rencontré une erreur :", err);
+      const content = document.getElementById("teacherDashboardContent");
+      if(content){
+        content.innerHTML = `
+          <div class="teacher-section">
+            <h3>👨‍🏫 Tableau enseignant</h3>
+            <div class="teacher-empty">Tableau principal ouvert en mode sécurisé.</div>
+          </div>
+        `;
+      }
+    }
+
+    // Réinsère toujours le tableau compétences après actualisation.
+    try{
+      const old = document.getElementById("teacherSkillsBlockV51");
+      if(old) old.remove();
+
+      const target = document.getElementById("teacherPhase33Content") || document.getElementById("teacherDashboardContent");
+      if(target && typeof window.hibouTeacherSkillsHTML === "function"){
+        const wrap = document.createElement("div");
+        wrap.id = "teacherSkillsBlockV51";
+        wrap.innerHTML = window.hibouTeacherSkillsHTML();
+        target.parentNode.insertBefore(wrap, target);
+      }
+    }catch(err){
+      console.warn("Erreur affichage compétences :", err);
+    }
+  }
+
+  window.hibouTeacherRefreshSafe = function(){
+    rerenderTeacherSafely();
+  };
+
+  window.exportTeacherCSV = function(){
+    const rows = [];
+    rows.push([
+      "Eleve",
+      "Score",
+      "Niveau",
+      "Badges",
+      "Calcul mental",
+      "Multiplier en ligne",
+      "Multiplier a 1 chiffre sans retenue",
+      "Multiplier a 1 chiffre avec retenue",
+      "Multiplier a 2 chiffres avec retenue",
+      "Nom commun",
+      "Verbe",
+      "Systeme solaire",
+      "France"
+    ]);
+
+    const names = getStudentNamesForTeacher();
+
+    function loadSkills(name){
+      const clean = String(name || "eleve").trim().toLowerCase()
+        .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+        .replace(/[^a-z0-9_-]/g,"_") || "eleve";
+      try{
+        return JSON.parse(localStorage.getItem("hibou_skills_v51_" + clean) || "{}") || {};
+      }catch(e){ return {}; }
+    }
+
+    function medalCount(v){
+      v = Number(v || 0);
+      if(v >= 5) return "OR";
+      if(v >= 3) return "ARGENT";
+      if(v >= 1) return "BRONZE";
+      return "A DECOUVRIR";
+    }
+
+    if(names.length === 0){
+      names.push(window.prenomActuel || localStorage.getItem("hibou_prenom") || "eleve");
+    }
+
+    names.forEach(function(name){
+      const skills = loadSkills(name);
+      let localScore = "";
+      let localLevel = "";
+      let localBadges = "";
+
+      // Données globales si c'est l'élève actuel.
+      try{
+        const current = window.prenomActuel || localStorage.getItem("hibou_prenom");
+        if(String(current || "").toLowerCase() === String(name || "").toLowerCase()){
+          localScore = window.score ?? localStorage.getItem("hibou_score") ?? "";
+          localLevel = document.getElementById("levelValue")?.textContent || "";
+          localBadges = Array.isArray(window.badges) ? window.badges.length : "";
+        }
+      }catch(e){}
+
+      rows.push([
+        name,
+        localScore,
+        localLevel,
+        localBadges,
+        medalCount(skills.calc_mental),
+        medalCount(skills.mult_ligne),
+        medalCount(skills.mult_1_sans),
+        medalCount(skills.mult_1_avec),
+        medalCount(skills.mult_2_avec),
+        medalCount(skills.nom_commun),
+        medalCount(skills.verbe),
+        medalCount(skills.systeme_solaire),
+        medalCount(skills.france)
+      ]);
+    });
+
+    const csv = rows.map(row => row.map(sanitizeCSV).join(";")).join("\n");
+    const blob = new Blob(["\ufeff" + csv], {type:"text/csv;charset=utf-8;"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    const date = new Date().toISOString().slice(0,10);
+    a.href = url;
+    a.download = "maitre_hibou_competences_" + date + ".csv";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+  };
+
+  function patchTeacherButtons(){
+    document.querySelectorAll("button").forEach(function(btn){
+      const text = (btn.textContent || "").toLowerCase();
+      const onclick = (btn.getAttribute("onclick") || "").toLowerCase();
+
+      if(text.includes("actualiser") || onclick.includes("renderteacherdashboard")){
+        btn.setAttribute("onclick", "hibouTeacherRefreshSafe()");
+      }
+
+      if(text.includes("export csv") || onclick.includes("exportteachercsv")){
+        btn.setAttribute("onclick", "exportTeacherCSV()");
+      }
+    });
+  }
+
+  const oldOpenTeacher = window.openTeacherDashboard;
+  window.openTeacherDashboard = function(){
+    if(typeof oldOpenTeacher === "function"){
+      oldOpenTeacher();
+    }else{
+      const overlay = document.getElementById("teacherDashboardOverlay");
+      if(overlay) overlay.classList.remove("hidden");
+      rerenderTeacherSafely();
+    }
+    setTimeout(patchTeacherButtons, 50);
+    setTimeout(patchTeacherButtons, 200);
+  };
+
+  document.addEventListener("DOMContentLoaded", patchTeacherButtons);
+  window.addEventListener("load", patchTeacherButtons);
+})();
+</script>
+
 </body>
 </html>

@@ -1027,101 +1027,73 @@ html, body {
 </style>
 
 
-<style id="patch-layout-tablette-v65">
-/* V6.5 - Correction affichage tablette : menu propre + chat lisible */
-:root{
-  --hibou-header-h: 72px;
-  --hibou-subjects-h: 58px;
-  --hibou-input-h: 132px;
-  --hibou-top-space: 130px;
-  --hibou-bottom-space: 132px;
-}
 
+<style id="patch-layout-tablette-v66">
+/* V6.6 - Retour à un affichage tablette stable */
 html, body{
-  height:100%;
-  overflow:hidden !important;
-}
-
-body{
-  padding-top:var(--hibou-top-space) !important;
-  padding-bottom:var(--hibou-bottom-space) !important;
-}
-
-/* Bandeau toujours visible */
-header{
-  position:fixed !important;
-  top:0 !important;
-  left:0 !important;
-  right:0 !important;
-  z-index:500 !important;
-  min-height:var(--hibou-header-h);
-}
-
-/* Matières toujours visibles */
-.subjects-bar{
-  position:fixed !important;
-  top:var(--hibou-header-h) !important;
-  left:0 !important;
-  right:0 !important;
-  z-index:499 !important;
-  background:var(--bg) !important;
-  box-shadow:0 4px 14px rgba(108,99,255,.12);
-  padding-top:8px !important;
-  padding-bottom:8px !important;
-}
-
-/* Sous-menu : seulement pour les vraies matières */
-.quick-questions{
-  position:fixed !important;
-  top:calc(var(--hibou-header-h) + var(--hibou-subjects-h)) !important;
-  left:50% !important;
-  transform:translateX(-50%) !important;
-  z-index:498 !important;
-  max-height:70px !important;
+  height:auto !important;
+  min-height:100vh !important;
+  overflow-x:hidden !important;
   overflow-y:auto !important;
 }
+
+/* On garde seulement un bandeau collant, pas fixé brutalement */
+header{
+  position:sticky !important;
+  top:0 !important;
+  z-index:80 !important;
+}
+
+/* La barre des matières reste accessible quand on remonte */
+.subjects-bar{
+  position:sticky !important;
+  top:60px !important;
+  z-index:79 !important;
+  background:var(--bg) !important;
+  box-shadow:0 4px 14px rgba(108,99,255,.10);
+}
+
+/* Sous-menu normal : pas de fixation qui écrase le chat */
+.quick-questions{
+  position:static !important;
+  transform:none !important;
+  max-height:none !important;
+  overflow:visible !important;
+}
+
+/* Pour Valider une compétence, pas de sous-menu */
 .quick-questions[style*="display:none"],
 .quick-questions.is-hidden{
   display:none !important;
 }
 
-/* En mode tablette, le défi jaune ne doit pas écraser le chat */
+/* Le chat redevient naturel et lisible */
+.chat-container{
+  height:auto !important;
+  min-height:360px !important;
+  max-height:none !important;
+  overflow-y:visible !important;
+  flex:1 1 auto !important;
+}
+
+/* Zone de saisie collante mais non bloquante */
+.input-area{
+  position:sticky !important;
+  bottom:0 !important;
+  z-index:80 !important;
+}
+
+/* On évite le gros bloc défi en permanence sur tablette */
 .master-challenge-card{
   display:none !important;
 }
 
-/* On garde un seul bouton progrès : celui sous forme de mini-bouton */
-.progress-mini-wrap{
-  position:fixed !important;
-  left:50% !important;
-  transform:translateX(-50%) !important;
-  top:calc(var(--hibou-header-h) + var(--hibou-subjects-h) + 6px) !important;
-  z-index:497 !important;
-  width:calc(100% - 32px) !important;
-  max-width:768px !important;
-  margin:0 !important;
-}
-.progress-mini-btn{
-  padding:8px 10px !important;
-}
-
-/* Chat : vraie zone de travail */
-.chat-container{
-  height:calc(100dvh - var(--hibou-top-space) - var(--hibou-bottom-space)) !important;
-  min-height:0 !important;
-  max-height:none !important;
-  overflow-y:auto !important;
-  flex:1 1 auto !important;
-  padding-top:12px !important;
-  padding-bottom:18px !important;
-}
-
-/* Bloc validation compétence plus compact sur tablette */
+/* Bloc compétence un peu plus compact */
 .skill-check-box{
   padding:12px !important;
 }
 .skill-check-grid{
-  grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr)) !important;
   gap:8px !important;
 }
 .skill-check-btn{
@@ -1130,54 +1102,26 @@ header{
   line-height:1.2 !important;
 }
 
-/* Zone de saisie toujours visible */
-.input-area{
-  position:fixed !important;
-  left:0 !important;
-  right:0 !important;
-  bottom:0 !important;
-  z-index:500 !important;
-}
-
-/* Évite que le bouton flottant du navigateur gêne trop la zone */
-.logout-area{
-  margin-top:4px !important;
-}
-
 @media(max-width:768px){
-  :root{
-    --hibou-header-h: 70px;
-    --hibou-subjects-h: 56px;
-    --hibou-input-h: 126px;
-    --hibou-top-space: 174px;
-    --hibou-bottom-space: 126px;
+  .subjects-bar{
+    top:54px !important;
   }
-  .logo-text{font-size:17px !important;}
-  .subject-btn{
-    font-size:13px !important;
-    padding:8px 12px !important;
+  .chat-container{
+    min-height:420px !important;
+    padding-bottom:18px !important;
   }
   .progress-mini-wrap{
-    top:calc(var(--hibou-header-h) + var(--hibou-subjects-h) + 8px) !important;
+    margin-top:6px !important;
+    margin-bottom:8px !important;
+  }
+  .progress-mini-btn{
+    padding:7px 10px !important;
   }
 }
 
 @media(max-width:520px){
   .skill-check-grid{
     grid-template-columns:1fr !important;
-  }
-}
-
-@media(max-height:760px){
-  :root{
-    --hibou-top-space: 164px;
-    --hibou-bottom-space: 118px;
-  }
-  .progress-mini-btn{
-    padding:6px 10px !important;
-  }
-  .security-note{
-    font-size:11px !important;
   }
 }
 </style>
@@ -5799,75 +5743,55 @@ setTimeout(removeVieDeClassePanel, 1000);
 </script>
 
 
-<script id="patch-layout-tablette-v65">
+
+<script id="patch-layout-tablette-v66">
 (function(){
-  function updateTabletLayout(){
-    const root = document.documentElement;
-    const header = document.querySelector("header");
-    const subjects = document.querySelector(".subjects-bar");
-    const input = document.querySelector(".input-area");
-    const progress = document.getElementById("progressMiniWrap");
-    const quick = document.getElementById("quickQuestions");
+  function cleanTabletLayoutV66(){
+    const q = document.getElementById("quickQuestions");
     const active = document.querySelector(".subject-btn.active");
-
-    const headerH = header ? Math.ceil(header.getBoundingClientRect().height) : 70;
-    const subjectsH = subjects ? Math.ceil(subjects.getBoundingClientRect().height) : 56;
-    const inputH = input ? Math.ceil(input.getBoundingClientRect().height) : 126;
-    const progressH = progress ? Math.ceil(progress.getBoundingClientRect().height) + 12 : 44;
-
-    const competenceMode = active && active.getAttribute("data-subject") === "competences";
-
-    if(quick && competenceMode){
-      quick.classList.add("is-hidden");
-      quick.style.display = "none";
-      quick.innerHTML = "";
+    if(q && active && active.getAttribute("data-subject") === "competences"){
+      q.classList.add("is-hidden");
+      q.style.display = "none";
+      q.innerHTML = "";
     }
-
-    root.style.setProperty("--hibou-header-h", headerH + "px");
-    root.style.setProperty("--hibou-subjects-h", subjectsH + "px");
-    root.style.setProperty("--hibou-input-h", inputH + "px");
-    root.style.setProperty("--hibou-bottom-space", inputH + "px");
-    root.style.setProperty("--hibou-top-space", (headerH + subjectsH + progressH) + "px");
 
     const chat = document.getElementById("chatContainer");
     if(chat){
-      chat.style.overflowY = "auto";
+      chat.style.height = "auto";
+      chat.style.maxHeight = "none";
+      chat.style.overflowY = "visible";
     }
   }
 
   const oldSelect = window.selectSubject;
-  if(typeof oldSelect === "function" && !window.__layoutTabletteV65Select){
-    window.__layoutTabletteV65Select = true;
+  if(typeof oldSelect === "function" && !window.__layoutTabletteV66Select){
+    window.__layoutTabletteV66Select = true;
     window.selectSubject = function(btn, subject){
       const result = oldSelect.apply(this, arguments);
-      setTimeout(updateTabletLayout, 0);
-      setTimeout(updateTabletLayout, 150);
+      setTimeout(cleanTabletLayoutV66, 0);
+      setTimeout(cleanTabletLayoutV66, 120);
       return result;
     };
   }
 
   const oldOpenCompetence = window.openCompetenceValidation;
-  if(typeof oldOpenCompetence === "function" && !window.__layoutTabletteV65Competence){
-    window.__layoutTabletteV65Competence = true;
+  if(typeof oldOpenCompetence === "function" && !window.__layoutTabletteV66Competence){
+    window.__layoutTabletteV66Competence = true;
     window.openCompetenceValidation = function(){
       const result = oldOpenCompetence.apply(this, arguments);
-      setTimeout(updateTabletLayout, 0);
-      setTimeout(updateTabletLayout, 150);
+      setTimeout(cleanTabletLayoutV66, 0);
+      setTimeout(cleanTabletLayoutV66, 120);
       return result;
     };
   }
 
-  window.addEventListener("resize", updateTabletLayout);
-  window.addEventListener("orientationchange", function(){ setTimeout(updateTabletLayout, 250); });
   document.addEventListener("DOMContentLoaded", function(){
-    updateTabletLayout();
-    setTimeout(updateTabletLayout, 200);
-    setTimeout(updateTabletLayout, 900);
+    cleanTabletLayoutV66();
+    setTimeout(cleanTabletLayoutV66, 300);
   });
   window.addEventListener("load", function(){
-    updateTabletLayout();
-    setTimeout(updateTabletLayout, 200);
-    setTimeout(updateTabletLayout, 900);
+    cleanTabletLayoutV66();
+    setTimeout(cleanTabletLayoutV66, 300);
   });
 })();
 </script>

@@ -1079,6 +1079,55 @@ header{
 }
 </style>
 
+
+<style id="patch-verbe-lecon-v63">
+.verbe-lesson{
+  background:#F8F7FF;
+  border:2px solid var(--primary-light);
+  border-radius:16px;
+  padding:16px;
+  margin-top:10px;
+  width:100%;
+}
+.verbe-lesson h3{
+  font-family:'Baloo 2',sans-serif;
+  color:var(--primary);
+  font-size:20px;
+  margin:0 0 8px 0;
+}
+.verbe-rule{
+  background:#FFFCEB;
+  border:2px solid var(--accent);
+  border-radius:14px;
+  padding:10px 12px;
+  font-weight:900;
+  color:#7A5C00;
+  margin:10px 0;
+  line-height:1.4;
+}
+.verbe-examples{
+  background:white;
+  border:2px solid #ECEBF3;
+  border-radius:14px;
+  padding:10px 12px;
+  font-weight:800;
+  line-height:1.45;
+  margin:10px 0;
+}
+.verbe-quiz-btn{
+  background:var(--primary);
+  color:white;
+  border:none;
+  border-radius:14px;
+  padding:10px 14px;
+  font-weight:900;
+  font-family:inherit;
+  cursor:pointer;
+  width:100%;
+  margin-top:8px;
+}
+</style>
+
 </head>
 <body>
 
@@ -3114,7 +3163,7 @@ function updateQuickQuestions(subject) {
     `,
     'francais': `
       <button class="quick-btn" onclick="startNomCommun()">✍️ Nom commun</button>
-      <button class="quick-btn" onclick="sendQuick('Explique-moi le verbe pour un CE2')">🏃 Le verbe</button>
+      <button class="quick-btn" onclick="startVerbe()">🏃 Le verbe</button>
       <button class="quick-btn" onclick="startIdeesPourEcrire()">✏️ Idées pour écrire</button>
       <button class="quick-btn" onclick="startLocalQuiz('francais','✍️ Quiz local Français CE2')">📚 Quiz local Français</button>
     `,
@@ -5572,6 +5621,196 @@ setTimeout(removeVieDeClassePanel, 1000);
     updateFixedLayout();
     setTimeout(updateFixedLayout, 200);
     setTimeout(updateFixedLayout, 800);
+  });
+})();
+</script>
+
+
+<script id="patch-nom-commun-unique-v62">
+(function(){
+  function getNomCommunLesson(){
+    return document.querySelector(".nom-commun-lesson[data-nom-commun='true'], .nom-commun-lesson");
+  }
+
+  function scrollToNomCommunLesson(box){
+    const chat = document.getElementById("chatContainer");
+    if(box){
+      box.setAttribute("data-nom-commun", "true");
+      box.scrollIntoView({behavior:"smooth", block:"center"});
+      if(chat) setTimeout(function(){ chat.scrollTop = chat.scrollHeight; }, 80);
+      return true;
+    }
+    return false;
+  }
+
+  const oldShowNomCommunLesson = window.showNomCommunLesson;
+  if(typeof oldShowNomCommunLesson === "function" && !window.__nomCommunUniqueV62){
+    window.__nomCommunUniqueV62 = true;
+
+    window.showNomCommunLesson = function(){
+      const existing = getNomCommunLesson();
+      if(existing){
+        scrollToNomCommunLesson(existing);
+        return;
+      }
+
+      const result = oldShowNomCommunLesson.apply(this, arguments);
+
+      setTimeout(function(){
+        const box = document.querySelector(".nom-commun-lesson");
+        if(box) box.setAttribute("data-nom-commun", "true");
+      }, 50);
+
+      return result;
+    };
+  }
+
+  const oldStartNomCommun = window.startNomCommun;
+  if(typeof oldStartNomCommun === "function" && !window.__startNomCommunUniqueV62){
+    window.__startNomCommunUniqueV62 = true;
+    window.startNomCommun = function(){
+      const existing = getNomCommunLesson();
+      if(existing){
+        scrollToNomCommunLesson(existing);
+        return;
+      }
+      return oldStartNomCommun.apply(this, arguments);
+    };
+  }
+})();
+</script>
+
+
+<script id="patch-verbe-lecon-v63">
+(function(){
+  function getVerbeLesson(){
+    return document.querySelector(".verbe-lesson[data-verbe='true'], .verbe-lesson");
+  }
+
+  function scrollToVerbeLesson(box){
+    const chat = document.getElementById("chatContainer");
+    if(box){
+      box.setAttribute("data-verbe", "true");
+      box.scrollIntoView({behavior:"smooth", block:"center"});
+      if(chat) setTimeout(function(){ chat.scrollTop = chat.scrollHeight; }, 80);
+      return true;
+    }
+    return false;
+  }
+
+  window.showVerbeLesson = function(){
+    const existing = getVerbeLesson();
+    if(existing){
+      scrollToVerbeLesson(existing);
+      return;
+    }
+
+    const c = document.getElementById("chatContainer");
+    if(!c) return;
+
+    const d = document.createElement("div");
+    d.className = "message prof";
+    d.innerHTML = `
+      <div class="avatar prof">🦉</div>
+      <div class="bubble">
+        <div class="verbe-lesson" data-verbe="true">
+          <h3>✍️ Le verbe</h3>
+          <div class="verbe-rule">
+            Un <b>verbe</b> indique souvent une action ou ce que fait quelqu'un.
+          </div>
+          <div class="verbe-examples">
+            ✅ Dans <b>Le chat dort</b>, le verbe est <b>dort</b>.<br>
+            ✅ Dans <b>Les enfants jouent</b>, le verbe est <b>jouent</b>.<br>
+            ✅ Dans <b>Je mange une pomme</b>, le verbe est <b>mange</b>.<br><br>
+            Astuce : on peut souvent mettre <b>ne ... pas</b> autour du verbe.<br>
+            Exemple : Le chat <b>ne dort pas</b>.
+          </div>
+          Quand tu as relu la leçon, tu peux faire le quiz.
+          <button class="verbe-quiz-btn" onclick="startVerbeQuizFromLesson()">➡️ Faire le quiz Verbe</button>
+        </div>
+      </div>`;
+    c.appendChild(d);
+    c.scrollTop = c.scrollHeight;
+  };
+
+  window.startVerbeQuizFromLesson = function(){
+    if(typeof startSkillCheck === "function"){
+      startSkillCheck("verbe");
+    }else if(typeof startLocalQuiz === "function"){
+      startLocalQuiz("francais", "✍️ Quiz local Français CE2");
+    }
+  };
+
+  window.startVerbe = function(){
+    showVerbeLesson();
+  };
+
+  function patchFrancaisMenu(){
+    document.querySelectorAll("button.quick-btn, button.local-quiz-card").forEach(function(btn){
+      const label = (btn.textContent || "").toLowerCase();
+      const action = (btn.getAttribute("onclick") || "").toLowerCase();
+
+      if(label.includes("verbe") || action.includes("verbe") || action.includes("aide-moi à reconnaître un verbe")){
+        btn.setAttribute("onclick", "startVerbe()");
+      }
+    });
+
+    // Si le sous-menu français existe mais sans bouton Verbe local, on l'ajoute.
+    const q = document.getElementById("quickQuestions");
+    const active = document.querySelector(".subject-btn.active");
+    if(q && active && active.getAttribute("data-subject") === "francais" && !q.querySelector("#verbeQuickBtnV63")){
+      q.insertAdjacentHTML("beforeend", '<button id="verbeQuickBtnV63" class="quick-btn" onclick="startVerbe()">✍️ Le verbe</button>');
+    }
+  }
+
+  const oldSelect = window.selectSubject;
+  if(typeof oldSelect === "function" && !window.__patchVerbeSelectV63){
+    window.__patchVerbeSelectV63 = true;
+    window.selectSubject = function(btn, subject){
+      const result = oldSelect.apply(this, arguments);
+      setTimeout(patchFrancaisMenu, 0);
+      setTimeout(patchFrancaisMenu, 120);
+      return result;
+    };
+  }
+
+  document.addEventListener("DOMContentLoaded", function(){
+    setTimeout(patchFrancaisMenu, 100);
+  });
+  window.addEventListener("load", function(){
+    setTimeout(patchFrancaisMenu, 100);
+  });
+})();
+</script>
+
+
+<script id="patch-verbe-direct-v64">
+(function(){
+  function patchVerbeButtonDirect(){
+    document.querySelectorAll("button.quick-btn").forEach(function(btn){
+      const label = (btn.textContent || "").toLowerCase();
+      const onclick = (btn.getAttribute("onclick") || "");
+      if(label.includes("verbe") || onclick.includes("Explique-moi le verbe")){
+        btn.setAttribute("onclick", "startVerbe()");
+      }
+    });
+  }
+
+  const oldUpdateQuickQuestions = window.updateQuickQuestions;
+  if(typeof oldUpdateQuickQuestions === "function" && !window.__patchVerbeDirectV64){
+    window.__patchVerbeDirectV64 = true;
+    window.updateQuickQuestions = function(subject){
+      const result = oldUpdateQuickQuestions.apply(this, arguments);
+      setTimeout(patchVerbeButtonDirect, 0);
+      return result;
+    };
+  }
+
+  document.addEventListener("DOMContentLoaded", function(){
+    setTimeout(patchVerbeButtonDirect, 100);
+  });
+  window.addEventListener("load", function(){
+    setTimeout(patchVerbeButtonDirect, 100);
   });
 })();
 </script>

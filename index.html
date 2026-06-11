@@ -1030,35 +1030,149 @@ html, body {
 
 
 
-<style id="patch-tablette-minimal-v68">
-/* V6.8 - Correctif minimal tablette : on ne force plus la mise en page */
+<style id="patch-tablette-shell-v69">
+/* V6.9 - Vraie structure tablette : haut / chat / bas */
 html, body{
-  overflow-x:hidden !important;
+  height:100dvh !important;
+  max-height:100dvh !important;
+  overflow:hidden !important;
 }
 
-/* La barre de matières reste naturelle : pas de fixed */
+body{
+  display:flex !important;
+  flex-direction:column !important;
+}
+
+/* Le haut reste dans le flux, pas en fixed */
+header{
+  position:relative !important;
+  top:auto !important;
+  flex:0 0 auto !important;
+  z-index:30 !important;
+}
+
 .subjects-bar{
   position:relative !important;
   top:auto !important;
+  flex:0 0 auto !important;
+  z-index:25 !important;
+  background:var(--bg) !important;
 }
 
-/* Le chat garde sa hauteur d'origine et ne doit pas être coupé horizontalement */
+/* Le sous-menu ne doit pas flotter ni couvrir le chat */
+.quick-questions{
+  position:relative !important;
+  top:auto !important;
+  transform:none !important;
+  flex:0 0 auto !important;
+  max-height:76px !important;
+  overflow-y:auto !important;
+}
+
+/* En mode validation compétence, on ne montre jamais le défi du maître */
+body.competence-mode #masterChallengeCard,
+body.competence-mode .master-challenge-card{
+  display:none !important;
+}
+
+/* Le bouton progrès reste compact */
+.progress-mini-wrap{
+  flex:0 0 auto !important;
+  margin:6px auto 6px auto !important;
+}
+.progress-mini-btn{
+  padding:7px 10px !important;
+}
+
+/* Le chat devient la vraie zone centrale de scroll */
 .chat-container{
+  flex:1 1 auto !important;
+  min-height:0 !important;
+  height:auto !important;
+  max-height:none !important;
+  overflow-y:auto !important;
   overflow-x:hidden !important;
+  padding-top:10px !important;
+  padding-bottom:12px !important;
 }
 
-/* La zone de saisie reste simplement collante en bas, comme avant */
+/* La saisie reste en bas dans le flux, sans masquer le chat */
 .input-area{
-  position:sticky !important;
-  bottom:0 !important;
+  position:relative !important;
+  bottom:auto !important;
+  flex:0 0 auto !important;
+  z-index:30 !important;
+  padding:8px 16px !important;
 }
 
-/* Sur tablette paysage : on compacte sans changer la structure */
+.security-note{
+  font-size:11px !important;
+  margin-top:4px !important;
+}
+.logout-area{
+  margin-top:2px !important;
+}
+.logout-btn{
+  font-size:12px !important;
+  padding:2px 8px !important;
+}
+
+/* Compactage tablette paysage */
 @media (max-width:1100px) and (orientation:landscape){
-  header{padding:8px 12px !important;}
-  .subjects-bar{padding:8px 12px !important;}
-  .subject-btn{font-size:13px !important; padding:7px 11px !important;}
-  .quick-btn{font-size:12px !important; padding:7px 10px !important;}
+  header{
+    padding:7px 12px !important;
+  }
+  .logo-icon{font-size:23px !important;}
+  .logo-text{font-size:17px !important;}
+  .badge{font-size:12px !important; padding:5px 8px !important;}
+  .btn-round{width:34px !important; height:34px !important;}
+
+  .subjects-bar{
+    padding:7px 12px !important;
+    gap:6px !important;
+  }
+  .subject-btn{
+    font-size:12px !important;
+    padding:7px 10px !important;
+  }
+
+  .quick-questions{
+    padding:4px 12px 6px 12px !important;
+    max-height:62px !important;
+  }
+  .quick-btn{
+    font-size:12px !important;
+    padding:6px 9px !important;
+  }
+
+  .message{
+    max-width:82% !important;
+  }
+  .bubble{
+    font-size:14px !important;
+    padding:10px 14px !important;
+  }
+
+  .input-area{
+    padding:7px 12px !important;
+  }
+  .input-wrapper{
+    padding:5px 9px !important;
+  }
+}
+
+/* Le bloc compétence doit tenir mieux sur tablette */
+.skill-check-box{
+  padding:12px !important;
+}
+.skill-check-grid{
+  grid-template-columns:repeat(auto-fit,minmax(190px,1fr)) !important;
+  gap:8px !important;
+}
+.skill-check-btn{
+  padding:9px !important;
+  font-size:13px !important;
+  line-height:1.22 !important;
 }
 </style>
 
@@ -5679,6 +5793,87 @@ setTimeout(removeVieDeClassePanel, 1000);
 </script>
 
 
+
+
+<script id="patch-tablette-shell-v69">
+(function(){
+  if("scrollRestoration" in history){
+    history.scrollRestoration = "manual";
+  }
+
+  function isCompetenceActive(){
+    const active = document.querySelector(".subject-btn.active");
+    return active && active.getAttribute("data-subject") === "competences";
+  }
+
+  function applyTabletShell(){
+    const competence = isCompetenceActive();
+    document.body.classList.toggle("competence-mode", !!competence);
+
+    const q = document.getElementById("quickQuestions");
+    if(q && competence){
+      q.style.display = "none";
+      q.innerHTML = "";
+    }
+
+    const challenge = document.getElementById("masterChallengeCard");
+    if(challenge && competence){
+      challenge.style.display = "none";
+    }
+
+    const chat = document.getElementById("chatContainer");
+    if(chat){
+      chat.style.overflowY = "auto";
+      chat.style.minHeight = "0";
+    }
+
+    window.scrollTo(0,0);
+  }
+
+  const oldSelect = window.selectSubject;
+  if(typeof oldSelect === "function" && !window.__tabletShellSelectV69){
+    window.__tabletShellSelectV69 = true;
+    window.selectSubject = function(btn, subject){
+      document.body.classList.remove("competence-mode");
+      const result = oldSelect.apply(this, arguments);
+      setTimeout(applyTabletShell, 0);
+      setTimeout(applyTabletShell, 120);
+      return result;
+    };
+  }
+
+  const oldOpenCompetence = window.openCompetenceValidation;
+  if(typeof oldOpenCompetence === "function" && !window.__tabletShellCompetenceV69){
+    window.__tabletShellCompetenceV69 = true;
+    window.openCompetenceValidation = function(){
+      document.body.classList.add("competence-mode");
+      const result = oldOpenCompetence.apply(this, arguments);
+      setTimeout(applyTabletShell, 0);
+      setTimeout(applyTabletShell, 120);
+      return result;
+    };
+  }
+
+  function startInCompetenceModeIfNeeded(){
+    applyTabletShell();
+    const active = document.querySelector(".subject-btn.active");
+    const hasSkillBox = document.querySelector(".skill-check-box");
+    if(active && active.getAttribute("data-subject") === "competences" && !hasSkillBox && typeof window.openCompetenceValidation === "function"){
+      window.openCompetenceValidation();
+    }
+    setTimeout(applyTabletShell, 200);
+  }
+
+  document.addEventListener("DOMContentLoaded", function(){
+    setTimeout(startInCompetenceModeIfNeeded, 100);
+    setTimeout(startInCompetenceModeIfNeeded, 500);
+  });
+  window.addEventListener("load", function(){
+    setTimeout(startInCompetenceModeIfNeeded, 100);
+    setTimeout(startInCompetenceModeIfNeeded, 500);
+  });
+})();
+</script>
 
 </body>
 </html>

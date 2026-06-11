@@ -1047,7 +1047,8 @@ body.competence-mode .master-challenge-card{
 
 
 
-<style id="patch-sciences-local-direct-v75">
+
+<style id="patch-sciences-local-visible-v76">
 .plantes-lesson,.systeme-lesson{
   background:#F8F7FF;
   border:2px solid var(--primary-light);
@@ -5589,7 +5590,8 @@ setTimeout(removeVieDeClassePanel, 1000);
 
 
 
-<script id="patch-sciences-local-direct-v75">
+
+<script id="patch-sciences-local-visible-v76">
 (function(){
   function addLessonOnce(selector, htmlContent){
     const existing = document.querySelector(selector);
@@ -5624,15 +5626,9 @@ setTimeout(removeVieDeClassePanel, 1000);
             ✅ <b>terre ou sels minéraux</b><br><br>
             Exemple : si une plante manque d’eau ou de lumière, elle pousse mal.
           </div>
-          <button class="plantes-quiz-btn" onclick="startPlantesQuizFromLesson()">➡️ Faire le quiz Plantes</button>
+          <button class="plantes-quiz-btn" onclick="startLocalQuiz('sciences','💡 Quiz local Sciences CE2')">➡️ Faire le quiz Plantes</button>
         </div>
       </div>`);
-  };
-
-  window.startPlantesQuizFromLesson = function(){
-    if(typeof startLocalQuiz === "function"){
-      startLocalQuiz("sciences", "💡 Quiz local Sciences CE2");
-    }
   };
 
   window.startSystemeSolaire = function(){
@@ -5652,31 +5648,40 @@ setTimeout(removeVieDeClassePanel, 1000);
             Une journée correspond au tour de la Terre sur elle-même.<br>
             Une année correspond au tour de la Terre autour du Soleil.
           </div>
-          <button class="systeme-quiz-btn" onclick="startSystemeSolaireQuizFromLesson()">➡️ Faire le quiz Système solaire</button>
+          <button class="systeme-quiz-btn" onclick="startLocalQuiz('sciences','💡 Quiz local Sciences CE2')">➡️ Faire le quiz Système solaire</button>
         </div>
       </div>`);
   };
 
-  window.startSystemeSolaireQuizFromLesson = function(){
-    if(typeof startLocalQuiz === "function"){
-      startLocalQuiz("sciences", "💡 Quiz local Sciences CE2");
+  function showActiveSubmenu(){
+    const active = document.querySelector(".subject-btn.active");
+    const q = document.getElementById("quickQuestions");
+    if(!active || !q || typeof updateQuickQuestions !== "function") return;
+    const subject = active.getAttribute("data-subject");
+    if(subject && subject !== "competences"){
+      document.body.classList.remove("competence-mode");
+      updateQuickQuestions(subject);
+      q.style.display = "flex";
     }
-  };
+  }
 
-  // Sécurité : si une matière est active au chargement, on montre son sous-menu.
-  document.addEventListener("DOMContentLoaded", function(){
-    setTimeout(function(){
-      const active = document.querySelector(".subject-btn.active");
+  const oldSelectSubjectV76 = window.selectSubject;
+  if(typeof oldSelectSubjectV76 === "function" && !window.__visibleSubmenusV76){
+    window.__visibleSubmenusV76 = true;
+    window.selectSubject = function(btn, subject){
+      document.body.classList.remove("competence-mode");
+      const result = oldSelectSubjectV76.apply(this, arguments);
       const q = document.getElementById("quickQuestions");
-      if(active && q && typeof updateQuickQuestions === "function"){
-        const subject = active.getAttribute("data-subject");
-        if(subject && subject !== "competences"){
-          document.body.classList.remove("competence-mode");
-          updateQuickQuestions(subject);
-          q.style.display = "flex";
-        }
-      }
-    }, 120);
+      if(q) q.style.display = "flex";
+      return result;
+    };
+  }
+
+  document.addEventListener("DOMContentLoaded", function(){
+    setTimeout(showActiveSubmenu, 120);
+  });
+  window.addEventListener("load", function(){
+    setTimeout(showActiveSubmenu, 120);
   });
 })();
 </script>

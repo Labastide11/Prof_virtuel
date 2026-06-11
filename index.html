@@ -954,7 +954,7 @@ html, body {
 
 
 <div class="subjects-bar">
-  <button class="subject-btn active" onclick="selectSubject(this, 'general')" data-subject="general">🏠 Général</button>
+  <button class="subject-btn active" onclick="openCompetenceValidation()" data-subject="competences">🏅 Valider une compétence</button>
   <button class="subject-btn" onclick="selectSubject(this, 'maths')" data-subject="maths">🔢 Maths</button>
   <button class="subject-btn" onclick="selectSubject(this, 'francais')" data-subject="francais">✍️ Français</button>
   <button class="subject-btn" onclick="selectSubject(this, 'sciences')" data-subject="sciences">💡 Sciences</button>
@@ -964,11 +964,7 @@ html, body {
 </div>
 
 <div class="quick-questions" id="quickQuestions">
-  <button class="quick-btn" onclick="showLocalQuizMenu()">📚 Banque CE2 Phase 4</button>
-  <button class="quick-btn" onclick="startNomCommun()">✍️ Nom commun</button>
-  <button class="quick-btn" onclick="startLocalQuiz('maths','🧮 Quiz local Maths CE2')">🧮 Quiz Maths</button>
-  <button class="quick-btn" onclick="startLocalQuiz('geographie','🌍 Quiz local Géographie CE2')">🌍 Quiz Géographie</button>
-  <button class="quick-btn" onclick="sendQuick('Explique-moi le système solaire pour un élève de CE2')">🪐 Système solaire</button>
+  <button class="quick-btn" onclick="openCompetenceValidation()">🏅 Valider une compétence</button>
 </div>
 
 <div class="master-challenge-card" id="masterChallengeCard"></div>
@@ -5038,39 +5034,62 @@ setTimeout(removeVieDeClassePanel, 1000);
 </script>
 
 
-<script id="menu-valider-competence-v57">
+
+<script id="menu-valider-competence-v57b">
 (function(){
+  function openCompetenceValidation(){
+    document.querySelectorAll(".subject-btn").forEach(function(b){ b.classList.remove("active"); });
+    const btn = document.querySelector('.subject-btn[data-subject="competences"], .subject-btn[data-subject="general"]');
+    if(btn) btn.classList.add("active");
+
+    const q = document.getElementById("quickQuestions");
+    if(q){
+      q.innerHTML = '<button class="quick-btn" onclick="openCompetenceValidation()">🏅 Valider une compétence</button>';
+    }
+
+    if(typeof startSkillCheckMenu === "function"){
+      startSkillCheckMenu();
+    }else if(typeof addMessage === "function"){
+      addMessage("prof", "La validation des compétences est en cours de chargement. Réessaie dans un instant.");
+    }
+  }
+
+  window.openCompetenceValidation = openCompetenceValidation;
+
   function patchMenu(){
-    const buttons = document.querySelectorAll(".subject-btn");
-    buttons.forEach(btn=>{
-      const txt=(btn.textContent||"").toLowerCase();
-      if(txt.includes("général") || txt.includes("general")){
-        btn.textContent="🏅 Valider une compétence";
-        btn.onclick=function(){
-          if(typeof startSkillCheckMenu==="function"){
-            startSkillCheckMenu();
-          }
-        };
+    document.querySelectorAll(".subject-btn").forEach(function(btn){
+      const txt = (btn.textContent || "").toLowerCase();
+      const subject = btn.getAttribute("data-subject");
+      if(txt.includes("général") || txt.includes("general") || subject === "general" || subject === "competences"){
+        btn.textContent = "🏅 Valider une compétence";
+        btn.setAttribute("data-subject", "competences");
+        btn.onclick = openCompetenceValidation;
       }
     });
   }
 
-  const oldSelect=window.selectSubject;
-  if(typeof oldSelect==="function" && !window.__v57menu){
-    window.__v57menu=true;
-    window.selectSubject=function(btn,subject){
-      if(subject==="general"){
-        if(typeof startSkillCheckMenu==="function"){
-          startSkillCheckMenu();
-          return;
-        }
+  const oldSelect = window.selectSubject;
+  if(typeof oldSelect === "function" && !window.__v57bmenu){
+    window.__v57bmenu = true;
+    window.selectSubject = function(btn, subject){
+      if(subject === "general" || subject === "competences"){
+        openCompetenceValidation();
+        return;
       }
-      return oldSelect.apply(this,arguments);
-    }
+      return oldSelect.apply(this, arguments);
+    };
   }
 
-  document.addEventListener("DOMContentLoaded",patchMenu);
-  window.addEventListener("load",patchMenu);
+  document.addEventListener("DOMContentLoaded", function(){
+    patchMenu();
+    setTimeout(patchMenu, 100);
+    setTimeout(patchMenu, 500);
+  });
+  window.addEventListener("load", function(){
+    patchMenu();
+    setTimeout(patchMenu, 100);
+    setTimeout(patchMenu, 500);
+  });
 })();
 </script>
 

@@ -5037,5 +5037,42 @@ setTimeout(removeVieDeClassePanel, 1000);
 })();
 </script>
 
+
+<script id="menu-valider-competence-v57">
+(function(){
+  function patchMenu(){
+    const buttons = document.querySelectorAll(".subject-btn");
+    buttons.forEach(btn=>{
+      const txt=(btn.textContent||"").toLowerCase();
+      if(txt.includes("général") || txt.includes("general")){
+        btn.textContent="🏅 Valider une compétence";
+        btn.onclick=function(){
+          if(typeof startSkillCheckMenu==="function"){
+            startSkillCheckMenu();
+          }
+        };
+      }
+    });
+  }
+
+  const oldSelect=window.selectSubject;
+  if(typeof oldSelect==="function" && !window.__v57menu){
+    window.__v57menu=true;
+    window.selectSubject=function(btn,subject){
+      if(subject==="general"){
+        if(typeof startSkillCheckMenu==="function"){
+          startSkillCheckMenu();
+          return;
+        }
+      }
+      return oldSelect.apply(this,arguments);
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded",patchMenu);
+  window.addEventListener("load",patchMenu);
+})();
+</script>
+
 </body>
 </html>

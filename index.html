@@ -3577,5 +3577,73 @@ setTimeout(removeVieDeClassePanel, 1000);
 })();
 </script>
 
+
+<script id="patch-bouton-enseignant-v50b">
+(function(){
+  function fallbackTeacherDashboard(errorMessage){
+    const content = document.getElementById("teacherDashboardContent");
+    if(content){
+      let roster = [];
+      try { roster = JSON.parse(localStorage.getItem("hibou_roster") || "[]"); } catch(e){}
+      content.innerHTML = `
+        <div class="teacher-section">
+          <h3>👨‍🏫 Tableau enseignant</h3>
+          <p><strong>Le panneau enseignant est ouvert en mode sécurisé.</strong></p>
+          <p class="teacher-small">Une partie du tableau de bord complet a rencontré une erreur, mais le bouton fonctionne.</p>
+          <div class="teacher-actions">
+            <div class="stat-card">👥 ${roster.length} élève(s) enregistré(s)</div>
+          </div>
+          ${errorMessage ? `<div class="teacher-empty">Détail technique : ${String(errorMessage).replace(/[<>&]/g, "")}</div>` : ""}
+        </div>
+      `;
+    }
+  }
+
+  window.openTeacherDashboard = function(){
+    const overlay = document.getElementById("teacherDashboardOverlay");
+    if(!overlay){
+      alert("Le panneau enseignant est introuvable dans la page.");
+      return;
+    }
+
+    overlay.classList.remove("hidden");
+
+    try{
+      if(typeof renderTeacherDashboard === "function"){
+        renderTeacherDashboard();
+      }else{
+        fallbackTeacherDashboard("renderTeacherDashboard est introuvable");
+      }
+    }catch(err){
+      console.error("Erreur tableau enseignant :", err);
+      fallbackTeacherDashboard(err && err.message ? err.message : err);
+    }
+  };
+
+  window.closeTeacherDashboard = function(){
+    const overlay = document.getElementById("teacherDashboardOverlay");
+    if(overlay) overlay.classList.add("hidden");
+  };
+
+  document.addEventListener("DOMContentLoaded", function(){
+    const btn = document.getElementById("teacherBtn");
+    if(btn){
+      btn.onclick = window.openTeacherDashboard;
+      btn.style.pointerEvents = "auto";
+      btn.disabled = false;
+    }
+  });
+
+  window.addEventListener("load", function(){
+    const btn = document.getElementById("teacherBtn");
+    if(btn){
+      btn.onclick = window.openTeacherDashboard;
+      btn.style.pointerEvents = "auto";
+      btn.disabled = false;
+    }
+  });
+})();
+</script>
+
 </body>
 </html>

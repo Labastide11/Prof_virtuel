@@ -4828,5 +4828,58 @@ setTimeout(removeVieDeClassePanel, 1000);
 })();
 </script>
 
+
+<script id="progress-ui-v54">
+(function(){
+ const oldSkills = window.hibouGetSkillsHTML;
+ if(oldSkills){
+   window.hibouGetSkillsHTML = function(domainFilter){
+     let prenom = window.prenomActuel || localStorage.getItem("hibou_prenom") || "Élève";
+     let todayPoints = 0;
+     try{
+       todayPoints = Number(sessionStorage.getItem("hibou_today_points")||0);
+     }catch(e){}
+     let content = oldSkills(domainFilter);
+     content = content.replace(
+       /<h3>🎯 Mes compétences<\/h3>/,
+       `<h3>🦉 Tableau de progression de ${prenom}</h3>
+       <div class="skills-note" style="margin-bottom:10px">
+       📅 Aujourd'hui<br>
+       ⭐ +${todayPoints} points<br>
+       🎯 Continue tes entraînements pour gagner des médailles !
+       </div>`
+     );
+     return content;
+   };
+ }
+
+ const oldOpen = window.openProgressPopup;
+ if(oldOpen && !window.__v54Progress){
+   window.__v54Progress = true;
+   window.openProgressPopup = function(){
+      oldOpen();
+      setTimeout(function(){
+        const btn1 = document.getElementById("skillsOpenBtnV51");
+        if(btn1) btn1.remove();
+        const btn2 = document.getElementById("skillCheckFromProgressBtn");
+        if(btn2) btn2.remove();
+      },150);
+   };
+ }
+
+ const oldAddScore = window.addScore;
+ if(oldAddScore && !window.__v54Score){
+   window.__v54Score = true;
+   window.addScore = function(points, reason){
+      try{
+        let cur = Number(sessionStorage.getItem("hibou_today_points")||0);
+        sessionStorage.setItem("hibou_today_points", cur + Number(points||0));
+      }catch(e){}
+      return oldAddScore.apply(this, arguments);
+   };
+ }
+})();
+</script>
+
 </body>
 </html>

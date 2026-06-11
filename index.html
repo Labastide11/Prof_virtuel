@@ -896,6 +896,37 @@ html, body {
 .skill-check-option.wrong{background:#FFEAEA!important;border-color:var(--secondary)!important;color:#7A2222!important;}
 </style>
 
+
+<style id="progress-popup-onglets-v56">
+.progress-top-summary{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin:10px 0;
+}
+.progress-top-card{
+  background:#F7F6FF;
+  border:2px solid #ECEBF3;
+  border-radius:14px;
+  padding:10px;
+  text-align:center;
+  font-weight:900;
+}
+.progress-advice{
+  background:#FFFCEB;
+  border:2px solid var(--accent);
+  border-radius:14px;
+  padding:10px 12px;
+  margin:10px 0;
+  font-weight:800;
+  color:#7A5C00;
+  line-height:1.35;
+}
+@media(max-width:560px){
+  .progress-top-summary{grid-template-columns:1fr;}
+}
+</style>
+
 </head>
 <body>
 
@@ -4878,6 +4909,131 @@ setTimeout(removeVieDeClassePanel, 1000);
       return oldAddScore.apply(this, arguments);
    };
  }
+})();
+</script>
+
+
+<script id="patch-titre-progression-v55">
+(function(){
+  function getHibouPrenom(){
+    return window.prenomActuel || localStorage.getItem("hibou_prenom") || localStorage.getItem("prenomActuel") || "l'élève";
+  }
+
+  function updateProgressTitle(){
+    const overlay = document.getElementById("progressOverlay");
+    if(!overlay) return;
+    const title = overlay.querySelector(".progress-modal-header h2");
+    if(title){
+      title.textContent = "🦉 Tableau de progression de " + getHibouPrenom();
+    }
+    const subtitle = overlay.querySelector(".progress-modal-header p");
+    if(subtitle){
+      subtitle.textContent = "Points, badges et compétences dans Maître Hibou.";
+    }
+  }
+
+  const oldOpenProgress = window.openProgressPopup;
+  if(typeof oldOpenProgress === "function" && !window.__patchTitreProgressionV55){
+    window.__patchTitreProgressionV55 = true;
+    window.openProgressPopup = function(){
+      oldOpenProgress();
+      setTimeout(updateProgressTitle, 0);
+      setTimeout(updateProgressTitle, 100);
+    };
+  }
+
+  document.addEventListener("DOMContentLoaded", updateProgressTitle);
+  window.addEventListener("load", updateProgressTitle);
+})();
+</script>
+
+
+<script id="progress-popup-onglets-v56">
+(function(){
+  function getPrenomV56(){
+    return window.prenomActuel || localStorage.getItem("hibou_prenom") || localStorage.getItem("prenomActuel") || "l'élève";
+  }
+
+  function getBadgeCountV56(){
+    try{
+      if(Array.isArray(window.badges)) return window.badges.length;
+      const saved = JSON.parse(localStorage.getItem("hibou_badges") || "[]");
+      return Array.isArray(saved) ? saved.length : 0;
+    }catch(e){ return 0; }
+  }
+
+  function getLevelV56(){
+    const el = document.getElementById("levelValue");
+    if(el && el.textContent.trim()) return el.textContent.trim();
+    return "1";
+  }
+
+  function getScoreV56(){
+    if(typeof window.score !== "undefined") return window.score;
+    const el = document.getElementById("scoreVal");
+    if(el && el.textContent.trim()) return el.textContent.trim();
+    return "0";
+  }
+
+  function buildProgressPopupV56(domain){
+    const zone = document.getElementById("progressPopupContent");
+    if(!zone || typeof window.hibouGetSkillsHTML !== "function") return;
+
+    const tabs = `
+      <div class="skills-tabs">
+        <button class="skills-tab ${!domain ? "active" : ""}" onclick="buildProgressPopupV56()">Tout</button>
+        <button class="skills-tab ${domain==="Maths" ? "active" : ""}" onclick="buildProgressPopupV56('Maths')">Maths</button>
+        <button class="skills-tab ${domain==="Français" ? "active" : ""}" onclick="buildProgressPopupV56('Français')">Français</button>
+        <button class="skills-tab ${domain==="Sciences" ? "active" : ""}" onclick="buildProgressPopupV56('Sciences')">Sciences</button>
+        <button class="skills-tab ${domain==="Géographie" ? "active" : ""}" onclick="buildProgressPopupV56('Géographie')">Géo</button>
+        <button class="skills-tab ${domain==="Anglais" ? "active" : ""}" onclick="buildProgressPopupV56('Anglais')">Anglais</button>
+      </div>`;
+
+    let skillsHTML = window.hibouGetSkillsHTML(domain);
+
+    // Nettoyage : on ne répète pas le titre "Tableau de progression" dans le bloc compétences.
+    skillsHTML = skillsHTML
+      .replace(/<h3>🦉 Tableau de progression de [\s\S]*?<\/h3>/, '<h3>🎯 Compétences</h3>')
+      .replace(/<h3>🎯 Mes compétences<\/h3>/, '<h3>🎯 Compétences</h3>');
+
+    zone.innerHTML = `
+      <div class="progress-top-summary">
+        <div class="progress-top-card">⭐ Niveau<br>${getLevelV56()}</div>
+        <div class="progress-top-card">🏆 Points<br>${getScoreV56()}</div>
+        <div class="progress-top-card">🎖️ Badges<br>${getBadgeCountV56()}</div>
+      </div>
+
+      <div class="progress-advice">
+        🦉 Conseil de Maître Hibou : avance à ton rythme. Essaie de transformer tes compétences ⬜ en 🥉, puis en 🥈 et enfin en 🥇 !
+      </div>
+
+      ${tabs}
+      ${skillsHTML}
+    `;
+  }
+
+  window.buildProgressPopupV56 = buildProgressPopupV56;
+
+  function updateTitleV56(){
+    const overlay = document.getElementById("progressOverlay");
+    if(!overlay) return;
+    const title = overlay.querySelector(".progress-modal-header h2");
+    if(title) title.textContent = "🦉 Tableau de progression de " + getPrenomV56();
+    const subtitle = overlay.querySelector(".progress-modal-header p");
+    if(subtitle) subtitle.textContent = "Points, badges et compétences dans Maître Hibou.";
+  }
+
+  const oldOpenProgress = window.openProgressPopup;
+  if(typeof oldOpenProgress === "function" && !window.__progressOngletsV56){
+    window.__progressOngletsV56 = true;
+    window.openProgressPopup = function(){
+      oldOpenProgress();
+      setTimeout(function(){
+        updateTitleV56();
+        buildProgressPopupV56();
+      }, 120);
+    };
+  }
 })();
 </script>
 

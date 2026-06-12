@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Maître Hibou V12.0 - Défi popup autonome</title>
+<title>Maître Hibou V12.2 - Colonne droite compacte</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -2489,46 +2489,119 @@ body.fullscreen-active .mockup-bottom-strip{
 </style>
 
 
-<style id="patch-plein-ecran-cartes-compactes-v121">
-/* Défi du maître + Mes progrès visibles simultanément en plein écran */
-body.fullscreen-active .master-challenge-card{
-  padding:8px 12px !important;
-  margin:4px auto !important;
+
+<style id="patch-colonne-droite-compacte-v122">
+/* V12.2 - Plein écran : cartes de droite Défi du maître + Mes progrès compactes */
+
+/* Réduction générale de la colonne droite */
+body.fullscreen-active .mockup-right-panel{
+  gap:10px !important;
+  padding:10px !important;
+}
+
+/* Les deux cartes à droite du chat */
+body.fullscreen-active .mockup-right-panel .mockup-side-card{
+  padding:12px 12px !important;
   border-radius:14px !important;
+  min-height:0 !important;
 }
-body.fullscreen-active .master-challenge-card h3{
-  font-size:16px !important;
-  margin-bottom:2px !important;
+
+/* Titre des cartes */
+body.fullscreen-active .mockup-right-panel .mockup-side-title{
+  font-size:20px !important;
+  margin-bottom:8px !important;
+  gap:8px !important;
 }
-body.fullscreen-active .master-challenge-card p{
+body.fullscreen-active .mockup-right-panel .mockup-side-title .icon{
+  font-size:26px !important;
+}
+
+/* Texte du défi */
+body.fullscreen-active .mockup-right-panel .mockup-side-body{
+  font-size:14px !important;
+  line-height:1.25 !important;
+}
+body.fullscreen-active .mockup-right-panel .mockup-owl-teacher{
+  font-size:42px !important;
+  margin-left:6px !important;
+}
+
+/* Barre de progression du défi */
+body.fullscreen-active .mockup-right-panel .mockup-progress-line{
+  margin-top:10px !important;
+  gap:8px !important;
+}
+body.fullscreen-active .mockup-right-panel .mockup-progress-bar{
+  height:18px !important;
+}
+body.fullscreen-active .mockup-right-panel .mockup-progress-text{
+  font-size:13px !important;
+  min-width:90px !important;
+}
+
+/* Pastille "clique ici" */
+body.fullscreen-active .mockup-right-panel .challenge-click-note{
+  margin-top:8px !important;
+  padding:5px 8px !important;
   font-size:12px !important;
-  margin:1px 0 !important;
 }
-body.fullscreen-active .challenge-actions{
-  margin-top:6px !important;
+
+/* Mes progrès : lignes plus compactes */
+body.fullscreen-active .mockup-right-panel .mockup-stat-row{
+  margin:8px 0 !important;
+  font-size:14px !important;
+  gap:8px !important;
 }
-body.fullscreen-active .challenge-btn{
+body.fullscreen-active .mockup-right-panel .mockup-stat-value{
+  min-width:68px !important;
   padding:6px 10px !important;
-  font-size:12px !important;
+  border-radius:10px !important;
+  font-size:14px !important;
 }
 
-body.fullscreen-active .progress-mini-wrap{
-  margin:4px auto !important;
-}
-body.fullscreen-active .progress-mini-btn{
-  min-height:42px !important;
-  font-size:16px !important;
-  padding:8px 10px !important;
-  border-radius:14px !important;
+/* Bouton voir tous mes progrès */
+body.fullscreen-active .mockup-right-panel .mockup-full-progress-btn{
+  margin-top:10px !important;
+  padding:10px !important;
+  border-radius:10px !important;
+  font-size:14px !important;
 }
 
-body.fullscreen-active .hibou-profile-panel{
-  margin:4px auto !important;
-  padding:8px !important;
-}
-body.fullscreen-active .hibou-advice-card{
-  margin-bottom:4px !important;
-  padding:8px !important;
+/* En paysage tablette, colonne droite encore plus efficace */
+@media (orientation:landscape) and (max-width:1280px){
+  body.fullscreen-active .mockup-main-shell{
+    grid-template-columns:minmax(0,1fr) 330px !important;
+    gap:8px !important;
+  }
+  body.fullscreen-active .mockup-right-panel{
+    gap:8px !important;
+    padding:8px !important;
+  }
+  body.fullscreen-active .mockup-right-panel .mockup-side-card{
+    padding:10px !important;
+  }
+  body.fullscreen-active .mockup-right-panel .mockup-side-title{
+    font-size:18px !important;
+    margin-bottom:6px !important;
+  }
+  body.fullscreen-active .mockup-right-panel .mockup-side-title .icon{
+    font-size:23px !important;
+  }
+  body.fullscreen-active .mockup-right-panel .mockup-side-body{
+    font-size:13px !important;
+  }
+  body.fullscreen-active .mockup-right-panel .mockup-owl-teacher{
+    font-size:36px !important;
+  }
+  body.fullscreen-active .mockup-right-panel .mockup-stat-row{
+    margin:6px 0 !important;
+    font-size:13px !important;
+  }
+  body.fullscreen-active .mockup-right-panel .mockup-stat-value{
+    min-width:60px !important;
+    padding:5px 8px !important;
+    font-size:13px !important;
+  }
 }
 </style>
 

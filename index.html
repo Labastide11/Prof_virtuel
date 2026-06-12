@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Maître Hibou V11.6 - Maquette tablette ajustée</title>
+<title>Maître Hibou V11.7 - Plein écran tablette</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -2147,6 +2147,77 @@ header.mockup-header{
 @media (max-width:560px){
   .subjects-bar{
     grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  }
+}
+</style>
+
+
+<style id="patch-plein-ecran-v117">
+/* V11.7 - Bouton plein écran pour retrouver le rendu de la maquette */
+.fullscreen-btn{
+  min-height:66px !important;
+  border-radius:16px !important;
+  border:1.5px solid #CFE3FF !important;
+  background:linear-gradient(135deg,#FFFFFF 0%,#F0F8FF 100%) !important;
+  color:#0068D9 !important;
+  box-shadow:0 4px 14px rgba(0,120,255,.10) !important;
+  padding:8px 12px !important;
+  font-family:inherit !important;
+  font-size:15px !important;
+  font-weight:900 !important;
+  cursor:pointer !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:8px !important;
+  white-space:nowrap !important;
+}
+.fullscreen-btn .fs-icon{
+  font-size:28px;
+  line-height:1;
+}
+.fullscreen-btn:hover{
+  transform:translateY(-1px);
+  box-shadow:0 7px 18px rgba(0,120,255,.16) !important;
+}
+
+/* En plein écran, on récupère encore un peu d'espace */
+body.fullscreen-active header.mockup-header{
+  margin-top:6px !important;
+}
+body.fullscreen-active .subjects-bar{
+  padding-top:6px !important;
+  padding-bottom:8px !important;
+}
+body.fullscreen-active .mockup-main-shell{
+  margin-top:6px !important;
+}
+body.fullscreen-active .mockup-bottom-strip{
+  margin-top:6px !important;
+}
+
+/* Tablette : le bouton reste lisible mais compact */
+@media (orientation:landscape) and (max-width:1280px){
+  .fullscreen-btn{
+    min-height:54px !important;
+    padding:6px 8px !important;
+    font-size:13px !important;
+    border-radius:14px !important;
+  }
+  .fullscreen-btn .fs-icon{
+    font-size:22px;
+  }
+}
+
+@media (max-width:760px){
+  .fullscreen-btn .fs-label{
+    display:none;
+  }
+  .fullscreen-btn{
+    width:48px !important;
+    min-height:48px !important;
+    padding:0 !important;
+    border-radius:50% !important;
   }
 }
 </style>
@@ -7265,6 +7336,83 @@ body.competence-mode #masterChallengeCard.master-challenge-card{
 
   document.addEventListener("DOMContentLoaded", initMockup);
   window.addEventListener("load", initMockup);
+})();
+</script>
+
+
+<script id="patch-plein-ecran-v117">
+(function(){
+  function isFullscreen(){
+    return document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
+  }
+
+  function requestFS(){
+    const el = document.documentElement;
+    if(el.requestFullscreen) return el.requestFullscreen();
+    if(el.webkitRequestFullscreen) return el.webkitRequestFullscreen();
+    if(el.msRequestFullscreen) return el.msRequestFullscreen();
+  }
+
+  function exitFS(){
+    if(document.exitFullscreen) return document.exitFullscreen();
+    if(document.webkitExitFullscreen) return document.webkitExitFullscreen();
+    if(document.msExitFullscreen) return document.msExitFullscreen();
+  }
+
+  function updateFSButton(){
+    const btn = document.getElementById("fullscreenToggleBtn");
+    if(!btn) return;
+    const active = !!isFullscreen();
+    document.body.classList.toggle("fullscreen-active", active);
+    btn.querySelector(".fs-icon").textContent = active ? "↙️" : "⛶";
+    btn.querySelector(".fs-label").textContent = active ? "Quitter" : "Plein écran";
+    btn.title = active ? "Quitter le plein écran" : "Passer en plein écran";
+  }
+
+  window.toggleMaitreHibouFullscreen = function(){
+    try{
+      if(isFullscreen()){
+        exitFS();
+      }else{
+        requestFS();
+      }
+    }catch(e){
+      alert("Le plein écran n'est pas disponible sur ce navigateur.");
+    }
+    setTimeout(updateFSButton, 150);
+  };
+
+  function addFullscreenButton(){
+    const actions = document.querySelector(".header-actions");
+    if(!actions || document.getElementById("fullscreenToggleBtn")) return;
+
+    const btn = document.createElement("button");
+    btn.id = "fullscreenToggleBtn";
+    btn.className = "fullscreen-btn";
+    btn.type = "button";
+    btn.onclick = window.toggleMaitreHibouFullscreen;
+    btn.innerHTML = '<span class="fs-icon">⛶</span><span class="fs-label">Plein écran</span>';
+
+    // On le place avant les petits boutons ronds pour rester visible.
+    const firstRound = actions.querySelector(".btn-round");
+    if(firstRound){
+      actions.insertBefore(btn, firstRound);
+    }else{
+      actions.appendChild(btn);
+    }
+    updateFSButton();
+  }
+
+  document.addEventListener("fullscreenchange", updateFSButton);
+  document.addEventListener("webkitfullscreenchange", updateFSButton);
+  document.addEventListener("msfullscreenchange", updateFSButton);
+
+  document.addEventListener("DOMContentLoaded", function(){
+    setTimeout(addFullscreenButton, 80);
+  });
+  window.addEventListener("load", function(){
+    setTimeout(addFullscreenButton, 120);
+  });
 })();
 </script>
 

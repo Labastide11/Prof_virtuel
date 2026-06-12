@@ -3328,9 +3328,9 @@ function updateQuickQuestions(subject) {
       <button class="quick-btn" onclick="startLocalQuiz('geographie','🌍 Quiz local Géographie CE2')">📚 Quiz local Géographie</button>
     `,
     'anglais': `
-      <button class="quick-btn" onclick="sendQuick('Apprends-moi les couleurs en anglais niveau CE2')">🎨 Couleurs</button>
-      <button class="quick-btn" onclick="sendQuick('Apprends-moi à me présenter en anglais niveau CE2')">👋 Se présenter</button>
-      <button class="quick-btn" onclick="sendQuick('Fais-moi un mini quiz en anglais CE2')">🇬🇧 Mini quiz</button>
+      <button class="quick-btn" onclick="startEnglishColors()">🎨 Couleurs</button>
+      <button class="quick-btn" onclick="startEnglishPresentation()">👋 Se présenter</button>
+      <button class="quick-btn" onclick="startEnglishMiniLesson()">🇬🇧 Mini-leçon + quiz</button>
       <button class="quick-btn" onclick="startLocalQuiz('anglais','🇬🇧 Quiz local Anglais CE2')">📚 Quiz local Anglais</button>
     `,
     'jeux': `
@@ -6043,6 +6043,201 @@ setTimeout(removeVieDeClassePanel, 1000);
   window.addEventListener("load", function(){
     setTimeout(patchDefiTablesButton, 150);
   });
+})();
+</script>
+
+<!-- PATCH V8.4 - Anglais harmonisé : titre + mini-leçon + quiz
+     À coller juste AVANT </body> dans Maitre_Hibou_V8_3_Prenom_Non_Cliquable.html -->
+<style id="patch-anglais-harmonise-v84">
+.english-lesson{
+  background:#F8F7FF;
+  border:2px solid var(--primary-light);
+  border-radius:16px;
+  padding:16px;
+  margin-top:10px;
+  width:100%;
+}
+.english-lesson h3{
+  font-family:'Baloo 2',sans-serif;
+  color:var(--primary);
+  font-size:20px;
+  margin:0 0 8px 0;
+}
+.english-rule{
+  background:#FFFCEB;
+  border:2px solid var(--accent);
+  border-radius:14px;
+  padding:10px 12px;
+  font-weight:900;
+  color:#7A5C00;
+  margin:10px 0;
+  line-height:1.4;
+}
+.english-examples{
+  background:white;
+  border:2px solid #ECEBF3;
+  border-radius:14px;
+  padding:10px 12px;
+  font-weight:800;
+  line-height:1.55;
+  margin:10px 0;
+}
+.english-mini-note{
+  font-size:13px;
+  color:var(--text-muted);
+  font-weight:800;
+  margin:8px 0;
+}
+.english-quiz-btn{
+  background:var(--primary);
+  color:white;
+  border:none;
+  border-radius:14px;
+  padding:10px 14px;
+  font-weight:900;
+  font-family:inherit;
+  cursor:pointer;
+  width:100%;
+  margin-top:8px;
+}
+.english-quiz-btn.secondary{
+  background:#fff;
+  color:var(--primary);
+  border:2px solid var(--primary-light);
+}
+</style>
+
+<script id="patch-anglais-harmonise-v84">
+(function(){
+  if(window.__patchAnglaisHarmoniseV84) return;
+  window.__patchAnglaisHarmoniseV84 = true;
+
+  function getChat(){ return document.getElementById('chatContainer'); }
+  function scrollChat(){ const c = getChat(); if(c) c.scrollTop = c.scrollHeight; }
+
+  function addEnglishLesson(title, rule, examples, quizTitle, quizKind){
+    const chat = getChat();
+    if(!chat) return;
+    const d = document.createElement('div');
+    d.className = 'message prof';
+    d.innerHTML = `
+      <div class="avatar prof">🦉</div>
+      <div class="bubble">
+        <div class="english-lesson">
+          <h3>${title}</h3>
+          <div class="english-rule">${rule}</div>
+          <div class="english-examples">${examples}</div>
+          <div class="english-mini-note">Quand tu as relu la mini-leçon, tu peux faire le quiz.</div>
+          <button class="english-quiz-btn" onclick="startEnglishLessonQuiz('${quizKind}')">➡️ Faire le quiz</button>
+          <button class="english-quiz-btn secondary" onclick="startLocalQuiz('anglais','🇬🇧 Quiz local Anglais CE2')">📚 Quiz local Anglais CE2</button>
+        </div>
+      </div>`;
+    chat.appendChild(d);
+    scrollChat();
+  }
+
+  window.startEnglishColors = function(){
+    addEnglishLesson(
+      '🎨 Colours / Les couleurs',
+      'En anglais, on apprend quelques couleurs simples pour décrire des objets.',
+      '✅ red = rouge<br>✅ blue = bleu<br>✅ green = vert<br>✅ yellow = jaune<br>✅ black = noir<br>✅ white = blanc<br><br>Exemple : <b>The pen is blue.</b> = Le stylo est bleu.',
+      'Quiz couleurs',
+      'colors'
+    );
+  };
+
+  window.startEnglishPresentation = function(){
+    addEnglishLesson(
+      '👋 Se présenter en anglais',
+      'Pour se présenter, on utilise des phrases courtes que l’on peut répéter facilement.',
+      '✅ Hello! = Bonjour !<br>✅ My name is ... = Je m’appelle ...<br>✅ I am 8 years old. = J’ai 8 ans.<br>✅ I live in France. = J’habite en France.<br><br>Exemple : <b>Hello, my name is Lina.</b>',
+      'Quiz se présenter',
+      'presentation'
+    );
+  };
+
+  window.startEnglishMiniLesson = function(){
+    addEnglishLesson(
+      '🇬🇧 Mini-leçon d’anglais CE2',
+      'En anglais CE2, on apprend surtout à comprendre et utiliser des mots très fréquents.',
+      '✅ Dire bonjour : <b>Hello!</b><br>✅ Dire son prénom : <b>My name is ...</b><br>✅ Dire une couleur : <b>red, blue, green...</b><br>✅ Compter un peu : <b>one, two, three...</b><br><br>Objectif : écouter, répéter, puis répondre à un petit quiz.',
+      'Mini quiz anglais',
+      'mixed'
+    );
+  };
+
+  const ENGLISH_LESSON_QUIZZES = {
+    colors: [
+      {q:'Que veut dire blue ?', options:['rouge','bleu','vert'], correct:1},
+      {q:'Comment dit-on rouge en anglais ?', options:['red','yellow','white'], correct:0},
+      {q:'The sun is yellow. Que veut dire yellow ?', options:['jaune','noir','bleu'], correct:0}
+    ],
+    presentation: [
+      {q:'Que veut dire Hello ?', options:['Au revoir','Bonjour','Merci'], correct:1},
+      {q:'Pour dire « Je m’appelle Sam », on dit...', options:['My name is Sam','I blue Sam','Hello France'], correct:0},
+      {q:'Que veut dire I live in France ?', options:['J’habite en France','J’aime la France','Je parle français'], correct:0}
+    ],
+    mixed: [
+      {q:'Comment dit-on bonjour ?', options:['Hello','Blue','Seven'], correct:0},
+      {q:'Que veut dire red ?', options:['rouge','vert','blanc'], correct:0},
+      {q:'Que veut dire My name is ... ?', options:['J’ai ... ans','Je m’appelle ...','J’habite ...'], correct:1}
+    ]
+  };
+
+  window.startEnglishLessonQuiz = function(kind){
+    const questions = ENGLISH_LESSON_QUIZZES[kind] || ENGLISH_LESSON_QUIZZES.mixed;
+    if(typeof startLocalQuiz === 'function'){
+      const formatted = questions.map(q => ({...q, subject:'anglais', skill:'anglais CE2'}));
+      startLocalQuiz('anglais', '🇬🇧 Quiz Anglais CE2', formatted, false);
+      return;
+    }
+    // Secours si startLocalQuiz n'existe pas.
+    const chat = getChat();
+    if(!chat) return;
+    const d = document.createElement('div');
+    d.className = 'message prof';
+    d.innerHTML = `<div class="avatar prof">🦉</div><div class="bubble"><b>🇬🇧 Quiz Anglais CE2</b><br>Le quiz local n'est pas disponible dans cette version.</div>`;
+    chat.appendChild(d);
+    scrollChat();
+  };
+
+  function patchEnglishButtons(){
+    document.querySelectorAll('button.quick-btn').forEach(function(btn){
+      const label = (btn.textContent || '').toLowerCase();
+      const action = (btn.getAttribute('onclick') || '').toLowerCase();
+      if(label.includes('couleur') || action.includes('couleurs') || action.includes('colors')){
+        btn.setAttribute('onclick', 'startEnglishColors()');
+      }else if(label.includes('présenter') || label.includes('presenter') || action.includes('présenter') || action.includes('presenter')){
+        btn.setAttribute('onclick', 'startEnglishPresentation()');
+      }else if(label.includes('mini quiz') || action.includes('mini quiz')){
+        btn.setAttribute('onclick', 'startEnglishMiniLesson()');
+        btn.textContent = '🇬🇧 Mini-leçon + quiz';
+      }
+    });
+  }
+
+  const oldUpdateQuickQuestions = window.updateQuickQuestions;
+  if(typeof oldUpdateQuickQuestions === 'function'){
+    window.updateQuickQuestions = function(subject){
+      const result = oldUpdateQuickQuestions.apply(this, arguments);
+      setTimeout(patchEnglishButtons, 0);
+      setTimeout(patchEnglishButtons, 120);
+      return result;
+    };
+  }
+
+  const oldSelectSubject = window.selectSubject;
+  if(typeof oldSelectSubject === 'function'){
+    window.selectSubject = function(btn, subject){
+      const result = oldSelectSubject.apply(this, arguments);
+      setTimeout(patchEnglishButtons, 0);
+      setTimeout(patchEnglishButtons, 120);
+      return result;
+    };
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){ setTimeout(patchEnglishButtons, 120); });
+  window.addEventListener('load', function(){ setTimeout(patchEnglishButtons, 120); });
 })();
 </script>
 

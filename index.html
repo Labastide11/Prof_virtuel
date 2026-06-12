@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Maître Hibou V4 Phase 4 - Banque CE2</title>
+<title>Maître Hibou V8.2 - Ergonomie Compétences</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -1221,6 +1221,50 @@ body.competence-mode .master-challenge-card{
 }
 </style>
 
+
+
+<style id="patch-ergonomie-competence-header-v82">
+/* V8.2 - Ergonomie : bouton Compétences déplacé dans le bandeau supérieur */
+.competence-header-btn{
+  background:linear-gradient(135deg,var(--primary) 0%,#8E86FF 100%);
+  color:white;
+  border:none;
+  padding:8px 12px;
+  border-radius:999px;
+  font-family:inherit;
+  font-weight:900;
+  font-size:14px;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  box-shadow:0 4px 14px rgba(108,99,255,.24);
+  white-space:nowrap;
+}
+.competence-header-btn:hover{
+  transform:translateY(-1px);
+  box-shadow:0 6px 18px rgba(108,99,255,.28);
+}
+@media (max-width:768px){
+  .header-actions{gap:6px;}
+  .competence-header-btn{
+    padding:7px 9px;
+    font-size:12px;
+  }
+}
+@media (max-width:520px){
+  .competence-header-btn .competence-label{display:none;}
+  .competence-header-btn{
+    width:34px;
+    height:34px;
+    padding:0;
+    border-radius:50%;
+    font-size:16px;
+  }
+}
+</style>
+
 </head>
 <body>
 
@@ -1248,7 +1292,6 @@ body.competence-mode .master-challenge-card{
 
 
 <div class="subjects-bar">
-  <button class="subject-btn" onclick="openCompetenceValidation()" data-subject="competences">🏅 Valider une compétence</button>
   <button class="subject-btn active" onclick="selectSubject(this, 'maths')" data-subject="maths">🔢 Maths</button>
   <button class="subject-btn" onclick="selectSubject(this, 'francais')" data-subject="francais">✍️ Français</button>
   <button class="subject-btn" onclick="selectSubject(this, 'sciences')" data-subject="sciences">💡 Sciences</button>

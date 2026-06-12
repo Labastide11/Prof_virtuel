@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Maître Hibou V9.1 - Bandeau matières colorées tablette</title>
+<title>Maître Hibou V9.2 - Bandeau matières fixe tablette</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -1413,6 +1413,58 @@ body.theme-anglais #quickQuestions{--activeMat:#9C4DFF;--activeSoft:#F3E9FF;}
 @media (max-width:560px){
   .competence-header-btn .competence-label{display:none !important;}
   .competence-header-btn{width:36px !important;height:36px !important;padding:0 !important;border-radius:50% !important;font-size:17px !important;}
+}
+</style>
+
+
+
+<style id="patch-bandeau-sticky-tablette-v92">
+/* V9.2 - Ergonomie tablette : matières et sous-matières toujours visibles */
+:root{
+  --hibou-header-h: 64px;
+  --hibou-subjects-h: 96px;
+}
+header{
+  position:sticky !important;
+  top:0 !important;
+  z-index:1000 !important;
+}
+.subjects-bar{
+  position:sticky !important;
+  top:var(--hibou-header-h) !important;
+  z-index:999 !important;
+}
+.quick-questions{
+  position:sticky !important;
+  top:calc(var(--hibou-header-h) + var(--hibou-subjects-h)) !important;
+  z-index:998 !important;
+  max-height:22vh;
+  overflow-y:auto !important;
+  -webkit-overflow-scrolling:touch;
+}
+.quick-questions::before{
+  position:sticky;
+  top:0;
+  z-index:1;
+  background:linear-gradient(180deg,#FFFFFF 0%,var(--activeSoft,#FFFFFF) 100%);
+  padding:2px 0 4px 0;
+}
+body.competence-mode #quickQuestions{
+  display:none !important;
+}
+@media (orientation:portrait) and (max-width:900px){
+  .quick-questions{max-height:24vh;}
+}
+@media (orientation:landscape) and (max-height:760px){
+  .quick-questions{
+    max-height:18vh;
+    padding-top:8px !important;
+    padding-bottom:8px !important;
+  }
+  .quick-questions::before{font-size:11px;}
+}
+@media (max-width:520px){
+  .quick-questions{max-height:26vh;}
 }
 </style>
 
@@ -6210,6 +6262,62 @@ setTimeout(removeVieDeClassePanel, 1000);
 })();
 </script>
 
+
+
+<script id="patch-bandeau-sticky-tablette-v92">
+(function(){
+  if(window.__hibouStickyBandeauV92) return;
+  window.__hibouStickyBandeauV92 = true;
+
+  function px(n){ return Math.ceil(n) + "px"; }
+
+  function updateStickyOffsets(){
+    const header = document.querySelector("header");
+    const subjects = document.querySelector(".subjects-bar");
+    const root = document.documentElement;
+    if(header){ root.style.setProperty("--hibou-header-h", px(header.getBoundingClientRect().height)); }
+    if(subjects){ root.style.setProperty("--hibou-subjects-h", px(subjects.getBoundingClientRect().height)); }
+  }
+
+  function keepNavigationVisible(){
+    updateStickyOffsets();
+    const quick = document.getElementById("quickQuestions");
+    if(quick && quick.style.display !== "none"){
+      quick.classList.remove("submenu-flash");
+      void quick.offsetWidth;
+      quick.classList.add("submenu-flash");
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", function(){
+    updateStickyOffsets();
+    setTimeout(updateStickyOffsets, 250);
+  });
+  window.addEventListener("load", updateStickyOffsets);
+  window.addEventListener("resize", function(){ setTimeout(updateStickyOffsets, 80); });
+  window.addEventListener("orientationchange", function(){ setTimeout(updateStickyOffsets, 250); });
+
+  const oldSelectSubject = window.selectSubject;
+  if(typeof oldSelectSubject === "function"){
+    window.selectSubject = function(btn, subject){
+      const result = oldSelectSubject.apply(this, arguments);
+      setTimeout(keepNavigationVisible, 0);
+      setTimeout(keepNavigationVisible, 180);
+      return result;
+    };
+  }
+
+  const oldUpdateQuickQuestions = window.updateQuickQuestions;
+  if(typeof oldUpdateQuickQuestions === "function"){
+    window.updateQuickQuestions = function(subject){
+      const result = oldUpdateQuickQuestions.apply(this, arguments);
+      setTimeout(updateStickyOffsets, 0);
+      return result;
+    };
+  }
+})();
+</script>
+
 </body> dans Maitre_Hibou_V8_3_Prenom_Non_Cliquable.html -->
 <style id="patch-anglais-harmonise-v84">
 .english-lesson{
@@ -6424,6 +6532,62 @@ setTimeout(removeVieDeClassePanel, 1000);
     const active = document.querySelector(".subject-btn.active");
     applySubjectTheme(active ? active.getAttribute("data-subject") : "maths");
   });
+})();
+</script>
+
+
+
+<script id="patch-bandeau-sticky-tablette-v92">
+(function(){
+  if(window.__hibouStickyBandeauV92) return;
+  window.__hibouStickyBandeauV92 = true;
+
+  function px(n){ return Math.ceil(n) + "px"; }
+
+  function updateStickyOffsets(){
+    const header = document.querySelector("header");
+    const subjects = document.querySelector(".subjects-bar");
+    const root = document.documentElement;
+    if(header){ root.style.setProperty("--hibou-header-h", px(header.getBoundingClientRect().height)); }
+    if(subjects){ root.style.setProperty("--hibou-subjects-h", px(subjects.getBoundingClientRect().height)); }
+  }
+
+  function keepNavigationVisible(){
+    updateStickyOffsets();
+    const quick = document.getElementById("quickQuestions");
+    if(quick && quick.style.display !== "none"){
+      quick.classList.remove("submenu-flash");
+      void quick.offsetWidth;
+      quick.classList.add("submenu-flash");
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", function(){
+    updateStickyOffsets();
+    setTimeout(updateStickyOffsets, 250);
+  });
+  window.addEventListener("load", updateStickyOffsets);
+  window.addEventListener("resize", function(){ setTimeout(updateStickyOffsets, 80); });
+  window.addEventListener("orientationchange", function(){ setTimeout(updateStickyOffsets, 250); });
+
+  const oldSelectSubject = window.selectSubject;
+  if(typeof oldSelectSubject === "function"){
+    window.selectSubject = function(btn, subject){
+      const result = oldSelectSubject.apply(this, arguments);
+      setTimeout(keepNavigationVisible, 0);
+      setTimeout(keepNavigationVisible, 180);
+      return result;
+    };
+  }
+
+  const oldUpdateQuickQuestions = window.updateQuickQuestions;
+  if(typeof oldUpdateQuickQuestions === "function"){
+    window.updateQuickQuestions = function(subject){
+      const result = oldUpdateQuickQuestions.apply(this, arguments);
+      setTimeout(updateStickyOffsets, 0);
+      return result;
+    };
+  }
 })();
 </script>
 

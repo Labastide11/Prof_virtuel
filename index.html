@@ -1171,6 +1171,56 @@ body.competence-mode .master-challenge-card{
 .question-log-status.blocked{background:#FFEAEA;color:#7A2222;}
 </style>
 
+
+<style id="patch-ergonomie-progres-v81">
+/* V8.1 - Ergonomie tablette : bouton "Voir mes progrès" plus lisible */
+.progress-mini-wrap{
+  max-width:768px;
+  width:calc(100% - 24px);
+  margin:10px auto 8px auto;
+  display:block;
+}
+.progress-mini-btn{
+  width:100% !important;
+  min-height:58px;
+  border:3px solid var(--primary-light) !important;
+  background:#fff !important;
+  color:var(--primary) !important;
+  border-radius:20px !important;
+  padding:14px 18px !important;
+  font-family:inherit !important;
+  font-weight:900 !important;
+  font-size:22px !important;
+  line-height:1.15 !important;
+  box-shadow:var(--shadow) !important;
+  cursor:pointer;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:12px !important;
+  text-align:center !important;
+  white-space:normal !important;
+}
+.progress-mini-btn:hover{
+  background:var(--primary-light) !important;
+  transform:translateY(-1px);
+}
+@media (max-width:768px){
+  .progress-mini-btn{
+    min-height:56px;
+    font-size:21px !important;
+    padding:13px 16px !important;
+  }
+}
+@media (max-width:480px){
+  .progress-mini-btn{
+    min-height:54px;
+    font-size:20px !important;
+    padding:12px 14px !important;
+  }
+}
+</style>
+
 </head>
 <body>
 

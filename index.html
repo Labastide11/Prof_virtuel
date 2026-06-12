@@ -1096,6 +1096,55 @@ body.competence-mode .master-challenge-card{
 }
 </style>
 
+
+<style id="patch-squelette-local-v77">
+.squelette-lesson{
+  background:#F8F7FF;
+  border:2px solid var(--primary-light);
+  border-radius:16px;
+  padding:16px;
+  margin-top:10px;
+  width:100%;
+}
+.squelette-lesson h3{
+  font-family:'Baloo 2',sans-serif;
+  color:var(--primary);
+  font-size:20px;
+  margin:0 0 8px 0;
+}
+.squelette-rule{
+  background:#FFFCEB;
+  border:2px solid var(--accent);
+  border-radius:14px;
+  padding:10px 12px;
+  font-weight:900;
+  color:#7A5C00;
+  margin:10px 0;
+  line-height:1.4;
+}
+.squelette-examples{
+  background:white;
+  border:2px solid #ECEBF3;
+  border-radius:14px;
+  padding:10px 12px;
+  font-weight:800;
+  line-height:1.45;
+  margin:10px 0;
+}
+.squelette-quiz-btn{
+  background:var(--primary);
+  color:white;
+  border:none;
+  border-radius:14px;
+  padding:10px 14px;
+  font-weight:900;
+  font-family:inherit;
+  cursor:pointer;
+  width:100%;
+  margin-top:8px;
+}
+</style>
+
 </head>
 <body>
 
@@ -3138,7 +3187,7 @@ function updateQuickQuestions(subject) {
     'sciences': `
       <button class="quick-btn" onclick="startPlantes()">🌱 Les plantes</button>
       <button class="quick-btn" onclick="startSystemeSolaire()">🪐 Système solaire</button>
-      <button class="quick-btn" onclick="sendQuick('Explique-moi le squelette humain pour un CE2')">🦴 Le squelette</button>
+      <button class="quick-btn" onclick="startSquelette()">🦴 Le squelette</button>
       <button class="quick-btn" onclick="startLocalQuiz('sciences','💡 Quiz local Sciences CE2')">📚 Quiz local Sciences</button>
     `,
     'geographie': `
@@ -5682,6 +5731,122 @@ setTimeout(removeVieDeClassePanel, 1000);
   });
   window.addEventListener("load", function(){
     setTimeout(showActiveSubmenu, 120);
+  });
+})();
+</script>
+
+
+<script id="patch-squelette-local-v77">
+(function(){
+  function addSqueletteLessonOnce(){
+    const existing = document.querySelector(".squelette-lesson");
+    const chat = document.getElementById("chatContainer");
+    if(existing){
+      existing.scrollIntoView({behavior:"smooth", block:"center"});
+      if(chat) setTimeout(function(){ chat.scrollTop = chat.scrollHeight; }, 80);
+      return;
+    }
+    if(!chat) return;
+
+    const d = document.createElement("div");
+    d.className = "message prof";
+    d.innerHTML = `
+      <div class="avatar prof">🦉</div>
+      <div class="bubble">
+        <div class="squelette-lesson">
+          <h3>🦴 Le squelette</h3>
+          <div class="squelette-rule">
+            Le <b>squelette</b>, c’est l’ensemble des os de notre corps.
+          </div>
+          <div class="squelette-examples">
+            ✅ Il aide le corps à <b>tenir debout</b>.<br>
+            ✅ Il protège certains organes importants.<br>
+            ✅ Les os travaillent avec les muscles pour nous permettre de <b>bouger</b>.<br><br>
+            Exemple : le crâne protège le cerveau.<br>
+            Exemple : les côtes protègent le cœur et les poumons.
+          </div>
+          Quand tu as relu la leçon, tu peux faire le quiz.
+          <button class="squelette-quiz-btn" onclick="startLocalQuiz('sciences','💡 Quiz local Sciences CE2')">➡️ Faire le quiz Squelette</button>
+        </div>
+      </div>`;
+    chat.appendChild(d);
+    chat.scrollTop = chat.scrollHeight;
+  }
+
+  window.startSquelette = function(){
+    addSqueletteLessonOnce();
+  };
+
+  function patchSqueletteButton(){
+    document.querySelectorAll("button.quick-btn").forEach(function(btn){
+      const label = (btn.textContent || "").toLowerCase();
+      const action = (btn.getAttribute("onclick") || "").toLowerCase();
+      if(label.includes("squelette") || action.includes("squelette")){
+        btn.setAttribute("onclick", "startSquelette()");
+      }
+    });
+  }
+
+  const oldSelectSubjectV77 = window.selectSubject;
+  if(typeof oldSelectSubjectV77 === "function" && !window.__patchSqueletteSelectV77){
+    window.__patchSqueletteSelectV77 = true;
+    window.selectSubject = function(btn, subject){
+      const result = oldSelectSubjectV77.apply(this, arguments);
+      setTimeout(patchSqueletteButton, 50);
+      return result;
+    };
+  }
+
+  document.addEventListener("DOMContentLoaded", function(){
+    setTimeout(patchSqueletteButton, 150);
+  });
+  window.addEventListener("load", function(){
+    setTimeout(patchSqueletteButton, 150);
+  });
+})();
+</script>
+
+
+<script id="patch-defi-tables-lien-manquant-v78">
+/* V7.8 - Correctif lien manquant : bouton "Défi tables 2 à 10" */
+(function(){
+  window.startMasterTablesChallenge = function(){
+    if (typeof makeTablesChallenge20Questions === "function" && typeof startLocalQuiz === "function") {
+      const questions = makeTablesChallenge20Questions();
+      startLocalQuiz("maths", "🏆 Défi tables 2 à 10", questions, true);
+      return;
+    }
+    if (typeof startActiveChallenge === "function") {
+      startActiveChallenge();
+      return;
+    }
+    alert("Le défi tables n'est pas disponible pour le moment.");
+  };
+
+  function patchDefiTablesButton(){
+    document.querySelectorAll("button.quick-btn").forEach(function(btn){
+      const label = (btn.textContent || "").toLowerCase();
+      if(label.includes("défi tables") || label.includes("tables 2 à 10")){
+        btn.setAttribute("onclick", "startMasterTablesChallenge()");
+      }
+    });
+  }
+
+  const oldSelectSubjectV78 = window.selectSubject;
+  if(typeof oldSelectSubjectV78 === "function" && !window.__patchDefiTablesSelectV78){
+    window.__patchDefiTablesSelectV78 = true;
+    window.selectSubject = function(btn, subject){
+      const result = oldSelectSubjectV78.apply(this, arguments);
+      setTimeout(patchDefiTablesButton, 50);
+      return result;
+    };
+  }
+
+  document.addEventListener("DOMContentLoaded", function(){
+    setTimeout(patchDefiTablesButton, 150);
+  });
+  window.addEventListener("load", function(){
+    setTimeout(patchDefiTablesButton, 150);
   });
 })();
 </script>

@@ -6591,5 +6591,180 @@ setTimeout(removeVieDeClassePanel, 1000);
 })();
 </script>
 
+
+
+<style id="patch-v93-navigation-fixe-zone-scrollable">
+/* V9.3 - Vraie ergonomie tablette : haut fixe + reste de la page scrollable */
+:root{ --hibou-fixed-zone-h: 0px; }
+html, body{
+  height:100%;
+  height:100dvh;
+  overflow:hidden !important;
+}
+body{
+  min-height:100dvh !important;
+  display:flex !important;
+  flex-direction:column !important;
+}
+.hibou-fixed-zone{
+  flex:0 0 auto !important;
+  position:relative !important;
+  z-index:5000 !important;
+  background:var(--bg) !important;
+  box-shadow:0 6px 18px rgba(45,43,85,.10) !important;
+}
+.hibou-fixed-zone header,
+.hibou-fixed-zone .subjects-bar,
+.hibou-fixed-zone .quick-questions{
+  position:relative !important;
+  top:auto !important;
+  z-index:auto !important;
+}
+.hibou-fixed-zone header{
+  flex-shrink:0 !important;
+}
+.hibou-fixed-zone .subjects-bar{
+  flex-shrink:0 !important;
+}
+.hibou-fixed-zone .quick-questions{
+  flex-shrink:0 !important;
+  max-height:20vh !important;
+  overflow-y:auto !important;
+  -webkit-overflow-scrolling:touch !important;
+  margin-bottom:0 !important;
+}
+.hibou-scroll-zone{
+  flex:1 1 auto !important;
+  min-height:0 !important;
+  height:calc(100dvh - var(--hibou-fixed-zone-h)) !important;
+  overflow-y:auto !important;
+  overflow-x:hidden !important;
+  -webkit-overflow-scrolling:touch !important;
+  overscroll-behavior:contain !important;
+  padding-bottom:18px !important;
+}
+.hibou-scroll-zone .chat-container{
+  flex:none !important;
+  max-height:none !important;
+  min-height:260px !important;
+  height:auto !important;
+  overflow:visible !important;
+}
+.hibou-scroll-zone .input-area{
+  position:relative !important;
+  bottom:auto !important;
+  z-index:auto !important;
+}
+.hibou-scroll-zone .welcome-quiz-container,
+.hibou-scroll-zone .master-challenge-card,
+.hibou-scroll-zone .progress-mini-wrap,
+.hibou-scroll-zone .diagnostic-panel,
+.hibou-scroll-zone .progress-panel{
+  flex:none !important;
+}
+@media (orientation:landscape) and (max-height:760px){
+  .hibou-fixed-zone .quick-questions{max-height:18vh !important;}
+  .hibou-scroll-zone .chat-container{min-height:210px !important;}
+}
+@media (orientation:portrait) and (max-width:900px){
+  .hibou-fixed-zone .quick-questions{max-height:22vh !important;}
+}
+@media (max-width:520px){
+  .hibou-fixed-zone .quick-questions{max-height:24vh !important;}
+}
+</style>
+
+<script id="patch-v93-navigation-fixe-zone-scrollable">
+(function(){
+  if(window.__hibouNavigationFixeScrollableV93) return;
+  window.__hibouNavigationFixeScrollableV93 = true;
+
+  function isOverlayNode(node){
+    if(node.nodeType !== 1) return false;
+    return node.classList.contains('modal-overlay') ||
+           node.classList.contains('prenom-overlay') ||
+           node.classList.contains('badge-toast') ||
+           node.id === 'modalOverlay' ||
+           node.id === 'prenomOverlay';
+  }
+
+  function updateFixedHeight(){
+    const fixed = document.getElementById('hibouFixedZone');
+    if(!fixed) return;
+    const h = Math.ceil(fixed.getBoundingClientRect().height);
+    document.documentElement.style.setProperty('--hibou-fixed-zone-h', h + 'px');
+  }
+
+  function buildTabletLayout(){
+    const header = document.querySelector('header');
+    const subjects = document.querySelector('.subjects-bar');
+    const quick = document.getElementById('quickQuestions');
+    if(!header || !subjects || !quick) return;
+    if(document.getElementById('hibouFixedZone')){ updateFixedHeight(); return; }
+
+    const fixed = document.createElement('div');
+    fixed.id = 'hibouFixedZone';
+    fixed.className = 'hibou-fixed-zone';
+    document.body.insertBefore(fixed, header);
+    fixed.appendChild(header);
+    fixed.appendChild(subjects);
+    fixed.appendChild(quick);
+
+    const scroll = document.createElement('main');
+    scroll.id = 'hibouScrollZone';
+    scroll.className = 'hibou-scroll-zone';
+    document.body.insertBefore(scroll, fixed.nextSibling);
+
+    const overlays = [];
+    Array.from(document.body.childNodes).forEach(function(node){
+      if(node === fixed || node === scroll) return;
+      if(isOverlayNode(node)) overlays.push(node);
+      else scroll.appendChild(node);
+    });
+    overlays.forEach(function(node){ document.body.appendChild(node); });
+
+    updateFixedHeight();
+    setTimeout(updateFixedHeight, 120);
+    setTimeout(updateFixedHeight, 400);
+
+    if(window.ResizeObserver){
+      const ro = new ResizeObserver(updateFixedHeight);
+      ro.observe(fixed);
+      ro.observe(subjects);
+      ro.observe(quick);
+    }
+  }
+
+  function scrollContentTop(){
+    const scroll = document.getElementById('hibouScrollZone');
+    if(scroll) scroll.scrollTop = 0;
+  }
+
+  document.addEventListener('DOMContentLoaded', buildTabletLayout);
+  window.addEventListener('load', function(){ buildTabletLayout(); updateFixedHeight(); });
+  window.addEventListener('resize', function(){ setTimeout(updateFixedHeight, 80); });
+  window.addEventListener('orientationchange', function(){ setTimeout(updateFixedHeight, 250); });
+
+  const oldSelectSubject = window.selectSubject;
+  if(typeof oldSelectSubject === 'function'){
+    window.selectSubject = function(btn, subject){
+      const result = oldSelectSubject.apply(this, arguments);
+      setTimeout(function(){ updateFixedHeight(); scrollContentTop(); }, 0);
+      setTimeout(updateFixedHeight, 180);
+      return result;
+    };
+  }
+
+  const oldUpdateQuickQuestions = window.updateQuickQuestions;
+  if(typeof oldUpdateQuickQuestions === 'function'){
+    window.updateQuickQuestions = function(subject){
+      const result = oldUpdateQuickQuestions.apply(this, arguments);
+      setTimeout(updateFixedHeight, 0);
+      setTimeout(updateFixedHeight, 180);
+      return result;
+    };
+  }
+})();
+</script>
 </body>
 </html>

@@ -1145,6 +1145,32 @@ body.competence-mode .master-challenge-card{
 }
 </style>
 
+
+
+<style id="patch-carnet-grandes-questions-v80">
+.question-log-note{
+  background:#FFFCEB;
+  border:2px solid var(--accent);
+  border-radius:14px;
+  padding:10px 12px;
+  margin:10px 0;
+  font-weight:800;
+  color:#7A5C00;
+  line-height:1.4;
+}
+.question-log-status{
+  display:inline-block;
+  border-radius:999px;
+  padding:3px 8px;
+  font-size:12px;
+  font-weight:900;
+  margin-left:4px;
+}
+.question-log-status.pending{background:#FFF3CD;color:#7A5C00;}
+.question-log-status.interesting{background:#EAE8FF;color:var(--primary);}
+.question-log-status.blocked{background:#FFEAEA;color:#7A2222;}
+</style>
+
 </head>
 <body>
 
@@ -1282,6 +1308,7 @@ let prenomActuel = '';
 let welcomeQuizSubject = 'général';
 
 const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbzeHY0Vm-O923mZfgQjmvUdtJUIEVUVR99srqocBldvkl7JPWn49K7tqqEthQB4JDQm/exec';
+const HIBOU_QUESTION_LOG_URL = 'https://script.google.com/macros/s/AKfycbzcgMiY7pEKb5M9jKYRfM2OMGB7lISvw-VRZzhdLrnIaQcu3gSAoEobrG7O0M9YuU8n/exec';
 
 // === V3 Phase 3.1 : banque locale CE2 et défis du maître ===
 const MASTER_CHALLENGE_KEY = 'hibou_master_challenge_v31';
@@ -3264,7 +3291,7 @@ const CE2_SECURITY = {
     'math','maths','calcul','addition','soustraction','multiplication','division','table','nombre','problème','géométrie','mesure','fraction',
     'français','grammaire','conjugaison','orthographe','lecture','écriture','dictée','nom commun','verbe','adjectif','phrase','sujet','accord',
     'science','sciences','plante','animal','corps','squelette','système solaire','terre','soleil','lune','eau','matière',
-    'géographie','geographie','france','carte','fleuve','montagne','ville','région','pays','europe','continent',
+    'géographie','geographie','france','carte','fleuve','montagne','ville','région','pays','europe','continent','monde','population','habitants','habitant','humains','terre','planète','planete','combien dans le monde','on est combien',
     'anglais','english','couleur','colors','hello','number','school','se présenter',
     'ce2','école','ecole','classe','élève','eleve','devoir','exercice','quiz','révision','réviser','explique','aide-moi','apprendre'
   ]
@@ -3294,33 +3321,82 @@ function hasAllowedSchoolTopic(text){
 function analyzeQuestionForCE2(message){
   const mode = getSecurityMode();
   const category = categoryMatch(message);
-  if (category) return {allowed:false, category, reason:'mot ou thème sensible détecté'};
+  if (category) return {allowed:false, pending:false, status:'Bloquée', category, reason:'mot ou thème sensible détecté'};
   if (mode === 'strict' && !hasAllowedSchoolTopic(message)) {
-    return {allowed:false, category:'hors cadre CE2', reason:'question trop éloignée des matières scolaires'};
+    return {allowed:false, pending:true, status:'À vérifier', category:'question à vérifier', reason:'Maître Hibou n’est pas certain d’avoir bien compris la question'};
   }
-  return {allowed:true, category:'autorisé', reason:'cadre scolaire'};
+  return {allowed:true, pending:false, status:'Autorisée', category:'autorisé', reason:'cadre scolaire'};
 }
 function isMessageAllowedForCE2(message) { return analyzeQuestionForCE2(message).allowed; }
+function pendingQuestionMessage(){
+  return "🦉 <strong>Maître Hibou réfléchit...</strong><br><br>Merci pour ta question !<br><br>Je ne suis pas encore certain d'avoir bien compris ce que tu veux demander. Je vais la noter dans mon <strong>carnet des grandes questions</strong> pour y réfléchir.<br><br>Ton enseignant pourra aussi m'aider à mieux comprendre cette question. Tu peux essayer de la reformuler avec d'autres mots. 😊";
+}
 function safeRefusalMessage(){
-  return "Je préfère rester sur des sujets adaptés à l'école primaire : maths, français, sciences, géographie, anglais ou lecture. Choisis une matière et je t'aide avec plaisir ! 🦉";
+  return "🦉 <strong>Merci pour ta question.</strong><br><br>Pour l'instant, je vais rester sur les sujets de l'école primaire : maths, français, sciences, géographie, anglais ou lecture.<br><br>Tu peux reformuler ta question ou choisir une matière, et je t'aide avec plaisir. 😊";
 }
 function localOnlyMessage(){
   return "Le mode 'banque locale uniquement' est activé. Je ne contacte pas l'IA. Tu peux utiliser les quiz locaux, les défis, les tables de multiplication, le nom commun et les révisions CE2. 🦉";
 }
+function getQuestionJournal(){
+  return JSON.parse(localStorage.getItem('hibou_question_journal') || '[]');
+}
+function saveQuestionJournal(logs){
+  localStorage.setItem('hibou_question_journal', JSON.stringify(logs.slice(0,120)));
+}
+function sendQuestionToRemoteLog(entry){
+  if (!HIBOU_QUESTION_LOG_URL) return;
+  try {
+    fetch(HIBOU_QUESTION_LOG_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        eleve: entry.student || prenomActuel || 'Élève non identifié',
+        question: entry.question || '',
+        statut: entry.status || entry.category || 'À vérifier',
+        decision: entry.reason || ''
+      })
+    }).catch(() => console.log('Journal distant indisponible'));
+  } catch(e) {
+    console.log('Erreur journal distant');
+  }
+}
+function logQuestionToJournal(question, status, category, reason){
+  const entry = {
+    date:new Date().toLocaleString('fr-FR'),
+    student:prenomActuel || 'Élève non identifié',
+    question:String(question).slice(0,280),
+    status:status || 'À vérifier',
+    category:category || '',
+    reason:reason || ''
+  };
+  const logs = getQuestionJournal();
+  logs.unshift(entry);
+  saveQuestionJournal(logs);
+  sendQuestionToRemoteLog(entry);
+  return entry;
+}
 function logBlockedQuestion(question, category, reason){
   const logs = JSON.parse(localStorage.getItem('hibou_blocked_log') || '[]');
-  logs.unshift({
+  const entry = {
     date:new Date().toLocaleString('fr-FR'),
     student:prenomActuel || 'Élève non identifié',
     question:String(question).slice(0,180),
     category:category || 'inconnu',
     reason:reason || ''
-  });
+  };
+  logs.unshift(entry);
   localStorage.setItem('hibou_blocked_log', JSON.stringify(logs.slice(0,80)));
+  logQuestionToJournal(question, 'Bloquée', category || 'inconnu', reason || '');
 }
 function clearBlockedLog(){
   if (!confirm('Effacer le journal des questions bloquées ?')) return;
   localStorage.removeItem('hibou_blocked_log');
+  renderTeacherSafetyPanel();
+}
+function clearQuestionJournal(){
+  if (!confirm('Effacer le carnet local des grandes questions ? Le Google Sheet ne sera pas effacé.')) return;
+  localStorage.removeItem('hibou_question_journal');
   renderTeacherSafetyPanel();
 }
 function isResponseSafeForCE2(response){
@@ -3332,6 +3408,8 @@ function renderTeacherSafetyPanel(){
   const mode = getSecurityMode();
   const aiOff = isAiDisabled();
   const logs = JSON.parse(localStorage.getItem('hibou_blocked_log') || '[]');
+  const questionLogs = getQuestionJournal();
+  const pendingCount = questionLogs.filter(l => l.status === 'À vérifier').length;
   const modeLabel = mode === 'local' || aiOff ? 'Banque locale uniquement' : (mode === 'strict' ? 'Strict CE2' : 'Normal');
   const modeClass = mode === 'local' || aiOff ? 'local' : (mode === 'strict' ? 'strict' : 'normal');
   box.innerHTML = `
@@ -3340,6 +3418,8 @@ function renderTeacherSafetyPanel(){
       <div class="security-grid">
         <div class="security-card"><strong>Mode actuel</strong><br><span class="security-status ${modeClass}">${modeLabel}</span></div>
         <div class="security-card"><strong>Questions bloquées</strong><br>${logs.length}</div>
+        <div class="security-card"><strong>À vérifier</strong><br>${pendingCount}</div>
+        <div class="security-card"><strong>Journal distant</strong><br>Google Sheet niveau 2</div>
         <div class="security-card"><strong>IA Groq/Grok</strong><br>${aiOff || mode === 'local' ? 'Désactivée' : 'Autorisée avec filtres'}</div>
       </div>
       <div class="security-toggle-row">
@@ -3347,9 +3427,14 @@ function renderTeacherSafetyPanel(){
         <button class="teacher-btn" onclick="setSecurityMode('strict')">Mode strict CE2</button>
         <button class="teacher-btn" onclick="setSecurityMode('local'); setAiDisabled(true)">Banque locale uniquement</button>
         <button class="teacher-btn secondary" onclick="setAiDisabled(false); if(getSecurityMode()==='local') setSecurityMode('strict')">Réactiver IA filtrée</button>
-        <button class="teacher-btn danger" onclick="clearBlockedLog()">Effacer journal</button>
+        <button class="teacher-btn danger" onclick="clearBlockedLog()">Effacer bloquées</button>
+        <button class="teacher-btn secondary" onclick="clearQuestionJournal()">Effacer carnet local</button>
       </div>
-      <div class="teacher-small">Recommandation classe : <strong>Mode strict CE2</strong>. Pour une autonomie totale sur tablette, utiliser <strong>Banque locale uniquement</strong>.</div>
+      <div class="teacher-small">Recommandation classe : <strong>Mode strict CE2</strong>. Les questions incertaines sont valorisées comme <strong>Carnet des grandes questions</strong> et envoyées vers le Google Sheet niveau 2.</div>
+      <div class="blocked-log">
+        <strong>📖 Carnet des grandes questions</strong>
+        ${questionLogs.length ? questionLogs.slice(0,12).map(l => `<div class="blocked-item"><strong>${escapeHTML(l.student)}</strong> — <span class="question-log-status ${l.status === 'À vérifier' ? 'pending' : (l.status === 'Bloquée' ? 'blocked' : 'interesting')}">${escapeHTML(l.status || '')}</span> — ${escapeHTML(l.date)}<br>« ${escapeHTML(l.question)} »<br><span style="color:var(--text-muted)">${escapeHTML(l.reason || l.category || '')}</span></div>`).join('') : '<div class="blocked-item">Aucune grande question enregistrée pour le moment.</div>'}
+      </div>
       <div class="blocked-log">
         <strong>Dernières questions bloquées</strong>
         ${logs.length ? logs.slice(0,12).map(l => `<div class="blocked-item"><strong>${escapeHTML(l.student)}</strong> — ${escapeHTML(l.category)} — ${escapeHTML(l.date)}<br>« ${escapeHTML(l.question)} »<br><span style="color:var(--text-muted)">${escapeHTML(l.reason)}</span></div>`).join('') : '<div class="blocked-item">Aucune question bloquée pour le moment.</div>'}
@@ -3396,8 +3481,13 @@ async function sendMessage() {
   const security = analyzeQuestionForCE2(text);
   if (!security.allowed) {
     addMessage('user', text);
-    logBlockedQuestion(text, security.category, security.reason);
-    addMessage('prof', safeRefusalMessage());
+    if (security.pending) {
+      logQuestionToJournal(text, 'À vérifier', security.category, security.reason);
+      addMessage('prof', pendingQuestionMessage());
+    } else {
+      logBlockedQuestion(text, security.category, security.reason);
+      addMessage('prof', safeRefusalMessage());
+    }
     input.value = '';
     input.style.height = 'auto';
     return;

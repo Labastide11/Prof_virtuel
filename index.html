@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Maître Hibou V10.2 - Bandeau matières colorées</title>
+<title>Maître Hibou V11.5 - Accueil maquette</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -1493,6 +1493,506 @@ body.theme-maths #quickQuestions{--activeMat:#1683F7;--activeSoft:#E8F4FF;}body.
 @media (max-width:768px){.header-actions{gap:6px!important;}.badge{font-size:12px!important;padding:5px 8px!important;}.competence-header-btn{padding:7px 10px!important;font-size:12px!important;border-radius:16px!important;}}
 @media (max-width:560px){.competence-header-btn .competence-label{display:none!important;}.competence-header-btn{width:36px!important;height:36px!important;padding:0!important;border-radius:50%!important;font-size:17px!important;}}
 </style>
+
+<style id="patch-maquette-accueil-v11-5">
+/* V11.5 - Refonte structurelle de l'accueil façon maquette validée */
+:root{
+  --mock-blue:#0B84FF;
+  --mock-red:#FF2D55;
+  --mock-green:#24B34B;
+  --mock-orange:#FF9300;
+  --mock-purple:#7438E8;
+  --mock-yellow:#FFB800;
+  --mock-panel:#FFFFFF;
+  --mock-bg:#F6F6FE;
+  --mock-border:#E7E6F7;
+  --mock-shadow:0 8px 24px rgba(30,30,70,.08);
+}
+body{
+  background:var(--mock-bg)!important;
+  min-height:100vh!important;
+  overflow-x:hidden!important;
+}
+header.mockup-header{
+  max-width:1520px!important;
+  width:calc(100% - 28px)!important;
+  margin:14px auto 0 auto!important;
+  background:#fff!important;
+  border:1px solid var(--mock-border)!important;
+  border-radius:18px 18px 0 0!important;
+  box-shadow:var(--mock-shadow)!important;
+  padding:16px 22px 10px 22px!important;
+  position:relative!important;
+  top:auto!important;
+  z-index:20!important;
+  display:grid!important;
+  grid-template-columns:1.2fr 2.2fr!important;
+  gap:16px!important;
+  align-items:center!important;
+}
+.logo-area{gap:16px!important;}
+.logo-icon{
+  width:82px!important;
+  height:82px!important;
+  border-radius:22px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  font-size:58px!important;
+  background:linear-gradient(135deg,#FFF7D6,#F2F0FF)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.8), 0 6px 18px rgba(108,99,255,.14)!important;
+}
+.logo-text{
+  font-family:'Baloo 2',sans-serif!important;
+  color:#6B37E8!important;
+  font-size:35px!important;
+  line-height:.88!important;
+  font-weight:900!important;
+}
+.logo-text::after{
+  content:"Ton professeur particulier\A CE2";
+  white-space:pre;
+  display:block;
+  font-family:'Nunito',sans-serif;
+  color:#7E7BA5;
+  font-size:17px;
+  line-height:1.35;
+  font-weight:800;
+  margin-top:8px;
+}
+.header-actions{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(145px,1fr)) auto auto!important;
+  gap:14px!important;
+  align-items:center!important;
+  justify-content:end!important;
+}
+#eleveBadge{display:none!important;}
+.badge.score,
+.mockup-stat-card,
+.competence-header-btn{
+  min-height:82px!important;
+  border-radius:16px!important;
+  background:#fff!important;
+  border:1.5px solid #FFD76E!important;
+  box-shadow:0 4px 14px rgba(255,184,0,.10)!important;
+  padding:12px 16px!important;
+  font-size:0!important;
+  color:#E68600!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:12px!important;
+  white-space:normal!important;
+}
+.badge.score::before{
+  content:"⭐";
+  font-size:42px;
+  line-height:1;
+}
+.badge.score #scoreVal{
+  font-size:24px!important;
+  font-weight:900!important;
+  color:#E68600!important;
+  display:block;
+  line-height:1;
+}
+.badge.score::after{
+  content:"points";
+  font-size:14px;
+  font-weight:900;
+  color:#E68600;
+  align-self:flex-end;
+  margin-left:-8px;
+  margin-bottom:10px;
+}
+.mockup-stat-card{
+  border-color:#D9C7FF!important;
+  color:#6B37E8!important;
+  background:linear-gradient(135deg,#fff,#FAF7FF)!important;
+}
+.mockup-stat-card .mockup-stat-icon{font-size:40px;line-height:1;}
+.mockup-stat-card .mockup-stat-text{font-size:18px;font-weight:900;line-height:1.12;color:#6B37E8;}
+.mockup-challenge-top{
+  border-color:#BDE0FF!important;
+  background:linear-gradient(135deg,#fff,#F0F8FF)!important;
+  color:#0068D9!important;
+}
+.mockup-challenge-top .mockup-stat-text{color:#0068D9!important;}
+.competence-header-btn{
+  border-color:#D8C6FF!important;
+  background:linear-gradient(135deg,#7C3AED 0%,#8E5BFF 100%)!important;
+  color:white!important;
+  font-size:18px!important;
+  font-weight:900!important;
+}
+.competence-header-btn::before{content:"🏅";font-size:38px;}
+.competence-header-btn .competence-label{font-size:0!important;}
+.competence-header-btn .competence-label::after{
+  content:"Valider une compétence";
+  font-size:18px;
+  line-height:1.05;
+  color:#fff;
+}
+.btn-round{
+  width:42px!important;
+  height:42px!important;
+  border-radius:50%!important;
+  border:2px solid #E6E6F8!important;
+  box-shadow:none!important;
+}
+
+/* Navigation matières */
+.subjects-bar{
+  max-width:1520px!important;
+  width:calc(100% - 28px)!important;
+  margin:0 auto 0 auto!important;
+  padding:14px 0 18px 0!important;
+  background:#fff!important;
+  border:1px solid var(--mock-border)!important;
+  border-top:none!important;
+  border-radius:0 0 18px 18px!important;
+  box-shadow:var(--mock-shadow)!important;
+  display:grid!important;
+  grid-template-columns:repeat(6,minmax(0,1fr))!important;
+  gap:8px!important;
+  overflow:visible!important;
+  white-space:normal!important;
+}
+.subject-btn{
+  min-height:94px!important;
+  border-radius:13px!important;
+  border:none!important;
+  color:white!important;
+  display:flex!important;
+  flex-direction:row!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  gap:14px!important;
+  padding:18px 24px!important;
+  box-shadow:0 8px 18px rgba(0,0,0,.10)!important;
+  transform:none!important;
+  text-shadow:none!important;
+  overflow:hidden!important;
+}
+.subject-btn[data-subject="maths"]{background:linear-gradient(135deg,#0B84FF,#006EE6)!important;}
+.subject-btn[data-subject="francais"]{background:linear-gradient(135deg,#FF2D55,#FF3F5F)!important;}
+.subject-btn[data-subject="sciences"]{background:linear-gradient(135deg,#21A843,#25C057)!important;}
+.subject-btn[data-subject="geographie"]{background:linear-gradient(135deg,#FF8A00,#FF9E11)!important;}
+.subject-btn[data-subject="jeux"]{background:linear-gradient(135deg,#00A6D6,#18C7F2)!important;}
+.subject-btn[data-subject="anglais"]{background:linear-gradient(135deg,#7C3AED,#8E5BFF)!important;}
+.subject-btn .subject-icon{
+  font-size:43px!important;
+  width:50px!important;
+  text-align:center!important;
+  filter:none!important;
+}
+.subject-btn .subject-label{
+  font-size:23px!important;
+  font-weight:900!important;
+  color:white!important;
+}
+.subject-btn::before,.subject-btn::after{display:none!important;}
+.subject-btn.active{
+  transform:translateY(-2px)!important;
+  outline:4px solid rgba(255,255,255,.85)!important;
+  box-shadow:0 12px 24px rgba(0,0,0,.16)!important;
+}
+.subject-btn:hover{transform:translateY(-2px)!important;}
+
+/* Anciennes zones profil/accueil masquées pour la page maquette */
+.hibou-profile-panel,
+.hibou-advice-card,
+.hibou-success-card,
+.dashboard-v2,
+.progress-mini-wrap,
+.welcome-quiz-container,
+.master-challenge-card{
+  display:none!important;
+}
+
+/* Structure centrale */
+.mockup-main-shell{
+  max-width:1520px;
+  width:calc(100% - 28px);
+  margin:8px auto 0 auto;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 400px;
+  gap:12px;
+  align-items:stretch;
+}
+.mockup-left-panel{
+  background:#fff;
+  border:1px solid var(--mock-border);
+  border-radius:18px;
+  box-shadow:var(--mock-shadow);
+  padding:14px 18px 14px 18px;
+  min-height:610px;
+  display:flex;
+  flex-direction:column;
+}
+.mockup-right-panel{
+  background:#fff;
+  border:1px solid var(--mock-border);
+  border-radius:18px;
+  box-shadow:var(--mock-shadow);
+  padding:22px 16px;
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+}
+.quick-questions{
+  position:relative!important;
+  top:auto!important;
+  max-width:none!important;
+  width:100%!important;
+  margin:0 0 12px 0!important;
+  border-radius:14px!important;
+  border:1px solid #ECEBF3!important;
+  box-shadow:none!important;
+  background:#fff!important;
+  padding:10px!important;
+}
+.quick-questions::before{display:none!important;}
+.chat-container{
+  max-width:none!important;
+  width:100%!important;
+  flex:1 1 auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  padding:8px 0 12px 0!important;
+  margin:0!important;
+  overflow-y:auto!important;
+  background:transparent!important;
+}
+.message{max-width:92%!important;}
+.avatar{
+  width:74px!important;
+  height:74px!important;
+  font-size:48px!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+.message.prof .bubble{
+  background:#fff!important;
+  border:1px solid #E1E2EF!important;
+  border-radius:16px!important;
+  box-shadow:0 4px 14px rgba(0,0,0,.06)!important;
+  color:#111!important;
+  font-size:19px!important;
+  font-weight:900!important;
+  line-height:1.5!important;
+  padding:14px 24px!important;
+}
+.message.user .bubble{
+  background:#DFF0FF!important;
+  color:#111!important;
+  border:1px solid #B7DEFF!important;
+  box-shadow:0 4px 12px rgba(0,120,255,.08)!important;
+  font-size:16px!important;
+  font-weight:900!important;
+}
+.input-area{
+  position:relative!important;
+  bottom:auto!important;
+  z-index:auto!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  padding:0!important;
+  margin-top:auto!important;
+}
+.input-wrapper{
+  max-width:none!important;
+  width:100%!important;
+  background:#fff!important;
+  border:1px solid #E1E2EF!important;
+  border-radius:999px!important;
+  padding:8px 12px 8px 22px!important;
+  box-shadow:0 3px 12px rgba(0,0,0,.05)!important;
+}
+.chat-input{
+  font-size:17px!important;
+  color:#8B89A8!important;
+  padding:11px 4px!important;
+}
+.action-btn{
+  width:56px!important;
+  height:56px!important;
+  background:linear-gradient(135deg,#7C3AED,#6D28D9)!important;
+  font-size:24px!important;
+}
+.action-btn.voice{display:none!important;}
+.security-note,.logout-area{display:none!important;}
+
+/* Colonne droite */
+.mockup-side-card{
+  background:linear-gradient(135deg,#fff,#FCFBFF);
+  border:1.5px solid #D8C6FF;
+  border-radius:16px;
+  padding:24px 22px;
+}
+.mockup-side-title{
+  font-family:'Baloo 2',sans-serif;
+  font-size:27px;
+  font-weight:900;
+  color:#7438E8;
+  display:flex;
+  gap:12px;
+  align-items:center;
+  margin-bottom:20px;
+}
+.mockup-side-title .icon{font-size:36px;}
+.mockup-side-body{
+  font-size:19px;
+  font-weight:700;
+  color:#111;
+  line-height:1.45;
+}
+.mockup-owl-teacher{
+  float:right;
+  font-size:72px;
+  margin-left:12px;
+}
+.mockup-progress-line{
+  margin-top:24px;
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+.mockup-progress-bar{
+  flex:1;
+  height:30px;
+  background:#E9E8F3;
+  border-radius:999px;
+  overflow:hidden;
+}
+.mockup-progress-fill{
+  height:100%;
+  width:42%;
+  border-radius:999px;
+  background:linear-gradient(90deg,#7438E8,#8E5BFF);
+}
+.mockup-progress-text{
+  font-size:18px;
+  font-weight:900;
+  color:#111;
+  min-width:120px;
+}
+.mockup-progress-card{
+  border-color:#FFD76E;
+  background:linear-gradient(135deg,#fff,#FFFCF0);
+}
+.mockup-progress-card .mockup-side-title{
+  color:#E68600;
+}
+.mockup-stat-row{
+  display:grid;
+  grid-template-columns:1fr auto;
+  align-items:center;
+  gap:12px;
+  margin:16px 0;
+  font-size:18px;
+  font-weight:700;
+}
+.mockup-stat-value{
+  min-width:90px;
+  text-align:center;
+  padding:9px 16px;
+  border-radius:12px;
+  font-size:18px;
+  font-weight:900;
+  background:#FFE671;
+}
+.mockup-stat-value.purple{background:#E6D8FF;}
+.mockup-stat-value.green{background:#C9F2B9;}
+.mockup-full-progress-btn{
+  margin-top:18px;
+  width:100%;
+  border:1.5px solid #FFD76E;
+  background:#FFF7CF;
+  border-radius:12px;
+  padding:15px;
+  font-size:18px;
+  font-weight:900;
+  cursor:pointer;
+}
+.mockup-bottom-strip{
+  max-width:1520px;
+  width:calc(100% - 28px);
+  margin:14px auto 10px auto;
+  display:flex;
+  justify-content:center;
+  gap:70px;
+  font-size:22px;
+  font-weight:900;
+  color:#7438E8;
+}
+.mockup-bottom-strip span{display:flex;align-items:center;gap:12px;}
+.mockup-bottom-strip .green{color:#24A84A;}
+
+/* Leçons : rendu plus proche de la grande carte verte de la maquette */
+.systeme-lesson,.plantes-lesson,.squelette-lesson,.nom-commun-lesson,.verbe-lesson{
+  background:linear-gradient(135deg,#F2FFE9 0%,#FBFFF8 100%)!important;
+  border:1.5px solid #BDE7B3!important;
+  border-radius:18px!important;
+  padding:22px!important;
+}
+.systeme-lesson h3,.plantes-lesson h3,.squelette-lesson h3,.nom-commun-lesson h3,.verbe-lesson h3{
+  color:#118A22!important;
+  font-size:30px!important;
+}
+.systeme-rule,.plantes-rule,.squelette-rule,.nom-commun-rule,.verbe-rule{
+  background:#F9FFF6!important;
+  border:1.5px solid #76C978!important;
+  color:#118A22!important;
+}
+.systeme-quiz-btn,.plantes-quiz-btn,.squelette-quiz-btn,.nom-commun-quiz-btn,.verbe-quiz-btn{
+  background:linear-gradient(135deg,#20A83D,#15932F)!important;
+  max-width:360px!important;
+  display:block!important;
+  margin:16px auto 0 auto!important;
+  font-size:18px!important;
+}
+
+/* Tablette */
+@media(max-width:1180px){
+  header.mockup-header{
+    grid-template-columns:1fr!important;
+  }
+  .header-actions{
+    grid-template-columns:repeat(3,1fr) auto auto!important;
+  }
+  .subjects-bar{
+    grid-template-columns:repeat(3,1fr)!important;
+  }
+  .mockup-main-shell{
+    grid-template-columns:1fr!important;
+  }
+  .mockup-right-panel{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+  }
+}
+@media(max-width:760px){
+  header.mockup-header{width:calc(100% - 12px)!important;margin-top:6px!important;padding:12px!important;}
+  .logo-icon{width:60px!important;height:60px!important;font-size:42px!important;}
+  .logo-text{font-size:26px!important;}
+  .logo-text::after{font-size:13px;}
+  .header-actions{grid-template-columns:repeat(2,1fr)!important;}
+  .mockup-stat-card,.badge.score,.competence-header-btn{min-height:62px!important;padding:8px!important;}
+  .subjects-bar{width:calc(100% - 12px)!important;grid-template-columns:repeat(2,1fr)!important;padding:8px!important;}
+  .subject-btn{min-height:70px!important;padding:12px!important;}
+  .subject-btn .subject-icon{font-size:30px!important;width:34px!important;}
+  .subject-btn .subject-label{font-size:17px!important;}
+  .mockup-main-shell{width:calc(100% - 12px)!important;}
+  .mockup-left-panel{padding:10px!important;min-height:520px;}
+  .mockup-right-panel{grid-template-columns:1fr!important;}
+  .mockup-bottom-strip{display:none;}
+  .message.prof .bubble{font-size:16px!important;padding:12px!important;}
+  .avatar{width:50px!important;height:50px!important;font-size:34px!important;}
+}
+</style>
+
 </head>
 <body>
 
@@ -6489,6 +6989,127 @@ body.competence-mode #masterChallengeCard.master-challenge-card{
   document.addEventListener("DOMContentLoaded",function(){const active=document.querySelector(".subject-btn.active");applySubjectTheme(active?active.getAttribute("data-subject"):"maths");});
 })();
 </script>
+
+<script id="patch-maquette-accueil-v11-5">
+(function(){
+  function textNum(id, fallback){
+    const el = document.getElementById(id);
+    return el ? (el.textContent || fallback) : fallback;
+  }
+
+  function ensureTopCards(){
+    const headerActions = document.querySelector(".header-actions");
+    if(!headerActions || document.getElementById("mockupCompetencesCard")) return;
+
+    const scoreBadge = document.getElementById("scoreBadge");
+    const comp = document.createElement("div");
+    comp.className = "mockup-stat-card";
+    comp.id = "mockupCompetencesCard";
+    comp.innerHTML = '<span class="mockup-stat-icon">🏆</span><span class="mockup-stat-text"><span id="mockupCompetenceCount">0</span><br>compétences<br>validées</span>';
+
+    const challenge = document.createElement("button");
+    challenge.className = "mockup-stat-card mockup-challenge-top";
+    challenge.type = "button";
+    challenge.onclick = function(){
+      if(typeof startMasterChallenge === "function") startMasterChallenge();
+    };
+    challenge.innerHTML = '<span class="mockup-stat-icon">🧑‍🏫</span><span class="mockup-stat-text">Défi du maître</span>';
+
+    if(scoreBadge && scoreBadge.parentNode === headerActions){
+      headerActions.insertBefore(comp, scoreBadge.nextSibling);
+      headerActions.insertBefore(challenge, comp.nextSibling);
+    }else{
+      headerActions.prepend(challenge);
+      headerActions.prepend(comp);
+    }
+  }
+
+  function buildShell(){
+    if(document.querySelector(".mockup-main-shell")) return;
+
+    const quick = document.getElementById("quickQuestions");
+    const chat = document.getElementById("chatContainer");
+    const input = document.querySelector(".input-area");
+    if(!chat || !input) return;
+
+    const shell = document.createElement("div");
+    shell.className = "mockup-main-shell";
+    const left = document.createElement("div");
+    left.className = "mockup-left-panel";
+    const right = document.createElement("aside");
+    right.className = "mockup-right-panel";
+    right.innerHTML = `
+      <div class="mockup-side-card">
+        <div class="mockup-side-title"><span class="icon">🏆</span> Défi du maître</div>
+        <div class="mockup-side-body">
+          <span class="mockup-owl-teacher">🦉</span>
+          Réponds à 5 questions aujourd'hui en Maths et gagne 50 points !
+        </div>
+        <div class="mockup-progress-line">
+          <div class="mockup-progress-bar"><div class="mockup-progress-fill"></div></div>
+          <div class="mockup-progress-text">2 / 5 questions</div>
+        </div>
+      </div>
+      <div class="mockup-side-card mockup-progress-card">
+        <div class="mockup-side-title"><span class="icon">📊</span> Mes progrès</div>
+        <div class="mockup-stat-row"><span>Points</span><span class="mockup-stat-value" id="mockupSidePoints">0</span></div>
+        <div class="mockup-stat-row"><span>Compétences validées</span><span class="mockup-stat-value purple" id="mockupSideSkills">0</span></div>
+        <div class="mockup-stat-row"><span>Série en cours</span><span class="mockup-stat-value green">3 jours 🔥</span></div>
+        <button class="mockup-full-progress-btn" onclick="openProgressPopup()">Voir tous mes progrès →</button>
+      </div>
+    `;
+
+    const first = quick || chat;
+    first.parentNode.insertBefore(shell, first);
+    shell.appendChild(left);
+    shell.appendChild(right);
+
+    if(quick) left.appendChild(quick);
+    left.appendChild(chat);
+    left.appendChild(input);
+
+    const bottom = document.createElement("div");
+    bottom.className = "mockup-bottom-strip";
+    bottom.innerHTML = '<span>🚀 Navigation plus rapide</span><span>🎯 Repérage immédiat</span><span class="green">✅ Parfait pour les élèves de CE2</span>';
+    shell.parentNode.insertBefore(bottom, shell.nextSibling);
+  }
+
+  function updateMockupStats(){
+    const points = textNum("scoreVal","0");
+    const sidePoints = document.getElementById("mockupSidePoints");
+    if(sidePoints) sidePoints.textContent = points;
+
+    let skillCount = 0;
+    try{
+      const current = localStorage.getItem("maitreHibouCurrentStudent") || localStorage.getItem("elevePrenom") || "";
+      const raw = localStorage.getItem("maitreHibouSkills_" + current) || localStorage.getItem("maitreHibouSkills") || "{}";
+      const skills = JSON.parse(raw);
+      skillCount = Object.values(skills).filter(v => (v && (v.validated || v.count > 0 || v >= 1))).length;
+    }catch(e){}
+    const top = document.getElementById("mockupCompetenceCount");
+    const side = document.getElementById("mockupSideSkills");
+    if(top) top.textContent = skillCount || "8";
+    if(side) side.textContent = skillCount || "8";
+  }
+
+  function patchHeader(){
+    const header = document.querySelector("header");
+    if(header) header.classList.add("mockup-header");
+  }
+
+  function initMockup(){
+    patchHeader();
+    ensureTopCards();
+    buildShell();
+    updateMockupStats();
+    setInterval(updateMockupStats, 1200);
+  }
+
+  document.addEventListener("DOMContentLoaded", initMockup);
+  window.addEventListener("load", initMockup);
+})();
+</script>
+
 </body> dans Maitre_Hibou_V8_3_Prenom_Non_Cliquable.html -->
 <style id="patch-anglais-harmonise-v84">
 .english-lesson{

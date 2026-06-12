@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Maître Hibou V11.7 - Plein écran tablette</title>
+<title>Maître Hibou V11.9 - Défi du maître cliquable</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -2152,73 +2152,240 @@ header.mockup-header{
 </style>
 
 
-<style id="patch-plein-ecran-v117">
-/* V11.7 - Bouton plein écran pour retrouver le rendu de la maquette */
-.fullscreen-btn{
-  min-height:66px !important;
-  border-radius:16px !important;
-  border:1.5px solid #CFE3FF !important;
-  background:linear-gradient(135deg,#FFFFFF 0%,#F0F8FF 100%) !important;
-  color:#0068D9 !important;
-  box-shadow:0 4px 14px rgba(0,120,255,.10) !important;
-  padding:8px 12px !important;
+
+<style id="patch-plein-ecran-v118">
+/* V11.8 - Bouton plein écran flottant : toujours visible sur tablette */
+.fullscreen-floating-btn{
+  position:fixed !important;
+  right:14px !important;
+  bottom:86px !important;
+  z-index:9999 !important;
+  width:62px !important;
+  height:62px !important;
+  border-radius:50% !important;
+  border:4px solid rgba(255,255,255,.95) !important;
+  background:linear-gradient(135deg,#0B84FF,#0068D9) !important;
+  color:white !important;
+  box-shadow:0 10px 28px rgba(0,104,217,.35) !important;
   font-family:inherit !important;
-  font-size:15px !important;
+  font-size:28px !important;
   font-weight:900 !important;
   cursor:pointer !important;
   display:flex !important;
   align-items:center !important;
   justify-content:center !important;
-  gap:8px !important;
-  white-space:nowrap !important;
+  padding:0 !important;
 }
-.fullscreen-btn .fs-icon{
-  font-size:28px;
-  line-height:1;
+.fullscreen-floating-btn:hover{
+  transform:translateY(-2px) scale(1.03);
 }
-.fullscreen-btn:hover{
-  transform:translateY(-1px);
-  box-shadow:0 7px 18px rgba(0,120,255,.16) !important;
+.fullscreen-floating-btn .fs-label{
+  display:none !important;
 }
 
-/* En plein écran, on récupère encore un peu d'espace */
+/* petit message au premier affichage */
+.fullscreen-hint{
+  position:fixed;
+  right:82px;
+  bottom:96px;
+  z-index:9998;
+  background:#fff;
+  color:#0068D9;
+  border:2px solid #BDE0FF;
+  border-radius:14px;
+  padding:8px 11px;
+  font-weight:900;
+  font-size:13px;
+  box-shadow:0 8px 22px rgba(0,104,217,.18);
+  pointer-events:none;
+  animation:fsHintFade 5s forwards;
+}
+@keyframes fsHintFade{
+  0%,70%{opacity:1;transform:translateX(0);}
+  100%{opacity:0;transform:translateX(8px);}
+}
+
+body.fullscreen-active .fullscreen-floating-btn{
+  background:linear-gradient(135deg,#FF8A00,#FFB800) !important;
+}
 body.fullscreen-active header.mockup-header{
-  margin-top:6px !important;
+  margin-top:4px !important;
 }
 body.fullscreen-active .subjects-bar{
-  padding-top:6px !important;
-  padding-bottom:8px !important;
+  padding-top:5px !important;
+  padding-bottom:7px !important;
 }
 body.fullscreen-active .mockup-main-shell{
-  margin-top:6px !important;
+  margin-top:4px !important;
 }
 body.fullscreen-active .mockup-bottom-strip{
-  margin-top:6px !important;
+  display:none !important;
 }
 
-/* Tablette : le bouton reste lisible mais compact */
 @media (orientation:landscape) and (max-width:1280px){
-  .fullscreen-btn{
-    min-height:54px !important;
-    padding:6px 8px !important;
-    font-size:13px !important;
-    border-radius:14px !important;
+  .fullscreen-floating-btn{
+    width:56px !important;
+    height:56px !important;
+    right:10px !important;
+    bottom:74px !important;
+    font-size:25px !important;
   }
-  .fullscreen-btn .fs-icon{
-    font-size:22px;
+  .fullscreen-hint{
+    right:72px;
+    bottom:84px;
   }
 }
+</style>
 
-@media (max-width:760px){
-  .fullscreen-btn .fs-label{
-    display:none;
-  }
-  .fullscreen-btn{
-    width:48px !important;
-    min-height:48px !important;
-    padding:0 !important;
-    border-radius:50% !important;
-  }
+
+<style id="patch-defi-maitre-popup-v119">
+/* V11.9 - Défi du maître cliquable + popup */
+.mockup-side-card:first-child,
+.mockup-challenge-top{
+  cursor:pointer !important;
+  transition:transform .18s ease, box-shadow .18s ease !important;
+}
+.mockup-side-card:first-child:hover,
+.mockup-challenge-top:hover{
+  transform:translateY(-2px) !important;
+  box-shadow:0 12px 28px rgba(0,104,217,.16) !important;
+}
+.challenge-click-note{
+  display:inline-block;
+  margin-top:14px;
+  background:#EAF5FF;
+  border:2px solid #BDE0FF;
+  color:#0068D9;
+  border-radius:999px;
+  padding:8px 12px;
+  font-size:14px;
+  font-weight:900;
+}
+.challenge-popup-overlay{
+  position:fixed;
+  inset:0;
+  z-index:10000;
+  background:rgba(35,33,75,.58);
+  backdrop-filter:blur(6px);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+}
+.challenge-popup-overlay.visible{
+  display:flex;
+}
+.challenge-popup-box{
+  width:min(560px,100%);
+  background:white;
+  border-radius:28px;
+  border:4px solid #BDE0FF;
+  box-shadow:0 20px 60px rgba(0,0,0,.24);
+  padding:24px;
+  animation:challengePop .22s ease-out;
+}
+@keyframes challengePop{
+  from{opacity:0;transform:scale(.92) translateY(12px);}
+  to{opacity:1;transform:scale(1) translateY(0);}
+}
+.challenge-popup-head{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  margin-bottom:12px;
+}
+.challenge-popup-owl{
+  width:76px;
+  height:76px;
+  border-radius:22px;
+  background:linear-gradient(135deg,#FFF7D6,#EAF5FF);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:52px;
+  flex-shrink:0;
+}
+.challenge-popup-title{
+  font-family:'Baloo 2',sans-serif;
+  font-size:30px;
+  font-weight:900;
+  color:#0068D9;
+  line-height:1;
+}
+.challenge-popup-sub{
+  font-weight:900;
+  color:#2D2B55;
+  font-size:16px;
+  margin-top:4px;
+}
+.challenge-popup-task{
+  background:#F0F8FF;
+  border:2px solid #BDE0FF;
+  border-radius:18px;
+  padding:14px;
+  font-size:18px;
+  line-height:1.4;
+  font-weight:900;
+  margin:14px 0;
+}
+.challenge-popup-progress{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin:12px 0 16px 0;
+}
+.challenge-popup-bar{
+  flex:1;
+  height:22px;
+  background:#E9E8F3;
+  border-radius:999px;
+  overflow:hidden;
+}
+.challenge-popup-fill{
+  height:100%;
+  width:42%;
+  background:linear-gradient(90deg,#0B84FF,#0068D9);
+  border-radius:999px;
+}
+.challenge-popup-count{
+  font-weight:900;
+  color:#0068D9;
+  min-width:96px;
+  text-align:right;
+}
+.challenge-popup-actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:12px;
+}
+.challenge-popup-btn{
+  border:none;
+  border-radius:16px;
+  padding:14px 12px;
+  font-family:inherit;
+  font-size:16px;
+  font-weight:900;
+  cursor:pointer;
+}
+.challenge-popup-btn.primary{
+  background:linear-gradient(135deg,#0B84FF,#0068D9);
+  color:white;
+}
+.challenge-popup-btn.purple{
+  background:linear-gradient(135deg,#7C3AED,#8E5BFF);
+  color:white;
+}
+.challenge-popup-btn.secondary{
+  grid-column:1 / -1;
+  background:#F4F3F8;
+  color:#2D2B55;
+}
+@media(max-width:560px){
+  .challenge-popup-box{padding:18px;border-radius:22px;}
+  .challenge-popup-title{font-size:25px;}
+  .challenge-popup-actions{grid-template-columns:1fr;}
+  .challenge-popup-btn.secondary{grid-column:auto;}
 }
 </style>
 
@@ -7340,7 +7507,8 @@ body.competence-mode #masterChallengeCard.master-challenge-card{
 </script>
 
 
-<script id="patch-plein-ecran-v117">
+
+<script id="patch-plein-ecran-v118">
 (function(){
   function isFullscreen(){
     return document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
@@ -7351,6 +7519,7 @@ body.competence-mode #masterChallengeCard.master-challenge-card{
     if(el.requestFullscreen) return el.requestFullscreen();
     if(el.webkitRequestFullscreen) return el.webkitRequestFullscreen();
     if(el.msRequestFullscreen) return el.msRequestFullscreen();
+    alert("Le plein écran n'est pas disponible sur ce navigateur.");
   }
 
   function exitFS(){
@@ -7359,59 +7528,153 @@ body.competence-mode #masterChallengeCard.master-challenge-card{
     if(document.msExitFullscreen) return document.msExitFullscreen();
   }
 
-  function updateFSButton(){
+  function updateBtn(){
     const btn = document.getElementById("fullscreenToggleBtn");
-    if(!btn) return;
     const active = !!isFullscreen();
     document.body.classList.toggle("fullscreen-active", active);
-    btn.querySelector(".fs-icon").textContent = active ? "↙️" : "⛶";
-    btn.querySelector(".fs-label").textContent = active ? "Quitter" : "Plein écran";
-    btn.title = active ? "Quitter le plein écran" : "Passer en plein écran";
+    if(btn){
+      btn.innerHTML = active ? "↙️" : "⛶";
+      btn.title = active ? "Quitter le plein écran" : "Plein écran";
+      btn.setAttribute("aria-label", btn.title);
+    }
   }
 
   window.toggleMaitreHibouFullscreen = function(){
-    try{
-      if(isFullscreen()){
-        exitFS();
-      }else{
-        requestFS();
-      }
-    }catch(e){
-      alert("Le plein écran n'est pas disponible sur ce navigateur.");
-    }
-    setTimeout(updateFSButton, 150);
+    if(isFullscreen()) exitFS();
+    else requestFS();
+    setTimeout(updateBtn, 150);
   };
 
-  function addFullscreenButton(){
-    const actions = document.querySelector(".header-actions");
-    if(!actions || document.getElementById("fullscreenToggleBtn")) return;
-
-    const btn = document.createElement("button");
-    btn.id = "fullscreenToggleBtn";
-    btn.className = "fullscreen-btn";
+  function addBtn(){
+    let btn = document.getElementById("fullscreenToggleBtn");
+    if(!btn){
+      btn = document.createElement("button");
+      btn.id = "fullscreenToggleBtn";
+      document.body.appendChild(btn);
+    }
+    btn.className = "fullscreen-floating-btn";
     btn.type = "button";
     btn.onclick = window.toggleMaitreHibouFullscreen;
-    btn.innerHTML = '<span class="fs-icon">⛶</span><span class="fs-label">Plein écran</span>';
+    btn.innerHTML = "⛶";
+    btn.title = "Plein écran";
+    btn.setAttribute("aria-label","Plein écran");
 
-    // On le place avant les petits boutons ronds pour rester visible.
-    const firstRound = actions.querySelector(".btn-round");
-    if(firstRound){
-      actions.insertBefore(btn, firstRound);
-    }else{
-      actions.appendChild(btn);
+    if(!document.getElementById("fullscreenHintV118")){
+      const hint = document.createElement("div");
+      hint.id = "fullscreenHintV118";
+      hint.className = "fullscreen-hint";
+      hint.textContent = "Plein écran";
+      document.body.appendChild(hint);
+      setTimeout(function(){ if(hint && hint.parentNode) hint.parentNode.removeChild(hint); }, 5200);
     }
-    updateFSButton();
+    updateBtn();
   }
 
-  document.addEventListener("fullscreenchange", updateFSButton);
-  document.addEventListener("webkitfullscreenchange", updateFSButton);
-  document.addEventListener("msfullscreenchange", updateFSButton);
+  document.addEventListener("fullscreenchange", updateBtn);
+  document.addEventListener("webkitfullscreenchange", updateBtn);
+  document.addEventListener("msfullscreenchange", updateBtn);
+
+  document.addEventListener("DOMContentLoaded", function(){ setTimeout(addBtn, 100); });
+  window.addEventListener("load", function(){ setTimeout(addBtn, 150); });
+})();
+</script>
+
+
+<script id="patch-defi-maitre-popup-v119">
+(function(){
+  function ensureChallengePopup(){
+    if(document.getElementById("challengePopupOverlay")) return;
+
+    const overlay = document.createElement("div");
+    overlay.id = "challengePopupOverlay";
+    overlay.className = "challenge-popup-overlay";
+    overlay.innerHTML = `
+      <div class="challenge-popup-box" role="dialog" aria-modal="true" aria-label="Défi du maître">
+        <div class="challenge-popup-head">
+          <div class="challenge-popup-owl">🦉</div>
+          <div>
+            <div class="challenge-popup-title">Défi du maître</div>
+            <div class="challenge-popup-sub">Un petit défi rapide pour gagner des points !</div>
+          </div>
+        </div>
+
+        <div class="challenge-popup-task">
+          🎯 Réponds à <b>5 questions</b> aujourd'hui en Maths et gagne <b>50 points</b>.
+        </div>
+
+        <div class="challenge-popup-progress">
+          <div class="challenge-popup-bar"><div class="challenge-popup-fill"></div></div>
+          <div class="challenge-popup-count">2 / 5</div>
+        </div>
+
+        <div class="challenge-popup-actions">
+          <button class="challenge-popup-btn primary" onclick="launchMasterChallengeFromPopup()">🚀 Commencer le défi</button>
+          <button class="challenge-popup-btn purple" onclick="openCompetenceFromChallengePopup()">🏅 Valider une compétence</button>
+          <button class="challenge-popup-btn secondary" onclick="closeMasterChallengePopup()">Fermer</button>
+        </div>
+      </div>
+    `;
+    overlay.addEventListener("click", function(e){
+      if(e.target === overlay) closeMasterChallengePopup();
+    });
+    document.body.appendChild(overlay);
+  }
+
+  window.openMasterChallengePopup = function(){
+    ensureChallengePopup();
+    const overlay = document.getElementById("challengePopupOverlay");
+    if(overlay) overlay.classList.add("visible");
+  };
+
+  window.closeMasterChallengePopup = function(){
+    const overlay = document.getElementById("challengePopupOverlay");
+    if(overlay) overlay.classList.remove("visible");
+  };
+
+  window.launchMasterChallengeFromPopup = function(){
+    closeMasterChallengePopup();
+    if(typeof startMasterChallenge === "function"){
+      startMasterChallenge();
+    }else if(typeof startLocalQuiz === "function"){
+      startLocalQuiz("maths","🎯 Défi du maître");
+    }else if(typeof sendQuick === "function"){
+      sendQuick("Défi du maître : propose-moi 5 questions de maths CE2");
+    }
+  };
+
+  window.openCompetenceFromChallengePopup = function(){
+    closeMasterChallengePopup();
+    if(typeof openCompetenceValidation === "function"){
+      openCompetenceValidation();
+    }
+  };
+
+  function makeChallengeClickable(){
+    ensureChallengePopup();
+
+    document.querySelectorAll(".mockup-challenge-top").forEach(function(el){
+      el.onclick = openMasterChallengePopup;
+      el.title = "Ouvrir le défi du maître";
+    });
+
+    const sideCards = document.querySelectorAll(".mockup-side-card");
+    if(sideCards[0]){
+      sideCards[0].onclick = openMasterChallengePopup;
+      sideCards[0].title = "Ouvrir le défi du maître";
+      if(!sideCards[0].querySelector(".challenge-click-note")){
+        const note = document.createElement("div");
+        note.className = "challenge-click-note";
+        note.textContent = "👆 Clique ici pour ouvrir le défi";
+        sideCards[0].appendChild(note);
+      }
+    }
+  }
 
   document.addEventListener("DOMContentLoaded", function(){
-    setTimeout(addFullscreenButton, 80);
+    setTimeout(makeChallengeClickable, 160);
   });
   window.addEventListener("load", function(){
-    setTimeout(addFullscreenButton, 120);
+    setTimeout(makeChallengeClickable, 220);
   });
 })();
 </script>

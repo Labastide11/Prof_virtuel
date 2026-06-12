@@ -2413,7 +2413,7 @@ function renderMasterChallengeCard() {
   const objectif = c.id === 'tables2a10'
     ? 'Objectif : réussir 20 calculs tirés au hasard dans les tables de 2 à 10.'
     : 'Réussis le défi proposé.';
-  card.innerHTML = `<h3>🏆 Défi du maître</h3><p>${escapeHTML(c.title)}</p><p>${objectif}</p><p>Récompense : +${c.reward} points et un badge spécial.</p><div class="challenge-actions"><button type="button" class="challenge-btn" onclick="startActiveChallenge()">${done ? '✅ Refaire le défi' : '🚀 Commencer le défi'}</button><button type="button" class="challenge-btn secondary" onclick="openProgressPopup()">📊 Voir mes progrès</button></div>`;
+  card.innerHTML = `<h3>🏆 Défi du maître</h3><p>${escapeHTML(c.title)}</p><p>${objectif}</p><p>Récompense : +${c.reward} points et un badge spécial.</p><div class="challenge-actions"><button type="button" class="challenge-btn" onclick="startActiveChallenge()">${done ? '✅ Refaire le défi' : '🚀 Commencer le défi'}</button></div>`;
 }
 
 function startActiveChallenge() {

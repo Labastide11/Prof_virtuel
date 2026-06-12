@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Maître Hibou V11.5 - Accueil maquette</title>
+<title>Maître Hibou V11.6 - Maquette tablette ajustée</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -1990,6 +1990,164 @@ header.mockup-header{
   .mockup-bottom-strip{display:none;}
   .message.prof .bubble{font-size:16px!important;padding:12px!important;}
   .avatar{width:50px!important;height:50px!important;font-size:34px!important;}
+}
+</style>
+
+
+<style id="patch-maquette-tablette-matieres-v116">
+/* V11.6 - Ajustement tablette : les 6 matières tiennent sur l'écran */
+
+/* On réduit les marges générales pour récupérer de la largeur */
+header.mockup-header,
+.subjects-bar,
+.mockup-main-shell,
+.mockup-bottom-strip{
+  width:calc(100% - 18px) !important;
+  max-width:1520px !important;
+}
+
+/* Bandeau matières plus compact */
+.subjects-bar{
+  grid-template-columns:repeat(6,minmax(0,1fr)) !important;
+  gap:7px !important;
+  padding:9px 8px 12px 8px !important;
+}
+
+/* Cartes matières moins hautes et moins larges */
+.subject-btn{
+  min-height:72px !important;
+  border-radius:14px !important;
+  padding:10px 8px !important;
+  gap:7px !important;
+  justify-content:center !important;
+}
+
+/* Icônes et textes réduits mais lisibles */
+.subject-btn .subject-icon{
+  font-size:31px !important;
+  width:auto !important;
+  min-width:30px !important;
+}
+.subject-btn .subject-label{
+  font-size:18px !important;
+  line-height:1.05 !important;
+  white-space:nowrap !important;
+}
+
+/* On réduit légèrement l'en-tête pour libérer de la place verticale */
+header.mockup-header{
+  padding:10px 16px 8px 16px !important;
+}
+.logo-icon{
+  width:66px !important;
+  height:66px !important;
+  font-size:46px !important;
+}
+.logo-text{
+  font-size:31px !important;
+}
+.logo-text::after{
+  font-size:15px !important;
+}
+.badge.score,
+.mockup-stat-card,
+.competence-header-btn{
+  min-height:66px !important;
+  padding:8px 10px !important;
+}
+.mockup-stat-card .mockup-stat-icon{
+  font-size:32px !important;
+}
+.mockup-stat-card .mockup-stat-text{
+  font-size:15px !important;
+}
+.competence-header-btn::before{
+  font-size:30px !important;
+}
+.competence-header-btn .competence-label::after{
+  font-size:15px !important;
+}
+.badge.score::before{
+  font-size:34px !important;
+}
+.badge.score #scoreVal{
+  font-size:22px !important;
+}
+
+/* Tablette paysage : priorité à une seule ligne de matières */
+@media (orientation:landscape) and (max-width:1280px){
+  header.mockup-header,
+  .subjects-bar,
+  .mockup-main-shell,
+  .mockup-bottom-strip{
+    width:calc(100% - 10px) !important;
+  }
+
+  .subjects-bar{
+    grid-template-columns:repeat(6,minmax(0,1fr)) !important;
+    gap:6px !important;
+    padding:7px 6px 9px 6px !important;
+  }
+
+  .subject-btn{
+    min-height:62px !important;
+    border-radius:13px !important;
+    padding:8px 5px !important;
+    gap:5px !important;
+  }
+
+  .subject-btn .subject-icon{
+    font-size:26px !important;
+    min-width:26px !important;
+  }
+
+  .subject-btn .subject-label{
+    font-size:16px !important;
+  }
+
+  /* Libellés longs raccourcis automatiquement en paysage */
+  .subject-btn[data-subject="geographie"] .subject-label{
+    font-size:0 !important;
+  }
+  .subject-btn[data-subject="geographie"] .subject-label::after{
+    content:"Géo";
+    font-size:16px;
+  }
+  .subject-btn[data-subject="francais"] .subject-label{
+    font-size:15px !important;
+  }
+  .subject-btn[data-subject="sciences"] .subject-label{
+    font-size:15px !important;
+  }
+  .subject-btn[data-subject="anglais"] .subject-label{
+    font-size:15px !important;
+  }
+}
+
+/* Tablette portrait : 3 x 2, plus confortable */
+@media (orientation:portrait) and (max-width:900px){
+  .subjects-bar{
+    grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+    gap:7px !important;
+    padding:8px !important;
+  }
+  .subject-btn{
+    min-height:64px !important;
+    padding:9px 8px !important;
+  }
+  .subject-btn .subject-icon{
+    font-size:27px !important;
+  }
+  .subject-btn .subject-label{
+    font-size:16px !important;
+  }
+}
+
+/* Très petits écrans : 2 colonnes */
+@media (max-width:560px){
+  .subjects-bar{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  }
 }
 </style>
 

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Maître Hibou V12.4 - Corrections affichage</title>
+<title>Maître Hibou V12.5 - Texte bas supprimé</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -2683,6 +2683,19 @@ body.fullscreen-active .mockup-right-panel .mockup-full-progress-btn{
 /* On garde une taille propre du libellé */
 .competence-header-btn .competence-label::after{
   content:"Valider une compétence" !important;
+}
+</style>
+
+
+<style id="patch-suppression-texte-demo-v125">
+/* V12.5 - Suppression de la ligne de démonstration en bas de page */
+.mockup-bottom-strip{
+  display:none !important;
+  visibility:hidden !important;
+  height:0 !important;
+  margin:0 !important;
+  padding:0 !important;
+  overflow:hidden !important;
 }
 </style>
 
@@ -7761,11 +7774,7 @@ body.competence-mode #masterChallengeCard.master-challenge-card{
     left.appendChild(chat);
     left.appendChild(input);
 
-    const bottom = document.createElement("div");
-    bottom.className = "mockup-bottom-strip";
-    bottom.innerHTML = '<span>🚀 Navigation plus rapide</span><span>🎯 Repérage immédiat</span><span class="green">✅ Parfait pour les élèves de CE2</span>';
-    shell.parentNode.insertBefore(bottom, shell.nextSibling);
-  }
+    }
 
   function updateMockupStats(){
     const points = textNum("scoreVal","0");

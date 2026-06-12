@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Maître Hibou V9.2 - Bandeau matières fixe tablette</title>
+<title>Maître Hibou V9.4 - Défi du Maître restauré</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -6318,6 +6318,64 @@ setTimeout(removeVieDeClassePanel, 1000);
 })();
 </script>
 
+
+
+<!-- PATCH V9.4 - Restauration du cadre Défi du Maître -->
+<style id="patch-v94-restore-defi-maitre">
+/* On conserve le cadre Défi du Maître dans la zone élève.
+   Seul le bouton doublon "Voir mes progrès" du cadre a été supprimé. */
+#masterChallengeCard.master-challenge-card{
+  display:block;
+}
+body.competence-mode #masterChallengeCard.master-challenge-card{
+  display:none !important;
+}
+</style>
+
+<script id="patch-v94-restore-defi-maitre">
+(function(){
+  if(window.__restoreDefiMaitreV94) return;
+  window.__restoreDefiMaitreV94 = true;
+
+  function restoreDefiMaitre(){
+    if(document.body.classList.contains('competence-mode')) return;
+    if(typeof window.renderMasterChallengeCard === 'function'){
+      window.renderMasterChallengeCard();
+    }
+    var card = document.getElementById('masterChallengeCard');
+    if(card && card.innerHTML.trim()){
+      card.style.display = 'block';
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    setTimeout(restoreDefiMaitre, 150);
+    setTimeout(restoreDefiMaitre, 500);
+  });
+  window.addEventListener('load', function(){
+    setTimeout(restoreDefiMaitre, 150);
+  });
+
+  var oldSelectSubject = window.selectSubject;
+  if(typeof oldSelectSubject === 'function'){
+    window.selectSubject = function(){
+      var result = oldSelectSubject.apply(this, arguments);
+      setTimeout(restoreDefiMaitre, 80);
+      return result;
+    };
+  }
+
+  var oldSavePrenom = window.savePrenom;
+  if(typeof oldSavePrenom === 'function'){
+    window.savePrenom = function(){
+      var result = oldSavePrenom.apply(this, arguments);
+      setTimeout(restoreDefiMaitre, 80);
+      return result;
+    };
+  }
+})();
+</script>
+
 </body> dans Maitre_Hibou_V8_3_Prenom_Non_Cliquable.html -->
 <style id="patch-anglais-harmonise-v84">
 .english-lesson{
@@ -6766,5 +6824,63 @@ body{
   }
 })();
 </script>
+
+
+<!-- PATCH V9.4 - Restauration du cadre Défi du Maître -->
+<style id="patch-v94-restore-defi-maitre">
+/* On conserve le cadre Défi du Maître dans la zone élève.
+   Seul le bouton doublon "Voir mes progrès" du cadre a été supprimé. */
+#masterChallengeCard.master-challenge-card{
+  display:block;
+}
+body.competence-mode #masterChallengeCard.master-challenge-card{
+  display:none !important;
+}
+</style>
+
+<script id="patch-v94-restore-defi-maitre">
+(function(){
+  if(window.__restoreDefiMaitreV94) return;
+  window.__restoreDefiMaitreV94 = true;
+
+  function restoreDefiMaitre(){
+    if(document.body.classList.contains('competence-mode')) return;
+    if(typeof window.renderMasterChallengeCard === 'function'){
+      window.renderMasterChallengeCard();
+    }
+    var card = document.getElementById('masterChallengeCard');
+    if(card && card.innerHTML.trim()){
+      card.style.display = 'block';
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    setTimeout(restoreDefiMaitre, 150);
+    setTimeout(restoreDefiMaitre, 500);
+  });
+  window.addEventListener('load', function(){
+    setTimeout(restoreDefiMaitre, 150);
+  });
+
+  var oldSelectSubject = window.selectSubject;
+  if(typeof oldSelectSubject === 'function'){
+    window.selectSubject = function(){
+      var result = oldSelectSubject.apply(this, arguments);
+      setTimeout(restoreDefiMaitre, 80);
+      return result;
+    };
+  }
+
+  var oldSavePrenom = window.savePrenom;
+  if(typeof oldSavePrenom === 'function'){
+    window.savePrenom = function(){
+      var result = oldSavePrenom.apply(this, arguments);
+      setTimeout(restoreDefiMaitre, 80);
+      return result;
+    };
+  }
+})();
+</script>
+
 </body>
 </html>

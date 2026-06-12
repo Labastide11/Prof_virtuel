@@ -1265,6 +1265,17 @@ body.competence-mode .master-challenge-card{
 }
 </style>
 
+
+<style id="patch-prenom-non-cliquable-v83">
+/* V8.3 - Ergonomie : le prénom identifie l'élève, il ne sert plus à changer d'élève */
+#eleveBadge{
+  cursor:default !important;
+}
+#eleveBadge:hover{
+  transform:none !important;
+}
+</style>
+
 </head>
 <body>
 
@@ -1274,7 +1285,7 @@ body.competence-mode .master-challenge-card{
     <div class="logo-text">Maître<br>Hibou</div>
   </div>
   <div class="header-actions">
-    <div class="badge" id="eleveBadge" style="display:none; cursor:pointer; background:#ECEBF3; color:var(--text);" onclick="changerEleve()" title="Changer d'élève">
+    <div class="badge" id="eleveBadge" style="display:none; background:#ECEBF3; color:var(--text);" title="Élève connecté">
       👤 <span id="eleveNom">Élève</span>
     </div>
     <div class="badge score" id="scoreBadge">🎯 <span id="scoreVal">0</span> pts</div>

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Maître Hibou V10.1 - Profil Hibou harmonisé</title>
+<title>Maître Hibou V10.2 - Bandeau matières colorées</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -1279,196 +1279,6 @@ body.competence-mode .master-challenge-card{
 
 
 
-<style id="patch-bandeau-matieres-v91">
-/* V9.1 - Bandeau des matières coloré, optimisé tablette portrait/paysage */
-.subject-btn[data-subject="maths"]{--mat:#1683F7;--mat2:#4DB0FF;--mat-soft:#E8F4FF;--mat-shadow:rgba(22,131,247,.28);}
-.subject-btn[data-subject="francais"]{--mat:#FF3B57;--mat2:#FF7A8C;--mat-soft:#FFECEF;--mat-shadow:rgba(255,59,87,.26);}
-.subject-btn[data-subject="sciences"]{--mat:#24A84A;--mat2:#63D878;--mat-soft:#E9F9EE;--mat-shadow:rgba(36,168,74,.25);}
-.subject-btn[data-subject="jeux"]{--mat:#00A6D6;--mat2:#43D5FF;--mat-soft:#E7FAFF;--mat-shadow:rgba(0,166,214,.23);}
-.subject-btn[data-subject="geographie"]{--mat:#FF8A00;--mat2:#FFB23F;--mat-soft:#FFF2E0;--mat-shadow:rgba(255,138,0,.26);}
-.subject-btn[data-subject="anglais"]{--mat:#9C4DFF;--mat2:#C084FF;--mat-soft:#F3E9FF;--mat-shadow:rgba(156,77,255,.25);}
-
-.subjects-bar{
-  display:grid !important;
-  grid-template-columns:repeat(6,minmax(0,1fr)) !important;
-  gap:10px !important;
-  padding:12px 14px !important;
-  max-width:1180px !important;
-  width:100% !important;
-  margin:0 auto !important;
-  overflow:visible !important;
-  white-space:normal !important;
-  scrollbar-width:none !important;
-  background:linear-gradient(180deg,#FFFFFF 0%,#F8F7FF 100%) !important;
-  border-bottom:2px solid #EAE8FF !important;
-  box-shadow:0 4px 18px rgba(108,99,255,.10) !important;
-}
-.subjects-bar::-webkit-scrollbar{display:none !important;}
-
-.subject-btn{
-  position:relative !important;
-  min-width:0 !important;
-  min-height:74px !important;
-  padding:9px 10px !important;
-  border-radius:20px !important;
-  border:3px solid rgba(255,255,255,.72) !important;
-  background:linear-gradient(135deg,var(--mat) 0%,var(--mat2) 100%) !important;
-  color:white !important;
-  box-shadow:0 7px 17px var(--mat-shadow), inset 0 1px 0 rgba(255,255,255,.35) !important;
-  display:flex !important;
-  flex-direction:column !important;
-  align-items:center !important;
-  justify-content:center !important;
-  gap:4px !important;
-  font-family:inherit !important;
-  font-size:13px !important;
-  font-weight:900 !important;
-  line-height:1.05 !important;
-  text-align:center !important;
-  text-shadow:0 1px 1px rgba(0,0,0,.18) !important;
-  transition:transform .18s ease, box-shadow .18s ease, filter .18s ease !important;
-  overflow:hidden !important;
-}
-.subject-btn::after{
-  content:"";
-  position:absolute;
-  left:10px;right:10px;bottom:7px;height:4px;
-  border-radius:99px;
-  background:rgba(255,255,255,.42);
-  opacity:.55;
-}
-.subject-btn .subject-icon{display:block !important;font-size:27px !important;line-height:1 !important;filter:drop-shadow(0 2px 2px rgba(0,0,0,.22));}
-.subject-btn .subject-label{display:block !important;font-size:13px !important;font-weight:900 !important;letter-spacing:.01em;}
-.subject-btn:hover{transform:translateY(-2px) !important;filter:saturate(1.06) brightness(1.03);box-shadow:0 10px 24px var(--mat-shadow), inset 0 1px 0 rgba(255,255,255,.40) !important;}
-.subject-btn.active{
-  transform:translateY(-3px) scale(1.035) !important;
-  border-color:#FFFFFF !important;
-  box-shadow:0 12px 28px var(--mat-shadow),0 0 0 4px var(--mat-soft),inset 0 1px 0 rgba(255,255,255,.45) !important;
-}
-.subject-btn.active::before{
-  content:"✓";position:absolute;top:6px;right:7px;width:18px;height:18px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;background:white;color:var(--mat);
-  font-size:12px;font-weight:900;text-shadow:none;box-shadow:0 2px 6px rgba(0,0,0,.16);
-}
-.subject-btn.active::after{opacity:1;background:#FFFFFF;}
-
-.competence-header-btn{
-  background:linear-gradient(135deg,#7C3AED 0%,#A78BFA 100%) !important;
-  color:white !important;
-  border:3px solid rgba(255,255,255,.75) !important;
-  padding:9px 13px !important;
-  border-radius:18px !important;
-  font-family:inherit !important;
-  font-weight:900 !important;
-  font-size:14px !important;
-  cursor:pointer;
-  display:flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-  gap:7px !important;
-  box-shadow:0 7px 17px rgba(124,58,237,.24), inset 0 1px 0 rgba(255,255,255,.35) !important;
-  white-space:nowrap !important;
-}
-.competence-header-btn:hover{transform:translateY(-1px);box-shadow:0 9px 22px rgba(124,58,237,.28), inset 0 1px 0 rgba(255,255,255,.40) !important;}
-
-.progress-mini-btn{
-  border:3px solid #FFE08A !important;
-  background:linear-gradient(135deg,#FFF9E7 0%,#FFF1B8 100%) !important;
-  color:#B77900 !important;
-  box-shadow:0 7px 18px rgba(255,184,0,.18) !important;
-}
-
-body.theme-maths #quickQuestions{--activeMat:#1683F7;--activeSoft:#E8F4FF;}
-body.theme-francais #quickQuestions{--activeMat:#FF3B57;--activeSoft:#FFECEF;}
-body.theme-sciences #quickQuestions{--activeMat:#24A84A;--activeSoft:#E9F9EE;}
-body.theme-jeux #quickQuestions{--activeMat:#00A6D6;--activeSoft:#E7FAFF;}
-body.theme-geographie #quickQuestions{--activeMat:#FF8A00;--activeSoft:#FFF2E0;}
-body.theme-anglais #quickQuestions{--activeMat:#9C4DFF;--activeSoft:#F3E9FF;}
-.quick-questions{border:2px solid var(--activeMat,#EAE8FF) !important;background:linear-gradient(180deg,#FFFFFF 0%,var(--activeSoft,#FFFFFF) 100%) !important;}
-.quick-btn{background:#FFFFFF !important;color:var(--activeMat,var(--primary)) !important;border:2px solid var(--activeSoft,#EAE8FF) !important;font-weight:900 !important;}
-.quick-btn:hover{background:var(--activeMat,var(--primary)) !important;color:white !important;border-color:var(--activeMat,var(--primary)) !important;}
-
-@media (orientation:landscape) and (max-width:1180px){
-  .subjects-bar{grid-template-columns:repeat(6,minmax(0,1fr)) !important;gap:8px !important;padding:9px 10px !important;}
-  .subject-btn{min-height:64px !important;border-radius:17px !important;padding:7px 8px !important;}
-  .subject-btn .subject-icon{font-size:24px !important;}
-  .subject-btn .subject-label{font-size:12px !important;}
-}
-@media (orientation:portrait) and (max-width:900px){
-  .subjects-bar{grid-template-columns:repeat(3,minmax(0,1fr)) !important;gap:8px !important;padding:10px 12px !important;}
-  .subject-btn{min-height:62px !important;border-radius:17px !important;padding:7px 8px !important;}
-  .subject-btn .subject-icon{font-size:24px !important;}
-  .subject-btn .subject-label{font-size:12px !important;}
-}
-@media (max-width:520px){
-  .subjects-bar{grid-template-columns:repeat(2,minmax(0,1fr)) !important;gap:7px !important;padding:8px 10px !important;}
-  .subject-btn{min-height:58px !important;}
-  .subject-btn .subject-icon{font-size:22px !important;}
-}
-@media (max-width:768px){
-  .header-actions{gap:6px !important;}
-  .badge{font-size:12px !important;padding:5px 8px !important;}
-  .competence-header-btn{padding:7px 10px !important;font-size:12px !important;border-radius:16px !important;}
-}
-@media (max-width:560px){
-  .competence-header-btn .competence-label{display:none !important;}
-  .competence-header-btn{width:36px !important;height:36px !important;padding:0 !important;border-radius:50% !important;font-size:17px !important;}
-}
-</style>
-
-
-
-<style id="patch-bandeau-sticky-tablette-v92">
-/* V9.2 - Ergonomie tablette : matières et sous-matières toujours visibles */
-:root{
-  --hibou-header-h: 64px;
-  --hibou-subjects-h: 96px;
-}
-header{
-  position:sticky !important;
-  top:0 !important;
-  z-index:1000 !important;
-}
-.subjects-bar{
-  position:sticky !important;
-  top:var(--hibou-header-h) !important;
-  z-index:999 !important;
-}
-.quick-questions{
-  position:sticky !important;
-  top:calc(var(--hibou-header-h) + var(--hibou-subjects-h)) !important;
-  z-index:998 !important;
-  max-height:22vh;
-  overflow-y:auto !important;
-  -webkit-overflow-scrolling:touch;
-}
-.quick-questions::before{
-  position:sticky;
-  top:0;
-  z-index:1;
-  background:linear-gradient(180deg,#FFFFFF 0%,var(--activeSoft,#FFFFFF) 100%);
-  padding:2px 0 4px 0;
-}
-body.competence-mode #quickQuestions{
-  display:none !important;
-}
-@media (orientation:portrait) and (max-width:900px){
-  .quick-questions{max-height:24vh;}
-}
-@media (orientation:landscape) and (max-height:760px){
-  .quick-questions{
-    max-height:18vh;
-    padding-top:8px !important;
-    padding-bottom:8px !important;
-  }
-  .quick-questions::before{font-size:11px;}
-}
-@media (max-width:520px){
-  .quick-questions{max-height:26vh;}
-}
-</style>
-
-
 <style id="patch-profil-hibou-v100">
 .hibou-player-card{
 display:flex;align-items:center;gap:12px;
@@ -1655,6 +1465,34 @@ box-shadow:0 6px 18px rgba(108,99,255,.12);
 }
 </style>
 
+<style id="patch-bandeau-matieres-v101">
+/* V10.2 - Bandeau matières colorées : lisible sur tablette portrait et paysage */
+.subject-btn[data-subject="maths"]{--mat:#1683F7;--mat2:#4DB0FF;--mat-soft:#E8F4FF;--mat-shadow:rgba(22,131,247,.28);} 
+.subject-btn[data-subject="francais"]{--mat:#FF3B57;--mat2:#FF7A8C;--mat-soft:#FFECEF;--mat-shadow:rgba(255,59,87,.26);} 
+.subject-btn[data-subject="sciences"]{--mat:#24A84A;--mat2:#63D878;--mat-soft:#E9F9EE;--mat-shadow:rgba(36,168,74,.25);} 
+.subject-btn[data-subject="jeux"]{--mat:#00A6D6;--mat2:#43D5FF;--mat-soft:#E7FAFF;--mat-shadow:rgba(0,166,214,.23);} 
+.subject-btn[data-subject="geographie"]{--mat:#FF8A00;--mat2:#FFB23F;--mat-soft:#FFF2E0;--mat-shadow:rgba(255,138,0,.26);} 
+.subject-btn[data-subject="anglais"]{--mat:#9C4DFF;--mat2:#C084FF;--mat-soft:#F3E9FF;--mat-shadow:rgba(156,77,255,.25);} 
+.subjects-bar{display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:10px!important;padding:12px 14px!important;width:100%!important;max-width:1180px!important;margin:0 auto!important;overflow:visible!important;white-space:normal!important;background:linear-gradient(180deg,#FFFFFF 0%,#F8F7FF 100%)!important;border-bottom:2px solid #EAE8FF!important;box-shadow:0 4px 18px rgba(108,99,255,.10)!important;}
+.subject-btn{position:relative!important;min-width:0!important;min-height:74px!important;padding:9px 10px!important;border-radius:20px!important;border:3px solid rgba(255,255,255,.75)!important;background:linear-gradient(135deg,var(--mat) 0%,var(--mat2) 100%)!important;color:white!important;box-shadow:0 7px 17px var(--mat-shadow),inset 0 1px 0 rgba(255,255,255,.35)!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:4px!important;font-family:inherit!important;font-weight:900!important;line-height:1.05!important;text-align:center!important;text-shadow:0 1px 1px rgba(0,0,0,.18)!important;transition:transform .18s ease,box-shadow .18s ease,filter .18s ease!important;overflow:hidden!important;}
+.subject-btn::after{content:"";position:absolute;left:10px;right:10px;bottom:7px;height:4px;border-radius:99px;background:rgba(255,255,255,.42);opacity:.55;}
+.subject-btn .subject-icon{display:block!important;font-size:27px!important;line-height:1!important;filter:drop-shadow(0 2px 2px rgba(0,0,0,.22));}
+.subject-btn .subject-label{display:block!important;font-size:13px!important;font-weight:900!important;}
+.subject-btn:hover{transform:translateY(-2px)!important;filter:saturate(1.06) brightness(1.03);box-shadow:0 10px 24px var(--mat-shadow),inset 0 1px 0 rgba(255,255,255,.40)!important;}
+.subject-btn.active{transform:translateY(-3px) scale(1.035)!important;border-color:#FFFFFF!important;box-shadow:0 12px 28px var(--mat-shadow),0 0 0 4px var(--mat-soft),inset 0 1px 0 rgba(255,255,255,.45)!important;}
+.subject-btn.active::before{content:"✓";position:absolute;top:6px;right:7px;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:white;color:var(--mat);font-size:12px;font-weight:900;text-shadow:none;box-shadow:0 2px 6px rgba(0,0,0,.16);}
+.subject-btn.active::after{opacity:1;background:white;}
+.competence-header-btn{background:linear-gradient(135deg,#7C3AED 0%,#A78BFA 100%)!important;color:white!important;border:3px solid rgba(255,255,255,.75)!important;padding:9px 13px!important;border-radius:18px!important;font-family:inherit!important;font-weight:900!important;font-size:14px!important;cursor:pointer;display:flex!important;align-items:center!important;justify-content:center!important;gap:7px!important;box-shadow:0 7px 17px rgba(124,58,237,.24),inset 0 1px 0 rgba(255,255,255,.35)!important;white-space:nowrap!important;}
+.progress-mini-btn{border:3px solid #FFE08A!important;background:linear-gradient(135deg,#FFF9E7 0%,#FFF1B8 100%)!important;color:#B77900!important;box-shadow:0 7px 18px rgba(255,184,0,.18)!important;}
+body.theme-maths #quickQuestions{--activeMat:#1683F7;--activeSoft:#E8F4FF;}body.theme-francais #quickQuestions{--activeMat:#FF3B57;--activeSoft:#FFECEF;}body.theme-sciences #quickQuestions{--activeMat:#24A84A;--activeSoft:#E9F9EE;}body.theme-jeux #quickQuestions{--activeMat:#00A6D6;--activeSoft:#E7FAFF;}body.theme-geographie #quickQuestions{--activeMat:#FF8A00;--activeSoft:#FFF2E0;}body.theme-anglais #quickQuestions{--activeMat:#9C4DFF;--activeSoft:#F3E9FF;}
+.quick-questions{border:2px solid var(--activeMat,#EAE8FF)!important;background:linear-gradient(180deg,#FFFFFF 0%,var(--activeSoft,#FFFFFF) 100%)!important;}
+.quick-btn{background:#FFFFFF!important;color:var(--activeMat,var(--primary))!important;border:2px solid var(--activeSoft,#EAE8FF)!important;font-weight:900!important;}.quick-btn:hover{background:var(--activeMat,var(--primary))!important;color:white!important;border-color:var(--activeMat,var(--primary))!important;}
+@media (orientation:landscape) and (max-width:1180px){.subjects-bar{grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:8px!important;padding:9px 10px!important;}.subject-btn{min-height:64px!important;border-radius:17px!important;padding:7px 8px!important;}.subject-btn .subject-icon{font-size:24px!important;}.subject-btn .subject-label{font-size:12px!important;}}
+@media (orientation:portrait) and (max-width:900px){.subjects-bar{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important;padding:10px 12px!important;}.subject-btn{min-height:62px!important;border-radius:17px!important;padding:7px 8px!important;}.subject-btn .subject-icon{font-size:24px!important;}.subject-btn .subject-label{font-size:12px!important;}}
+@media (max-width:520px){.subjects-bar{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px!important;padding:8px 10px!important;}.subject-btn{min-height:58px!important;}.subject-btn .subject-icon{font-size:22px!important;}}
+@media (max-width:768px){.header-actions{gap:6px!important;}.badge{font-size:12px!important;padding:5px 8px!important;}.competence-header-btn{padding:7px 10px!important;font-size:12px!important;border-radius:16px!important;}}
+@media (max-width:560px){.competence-header-btn .competence-label{display:none!important;}.competence-header-btn{width:36px!important;height:36px!important;padding:0!important;border-radius:50%!important;font-size:17px!important;}}
+</style>
 </head>
 <body>
 
@@ -1721,13 +1559,12 @@ box-shadow:0 6px 18px rgba(108,99,255,.12);
 
 <div class="subjects-bar">
   <button class="subject-btn active" onclick="selectSubject(this, 'maths')" data-subject="maths"><span class="subject-icon">🔢</span><span class="subject-label">Maths</span></button>
-  <button class="subject-btn" onclick="selectSubject(this, 'francais')" data-subject="francais"><span class="subject-icon">✍️</span><span class="subject-label">Français</span></button>
-  <button class="subject-btn" onclick="selectSubject(this, 'sciences')" data-subject="sciences"><span class="subject-icon">💡</span><span class="subject-label">Sciences</span></button>
+  <button class="subject-btn" onclick="selectSubject(this, 'francais')" data-subject="francais"><span class="subject-icon">📖</span><span class="subject-label">Français</span></button>
+  <button class="subject-btn" onclick="selectSubject(this, 'sciences')" data-subject="sciences"><span class="subject-icon">🧪</span><span class="subject-label">Sciences</span></button>
   <button class="subject-btn" onclick="selectSubject(this, 'jeux')" data-subject="jeux"><span class="subject-icon">🌐</span><span class="subject-label">Jeux</span></button>
   <button class="subject-btn" onclick="selectSubject(this, 'geographie')" data-subject="geographie"><span class="subject-icon">🌍</span><span class="subject-label">Géo</span></button>
   <button class="subject-btn" onclick="selectSubject(this, 'anglais')" data-subject="anglais"><span class="subject-icon">🇬🇧</span><span class="subject-label">Anglais</span></button>
 </div>
-
 <div class="quick-questions" id="quickQuestions" style="display:none;"></div>
 
 <div class="master-challenge-card" id="masterChallengeCard"></div>
@@ -6465,86 +6302,6 @@ setTimeout(removeVieDeClassePanel, 1000);
 
 <!-- PATCH V8.4 - Anglais harmonisé : titre + mini-leçon + quiz
      À coller juste AVANT 
-<script id="patch-bandeau-matieres-v91">
-(function(){
-  const themes = ["maths","francais","sciences","jeux","geographie","anglais"];
-  function applySubjectTheme(subject){
-    document.body.classList.remove(...themes.map(t => "theme-" + t));
-    if(themes.includes(subject)){ document.body.classList.add("theme-" + subject); }
-  }
-  const oldSelectSubject = window.selectSubject;
-  if(typeof oldSelectSubject === "function" && !window.__bandeauMatieresV91){
-    window.__bandeauMatieresV91 = true;
-    window.selectSubject = function(btn, subject){
-      applySubjectTheme(subject);
-      return oldSelectSubject.apply(this, arguments);
-    };
-  }
-  document.addEventListener("DOMContentLoaded", function(){
-    const active = document.querySelector(".subject-btn.active");
-    applySubjectTheme(active ? active.getAttribute("data-subject") : "maths");
-  });
-})();
-</script>
-
-
-
-<script id="patch-bandeau-sticky-tablette-v92">
-(function(){
-  if(window.__hibouStickyBandeauV92) return;
-  window.__hibouStickyBandeauV92 = true;
-
-  function px(n){ return Math.ceil(n) + "px"; }
-
-  function updateStickyOffsets(){
-    const header = document.querySelector("header");
-    const subjects = document.querySelector(".subjects-bar");
-    const root = document.documentElement;
-    if(header){ root.style.setProperty("--hibou-header-h", px(header.getBoundingClientRect().height)); }
-    if(subjects){ root.style.setProperty("--hibou-subjects-h", px(subjects.getBoundingClientRect().height)); }
-  }
-
-  function keepNavigationVisible(){
-    updateStickyOffsets();
-    const quick = document.getElementById("quickQuestions");
-    if(quick && quick.style.display !== "none"){
-      quick.classList.remove("submenu-flash");
-      void quick.offsetWidth;
-      quick.classList.add("submenu-flash");
-    }
-  }
-
-  document.addEventListener("DOMContentLoaded", function(){
-    updateStickyOffsets();
-    setTimeout(updateStickyOffsets, 250);
-  });
-  window.addEventListener("load", updateStickyOffsets);
-  window.addEventListener("resize", function(){ setTimeout(updateStickyOffsets, 80); });
-  window.addEventListener("orientationchange", function(){ setTimeout(updateStickyOffsets, 250); });
-
-  const oldSelectSubject = window.selectSubject;
-  if(typeof oldSelectSubject === "function"){
-    window.selectSubject = function(btn, subject){
-      const result = oldSelectSubject.apply(this, arguments);
-      setTimeout(keepNavigationVisible, 0);
-      setTimeout(keepNavigationVisible, 180);
-      return result;
-    };
-  }
-
-  const oldUpdateQuickQuestions = window.updateQuickQuestions;
-  if(typeof oldUpdateQuickQuestions === "function"){
-    window.updateQuickQuestions = function(subject){
-      const result = oldUpdateQuickQuestions.apply(this, arguments);
-      setTimeout(updateStickyOffsets, 0);
-      return result;
-    };
-  }
-})();
-</script>
-
-
-
 <!-- PATCH V9.4 - Restauration du cadre Défi du Maître -->
 <style id="patch-v94-restore-defi-maitre">
 /* On conserve le cadre Défi du Maître dans la zone élève.
@@ -6723,6 +6480,15 @@ body.competence-mode #masterChallengeCard.master-challenge-card{
 })();
 </script>
 
+<script id="patch-bandeau-matieres-v101">
+(function(){
+  const themes=["maths","francais","sciences","jeux","geographie","anglais"];
+  function applySubjectTheme(subject){document.body.classList.remove(...themes.map(t=>"theme-"+t));if(themes.includes(subject)){document.body.classList.add("theme-"+subject);}}
+  const oldSelectSubject=window.selectSubject;
+  if(typeof oldSelectSubject==="function"&&!window.__bandeauMatieresV101){window.__bandeauMatieresV101=true;window.selectSubject=function(btn,subject){applySubjectTheme(subject);return oldSelectSubject.apply(this,arguments);};}
+  document.addEventListener("DOMContentLoaded",function(){const active=document.querySelector(".subject-btn.active");applySubjectTheme(active?active.getAttribute("data-subject"):"maths");});
+})();
+</script>
 </body> dans Maitre_Hibou_V8_3_Prenom_Non_Cliquable.html -->
 <style id="patch-anglais-harmonise-v84">
 .english-lesson{
@@ -6916,86 +6682,6 @@ body.competence-mode #masterChallengeCard.master-challenge-card{
   window.addEventListener('load', function(){ setTimeout(patchEnglishButtons, 120); });
 })();
 </script>
-
-
-<script id="patch-bandeau-matieres-v91">
-(function(){
-  const themes = ["maths","francais","sciences","jeux","geographie","anglais"];
-  function applySubjectTheme(subject){
-    document.body.classList.remove(...themes.map(t => "theme-" + t));
-    if(themes.includes(subject)){ document.body.classList.add("theme-" + subject); }
-  }
-  const oldSelectSubject = window.selectSubject;
-  if(typeof oldSelectSubject === "function" && !window.__bandeauMatieresV91){
-    window.__bandeauMatieresV91 = true;
-    window.selectSubject = function(btn, subject){
-      applySubjectTheme(subject);
-      return oldSelectSubject.apply(this, arguments);
-    };
-  }
-  document.addEventListener("DOMContentLoaded", function(){
-    const active = document.querySelector(".subject-btn.active");
-    applySubjectTheme(active ? active.getAttribute("data-subject") : "maths");
-  });
-})();
-</script>
-
-
-
-<script id="patch-bandeau-sticky-tablette-v92">
-(function(){
-  if(window.__hibouStickyBandeauV92) return;
-  window.__hibouStickyBandeauV92 = true;
-
-  function px(n){ return Math.ceil(n) + "px"; }
-
-  function updateStickyOffsets(){
-    const header = document.querySelector("header");
-    const subjects = document.querySelector(".subjects-bar");
-    const root = document.documentElement;
-    if(header){ root.style.setProperty("--hibou-header-h", px(header.getBoundingClientRect().height)); }
-    if(subjects){ root.style.setProperty("--hibou-subjects-h", px(subjects.getBoundingClientRect().height)); }
-  }
-
-  function keepNavigationVisible(){
-    updateStickyOffsets();
-    const quick = document.getElementById("quickQuestions");
-    if(quick && quick.style.display !== "none"){
-      quick.classList.remove("submenu-flash");
-      void quick.offsetWidth;
-      quick.classList.add("submenu-flash");
-    }
-  }
-
-  document.addEventListener("DOMContentLoaded", function(){
-    updateStickyOffsets();
-    setTimeout(updateStickyOffsets, 250);
-  });
-  window.addEventListener("load", updateStickyOffsets);
-  window.addEventListener("resize", function(){ setTimeout(updateStickyOffsets, 80); });
-  window.addEventListener("orientationchange", function(){ setTimeout(updateStickyOffsets, 250); });
-
-  const oldSelectSubject = window.selectSubject;
-  if(typeof oldSelectSubject === "function"){
-    window.selectSubject = function(btn, subject){
-      const result = oldSelectSubject.apply(this, arguments);
-      setTimeout(keepNavigationVisible, 0);
-      setTimeout(keepNavigationVisible, 180);
-      return result;
-    };
-  }
-
-  const oldUpdateQuickQuestions = window.updateQuickQuestions;
-  if(typeof oldUpdateQuickQuestions === "function"){
-    window.updateQuickQuestions = function(subject){
-      const result = oldUpdateQuickQuestions.apply(this, arguments);
-      setTimeout(updateStickyOffsets, 0);
-      return result;
-    };
-  }
-})();
-</script>
-
 
 
 <style id="patch-v93-navigation-fixe-zone-scrollable">
@@ -7351,5 +7037,14 @@ body.competence-mode #masterChallengeCard.master-challenge-card{
 })();
 </script>
 
+<script id="patch-bandeau-matieres-v101">
+(function(){
+  const themes=["maths","francais","sciences","jeux","geographie","anglais"];
+  function applySubjectTheme(subject){document.body.classList.remove(...themes.map(t=>"theme-"+t));if(themes.includes(subject)){document.body.classList.add("theme-"+subject);}}
+  const oldSelectSubject=window.selectSubject;
+  if(typeof oldSelectSubject==="function"&&!window.__bandeauMatieresV101){window.__bandeauMatieresV101=true;window.selectSubject=function(btn,subject){applySubjectTheme(subject);return oldSelectSubject.apply(this,arguments);};}
+  document.addEventListener("DOMContentLoaded",function(){const active=document.querySelector(".subject-btn.active");applySubjectTheme(active?active.getAttribute("data-subject"):"maths");});
+})();
+</script>
 </body>
 </html>

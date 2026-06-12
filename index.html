@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Maître Hibou V11.9 - Défi du maître cliquable</title>
+<title>Maître Hibou V12.0 - Défi popup autonome</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -2238,8 +2238,9 @@ body.fullscreen-active .mockup-bottom-strip{
 </style>
 
 
-<style id="patch-defi-maitre-popup-v119">
-/* V11.9 - Défi du maître cliquable + popup */
+
+<style id="patch-defi-maitre-popup-v120">
+/* V12.0 - Défi du maître entièrement joué dans la popup */
 .mockup-side-card:first-child,
 .mockup-challenge-top{
   cursor:pointer !important;
@@ -2272,11 +2273,9 @@ body.fullscreen-active .mockup-bottom-strip{
   justify-content:center;
   padding:18px;
 }
-.challenge-popup-overlay.visible{
-  display:flex;
-}
+.challenge-popup-overlay.visible{display:flex;}
 .challenge-popup-box{
-  width:min(560px,100%);
+  width:min(620px,100%);
   background:white;
   border-radius:28px;
   border:4px solid #BDE0FF;
@@ -2323,8 +2322,8 @@ body.fullscreen-active .mockup-bottom-strip{
   border:2px solid #BDE0FF;
   border-radius:18px;
   padding:14px;
-  font-size:18px;
-  line-height:1.4;
+  font-size:17px;
+  line-height:1.35;
   font-weight:900;
   margin:14px 0;
 }
@@ -2343,9 +2342,10 @@ body.fullscreen-active .mockup-bottom-strip{
 }
 .challenge-popup-fill{
   height:100%;
-  width:42%;
+  width:0%;
   background:linear-gradient(90deg,#0B84FF,#0068D9);
   border-radius:999px;
+  transition:width .25s ease;
 }
 .challenge-popup-count{
   font-weight:900;
@@ -2353,6 +2353,71 @@ body.fullscreen-active .mockup-bottom-strip{
   min-width:96px;
   text-align:right;
 }
+.challenge-game-zone{
+  margin-top:12px;
+}
+.challenge-question-card{
+  background:#FFFDF6;
+  border:2px solid #FFE08A;
+  border-radius:18px;
+  padding:16px;
+}
+.challenge-question-number{
+  font-weight:900;
+  color:#0068D9;
+  font-size:14px;
+  margin-bottom:8px;
+  text-transform:uppercase;
+}
+.challenge-question-text{
+  font-family:'Baloo 2',sans-serif;
+  color:#2D2B55;
+  font-size:28px;
+  font-weight:900;
+  text-align:center;
+  margin:6px 0 14px 0;
+}
+.challenge-options{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+.challenge-option{
+  border:2px solid #ECEBF3;
+  background:#fff;
+  color:#2D2B55;
+  border-radius:16px;
+  padding:14px;
+  font-family:inherit;
+  font-size:18px;
+  font-weight:900;
+  cursor:pointer;
+  transition:all .15s ease;
+}
+.challenge-option:not(:disabled):hover{
+  border-color:#0B84FF;
+  background:#EAF5FF;
+  transform:translateY(-1px);
+}
+.challenge-option.correct{
+  background:#E6F7E9 !important;
+  border-color:#6BCB77 !important;
+  color:#1E5627 !important;
+}
+.challenge-option.wrong{
+  background:#FFEAEA !important;
+  border-color:#FF6B6B !important;
+  color:#7A2222 !important;
+}
+.challenge-feedback{
+  min-height:28px;
+  margin-top:12px;
+  text-align:center;
+  font-size:17px;
+  font-weight:900;
+}
+.challenge-feedback.ok{color:#1E5627;}
+.challenge-feedback.bad{color:#7A2222;}
 .challenge-popup-actions{
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -2377,15 +2442,49 @@ body.fullscreen-active .mockup-bottom-strip{
   color:white;
 }
 .challenge-popup-btn.secondary{
-  grid-column:1 / -1;
   background:#F4F3F8;
   color:#2D2B55;
+}
+.challenge-popup-btn.full{
+  grid-column:1 / -1;
+}
+.challenge-result-box{
+  background:linear-gradient(135deg,#FFF7D6,#EAF5FF);
+  border:3px solid #FFD93D;
+  border-radius:22px;
+  padding:18px;
+  text-align:center;
+}
+.challenge-result-title{
+  font-family:'Baloo 2',sans-serif;
+  font-size:32px;
+  color:#0068D9;
+  font-weight:900;
+  margin-bottom:6px;
+}
+.challenge-result-score{
+  font-size:22px;
+  font-weight:900;
+  color:#2D2B55;
+  margin:10px 0;
+}
+.challenge-reward{
+  display:inline-block;
+  margin-top:8px;
+  background:#FFE671;
+  color:#7A5C00;
+  border-radius:999px;
+  padding:10px 16px;
+  font-size:18px;
+  font-weight:900;
 }
 @media(max-width:560px){
   .challenge-popup-box{padding:18px;border-radius:22px;}
   .challenge-popup-title{font-size:25px;}
+  .challenge-question-text{font-size:23px;}
+  .challenge-options{grid-template-columns:1fr;}
   .challenge-popup-actions{grid-template-columns:1fr;}
-  .challenge-popup-btn.secondary{grid-column:auto;}
+  .challenge-popup-btn.full{grid-column:auto;}
 }
 </style>
 
@@ -7580,8 +7679,19 @@ body.competence-mode #masterChallengeCard.master-challenge-card{
 </script>
 
 
-<script id="patch-defi-maitre-popup-v119">
+
+<script id="patch-defi-maitre-popup-v120">
 (function(){
+  const challengeQuestions = [
+    {q:"7 × 5 = ?", options:["30","35","40","45"], answer:"35", skill:"Tables de multiplication"},
+    {q:"48 + 27 = ?", options:["65","75","85","95"], answer:"75", skill:"Calcul mental"},
+    {q:"100 - 36 = ?", options:["54","64","74","84"], answer:"64", skill:"Calcul mental"},
+    {q:"6 × 8 = ?", options:["42","48","54","56"], answer:"48", skill:"Tables de multiplication"},
+    {q:"25 + 25 + 25 = ?", options:["50","65","75","100"], answer:"75", skill:"Addition"}
+  ];
+
+  let challengeState = { index:0, score:0, locked:false };
+
   function ensureChallengePopup(){
     if(document.getElementById("challengePopupOverlay")) return;
 
@@ -7594,24 +7704,20 @@ body.competence-mode #masterChallengeCard.master-challenge-card{
           <div class="challenge-popup-owl">🦉</div>
           <div>
             <div class="challenge-popup-title">Défi du maître</div>
-            <div class="challenge-popup-sub">Un petit défi rapide pour gagner des points !</div>
+            <div class="challenge-popup-sub">Réponds à 5 questions dans cette fenêtre.</div>
           </div>
         </div>
 
-        <div class="challenge-popup-task">
-          🎯 Réponds à <b>5 questions</b> aujourd'hui en Maths et gagne <b>50 points</b>.
+        <div class="challenge-popup-task" id="challengeTaskText">
+          🎯 Mission du jour : réussir le plus de questions possible en Maths. Récompense : jusqu'à <b>50 points</b>.
         </div>
 
         <div class="challenge-popup-progress">
-          <div class="challenge-popup-bar"><div class="challenge-popup-fill"></div></div>
-          <div class="challenge-popup-count">2 / 5</div>
+          <div class="challenge-popup-bar"><div class="challenge-popup-fill" id="challengePopupFill"></div></div>
+          <div class="challenge-popup-count" id="challengePopupCount">0 / 5</div>
         </div>
 
-        <div class="challenge-popup-actions">
-          <button class="challenge-popup-btn primary" onclick="launchMasterChallengeFromPopup()">🚀 Commencer le défi</button>
-          <button class="challenge-popup-btn purple" onclick="openCompetenceFromChallengePopup()">🏅 Valider une compétence</button>
-          <button class="challenge-popup-btn secondary" onclick="closeMasterChallengePopup()">Fermer</button>
-        </div>
+        <div class="challenge-game-zone" id="challengeGameZone"></div>
       </div>
     `;
     overlay.addEventListener("click", function(e){
@@ -7620,10 +7726,112 @@ body.competence-mode #masterChallengeCard.master-challenge-card{
     document.body.appendChild(overlay);
   }
 
+  function updateSideProgress(){
+    const fill = document.querySelector(".mockup-progress-fill");
+    const text = document.querySelector(".mockup-progress-text");
+    if(fill) fill.style.width = Math.round((challengeState.index / challengeQuestions.length) * 100) + "%";
+    if(text) text.textContent = challengeState.index + " / " + challengeQuestions.length + " questions";
+  }
+
+  function updatePopupProgress(){
+    const fill = document.getElementById("challengePopupFill");
+    const count = document.getElementById("challengePopupCount");
+    const pct = Math.round((challengeState.index / challengeQuestions.length) * 100);
+    if(fill) fill.style.width = pct + "%";
+    if(count) count.textContent = challengeState.index + " / " + challengeQuestions.length;
+    updateSideProgress();
+  }
+
+  function renderStart(){
+    challengeState = { index:0, score:0, locked:false };
+    updatePopupProgress();
+    const zone = document.getElementById("challengeGameZone");
+    if(!zone) return;
+    zone.innerHTML = `
+      <div class="challenge-result-box">
+        <div class="challenge-result-title">Prêt pour le défi ?</div>
+        <div class="challenge-result-score">5 questions de maths CE2</div>
+        <div class="challenge-reward">🎁 Jusqu'à +50 points</div>
+      </div>
+      <div class="challenge-popup-actions">
+        <button class="challenge-popup-btn primary full" onclick="startPopupMasterChallenge()">🚀 Commencer le défi</button>
+        <button class="challenge-popup-btn secondary full" onclick="closeMasterChallengePopup()">Fermer</button>
+      </div>
+    `;
+  }
+
+  function renderQuestion(){
+    challengeState.locked = false;
+    updatePopupProgress();
+    const zone = document.getElementById("challengeGameZone");
+    if(!zone) return;
+
+    const item = challengeQuestions[challengeState.index];
+    const buttons = item.options.map(function(opt){
+      return `<button class="challenge-option" onclick="answerPopupMasterChallenge('${String(opt).replace(/'/g,"\\'")}')">${opt}</button>`;
+    }).join("");
+
+    zone.innerHTML = `
+      <div class="challenge-question-card">
+        <div class="challenge-question-number">Question ${challengeState.index + 1} / ${challengeQuestions.length} · ${item.skill}</div>
+        <div class="challenge-question-text">${item.q}</div>
+        <div class="challenge-options">${buttons}</div>
+        <div class="challenge-feedback" id="challengeFeedback"></div>
+      </div>
+      <div class="challenge-popup-actions">
+        <button class="challenge-popup-btn secondary full" onclick="closeMasterChallengePopup()">Mettre en pause</button>
+      </div>
+    `;
+  }
+
+  function addChallengePoints(points){
+    try{
+      if(typeof addPoints === "function"){
+        addPoints(points);
+        return;
+      }
+      const scoreEl = document.getElementById("scoreVal");
+      if(scoreEl){
+        const current = parseInt(scoreEl.textContent || "0", 10) || 0;
+        scoreEl.textContent = current + points;
+      }
+    }catch(e){}
+  }
+
+  function renderEnd(){
+    challengeState.index = challengeQuestions.length;
+    updatePopupProgress();
+    const zone = document.getElementById("challengeGameZone");
+    if(!zone) return;
+
+    const points = challengeState.score * 10;
+    if(points > 0 && !challengeState.rewardGiven){
+      challengeState.rewardGiven = true;
+      addChallengePoints(points);
+    }
+
+    const success = challengeState.score >= 4;
+    zone.innerHTML = `
+      <div class="challenge-result-box">
+        <div class="challenge-result-title">${success ? "🎉 Défi réussi !" : "💪 Défi terminé !"}</div>
+        <div class="challenge-result-score">Score : ${challengeState.score} / ${challengeQuestions.length}</div>
+        <div class="challenge-reward">⭐ +${points} points</div>
+        <div style="margin-top:12px;font-weight:900;color:#2D2B55;">
+          ${success ? "Bravo, tu as très bien travaillé !" : "Tu peux réessayer pour battre ton score."}
+        </div>
+      </div>
+      <div class="challenge-popup-actions">
+        <button class="challenge-popup-btn primary" onclick="startPopupMasterChallenge()">🔁 Rejouer</button>
+        <button class="challenge-popup-btn purple" onclick="closeMasterChallengePopup()">Terminer</button>
+      </div>
+    `;
+  }
+
   window.openMasterChallengePopup = function(){
     ensureChallengePopup();
     const overlay = document.getElementById("challengePopupOverlay");
     if(overlay) overlay.classList.add("visible");
+    renderStart();
   };
 
   window.closeMasterChallengePopup = function(){
@@ -7631,22 +7839,37 @@ body.competence-mode #masterChallengeCard.master-challenge-card{
     if(overlay) overlay.classList.remove("visible");
   };
 
-  window.launchMasterChallengeFromPopup = function(){
-    closeMasterChallengePopup();
-    if(typeof startMasterChallenge === "function"){
-      startMasterChallenge();
-    }else if(typeof startLocalQuiz === "function"){
-      startLocalQuiz("maths","🎯 Défi du maître");
-    }else if(typeof sendQuick === "function"){
-      sendQuick("Défi du maître : propose-moi 5 questions de maths CE2");
-    }
+  window.startPopupMasterChallenge = function(){
+    challengeState = { index:0, score:0, locked:false, rewardGiven:false };
+    renderQuestion();
   };
 
-  window.openCompetenceFromChallengePopup = function(){
-    closeMasterChallengePopup();
-    if(typeof openCompetenceValidation === "function"){
-      openCompetenceValidation();
+  window.answerPopupMasterChallenge = function(choice){
+    if(challengeState.locked) return;
+    challengeState.locked = true;
+
+    const item = challengeQuestions[challengeState.index];
+    const ok = choice === item.answer;
+    if(ok) challengeState.score++;
+
+    document.querySelectorAll(".challenge-option").forEach(function(btn){
+      btn.disabled = true;
+      const val = (btn.textContent || "").trim();
+      if(val === item.answer) btn.classList.add("correct");
+      else if(val === choice) btn.classList.add("wrong");
+    });
+
+    const feedback = document.getElementById("challengeFeedback");
+    if(feedback){
+      feedback.className = "challenge-feedback " + (ok ? "ok" : "bad");
+      feedback.textContent = ok ? "✅ Bravo !" : "❌ Presque ! La bonne réponse était " + item.answer + ".";
     }
+
+    setTimeout(function(){
+      challengeState.index++;
+      if(challengeState.index >= challengeQuestions.length) renderEnd();
+      else renderQuestion();
+    }, 950);
   };
 
   function makeChallengeClickable(){
@@ -7664,17 +7887,17 @@ body.competence-mode #masterChallengeCard.master-challenge-card{
       if(!sideCards[0].querySelector(".challenge-click-note")){
         const note = document.createElement("div");
         note.className = "challenge-click-note";
-        note.textContent = "👆 Clique ici pour ouvrir le défi";
+        note.textContent = "👆 Clique ici pour jouer le défi";
         sideCards[0].appendChild(note);
       }
     }
   }
 
   document.addEventListener("DOMContentLoaded", function(){
-    setTimeout(makeChallengeClickable, 160);
+    setTimeout(makeChallengeClickable, 180);
   });
   window.addEventListener("load", function(){
-    setTimeout(makeChallengeClickable, 220);
+    setTimeout(makeChallengeClickable, 240);
   });
 })();
 </script>

@@ -3226,8 +3226,68 @@ let soundEnabled = true;
 let prenomActuel = '';
 let welcomeQuizSubject = 'général';
 
-const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbzeHY0Vm-O923mZfgQjmvUdtJUIEVUVR99srqocBldvkl7JPWn49K7tqqEthQB4JDQm/exec';
+const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbxz1vYS24sv-c3XVja12geWEXIQl6bQyBoQKBx5kg_fwQaj80_Oc7Y34yeBSRN4lF1f/exec';
 const HIBOU_QUESTION_LOG_URL = 'https://script.google.com/macros/s/AKfycbzcgMiY7pEKb5M9jKYRfM2OMGB7lISvw-VRZzhdLrnIaQcu3gSAoEobrG7O0M9YuU8n/exec';
+
+// === V14.1 : liste des élèves récupérée depuis Google Sheets ===
+// Le prénom saisi doit correspondre à une ligne du tableau Google Sheets.
+let studentsSheetCache = null;
+const FALLBACK_STUDENTS = [
+  'Badr','Anissa','Aaron','Neyla','Hiba','Sara','Adam','Amine','Youssef','Eléa','Rofrane','Akshiga','Mélanie','Stefanie','Antoni','Ibrahim','Nordine','Zoé','Chris Yoan','Boy'
+];
+
+function normalizeStudentName(value) {
+  return String(value || '')
+    .trim()
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[’']/g, ' ')
+    .replace(/[-_]/g, ' ')
+    .replace(/\s+/g, ' ');
+}
+
+function titleCaseStudentName(value) {
+  return String(value || '')
+    .trim()
+    .toLowerCase()
+    .replace(/(^|[\s-])\p{L}/gu, m => m.toUpperCase());
+}
+
+function extractStudentsFromSheetPayload(payload) {
+  const rows = Array.isArray(payload) ? payload : (payload && (payload.eleves || payload.students || payload.data || payload.rows)) || [];
+  if (!Array.isArray(rows)) return [];
+  return rows.map(row => {
+    if (typeof row === 'string') return row;
+    if (Array.isArray(row)) return row[1] || row[0] || '';
+    return row.prenom || row.prénom || row.Prenom || row['Prénom'] || row.name || row.nom || row.Nom || '';
+  }).filter(Boolean);
+}
+
+async function loadStudentsFromSheet(forceReload = false) {
+  if (studentsSheetCache && !forceReload) return studentsSheetCache;
+  try {
+    const response = await fetch(GOOGLE_SHEET_URL, { cache: 'no-store' });
+    if (!response.ok) throw new Error('Réponse Google Sheets incorrecte');
+    const payload = await response.json();
+    const names = extractStudentsFromSheetPayload(payload);
+    if (!names.length) throw new Error('Aucun prénom trouvé dans Google Sheets');
+    studentsSheetCache = names.map(n => String(n).trim()).filter(Boolean);
+    localStorage.setItem('hibou_roster_sheet', JSON.stringify(studentsSheetCache));
+    return studentsSheetCache;
+  } catch (err) {
+    console.warn('Liste Google Sheets indisponible, utilisation du dernier cache/local.', err);
+    const cached = JSON.parse(localStorage.getItem('hibou_roster_sheet') || '[]');
+    studentsSheetCache = cached.length ? cached : FALLBACK_STUDENTS;
+    return studentsSheetCache;
+  }
+}
+
+function findMatchingStudentName(inputName, roster) {
+  const wanted = normalizeStudentName(inputName);
+  return roster.find(name => normalizeStudentName(name) === wanted) || '';
+}
+
 
 // === V3 Phase 3.1 : banque locale CE2 et défis du maître ===
 const MASTER_CHALLENGE_KEY = 'hibou_master_challenge_v31';
@@ -3369,14 +3429,26 @@ window.addEventListener('load', () => {
     });
     pInput.focus();
   }
+  loadStudentsFromSheet().then(function(list){
+    const error = document.getElementById('prenomError');
+    if (error && list && list.length) error.textContent = '';
+  });
 });
 
-function savePrenom() {
+async function savePrenom() {
   const input = document.getElementById('prenomInput').value.trim();
   const error = document.getElementById('prenomError');
   if (!input) { error.textContent = 'Entre ton prénom !'; return; }
-  
-  prenomActuel = input;
+  error.textContent = 'Je vérifie ton prénom...';
+
+  const officialRoster = await loadStudentsFromSheet();
+  const matchedName = findMatchingStudentName(input, officialRoster);
+  if (!matchedName) {
+    error.textContent = 'Prénom non reconnu. Vérifie l’orthographe ou demande au maître.';
+    return;
+  }
+  error.textContent = '';
+  prenomActuel = titleCaseStudentName(matchedName);
   addStudentToRoster(prenomActuel);
   document.getElementById('prenomOverlay').classList.add('hidden');
   document.getElementById('eleveBadge').style.display = 'flex';

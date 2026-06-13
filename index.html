@@ -11105,5 +11105,36 @@ window.HIBOU_CLASS_STUDENTS = [
 })();
 </script>
 
+
+<script id="dev-profile-v151">
+window.DEV_PROFILE_ENABLED = true;
+
+(function(){
+const normalizeName = s => (s||"")
+ .toLowerCase()
+ .normalize("NFD")
+ .replace(/[\u0300-\u036f]/g,"")
+ .trim();
+
+document.addEventListener("DOMContentLoaded", ()=>{
+  const input = document.querySelector(".prenom-input");
+  const btn = document.querySelector(".prenom-btn");
+  if(!input || !btn) return;
+
+  const oldClick = btn.onclick;
+
+  btn.addEventListener("click", function(){
+    const v = normalizeName(input.value);
+    if(v==="test" || v==="dev"){
+      localStorage.setItem("elevePrenom","DEV TEST");
+      localStorage.setItem("score","150");
+      localStorage.setItem("badges","12");
+      alert("🛠️ Profil développeur activé");
+    }
+  }, true);
+});
+})();
+</script>
+
 </body>
 </html>

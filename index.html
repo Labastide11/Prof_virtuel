@@ -2811,22 +2811,16 @@ body.login-active .prenom-box h2{
 </style>
 
 
-<style id="patch-acces-enseignant-secret-v14">
-/* V14 - Accès enseignant invisible pour les élèves */
+
+<style id="patch-teacher-open-fix-v16">
+/* V16 - Accès enseignant secret + ouverture fiable du tableau */
 #teacherBtn,
 #teacherButton,
 .teacher-access-btn,
-.teacher-btn-floating,
-button[onclick*="Teacher"],
-button[onclick*="teacher"],
-button[onclick*="openTeacher"],
-button[onclick*="openTeacherDashboard"],
-button[onclick*="showTeacher"],
-button[onclick*="openAdmin"]{
+.teacher-btn-floating{
   display:none !important;
 }
 
-/* Le logo devient la zone secrète d'accès enseignant */
 .logo-area{
   cursor:default;
   user-select:none;
@@ -2850,9 +2844,7 @@ button[onclick*="openAdmin"]{
   z-index:10000;
   padding:20px;
 }
-.teacher-secret-overlay.visible{
-  display:flex;
-}
+.teacher-secret-overlay.visible{display:flex;}
 .teacher-secret-box{
   width:min(420px,100%);
   background:white;
@@ -2862,7 +2854,6 @@ button[onclick*="openAdmin"]{
   padding:24px;
   text-align:center;
   position:relative;
-  animation:pop .25s ease-out;
 }
 .teacher-secret-close{
   position:absolute;
@@ -2904,10 +2895,6 @@ button[onclick*="openAdmin"]{
   color:var(--text);
   margin-bottom:10px;
 }
-.teacher-secret-input:focus{
-  border-color:var(--primary);
-  box-shadow:0 0 0 4px var(--primary-light);
-}
 .teacher-secret-error{
   min-height:20px;
   color:var(--secondary);
@@ -2915,10 +2902,7 @@ button[onclick*="openAdmin"]{
   font-weight:900;
   margin-bottom:10px;
 }
-.teacher-secret-actions{
-  display:flex;
-  gap:8px;
-}
+.teacher-secret-actions{display:flex;gap:8px;}
 .teacher-secret-actions button{
   flex:1;
   border:none;
@@ -2929,20 +2913,12 @@ button[onclick*="openAdmin"]{
   font-weight:900;
   cursor:pointer;
 }
-.teacher-secret-cancel{
-  background:#F4F3F8;
-  color:var(--text);
-}
-.teacher-secret-validate{
-  background:var(--primary);
-  color:white;
-}
-</style>
+.teacher-secret-cancel{background:#F4F3F8;color:var(--text);}
+.teacher-secret-validate{background:var(--primary);color:white;}
 
-
-<style id="patch-teacher-fullscreen-v15">
-/* V15 - Tableau enseignant plein écran */
+/* Tableau enseignant plein écran */
 .teacher-dashboard-modal,
+#teacherDashboardOverlay,
 #teacherDashboardModal,
 #teacherModal{
   position:fixed !important;
@@ -2956,12 +2932,14 @@ button[onclick*="openAdmin"]{
 }
 
 .teacher-dashboard-modal:not(.hidden),
+#teacherDashboardOverlay:not(.hidden),
 #teacherDashboardModal:not(.hidden),
 #teacherModal:not(.hidden){
   display:flex !important;
 }
 
 .teacher-dashboard-modal .modal-box,
+#teacherDashboardOverlay .modal-box,
 #teacherDashboardModal .modal-box,
 #teacherModal .modal-box{
   width:min(1180px,96vw) !important;
@@ -2977,6 +2955,7 @@ button[onclick*="openAdmin"]{
 }
 
 .teacher-dashboard-modal .modal-box::before,
+#teacherDashboardOverlay .modal-box::before,
 #teacherDashboardModal .modal-box::before,
 #teacherModal .modal-box::before{
   content:"🦉 Tableau de bord enseignant";
@@ -3011,18 +2990,15 @@ button[onclick*="openAdmin"]{
   cursor:pointer !important;
   box-shadow:0 6px 18px rgba(255,107,107,.28) !important;
 }
-
-body.teacher-fullscreen-open{
-  overflow:hidden !important;
-}
+body.teacher-fullscreen-open{overflow:hidden !important;}
 
 @media(max-width:768px){
   .teacher-dashboard-modal,
+  #teacherDashboardOverlay,
   #teacherDashboardModal,
-  #teacherModal{
-    padding:6px !important;
-  }
+  #teacherModal{padding:6px !important;}
   .teacher-dashboard-modal .modal-box,
+  #teacherDashboardOverlay .modal-box,
   #teacherDashboardModal .modal-box,
   #teacherModal .modal-box{
     width:98vw !important;
@@ -3030,19 +3006,6 @@ body.teacher-fullscreen-open{
     max-height:96vh !important;
     border-radius:20px !important;
     padding:14px !important;
-  }
-  .teacher-dashboard-modal .modal-box::before,
-  #teacherDashboardModal .modal-box::before,
-  #teacherModal .modal-box::before{
-    top:-14px;
-    margin:-14px -14px 12px -14px;
-    padding:14px 54px 12px 14px;
-    font-size:20px;
-  }
-  .teacher-fullscreen-close{
-    width:42px !important;
-    height:42px !important;
-    font-size:22px !important;
   }
 }
 </style>
@@ -10281,27 +10244,16 @@ header{
 </script>
 
 
-<script id="patch-acces-enseignant-secret-v14-js">
+
+<script id="patch-teacher-open-fix-v16-js">
 (function(){
-  if(window.__hibouTeacherSecretV14) return;
-  window.__hibouTeacherSecretV14 = true;
+  if(window.__hibouTeacherOpenFixV16) return;
+  window.__hibouTeacherOpenFixV16 = true;
 
-  const TEACHER_CODE = "1234"; // Code enseignant modifiable ici.
+  const TEACHER_CODE = "1234";
 
-  function removeVisibleTeacherButtons(){
-    const selectors = [
-      '#teacherBtn',
-      '#teacherButton',
-      '.teacher-access-btn',
-      '.teacher-btn-floating',
-      'button[onclick*="Teacher"]',
-      'button[onclick*="teacher"]',
-      'button[onclick*="openTeacher"]',
-      'button[onclick*="openTeacherDashboard"]',
-      'button[onclick*="showTeacher"]',
-      'button[onclick*="openAdmin"]'
-    ];
-    document.querySelectorAll(selectors.join(',')).forEach(function(btn){
+  function hideOldTeacherButton(){
+    document.querySelectorAll('#teacherBtn,#teacherButton,.teacher-access-btn,.teacher-btn-floating').forEach(function(btn){
       btn.style.display = 'none';
       btn.setAttribute('aria-hidden','true');
       btn.tabIndex = -1;
@@ -10316,10 +10268,10 @@ header{
     overlay.id = 'teacherSecretOverlay';
     overlay.className = 'teacher-secret-overlay';
     overlay.innerHTML = `
-      <div class="teacher-secret-box" role="dialog" aria-modal="true" aria-labelledby="teacherSecretTitle">
+      <div class="teacher-secret-box" role="dialog" aria-modal="true">
         <button class="teacher-secret-close" type="button" aria-label="Fermer">×</button>
         <div style="font-size:46px;line-height:1;">🦉</div>
-        <div id="teacherSecretTitle" class="teacher-secret-title">Accès enseignant</div>
+        <div class="teacher-secret-title">Accès enseignant</div>
         <div class="teacher-secret-text">Entre le code enseignant pour ouvrir le tableau de bord.</div>
         <input id="teacherSecretInput" class="teacher-secret-input" type="password" inputmode="numeric" autocomplete="off" placeholder="Code enseignant">
         <div id="teacherSecretError" class="teacher-secret-error"></div>
@@ -10331,20 +10283,13 @@ header{
     `;
     document.body.appendChild(overlay);
 
-    overlay.addEventListener('click', function(e){
-      if(e.target === overlay) closeTeacherSecret();
-    });
-
+    overlay.addEventListener('click', function(e){ if(e.target === overlay) closeTeacherSecret(); });
     overlay.querySelector('.teacher-secret-close').addEventListener('click', closeTeacherSecret);
     overlay.querySelector('.teacher-secret-cancel').addEventListener('click', closeTeacherSecret);
     overlay.querySelector('.teacher-secret-validate').addEventListener('click', validateTeacherSecret);
     overlay.querySelector('#teacherSecretInput').addEventListener('keydown', function(e){
       if(e.key === 'Enter') validateTeacherSecret();
       if(e.key === 'Escape') closeTeacherSecret();
-    });
-
-    document.addEventListener('keydown', function(e){
-      if(e.key === 'Escape' && overlay.classList.contains('visible')) closeTeacherSecret();
     });
 
     return overlay;
@@ -10364,221 +10309,167 @@ header{
     const overlay = document.getElementById('teacherSecretOverlay');
     if(!overlay) return;
     overlay.classList.remove('visible');
-    const input = overlay.querySelector('#teacherSecretInput');
-    if(input) input.blur();
   }
 
-  function openRealTeacherDashboard(){
-    const candidates = [
+  function findTeacherOverlay(){
+    return document.getElementById('teacherDashboardOverlay')
+      || document.getElementById('teacherDashboardModal')
+      || document.getElementById('teacherModal')
+      || document.querySelector('.teacher-dashboard-modal');
+  }
+
+  function openTeacherDashboardReliable(){
+    // 1) On lance d'abord les fonctions natives si elles existent.
+    const funcs = [
+      'renderTeacherDashboard',
+      'renderTeacherStats',
+      'updateTeacherDashboard'
+    ];
+    funcs.forEach(function(name){
+      try{
+        if(typeof window[name] === 'function') window[name]();
+      }catch(e){}
+    });
+
+    const openFuncs = [
       'openTeacherDashboard',
       'showTeacherDashboard',
       'openTeacherPanel',
-      'showTeacherPanel',
-      'openTeacher',
-      'showTeacher',
-      'openAdminDashboard'
+      'showTeacherPanel'
     ];
-
-    for(const name of candidates){
-      if(typeof window[name] === 'function'){
-        window[name]();
-        return true;
-      }
+    for(const name of openFuncs){
+      try{
+        if(typeof window[name] === 'function'){
+          window[name]();
+          break;
+        }
+      }catch(e){}
     }
 
-    const hiddenBtn = document.querySelector(
-      '#teacherBtn,#teacherButton,.teacher-access-btn,.teacher-btn-floating,button[onclick*="Teacher"],button[onclick*="teacher"],button[onclick*="openTeacher"],button[onclick*="openTeacherDashboard"],button[onclick*="showTeacher"],button[onclick*="openAdmin"]'
-    );
-    if(hiddenBtn){
-      hiddenBtn.style.display = '';
-      hiddenBtn.click();
-      hiddenBtn.style.display = 'none';
-      return true;
+    // 2) On force l'ouverture du vrai panneau.
+    const overlay = findTeacherOverlay();
+    if(!overlay){
+      alert("Tableau enseignant introuvable dans cette version.");
+      return false;
     }
 
-    const modal = document.querySelector('.teacher-dashboard-modal, #teacherDashboardModal, #teacherModal');
-    if(modal){
-      modal.classList.remove('hidden');
-      modal.style.display = 'flex';
-      return true;
+    overlay.classList.remove('hidden');
+    overlay.style.display = 'flex';
+    overlay.style.visibility = 'visible';
+    overlay.removeAttribute('aria-hidden');
+
+    document.body.classList.add('teacher-fullscreen-open');
+    upgradeTeacherOverlay(overlay);
+    return true;
+  }
+
+  function closeTeacherDashboard(overlay){
+    if(!overlay) overlay = findTeacherOverlay();
+    if(!overlay) return;
+    overlay.classList.add('hidden');
+    overlay.style.display = 'none';
+    document.body.classList.remove('teacher-fullscreen-open');
+  }
+
+  function upgradeTeacherOverlay(overlay){
+    if(!overlay) return;
+    const box = overlay.querySelector('.modal-box') || overlay;
+    if(!box.querySelector('.teacher-fullscreen-close')){
+      const close = document.createElement('button');
+      close.type = 'button';
+      close.className = 'teacher-fullscreen-close';
+      close.setAttribute('aria-label','Fermer le tableau enseignant');
+      close.textContent = '×';
+      close.addEventListener('click', function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        closeTeacherDashboard(overlay);
+      });
+      box.insertBefore(close, box.firstChild);
     }
 
-    return false;
+    if(!overlay.dataset.teacherFullscreenInstalled){
+      overlay.dataset.teacherFullscreenInstalled = 'true';
+      overlay.addEventListener('click', function(e){
+        if(e.target === overlay) closeTeacherDashboard(overlay);
+      });
+    }
   }
 
   function validateTeacherSecret(){
     const overlay = ensureSecretPopup();
     const input = overlay.querySelector('#teacherSecretInput');
     const error = overlay.querySelector('#teacherSecretError');
-    const value = (input.value || '').trim();
 
-    if(value !== TEACHER_CODE){
+    if((input.value || '').trim() !== TEACHER_CODE){
       error.textContent = 'Code incorrect.';
       input.select();
       return;
     }
 
     closeTeacherSecret();
-
-    setTimeout(function(){
-      const opened = openRealTeacherDashboard();
-      if(!opened){
-        alert("Le tableau enseignant n'a pas été trouvé dans cette version.");
-      }
-    }, 120);
+    setTimeout(openTeacherDashboardReliable, 80);
   }
 
   function installLongPress(){
     const logo = document.querySelector('.logo-area');
     if(!logo || logo.dataset.teacherSecretInstalled === 'true') return;
-
     logo.dataset.teacherSecretInstalled = 'true';
-    let timer = null;
-    let started = false;
 
-    function start(e){
-      if(e && e.target && e.target.closest && e.target.closest('button,input,textarea,a')) return;
-      started = true;
+    let timer = null;
+    let active = false;
+
+    function start(){
+      active = true;
       logo.classList.add('teacher-long-pressing');
       clearTimeout(timer);
       timer = setTimeout(function(){
-        timer = null;
-        if(started) openTeacherSecret();
+        if(active) openTeacherSecret();
       }, 3000);
     }
 
     function stop(){
-      started = false;
+      active = false;
       logo.classList.remove('teacher-long-pressing');
       clearTimeout(timer);
-      timer = null;
     }
 
     logo.addEventListener('pointerdown', start);
     logo.addEventListener('pointerup', stop);
     logo.addEventListener('pointercancel', stop);
     logo.addEventListener('pointerleave', stop);
-
-    // Secours PC : double-clic sur logo
     logo.addEventListener('dblclick', function(e){
       e.preventDefault();
       openTeacherSecret();
     });
   }
 
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape'){
+      closeTeacherSecret();
+      closeTeacherDashboard();
+    }
+  });
+
   document.addEventListener('DOMContentLoaded', function(){
-    removeVisibleTeacherButtons();
-    installLongPress();
+    hideOldTeacherButton();
     ensureSecretPopup();
+    installLongPress();
+
+    const overlay = findTeacherOverlay();
+    if(overlay) upgradeTeacherOverlay(overlay);
 
     new MutationObserver(function(){
-      removeVisibleTeacherButtons();
+      hideOldTeacherButton();
       installLongPress();
+      const o = findTeacherOverlay();
+      if(o) upgradeTeacherOverlay(o);
     }).observe(document.body, {childList:true, subtree:true});
   });
 
   window.openTeacherSecret = openTeacherSecret;
-  window.closeTeacherSecret = closeTeacherSecret;
-})();
-</script>
-
-
-<script id="patch-teacher-fullscreen-v15-js">
-(function(){
-  if(window.__hibouTeacherFullscreenV15) return;
-  window.__hibouTeacherFullscreenV15 = true;
-
-  function getTeacherModals(){
-    return Array.from(document.querySelectorAll('.teacher-dashboard-modal,#teacherDashboardModal,#teacherModal'));
-  }
-
-  function isVisible(el){
-    if(!el) return false;
-    const style = getComputedStyle(el);
-    return !el.classList.contains('hidden') && style.display !== 'none' && style.visibility !== 'hidden';
-  }
-
-  function closeTeacherModal(modal){
-    if(!modal) return;
-    modal.classList.add('hidden');
-    modal.style.display = 'none';
-    document.body.classList.remove('teacher-fullscreen-open');
-  }
-
-  function addCloseButton(modal){
-    if(!modal) return;
-    const box = modal.querySelector('.modal-box') || modal;
-    if(box.querySelector('.teacher-fullscreen-close')) return;
-
-    const close = document.createElement('button');
-    close.type = 'button';
-    close.className = 'teacher-fullscreen-close';
-    close.setAttribute('aria-label','Fermer le tableau enseignant');
-    close.textContent = '×';
-    close.addEventListener('click', function(e){
-      e.preventDefault();
-      e.stopPropagation();
-      closeTeacherModal(modal);
-    });
-    box.insertBefore(close, box.firstChild);
-  }
-
-  function upgradeTeacherModal(){
-    getTeacherModals().forEach(function(modal){
-      addCloseButton(modal);
-
-      if(!modal.dataset.fullscreenCloseInstalled){
-        modal.dataset.fullscreenCloseInstalled = 'true';
-
-        modal.addEventListener('click', function(e){
-          if(e.target === modal) closeTeacherModal(modal);
-        });
-
-        // Répare les anciens boutons fermer s'ils existent mais ne fonctionnent pas bien
-        modal.querySelectorAll('button').forEach(function(btn){
-          const text = (btn.textContent || '').trim().toLowerCase();
-          const aria = (btn.getAttribute('aria-label') || '').toLowerCase();
-          if(text === '×' || text === 'x' || text.includes('fermer') || text.includes('annuler') || aria.includes('fermer')){
-            if(!btn.classList.contains('teacher-fullscreen-close')){
-              btn.addEventListener('click', function(e){
-                const insideSecret = btn.closest('.teacher-secret-box');
-                if(insideSecret) return;
-                e.preventDefault();
-                e.stopPropagation();
-                closeTeacherModal(modal);
-              });
-            }
-          }
-        });
-      }
-
-      if(isVisible(modal)){
-        document.body.classList.add('teacher-fullscreen-open');
-        modal.style.display = 'flex';
-      }
-    });
-  }
-
-  document.addEventListener('keydown', function(e){
-    if(e.key !== 'Escape') return;
-    getTeacherModals().forEach(function(modal){
-      if(isVisible(modal)) closeTeacherModal(modal);
-    });
-  });
-
-  document.addEventListener('DOMContentLoaded', function(){
-    upgradeTeacherModal();
-    new MutationObserver(upgradeTeacherModal).observe(document.body, {
-      childList:true,
-      subtree:true,
-      attributes:true,
-      attributeFilter:['class','style']
-    });
-  });
-
-  window.closeTeacherFullscreen = function(){
-    getTeacherModals().forEach(closeTeacherModal);
-  };
+  window.openTeacherDashboardReliable = openTeacherDashboardReliable;
+  window.closeTeacherDashboard = closeTeacherDashboard;
 })();
 </script>
 

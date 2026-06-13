@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 Maître Hibou V16.4 - Connexion Google Sheets</title>
+<title>🦉 Maître Hibou V16.5 - Tableau enseignant utile</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -3219,86 +3219,120 @@ body.prenom-mode .class-motivation-panel {
 
 
 
-<style id="style-v164-sheets-auth">
-/* V16.4 - Google Sheets devient le contrôle d'accès élève */
 
-#teacherGoogleSheetsContent {
-  display: block !important;
-  width: 100% !important;
-  margin: 0 0 16px 0 !important;
+<style id="style-v165-teacher-useful-dashboard">
+/* V16.5 - Espace enseignant utile : anniversaires, compétences validées, compétences à revoir */
+
+.teacher-v165-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0 0 14px 0;
 }
 
-.teacher-google-section {
-  display: block !important;
-  background: #F7F6FF !important;
-  border: 3px solid #6C63FF !important;
-  border-radius: 18px !important;
-  padding: 14px !important;
-  margin: 0 0 16px 0 !important;
-  box-shadow: 0 6px 18px rgba(108,99,255,.12) !important;
+.teacher-v165-card,
+.teacher-v165-section,
+.teacher-v165-birthdays {
+  background: #F7F6FF;
+  border: 2px solid #EAE8FF;
+  border-radius: 18px;
+  padding: 14px;
+  margin: 0 0 14px 0;
 }
 
-.teacher-google-header {
-  display: flex !important;
-  justify-content: space-between !important;
-  align-items: center !important;
-  gap: 12px !important;
-  flex-wrap: wrap !important;
-  margin-bottom: 10px !important;
+.teacher-v165-card h3,
+.teacher-v165-section h3,
+.teacher-v165-birthdays h3 {
+  font-family: 'Baloo 2', sans-serif;
+  color: var(--primary);
+  font-size: 22px;
+  margin: 0 0 10px 0;
 }
 
-.teacher-google-header h3 {
-  font-family: 'Baloo 2', sans-serif !important;
-  color: var(--primary) !important;
-  font-size: 24px !important;
-  margin: 0 !important;
+.teacher-v165-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 8px;
 }
 
-.teacher-google-status {
-  font-size: 13px !important;
-  font-weight: 900 !important;
-  color: var(--text-muted) !important;
-  margin-top: 2px !important;
+.teacher-v165-metric {
+  background: white;
+  border: 2px solid #ECEBF3;
+  border-radius: 14px;
+  padding: 10px;
+  text-align: center;
+  font-weight: 900;
 }
 
-.teacher-google-table-wrap {
-  overflow-x: auto !important;
-  background: white !important;
-  border: 2px solid #ECEBF3 !important;
-  border-radius: 14px !important;
+.teacher-v165-metric strong {
+  display: block;
+  color: var(--primary);
+  font-size: 22px;
+  line-height: 1.05;
 }
 
-.teacher-google-table {
-  width: 100% !important;
-  border-collapse: collapse !important;
-  font-size: 13px !important;
+.teacher-v165-metric span {
+  display: block;
+  color: var(--text-muted);
+  font-size: 12px;
+  margin-top: 3px;
 }
 
-.teacher-google-table th,
-.teacher-google-table td {
-  padding: 9px 10px !important;
-  border-bottom: 1px solid #ECEBF3 !important;
-  text-align: left !important;
-  white-space: nowrap !important;
-  font-weight: 800 !important;
+.teacher-v165-metric.ok strong { color: #1E5627; }
+.teacher-v165-metric.warn strong { color: #7A5C00; }
+.teacher-v165-metric.danger strong { color: #7A2222; }
+
+.teacher-v165-table-wrap {
+  overflow-x: auto;
+  background: white;
+  border: 2px solid #ECEBF3;
+  border-radius: 14px;
 }
 
-.teacher-google-table th {
-  background: #F7F6FF !important;
-  color: var(--primary) !important;
-  font-weight: 900 !important;
+.teacher-v165-table td,
+.teacher-v165-table th {
+  white-space: normal;
+  vertical-align: top;
 }
 
-.teacher-google-active {
-  display: inline-block !important;
-  padding: 4px 8px !important;
-  border-radius: 999px !important;
-  font-size: 12px !important;
-  font-weight: 900 !important;
+.teacher-v165-pill {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: 900;
 }
 
-.teacher-google-active.ok { background: #E6F7E9 !important; color: #1E5627 !important; }
-.teacher-google-active.no { background: #FFEAEA !important; color: #7A2222 !important; }
+.teacher-v165-pill.ok { background: #E6F7E9; color: #1E5627; }
+.teacher-v165-pill.warn { background: #FFF3CD; color: #7A5C00; }
+.teacher-v165-pill.danger { background: #FFEAEA; color: #7A2222; }
+
+.teacher-v165-birthday-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px,1fr));
+  gap: 8px;
+}
+
+.teacher-v165-birthday-item {
+  background: white;
+  border: 2px solid #ECEBF3;
+  border-radius: 14px;
+  padding: 10px;
+  font-weight: 900;
+}
+
+.teacher-v165-birthday-date {
+  color: var(--primary);
+  font-size: 13px;
+  margin-top: 2px;
+}
+
+.teacher-v165-small {
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.35;
+}
 
 .prenom-btn.loading,
 .prenom-btn:disabled {
@@ -3306,12 +3340,19 @@ body.prenom-mode .class-motivation-panel {
   cursor: wait !important;
 }
 
-.sheets-auth-note {
-  font-size: 12px;
-  font-weight: 800;
-  color: var(--text-muted);
-  margin-top: 8px;
-  line-height: 1.35;
+@media (max-width: 850px) {
+  .teacher-v165-grid {
+    grid-template-columns: 1fr;
+  }
+  .teacher-v165-metrics {
+    grid-template-columns: repeat(2, minmax(0,1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .teacher-v165-metrics {
+    grid-template-columns: 1fr;
+  }
 }
 </style>
 
@@ -3457,7 +3498,6 @@ body.prenom-mode .class-motivation-panel {
     </div>
 
     <div class="teacher-fullscreen-content">
-      <div id="teacherGoogleSheetsContent"></div>
 <div id="teacherChallengeContent"></div>
       <div id="teacherPhase33Content"></div>
       <div id="teacherSafetyContent"></div>
@@ -3915,15 +3955,41 @@ function startRemediationQuiz(subject, skill) {
 function renderTeacherDashboard() {
   renderTeacherChallenge();
   renderTeacherSafetyPanel();
+
   const content = document.getElementById('teacherDashboardContent');
-  const roster = JSON.parse(localStorage.getItem('hibou_roster') || '[]');
   if (!content) return;
-  if (roster.length === 0) {
-    content.innerHTML = '<div class="teacher-empty">Aucun élève enregistré pour le moment.</div>';
-    return;
-  }
+
+  const roster = JSON.parse(localStorage.getItem('hibou_roster') || '[]');
   const students = roster.map(getStudentData).map(s => ({...s, analysis: analyzeStudentSkills(s.skills)}));
-  const rows = students.map(s => `
+
+  const totalPoints = students.reduce((sum, s) => sum + s.score, 0);
+  const practicedStudents = students.filter(s => s.analysis.totalAttempts > 0);
+  const toHelp = students.filter(s => s.analysis.alert === 'danger');
+  const toWatch = students.filter(s => s.analysis.alert === 'warn');
+  const best = students.slice().sort((a,b) => b.score - a.score)[0];
+
+  const validatedRows = students.flatMap(s =>
+    (s.analysis.strong || []).map(skill => ({
+      name: s.name,
+      subject: skill.subject,
+      skill: skill.skill,
+      pct: skill.pct,
+      attempts: skill.attempts
+    }))
+  ).sort((a,b) => a.name.localeCompare(b.name, 'fr') || a.subject.localeCompare(b.subject, 'fr'));
+
+  const reviewRows = students.flatMap(s =>
+    [...(s.analysis.weak || []), ...(s.analysis.watch || [])].map(skill => ({
+      name: s.name,
+      subject: skill.subject,
+      skill: skill.skill,
+      pct: skill.pct,
+      attempts: skill.attempts,
+      level: skill.pct < 60 ? 'danger' : 'warn'
+    }))
+  ).sort((a,b) => (a.level === 'danger' ? -1 : 1) - (b.level === 'danger' ? -1 : 1) || a.pct - b.pct);
+
+  const studentRows = students.map(s => `
     <tr>
       <td><strong>${escapeHTML(s.name)}</strong></td>
       <td>${s.score}</td>
@@ -3935,34 +4001,95 @@ function renderTeacherDashboard() {
       <td>${s.history[0] ? escapeHTML(s.history[0].type + ' · ' + s.history[0].date) : '—'}</td>
       <td><button class="teacher-btn danger" onclick="resetStudent('${encodeURIComponent(s.name)}')">Réinitialiser</button></td>
     </tr>`).join('');
-  const total = students.reduce((sum, s) => sum + s.score, 0);
-  const best = students.slice().sort((a,b) => b.score - a.score)[0];
-  const toHelp = students.filter(s => s.analysis.alert === 'danger');
-  const toWatch = students.filter(s => s.analysis.alert === 'warn');
+
+  const validatedHTML = validatedRows.length ? validatedRows.map(r => `
+    <tr>
+      <td><strong>${escapeHTML(r.name)}</strong></td>
+      <td>${escapeHTML(subjectLabel(r.subject))}</td>
+      <td>${escapeHTML(r.skill)}</td>
+      <td><span class="teacher-v165-pill ok">${r.pct}%</span></td>
+      <td>${r.attempts}</td>
+    </tr>
+  `).join('') : `<tr><td colspan="5">Aucune compétence validée pour le moment. Les compétences apparaissent après plusieurs réussites.</td></tr>`;
+
+  const reviewHTML = reviewRows.length ? reviewRows.map(r => `
+    <tr>
+      <td><strong>${escapeHTML(r.name)}</strong></td>
+      <td>${escapeHTML(subjectLabel(r.subject))}</td>
+      <td>${escapeHTML(r.skill)}</td>
+      <td><span class="teacher-v165-pill ${r.level === 'danger' ? 'danger' : 'warn'}">${r.pct}%</span></td>
+      <td>${r.level === 'danger' ? 'À revoir en priorité' : 'À consolider'}</td>
+    </tr>
+  `).join('') : `<tr><td colspan="5">Aucune compétence à revoir pour le moment.</td></tr>`;
+
   const history = students.flatMap(s => s.history.map(h => ({...h, name:s.name}))).slice(0, 12);
-  const diagnosticCards = students.map(s => `<div class="teacher-diagnostic-card"><h4>${escapeHTML(s.name)} ${studentAlertBadge(s.analysis)}</h4><div>${formatWeakSkills(s.analysis)}</div><div class="teacher-small">${escapeHTML(teacherAdviceFor(s.analysis))}</div></div>`).join('');
+
   content.innerHTML = `
-    <div class="teacher-actions">
-      <div class="stat-card">👥 ${students.length} élève(s)</div>
-      <div class="stat-card">🏆 ${total} points cumulés</div>
-      <div class="stat-card">⭐ Meilleur score : ${best ? escapeHTML(best.name) + ' (' + best.score + ')' : '—'}</div>
-      <div class="stat-card">⚠️ ${toHelp.length} à aider</div>
-      <div class="stat-card">🔎 ${toWatch.length} à surveiller</div>
+    <div id="teacherSheetsDashboardContent"></div>
+
+    <div class="teacher-v165-grid">
+      <div class="teacher-v165-card">
+        <h3>👥 Résumé classe</h3>
+        <div class="teacher-v165-metrics">
+          <div class="teacher-v165-metric"><strong>${students.length}</strong><span>profils locaux</span></div>
+          <div class="teacher-v165-metric"><strong>${practicedStudents.length}</strong><span>élèves avec entraînements</span></div>
+          <div class="teacher-v165-metric"><strong>${totalPoints}</strong><span>points cumulés</span></div>
+          <div class="teacher-v165-metric"><strong>${best ? escapeHTML(best.name) : '—'}</strong><span>meilleur score</span></div>
+        </div>
+      </div>
+
+      <div class="teacher-v165-card">
+        <h3>🚦 Alertes pédagogiques</h3>
+        <div class="teacher-v165-metrics">
+          <div class="teacher-v165-metric danger"><strong>${toHelp.length}</strong><span>à aider</span></div>
+          <div class="teacher-v165-metric warn"><strong>${toWatch.length}</strong><span>à surveiller</span></div>
+          <div class="teacher-v165-metric ok"><strong>${validatedRows.length}</strong><span>compétences validées</span></div>
+          <div class="teacher-v165-metric"><strong>${reviewRows.length}</strong><span>compétences à revoir</span></div>
+        </div>
+      </div>
     </div>
-    <div class="teacher-table-wrap">
-      <table class="teacher-table">
-        <thead><tr><th>Élève</th><th>Points</th><th>Niveau</th><th>Badges</th><th>Réussite</th><th>Alerte</th><th>À travailler</th><th>Dernière activité</th><th>Action</th></tr></thead>
-        <tbody>${rows}</tbody>
-      </table>
+
+    <div class="teacher-v165-section">
+      <h3>🏆 Compétences validées</h3>
+      <div class="teacher-v165-table-wrap">
+        <table class="teacher-table teacher-v165-table">
+          <thead><tr><th>Élève</th><th>Matière</th><th>Compétence</th><th>Réussite</th><th>Essais</th></tr></thead>
+          <tbody>${validatedHTML}</tbody>
+        </table>
+      </div>
     </div>
-    <div class="teacher-section">
-      <h3>🧠 Diagnostic automatique</h3>
-      <div class="teacher-diagnostic-grid">${diagnosticCards}</div>
+
+    <div class="teacher-v165-section">
+      <h3>🔁 Compétences à revoir</h3>
+      <div class="teacher-v165-table-wrap">
+        <table class="teacher-table teacher-v165-table">
+          <thead><tr><th>Élève</th><th>Matière</th><th>Compétence</th><th>Réussite</th><th>Priorité</th></tr></thead>
+          <tbody>${reviewHTML}</tbody>
+        </table>
+      </div>
     </div>
+
+    <div class="teacher-v165-section">
+      <h3>📋 Suivi détaillé local</h3>
+      ${students.length ? `
+        <div class="teacher-table-wrap">
+          <table class="teacher-table">
+            <thead><tr><th>Élève</th><th>Points</th><th>Niveau</th><th>Badges</th><th>Réussite</th><th>Alerte</th><th>À travailler</th><th>Dernière activité</th><th>Action</th></tr></thead>
+            <tbody>${studentRows}</tbody>
+          </table>
+        </div>
+      ` : '<div class="teacher-empty">Aucun entraînement local enregistré pour le moment.</div>'}
+    </div>
+
     <div class="history-list">
       <strong>Dernières activités</strong>
       ${history.length ? history.map(h => `<div class="history-item">${escapeHTML(h.name)} — ${escapeHTML(h.type)} — ${h.points >= 0 ? '+' : ''}${h.points} pts — ${escapeHTML(h.date)}</div>`).join('') : '<div class="history-item">Aucune activité enregistrée.</div>'}
-    </div>`;
+    </div>
+  `;
+
+  if (typeof renderTeacherSheetsDashboardV165 === 'function') {
+    renderTeacherSheetsDashboardV165();
+  }
 }
 
 function exportTeacherCSV() {
@@ -10358,10 +10485,11 @@ header{
 
 
 
-<script id="script-v164-sheets-auth">
+
+<script id="script-v165-teacher-useful-dashboard">
 (function(){
-  if (window.__sheetsAuthV164) return;
-  window.__sheetsAuthV164 = true;
+  if (window.__teacherUsefulDashboardV165) return;
+  window.__teacherUsefulDashboardV165 = true;
 
   const GOOGLE_SHEETS_ELEVES_URL = "https://script.google.com/macros/s/AKfycbxz1vYS24sv-c3XVja12geWEXIQl6bQyBoQKBx5kg_fwQaj80_Oc7Y34yeBSRN4lF1f/exec";
   const SHEETS_CACHE_MS = 5 * 60 * 1000;
@@ -10454,30 +10582,23 @@ header{
   function findStudentByInput(input, students){
     const wanted = normalizeName(input);
     if (!wanted) return null;
-
     return students.find(function(student){
       return student.active && student.normalized === wanted;
     }) || null;
   }
 
   function setPrenomError(message){
-    const errorEl = document.getElementById("prenomError");
-    if (errorEl) {
-      errorEl.textContent = message || "";
-      return;
+    let errorEl = document.getElementById("prenomError");
+    const input = document.getElementById("prenomInput");
+
+    if (!errorEl && input && input.parentNode) {
+      errorEl = document.createElement("div");
+      errorEl.id = "prenomError";
+      errorEl.className = "modal-error";
+      input.parentNode.insertBefore(errorEl, input.nextSibling);
     }
 
-    const input = document.getElementById("prenomInput");
-    if (input && input.parentNode) {
-      let box = document.getElementById("prenomError");
-      if (!box) {
-        box = document.createElement("div");
-        box.id = "prenomError";
-        box.className = "modal-error";
-        input.parentNode.insertBefore(box, input.nextSibling);
-      }
-      box.textContent = message || "";
-    }
+    if (errorEl) errorEl.textContent = message || "";
   }
 
   function setPrenomButtonLoading(isLoading){
@@ -10511,13 +10632,16 @@ header{
         return;
       }
 
-      // On utilise l'orthographe officielle du Google Sheet.
       window.prenomActuel = matched.prenom;
 
       try {
         localStorage.setItem("hibou_last_prenom", matched.prenom);
         localStorage.setItem("hibou_current_student", JSON.stringify(matched));
       } catch(e) {}
+
+      if (typeof addStudentToRoster === "function") {
+        addStudentToRoster(matched.prenom);
+      }
 
       const prenomOverlay = document.getElementById("prenomOverlay");
       if (prenomOverlay) prenomOverlay.classList.add("hidden");
@@ -10529,19 +10653,11 @@ header{
       const eleveBadge = document.getElementById("eleveBadge");
       if (eleveBadge) eleveBadge.innerHTML = "👤 " + escapeHtml(matched.prenom);
 
-      if (typeof loadStudent === "function") {
-        loadStudent(matched.prenom);
-      }
-
-      if (typeof updateStudentHeader === "function") {
-        updateStudentHeader();
-      }
-      if (typeof refreshHeaderCards === "function") {
-        refreshHeaderCards();
-      }
-      if (typeof renderHibouProfile === "function") {
-        renderHibouProfile();
-      }
+      if (typeof loadStudentProgress === "function") loadStudentProgress();
+      if (typeof loadStudent === "function") loadStudent(matched.prenom);
+      if (typeof updateStudentHeader === "function") updateStudentHeader();
+      if (typeof refreshHeaderCards === "function") refreshHeaderCards();
+      if (typeof renderHibouProfile === "function") renderHibouProfile();
 
       if (typeof addMessage === "function") {
         addMessage("prof", "Bonjour " + matched.prenom + " 🌟 Que souhaites-tu apprendre aujourd’hui ?");
@@ -10555,105 +10671,85 @@ header{
     }
   }
 
-  function ensureTeacherHost(){
-    let host = document.getElementById("teacherGoogleSheetsContent");
-    if (host) return host;
+  function parseBirthdayDate(value){
+    const text = String(value || "").trim();
+    if (!text) return null;
 
-    const content = document.querySelector(".teacher-fullscreen-content");
-    if (!content) return null;
+    const match = text.match(/^(\d{1,2})[\/\-.](\d{1,2})(?:[\/\-.](\d{2,4}))?$/);
+    if (!match) return null;
 
-    host = document.createElement("div");
-    host.id = "teacherGoogleSheetsContent";
-    content.insertBefore(host, content.firstChild);
-    return host;
+    const day = Number(match[1]);
+    const month = Number(match[2]);
+
+    if (!day || !month || day < 1 || day > 31 || month < 1 || month > 12) return null;
+    return { day, month };
   }
 
-  function renderTeacherSheetsLoading(){
-    const host = ensureTeacherHost();
-    if (!host) return;
-    host.innerHTML = `
-      <section class="teacher-google-section">
-        <div class="teacher-google-header">
-          <div>
-            <h3>📄 Contrôle élèves Google Sheets</h3>
-            <div class="teacher-google-status">Chargement…</div>
-          </div>
-          <button class="teacher-btn secondary" onclick="loadTeacherSheetsControlV164(true)">🔄 Recharger</button>
-        </div>
-      </section>
-    `;
+  function monthName(monthIndexOneBased){
+    const names = ["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
+    return names[monthIndexOneBased - 1] || "";
   }
 
-  function renderTeacherSheetsTable(students, status){
-    const host = ensureTeacherHost();
+  function renderBirthdayDashboard(students){
+    const host = document.getElementById("teacherSheetsDashboardContent");
     if (!host) return;
 
-    const list = Array.isArray(students) ? students : [];
-    const activeCount = list.filter(function(s){ return s.active; }).length;
+    const now = new Date();
+    const currentMonth = now.getMonth() + 1;
+    const activeStudents = students.filter(function(s){ return s.active; });
+    const testProfiles = activeStudents.filter(function(s){
+      const n = normalizeName(s.prenom);
+      return n === "dev" || n === "test";
+    });
 
-    const rows = list.map(function(student){
+    const birthdays = activeStudents
+      .map(function(s){ return {...s, birthday: parseBirthdayDate(s.naissance)}; })
+      .filter(function(s){ return s.birthday && s.birthday.month === currentMonth; })
+      .sort(function(a,b){ return a.birthday.day - b.birthday.day || a.prenom.localeCompare(b.prenom, 'fr'); });
+
+    const birthdayHTML = birthdays.length ? birthdays.map(function(s){
       return `
-        <tr>
-          <td><strong>${escapeHtml(student.prenom)}</strong></td>
-          <td>${escapeHtml(student.initiale)}</td>
-          <td>${escapeHtml(student.naissance)}</td>
-          <td>${escapeHtml(student.sexe)}</td>
-          <td><span class="teacher-google-active ${student.active ? "ok" : "no"}">${student.active ? "Actif" : "Inactif"}</span></td>
-        </tr>
+        <div class="teacher-v165-birthday-item">
+          🎂 ${escapeHtml(s.prenom)}
+          <div class="teacher-v165-birthday-date">${s.birthday.day} ${monthName(s.birthday.month)}</div>
+        </div>
       `;
-    }).join("");
+    }).join("") : `<div class="teacher-v165-birthday-item">Aucun anniversaire actif ce mois-ci.</div>`;
+
+    const testText = testProfiles.length ? " · profil test détecté : " + testProfiles.map(function(s){ return escapeHtml(s.prenom); }).join(", ") : "";
 
     host.innerHTML = `
-      <section class="teacher-google-section">
-        <div class="teacher-google-header">
-          <div>
-            <h3>📄 Contrôle élèves Google Sheets</h3>
-            <div class="teacher-google-status">${escapeHtml(status)} — ${list.length} élève(s), ${activeCount} actif(s)</div>
-            <div class="teacher-google-status">Connexion acceptée : majuscules/minuscules ignorées, accents ignorés, espaces/tirets ignorés.</div>
-          </div>
-          <button class="teacher-btn secondary" onclick="loadTeacherSheetsControlV164(true)">🔄 Recharger</button>
+      <div class="teacher-v165-birthdays">
+        <h3>🎂 Anniversaires du mois</h3>
+        <div class="teacher-v165-birthday-list">${birthdayHTML}</div>
+        <div class="teacher-v165-small" style="margin-top:8px;">
+          Source : Google Sheets — ${activeStudents.length} profil(s) actif(s)${testText}
         </div>
-
-        <div class="teacher-google-table-wrap">
-          <table class="teacher-google-table">
-            <thead>
-              <tr>
-                <th>Prénom</th>
-                <th>Initiale</th>
-                <th>Naissance</th>
-                <th>Sexe</th>
-                <th>Actif</th>
-              </tr>
-            </thead>
-            <tbody>${rows || '<tr><td colspan="5">Aucun élève trouvé dans Google Sheets.</td></tr>'}</tbody>
-          </table>
-        </div>
-      </section>
+      </div>
     `;
   }
 
-  async function loadTeacherSheetsControl(force){
-    renderTeacherSheetsLoading();
+  async function renderTeacherSheetsDashboard(){
+    const host = document.getElementById("teacherSheetsDashboardContent");
+    if (host) {
+      host.innerHTML = `
+        <div class="teacher-v165-birthdays">
+          <h3>🎂 Anniversaires du mois</h3>
+          <div class="teacher-v165-small">Chargement des données Google Sheets…</div>
+        </div>
+      `;
+    }
+
     try {
-      const students = await fetchSheetsStudents(!!force);
-      renderTeacherSheetsTable(students, "Synchronisé avec Google Sheets");
+      const students = await fetchSheetsStudents(false);
+      renderBirthdayDashboard(students);
     } catch(error) {
-      const host = ensureTeacherHost();
       if (!host) return;
       host.innerHTML = `
-        <section class="teacher-google-section">
-          <div class="teacher-google-header">
-            <div>
-              <h3>📄 Contrôle élèves Google Sheets</h3>
-              <div class="teacher-google-status">Erreur de chargement</div>
-            </div>
-            <button class="teacher-btn secondary" onclick="loadTeacherSheetsControlV164(true)">🔄 Réessayer</button>
-          </div>
-          <div class="teacher-small">
-            Erreur : ${escapeHtml(error.message)}<br>
-            Le script Google Apps Script doit être publié en application web et renvoyer du JSON.
-          </div>
-        </section>
+        <div class="teacher-v165-birthdays">
+          <h3>🎂 Anniversaires du mois</h3>
+          <div class="teacher-v165-small">Impossible de charger les anniversaires depuis Google Sheets : ${escapeHtml(error.message)}</div>
+        </div>
       `;
     }
   }
@@ -10679,13 +10775,15 @@ header{
     }
   }
 
-  // Remplacement propre de la fonction globale existante.
   window.savePrenom = savePrenomWithSheets;
+  window.renderTeacherSheetsDashboardV165 = renderTeacherSheetsDashboard;
+  window.fetchSheetsStudentsV165 = fetchSheetsStudents;
+  window.normalizeStudentNameV165 = normalizeName;
 
-  const oldOpenTeacher = window.openTeacherDashboard;
+  const originalOpenTeacherDashboard = window.openTeacherDashboard;
   window.openTeacherDashboard = function(){
-    if (typeof oldOpenTeacher === "function") {
-      oldOpenTeacher.apply(this, arguments);
+    if (typeof originalOpenTeacherDashboard === "function") {
+      originalOpenTeacherDashboard.apply(this, arguments);
     } else {
       const overlay = document.getElementById("teacherDashboardOverlay");
       if (overlay) overlay.classList.remove("hidden");
@@ -10693,27 +10791,12 @@ header{
       document.body.classList.add("teacher-dashboard-open");
       if (typeof renderTeacherDashboard === "function") renderTeacherDashboard();
     }
-    setTimeout(function(){ loadTeacherSheetsControl(false); }, 150);
-  };
 
-  const oldRenderTeacher = window.renderTeacherDashboard;
-  window.renderTeacherDashboard = function(){
-    if (typeof oldRenderTeacher === "function") oldRenderTeacher.apply(this, arguments);
-    setTimeout(function(){
-      ensureTeacherHost();
-      const host = document.getElementById("teacherGoogleSheetsContent");
-      if (host && !host.innerHTML.trim()) renderTeacherSheetsLoading();
-    }, 80);
+    setTimeout(renderTeacherSheetsDashboard, 150);
   };
-
-  window.loadTeacherSheetsControlV164 = loadTeacherSheetsControl;
-  window.fetchSheetsStudentsV164 = fetchSheetsStudents;
-  window.normalizeStudentNameV164 = normalizeName;
 
   document.addEventListener("DOMContentLoaded", function(){
     installPrenomAuth();
-    ensureTeacherHost();
-    renderTeacherSheetsLoading();
   });
 
   window.addEventListener("load", function(){

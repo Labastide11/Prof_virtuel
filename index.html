@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 Maître Hibou V15.9 - Retour base sans bug</title>
+<title>🦉 Maître Hibou V16.0 - Accès enseignant caché</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -2912,6 +2912,151 @@ body.fullscreen-active .mockup-right-panel .mockup-full-progress-btn{
 }
 </style>
 
+
+<style id="style-v16-teacher-hidden-access">
+/* V16.0 - Espace enseignant caché et plein écran */
+
+/* L'ancien bouton enseignant n'existe plus dans le HTML.
+   Cette sécurité évite aussi son affichage si une ancienne copie le recrée. */
+#teacherBtn {
+  display: none !important;
+}
+
+/* Le hibou devient l'accès discret enseignant : appui long. */
+.logo-icon,
+.hibou-profile-owl {
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.logo-icon.teacher-longpress-ready,
+.hibou-profile-owl.teacher-longpress-ready {
+  cursor: pointer;
+}
+
+/* Pendant l'appui long, un léger retour visuel discret. */
+.logo-icon.teacher-longpress-active,
+.hibou-profile-owl.teacher-longpress-active {
+  outline: 3px solid var(--accent);
+  outline-offset: 4px;
+}
+
+/* Quand la fenêtre enseignant est ouverte, on bloque le fond. */
+body.teacher-dashboard-open {
+  overflow: hidden !important;
+}
+
+/* Popup enseignant en grand format, adaptée tablette. */
+.teacher-dashboard-modal {
+  padding: 0 !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: rgba(45,43,85,0.72) !important;
+  backdrop-filter: blur(8px);
+  z-index: 300 !important;
+}
+
+.teacher-dashboard-modal.hidden {
+  display: none !important;
+}
+
+.teacher-dashboard-modal .teacher-fullscreen-box {
+  width: min(1320px, calc(100vw - 24px)) !important;
+  height: min(900px, calc(100vh - 24px)) !important;
+  max-width: none !important;
+  max-height: none !important;
+  padding: 0 !important;
+  border-radius: 24px !important;
+  overflow: hidden !important;
+  text-align: left !important;
+  display: flex !important;
+  flex-direction: column !important;
+  background: var(--card) !important;
+}
+
+.teacher-fullscreen-top {
+  flex-shrink: 0;
+  padding: 18px 20px 12px 20px;
+  border-bottom: 2px solid #ECEBF3;
+  margin: 0 !important;
+}
+
+.teacher-fullscreen-top h2 {
+  margin: 0 0 4px 0 !important;
+  font-size: 28px !important;
+}
+
+.teacher-fullscreen-top p {
+  margin: 0 !important;
+  font-size: 14px !important;
+  color: var(--text-muted) !important;
+  font-weight: 800 !important;
+}
+
+.teacher-close-btn {
+  width: 46px !important;
+  height: 46px !important;
+  min-width: 46px !important;
+  font-size: 20px !important;
+  background: #FFEAEA !important;
+  border-color: #FFB8B8 !important;
+  color: #7A2222 !important;
+}
+
+.teacher-fullscreen-actions {
+  flex-shrink: 0;
+  padding: 12px 20px;
+  border-bottom: 2px solid #ECEBF3;
+  margin: 0 !important;
+  background: #F7F6FF;
+}
+
+.teacher-dashboard-scroll {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 16px 20px 22px 20px;
+}
+
+/* Les tableaux prennent la place disponible. */
+.teacher-dashboard-modal .teacher-table-wrap,
+.teacher-dashboard-modal .teacher-skills-wrap {
+  max-width: 100%;
+  overflow: auto;
+}
+
+/* Tablette : fenêtre presque plein écran et bouton de fermeture toujours confortable. */
+@media (max-width: 900px) {
+  .teacher-dashboard-modal .teacher-fullscreen-box {
+    width: calc(100vw - 12px) !important;
+    height: calc(100vh - 12px) !important;
+    border-radius: 18px !important;
+  }
+
+  .teacher-fullscreen-top {
+    padding: 14px 14px 10px 14px;
+  }
+
+  .teacher-fullscreen-top h2 {
+    font-size: 24px !important;
+  }
+
+  .teacher-fullscreen-actions {
+    padding: 10px 14px;
+  }
+
+  .teacher-dashboard-scroll {
+    padding: 12px 14px 18px 14px;
+  }
+
+  .teacher-btn {
+    padding: 10px 12px !important;
+    font-size: 13px !important;
+  }
+}
+</style>
+
 </head>
 <body>
 
@@ -2926,7 +3071,6 @@ body.fullscreen-active .mockup-right-panel .mockup-full-progress-btn{
     </div>
     <div class="badge score" id="scoreBadge">🎯 <span id="scoreVal">0</span> pts</div>
     <button class="competence-header-btn" onclick="openCompetenceValidation()" title="Valider une compétence">⭐ <span class="competence-label">Valider une compétence</span></button>
-    <button class="btn-round" id="teacherBtn" onclick="openTeacherDashboard()" title="Tableau de bord enseignant">👨‍🏫</button>
     <button class="btn-round" id="soundBtn" onclick="toggleSound()">🔊</button>
   </div>
 </header>
@@ -3035,25 +3179,29 @@ body.fullscreen-active .mockup-right-panel .mockup-full-progress-btn{
 
 <div class="badge-toast" id="badgeToast"></div>
 
-<div class="modal-overlay hidden teacher-dashboard-modal" id="teacherDashboardOverlay">
-  <div class="modal-box">
-    <div class="teacher-top">
+<div class="modal-overlay hidden teacher-dashboard-modal" id="teacherDashboardOverlay" role="dialog" aria-modal="true" aria-label="Espace enseignant">
+  <div class="modal-box teacher-fullscreen-box">
+    <div class="teacher-top teacher-fullscreen-top">
       <div>
-        <h2>Tableau de bord enseignant 📊</h2>
+        <h2>🦉 Espace enseignant</h2>
         <p>Suivi local des élèves, scores, niveaux, badges et derniers entraînements.</p>
       </div>
-      <button class="btn-round" onclick="closeTeacherDashboard()" title="Fermer">✖</button>
+      <button class="btn-round teacher-close-btn" onclick="closeTeacherDashboard()" title="Fermer l’espace enseignant" aria-label="Fermer">✖</button>
     </div>
-    <div class="teacher-actions">
+
+    <div class="teacher-actions teacher-fullscreen-actions">
       <button class="teacher-btn" onclick="exportTeacherCSV()">⬇️ Export CSV</button>
       <button class="teacher-btn secondary" onclick="renderTeacherDashboard()">🔄 Actualiser</button>
       <button class="teacher-btn danger" onclick="resetAllStudents()">🧹 Tout réinitialiser</button>
     </div>
-    <div id="teacherChallengeContent"></div>
-    <div id="teacherPhase33Content"></div>
-    <div id="teacherSafetyContent"></div>
-    <div id="teacherDashboardContent"></div>
-    <div class="teacher-small">Les données sont enregistrées dans le navigateur de l'appareil. Pour un suivi fiable en classe, utilise toujours la même tablette ou exporte régulièrement le CSV.</div>
+
+    <div class="teacher-dashboard-scroll">
+      <div id="teacherChallengeContent"></div>
+      <div id="teacherPhase33Content"></div>
+      <div id="teacherSafetyContent"></div>
+      <div id="teacherDashboardContent"></div>
+      <div class="teacher-small">Les données sont enregistrées dans le navigateur de l'appareil. Pour un suivi fiable en classe, utilise toujours la même tablette ou exporte régulièrement le CSV.</div>
+    </div>
   </div>
 </div>
 
@@ -3419,12 +3567,17 @@ function getStudentSkillStats(name) {
 }
 
 function openTeacherDashboard() {
+  const overlay = document.getElementById('teacherDashboardOverlay');
+  if (!overlay) return;
+  overlay.classList.remove('hidden');
+  document.body.classList.add('teacher-dashboard-open');
   renderTeacherDashboard();
-  document.getElementById('teacherDashboardOverlay').classList.remove('hidden');
 }
 
 function closeTeacherDashboard() {
-  document.getElementById('teacherDashboardOverlay').classList.add('hidden');
+  const overlay = document.getElementById('teacherDashboardOverlay');
+  if (overlay) overlay.classList.add('hidden');
+  document.body.classList.remove('teacher-dashboard-open');
 }
 
 function teacherSuccessRate(skills) {
@@ -5870,73 +6023,6 @@ setTimeout(removeVieDeClassePanel, 1000);
 })();
 </script>
 
-
-<script id="patch-bouton-enseignant-v50b">
-(function(){
-  function fallbackTeacherDashboard(errorMessage){
-    const content = document.getElementById("teacherDashboardContent");
-    if(content){
-      let roster = [];
-      try { roster = JSON.parse(localStorage.getItem("hibou_roster") || "[]"); } catch(e){}
-      content.innerHTML = `
-        <div class="teacher-section">
-          <h3>👨‍🏫 Tableau enseignant</h3>
-          <p><strong>Le panneau enseignant est ouvert en mode sécurisé.</strong></p>
-          <p class="teacher-small">Une partie du tableau de bord complet a rencontré une erreur, mais le bouton fonctionne.</p>
-          <div class="teacher-actions">
-            <div class="stat-card">👥 ${roster.length} élève(s) enregistré(s)</div>
-          </div>
-          ${errorMessage ? `<div class="teacher-empty">Détail technique : ${String(errorMessage).replace(/[<>&]/g, "")}</div>` : ""}
-        </div>
-      `;
-    }
-  }
-
-  window.openTeacherDashboard = function(){
-    const overlay = document.getElementById("teacherDashboardOverlay");
-    if(!overlay){
-      alert("Le panneau enseignant est introuvable dans la page.");
-      return;
-    }
-
-    overlay.classList.remove("hidden");
-
-    try{
-      if(typeof renderTeacherDashboard === "function"){
-        renderTeacherDashboard();
-      }else{
-        fallbackTeacherDashboard("renderTeacherDashboard est introuvable");
-      }
-    }catch(err){
-      console.error("Erreur tableau enseignant :", err);
-      fallbackTeacherDashboard(err && err.message ? err.message : err);
-    }
-  };
-
-  window.closeTeacherDashboard = function(){
-    const overlay = document.getElementById("teacherDashboardOverlay");
-    if(overlay) overlay.classList.add("hidden");
-  };
-
-  document.addEventListener("DOMContentLoaded", function(){
-    const btn = document.getElementById("teacherBtn");
-    if(btn){
-      btn.onclick = window.openTeacherDashboard;
-      btn.style.pointerEvents = "auto";
-      btn.disabled = false;
-    }
-  });
-
-  window.addEventListener("load", function(){
-    const btn = document.getElementById("teacherBtn");
-    if(btn){
-      btn.onclick = window.openTeacherDashboard;
-      btn.style.pointerEvents = "auto";
-      btn.disabled = false;
-    }
-  });
-})();
-</script>
 
 <script id="patch-tablette-anti-refresh-v50c">
 (function(){
@@ -9881,6 +9967,128 @@ header{
 
   document.addEventListener('DOMContentLoaded', function(){ setTimeout(patchGeographieButtons, 120); });
   window.addEventListener('load', function(){ setTimeout(patchGeographieButtons, 180); });
+})();
+</script>
+
+
+<script id="script-v16-teacher-hidden-access">
+(function(){
+  if (window.__teacherHiddenAccessV16) return;
+  window.__teacherHiddenAccessV16 = true;
+
+  const LONG_PRESS_MS = 5000;
+  let longPressTimer = null;
+  let activeTarget = null;
+
+  function openTeacherFromHiddenAccess(){
+    clearLongPress();
+
+    if (typeof window.openTeacherDashboard === "function") {
+      window.openTeacherDashboard();
+    } else {
+      const overlay = document.getElementById("teacherDashboardOverlay");
+      if (overlay) overlay.classList.remove("hidden");
+      document.body.classList.add("teacher-dashboard-open");
+    }
+  }
+
+  function clearLongPress(){
+    if (longPressTimer) {
+      clearTimeout(longPressTimer);
+      longPressTimer = null;
+    }
+    if (activeTarget) {
+      activeTarget.classList.remove("teacher-longpress-active");
+      activeTarget = null;
+    }
+  }
+
+  function startLongPress(target){
+    clearLongPress();
+    activeTarget = target;
+    target.classList.add("teacher-longpress-active");
+    longPressTimer = setTimeout(openTeacherFromHiddenAccess, LONG_PRESS_MS);
+  }
+
+  function installHiddenAccess(){
+    const targets = document.querySelectorAll(".logo-icon, .hibou-profile-owl");
+    targets.forEach(function(target){
+      if (target.dataset.teacherHiddenAccessInstalled === "1") return;
+      target.dataset.teacherHiddenAccessInstalled = "1";
+      target.classList.add("teacher-longpress-ready");
+      target.title = "Maître Hibou";
+
+      target.addEventListener("touchstart", function(){
+        startLongPress(target);
+      }, {passive:true});
+
+      target.addEventListener("mousedown", function(event){
+        if (event.button !== 0) return;
+        startLongPress(target);
+      });
+
+      ["touchend", "touchcancel", "mouseup", "mouseleave", "dragstart"].forEach(function(eventName){
+        target.addEventListener(eventName, clearLongPress);
+      });
+    });
+  }
+
+  function installTeacherCloseBehaviors(){
+    const overlay = document.getElementById("teacherDashboardOverlay");
+    if (!overlay || overlay.dataset.closeBehaviorsInstalled === "1") return;
+    overlay.dataset.closeBehaviorsInstalled = "1";
+
+    overlay.addEventListener("click", function(event){
+      if (event.target === overlay && typeof window.closeTeacherDashboard === "function") {
+        window.closeTeacherDashboard();
+      }
+    });
+
+    document.addEventListener("keydown", function(event){
+      if (event.key === "Escape" && !overlay.classList.contains("hidden")) {
+        if (typeof window.closeTeacherDashboard === "function") window.closeTeacherDashboard();
+      }
+    });
+  }
+
+  const previousCloseTeacherDashboard = window.closeTeacherDashboard;
+  window.closeTeacherDashboard = function(){
+    const overlay = document.getElementById("teacherDashboardOverlay");
+    if (overlay) overlay.classList.add("hidden");
+    document.body.classList.remove("teacher-dashboard-open");
+
+    if (typeof previousCloseTeacherDashboard === "function") {
+      try { previousCloseTeacherDashboard(); } catch(e) {}
+    }
+  };
+
+  const previousOpenTeacherDashboard = window.openTeacherDashboard;
+  window.openTeacherDashboard = function(){
+    const overlay = document.getElementById("teacherDashboardOverlay");
+    if (!overlay) return;
+
+    overlay.classList.remove("hidden");
+    document.body.classList.add("teacher-dashboard-open");
+
+    if (typeof previousOpenTeacherDashboard === "function") {
+      try { previousOpenTeacherDashboard(); } catch(e) {}
+    } else if (typeof renderTeacherDashboard === "function") {
+      renderTeacherDashboard();
+    }
+
+    overlay.classList.remove("hidden");
+    document.body.classList.add("teacher-dashboard-open");
+  };
+
+  document.addEventListener("DOMContentLoaded", function(){
+    installHiddenAccess();
+    installTeacherCloseBehaviors();
+  });
+
+  window.addEventListener("load", function(){
+    installHiddenAccess();
+    installTeacherCloseBehaviors();
+  });
 })();
 </script>
 

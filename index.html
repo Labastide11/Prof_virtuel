@@ -2707,6 +2707,87 @@ body.fullscreen-active .mockup-right-panel .mockup-full-progress-btn{
 }
 </style>
 
+
+<style id="patch-header-v85-points-competences-message">
+/* V8.5 - Bandeau supérieur : points | compétences | message | valider une compétence */
+.header-actions{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:flex-end !important;
+  gap:14px !important;
+  flex-wrap:wrap !important;
+}
+.welcome-header-message{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  background:linear-gradient(135deg,#F2FFF4 0%,#FFFFFF 100%);
+  border:2px solid #CDEFD2;
+  border-radius:18px;
+  padding:10px 14px;
+  color:var(--text);
+  font-weight:900;
+  line-height:1.15;
+  box-shadow:var(--shadow);
+  white-space:nowrap;
+}
+.welcome-header-message .welcome-emoji{
+  font-size:22px;
+  line-height:1;
+}
+.welcome-header-message strong{
+  color:#178A32;
+  font-size:15px;
+}
+.welcome-header-message small{
+  font-size:13px;
+  color:var(--text);
+  font-weight:800;
+}
+.competence-header-btn{
+  min-height:58px !important;
+  padding:10px 18px !important;
+  border-radius:18px !important;
+  font-size:18px !important;
+  gap:12px !important;
+}
+.competence-header-btn .competence-icon{
+  font-size:30px !important;
+  line-height:1 !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+}
+@media (max-width:900px){
+  .header-actions{gap:8px !important;}
+  .welcome-header-message{
+    order:10;
+    width:100%;
+    justify-content:center;
+    white-space:normal;
+    text-align:center;
+  }
+}
+@media (max-width:520px){
+  .welcome-header-message{
+    display:none;
+  }
+  .competence-header-btn{
+    width:44px !important;
+    height:44px !important;
+    min-height:44px !important;
+    padding:0 !important;
+    border-radius:50% !important;
+  }
+  .competence-header-btn .competence-label{
+    display:none !important;
+  }
+  .competence-header-btn .competence-icon{
+    font-size:26px !important;
+  }
+}
+</style>
+
 </head>
 <body>
 
@@ -2720,7 +2801,12 @@ body.fullscreen-active .mockup-right-panel .mockup-full-progress-btn{
       👤 <span id="eleveNom">Élève</span>
     </div>
     <div class="badge score" id="scoreBadge">🎯 <span id="scoreVal">0</span> pts</div>
-    <button class="competence-header-btn" onclick="openCompetenceValidation()" title="Valider une compétence">⭐ <span class="competence-label">Valider une compétence</span></button>
+    
+<div id="welcomeHeaderMessage" class="welcome-header-message">
+  <span class="welcome-emoji">👋</span>
+  <span><strong>Bonjour champion !</strong><br><small>Prêt à apprendre et à gagner des points ?</small></span>
+</div>
+<button class="competence-header-btn" onclick="openCompetenceValidation()" title="Valider une compétence">⭐ <span class="competence-label">Valider une compétence</span></button>
     <button class="btn-round" id="teacherBtn" onclick="openTeacherDashboard()" title="Tableau de bord enseignant">👨‍🏫</button>
     <button class="btn-round" id="soundBtn" onclick="toggleSound()">🔊</button>
   </div>
@@ -2780,728 +2866,6 @@ body.fullscreen-active .mockup-right-panel .mockup-full-progress-btn{
   <button class="subject-btn" onclick="selectSubject(this, 'anglais')" data-subject="anglais"><span class="subject-icon">🇬🇧</span><span class="subject-label">Anglais</span></button>
 </div>
 <div class="quick-questions" id="quickQuestions" style="display:none;"></div>
-
-<div class="master-challenge-card" id="masterChallengeCard"></div>
-
-
-<div class="welcome-quiz-container" id="welcomeQuizFrame"></div>
-
-<div class="chat-container" id="chatContainer">
-  <div class="message prof">
-    <div class="avatar prof">🦉</div>
-    <div class="bubble">Coucou ! Je suis Maître Hibou, ton instituteur virtuel. La banque CE2 locale est maintenant enrichie : tu peux t’entraîner même sans IA !</div>
-  </div>
-</div>
-
-<div class="input-area">
-  <div class="input-wrapper">
-    <textarea class="chat-input" id="userInput" rows="1" placeholder="Écris ton message ici..." onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
-    <div style="position:relative; display:flex; gap:6px;">
-      <button class="action-btn voice" id="voiceBtn" onclick="toggleVoice()">🎤</button>
-      <button class="action-btn" onclick="sendMessage()">🚀</button>
-    </div>
-  </div>
-  <div class="security-note">Mode CE2 sécurisé : questions filtrées, réponses contrôlées, journal enseignant disponible.</div>
-  <div class="logout-area">
-    <button class="logout-btn" onclick="changerEleve()">👤 Changer d'élève / Donner la tablette</button>
-  </div>
-</div>
-
-<div class="modal-overlay hidden" id="modalOverlay">
-  <div class="modal-box">
-    <h2>Clé de sécurité requise 🔑</h2>
-    <p>Pour me permettre de réfléchir et de te répondre, entre ta clé d'activation API Groq ci-dessous :</p>
-    <input class="modal-input" type="password" id="apiKeyInput" placeholder="gsk_..." autocomplete="off">
-    <div class="modal-error" id="modalError"></div>
-    <button class="modal-btn" onclick="saveApiKey()">Valider et activer 🚀</button>
-  </div>
-</div>
-
-<div class="prenom-overlay" id="prenomOverlay">
-  <div class="prenom-box">
-    <div class="owl">🦉</div>
-    <h2>Comment tu t'appelles ?</h2>
-    <p>Entre ton prénom pour enregistrer tes super points !</p>
-    <input class="prenom-input" type="text" id="prenomInput" placeholder="Ton prénom ici..." autocomplete="off">
-    <div class="modal-error" id="prenomError"></div>
-    <button class="prenom-btn" onclick="savePrenom()">C'est parti ! 🚀</button>
-  </div>
-</div>
-
-<div class="badge-toast" id="badgeToast"></div>
-
-<div class="modal-overlay hidden teacher-dashboard-modal" id="teacherDashboardOverlay">
-  <div class="modal-box">
-    <div class="teacher-top">
-      <div>
-        <h2>Tableau de bord enseignant 📊</h2>
-        <p>Suivi local des élèves, scores, niveaux, badges et derniers entraînements.</p>
-      </div>
-      <button class="btn-round" onclick="closeTeacherDashboard()" title="Fermer">✖</button>
-    </div>
-    <div class="teacher-actions">
-      <button class="teacher-btn" onclick="exportTeacherCSV()">⬇️ Export CSV</button>
-      <button class="teacher-btn secondary" onclick="renderTeacherDashboard()">🔄 Actualiser</button>
-      <button class="teacher-btn danger" onclick="resetAllStudents()">🧹 Tout réinitialiser</button>
-    </div>
-    <div id="teacherChallengeContent"></div>
-    <div id="teacherPhase33Content"></div>
-    <div id="teacherSafetyContent"></div>
-    <div id="teacherDashboardContent"></div>
-    <div class="teacher-small">Les données sont enregistrées dans le navigateur de l'appareil. Pour un suivi fiable en classe, utilise toujours la même tablette ou exporte régulièrement le CSV.</div>
-  </div>
-</div>
-
-<div class="modal-overlay hidden progress-modal" id="progressOverlay">
-  <div class="modal-box">
-    <div class="progress-modal-header">
-      <div>
-        <h2>Mes progrès 📊</h2>
-        <p>Un résumé clair de tes entraînements dans Maître Hibou.</p>
-      </div>
-      <button class="btn-round" onclick="closeProgressPopup()" title="Fermer">✖</button>
-    </div>
-    <div id="progressPopupContent"></div>
-  </div>
-</div>
-
-
-<script>
-let GROQ_KEY = '';
-let currentSubject = 'general';
-let score = 0;
-let badges = [];
-let streak = 1;
-let isRecording = false;
-let recognition = null;
-let conversationHistory = [];
-let soundEnabled = true;
-let prenomActuel = '';
-let welcomeQuizSubject = 'général';
-
-const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbzeHY0Vm-O923mZfgQjmvUdtJUIEVUVR99srqocBldvkl7JPWn49K7tqqEthQB4JDQm/exec';
-const HIBOU_QUESTION_LOG_URL = 'https://script.google.com/macros/s/AKfycbzcgMiY7pEKb5M9jKYRfM2OMGB7lISvw-VRZzhdLrnIaQcu3gSAoEobrG7O0M9YuU8n/exec';
-
-// === V3 Phase 3.1 : banque locale CE2 et défis du maître ===
-const MASTER_CHALLENGE_KEY = 'hibou_master_challenge_v31';
-
-const banqueCE2 = {
-  maths: [
-    {q:'Combien font 6 × 7 ?', options:['42','36','48','40'], correct:0, skill:'tables'},
-    {q:'Combien font 8 × 5 ?', options:['35','40','45','30'], correct:1, skill:'tables'},
-    {q:'Combien font 9 × 4 ?', options:['32','36','40','45'], correct:1, skill:'tables'},
-    {q:'Quel est le double de 24 ?', options:['42','48','46','50'], correct:1, skill:'calcul'},
-    {q:'Quel est le résultat de 350 + 120 ?', options:['460','470','480','570'], correct:1, skill:'calcul'},
-    {q:'Dans 4 582, quel chiffre est celui des centaines ?', options:['4','5','8','2'], correct:1, skill:'numération'},
-    {q:'Quel nombre est le plus grand ?', options:['4 099','4 900','4 090','4 009'], correct:1, skill:'numération'},
-    {q:'Combien y a-t-il de minutes dans une heure ?', options:['30','45','60','100'], correct:2, skill:'mesures'},
-    {q:'Un rectangle a 4 côtés. Combien a-t-il d’angles droits ?', options:['2','3','4','5'], correct:2, skill:'géométrie'},
-    {q:'Combien font 63 ÷ 7 ?', options:['7','8','9','10'], correct:2, skill:'calcul'}
-  ],
-  francais: [
-    {q:'Dans « Le chien aboie », quel mot est un nom commun ?', options:['Le','chien','aboie'], correct:1, skill:'nom commun'},
-    {q:'Quel mot est un verbe ?', options:['courir','cartable','rouge'], correct:0, skill:'verbe'},
-    {q:'Quel déterminant convient : ___ maison ?', options:['un','une','des'], correct:1, skill:'déterminant'},
-    {q:'Dans « Les enfants jouent », quel est le verbe ?', options:['Les','enfants','jouent'], correct:2, skill:'verbe'},
-    {q:'Quel mot est un adjectif ?', options:['petit','table','chanter'], correct:0, skill:'adjectif'},
-    {q:'Quel est le pluriel de « un cheval » ?', options:['des chevals','des chevaux','des cheval'], correct:1, skill:'pluriel'},
-    {q:'Quelle phrase est correcte ?', options:['Les fille joue.','Les filles jouent.','La filles joue.'], correct:1, skill:'accord'},
-    {q:'Quel mot commence par un son voyelle ?', options:['arbre','chien','train'], correct:0, skill:'lecture'},
-    {q:'Dans « Je mange une pomme », quel est le complément ?', options:['Je','mange','une pomme'], correct:2, skill:'phrase'},
-    {q:'Quel signe termine une question ?', options:['.','?','!'], correct:1, skill:'ponctuation'}
-  ],
-  sciences: [
-    {q:'De quoi une plante a-t-elle besoin pour grandir ?', options:['Eau, lumière, terre','Seulement de sable','Seulement de vent'], correct:0, skill:'vivant'},
-    {q:'Quelle planète est appelée la planète rouge ?', options:['Mars','Vénus','Jupiter'], correct:0, skill:'système solaire'},
-    {q:'La Terre tourne autour...', options:['du Soleil','de la Lune','de Mars'], correct:0, skill:'système solaire'},
-    {q:'Quel organe sert à respirer ?', options:['les poumons','l’estomac','les dents'], correct:0, skill:'corps humain'},
-    {q:'L’eau solide s’appelle...', options:['vapeur','glace','pluie'], correct:1, skill:'matière'},
-    {q:'Un animal qui mange des plantes est...', options:['herbivore','carnivore','minéral'], correct:0, skill:'vivant'},
-    {q:'Le squelette sert surtout à...', options:['soutenir le corps','digérer','voir'], correct:0, skill:'corps humain'},
-    {q:'La Lune est...', options:['une étoile','un satellite de la Terre','une planète'], correct:1, skill:'système solaire'}
-  ],
-  geographie: [
-    {q:'La capitale de la France est...', options:['Paris','Lyon','Marseille'], correct:0, skill:'France'},
-    {q:'Quel fleuve traverse Paris ?', options:['La Seine','La Loire','Le Rhône'], correct:0, skill:'France'},
-    {q:'La France se trouve en...', options:['Europe','Afrique','Asie'], correct:0, skill:'Europe'},
-    {q:'Quel océan borde l’ouest de la France ?', options:['Atlantique','Pacifique','Indien'], correct:0, skill:'France'},
-    {q:'Les Pyrénées sont...', options:['des montagnes','des fleuves','des mers'], correct:0, skill:'relief'},
-    {q:'Une carte sert à...', options:['se repérer','chanter','mesurer le temps'], correct:0, skill:'carte'},
-    {q:'Le nord est souvent placé...', options:['en haut de la carte','en bas','à droite seulement'], correct:0, skill:'carte'},
-    {q:'La Méditerranée borde la France au...', options:['sud','nord','centre'], correct:0, skill:'France'}
-  ],
-  anglais: [
-    {q:'Comment dit-on « rouge » en anglais ?', options:['red','blue','green'], correct:0, skill:'colors'},
-    {q:'Comment dit-on « bonjour » ?', options:['hello','bye','cat'], correct:0, skill:'salutations'},
-    {q:'Comment dit-on « chien » ?', options:['dog','cat','bird'], correct:0, skill:'animals'},
-    {q:'Comment dit-on « merci » ?', options:['please','thank you','good night'], correct:1, skill:'politesse'},
-    {q:'Comment dit-on « un » ?', options:['one','two','three'], correct:0, skill:'numbers'},
-    {q:'Comment dit-on « bleu » ?', options:['yellow','blue','black'], correct:1, skill:'colors'}
-  ]
-};
-
-function shuffleHibouArray(arr) {
-  return arr.map(v => ({v, r: Math.random()})).sort((a,b) => a.r - b.r).map(o => o.v);
-}
-
-function makeMultiplicationOptions(answer) {
-  const candidates = [
-    answer,
-    answer + 2,
-    answer - 2,
-    answer + 5,
-    answer - 5,
-    answer + 10,
-    answer - 10
-  ].filter(n => n > 0 && n !== answer);
-  const uniqueWrong = [...new Set(candidates)].slice(0, 3);
-  while (uniqueWrong.length < 3) {
-    const extra = answer + (uniqueWrong.length + 1) * 3;
-    if (!uniqueWrong.includes(extra)) uniqueWrong.push(extra);
-  }
-  const optionsNumbers = shuffleHibouArray([answer, ...uniqueWrong.slice(0, 3)]);
-  return { options: optionsNumbers.map(String), correct: optionsNumbers.indexOf(answer) };
-}
-
-function makeAllTablesChallengeQuestions() {
-  const questions = [];
-  for (let a = 2; a <= 10; a++) {
-    for (let b = 2; b <= 10; b++) {
-      const answer = a * b;
-      const data = makeMultiplicationOptions(answer);
-      questions.push({
-        q: `${a} × ${b} = ?`,
-        options: data.options,
-        correct: data.correct,
-        skill: 'tables 2 à 10',
-        subject: 'maths'
-      });
-    }
-  }
-  return shuffleHibouArray(questions);
-}
-
-function makeTablesChallenge20Questions() {
-  // Les tables 2 à 10 contiennent 81 combinaisons possibles.
-  // Pour un vrai défi CE2 faisable sur tablette, on tire 20 calculs au hasard.
-  return makeAllTablesChallengeQuestions().slice(0, 20);
-}
-
-const challengeCatalog = {
-  tables2a10: {id:'tables2a10', title:'Méga défi : tables de 2 à 10', subject:'maths', reward:300, badge:'defi-tables-2-10', badgeLabel:'🏆 Maître des tables de 2 à 10', questions: makeTablesChallenge20Questions()},
-  nomCommun: {id:'nomCommun', title:'Nom commun', subject:'francais', reward:100, badge:'defi-nom-commun', badgeLabel:'🏆 Défi Nom commun', questions:null},
-  systemeSolaire: {id:'systemeSolaire', title:'Système solaire', subject:'sciences', reward:100, badge:'defi-systeme-solaire', badgeLabel:'🏆 Défi Système solaire', questions:null},
-  france: {id:'france', title:'Géographie : la France', subject:'geographie', reward:100, badge:'defi-france', badgeLabel:'🏆 Défi France', questions:null}
-};
-
-// === V4 Phase 4 : banque CE2 locale enrichie ===
-const banqueCE2Phase4 = {"maths": [{"q": "Combien font 2 × 2 ?", "options": ["4", "6", "2", "9"], "correct": 0, "skill": "tables"}, {"q": "Combien font 2 × 3 ?", "options": ["6", "8", "9", "4"], "correct": 0, "skill": "tables"}, {"q": "Combien font 2 × 4 ?", "options": ["8", "10", "12", "6"], "correct": 0, "skill": "tables"}, {"q": "Combien font 2 × 5 ?", "options": ["10", "12", "15", "8"], "correct": 0, "skill": "tables"}, {"q": "Combien font 2 × 6 ?", "options": ["12", "14", "18", "10"], "correct": 0, "skill": "tables"}, {"q": "Combien font 2 × 7 ?", "options": ["14", "16", "21", "12"], "correct": 0, "skill": "tables"}, {"q": "Combien font 2 × 8 ?", "options": ["16", "18", "24", "14"], "correct": 0, "skill": "tables"}, {"q": "Combien font 2 × 9 ?", "options": ["18", "20", "27", "16"], "correct": 0, "skill": "tables"}, {"q": "Combien font 2 × 10 ?", "options": ["20", "22", "30", "18"], "correct": 0, "skill": "tables"}, {"q": "Combien font 3 × 2 ?", "options": ["6", "9", "8", "4"], "correct": 0, "skill": "tables"}, {"q": "Combien font 3 × 3 ?", "options": ["9", "12", "11", "7"], "correct": 0, "skill": "tables"}, {"q": "Combien font 3 × 4 ?", "options": ["12", "15", "16", "14"], "correct": 0, "skill": "tables"}, {"q": "Combien font 3 × 5 ?", "options": ["15", "18", "20", "17"], "correct": 0, "skill": "tables"}, {"q": "Combien font 3 × 6 ?", "options": ["18", "21", "24", "20"], "correct": 0, "skill": "tables"}, {"q": "Combien font 3 × 7 ?", "options": ["21", "24", "28", "23"], "correct": 0, "skill": "tables"}, {"q": "Combien font 3 × 8 ?", "options": ["24", "27", "32", "26"], "correct": 0, "skill": "tables"}, {"q": "Combien font 3 × 9 ?", "options": ["27", "30", "36", "29"], "correct": 0, "skill": "tables"}, {"q": "Combien font 3 × 10 ?", "options": ["30", "33", "40", "32"], "correct": 0, "skill": "tables"}, {"q": "Combien font 4 × 2 ?", "options": ["8", "12", "10", "6"], "correct": 0, "skill": "tables"}, {"q": "Combien font 4 × 3 ?", "options": ["12", "16", "15", "14"], "correct": 0, "skill": "tables"}, {"q": "Combien font 4 × 4 ?", "options": ["16", "20", "18", "14"], "correct": 0, "skill": "tables"}, {"q": "Combien font 4 × 5 ?", "options": ["20", "24", "25", "22"], "correct": 0, "skill": "tables"}, {"q": "Combien font 4 × 6 ?", "options": ["24", "28", "30", "26"], "correct": 0, "skill": "tables"}, {"q": "Combien font 4 × 7 ?", "options": ["28", "32", "35", "30"], "correct": 0, "skill": "tables"}, {"q": "Combien font 4 × 8 ?", "options": ["32", "36", "40", "34"], "correct": 0, "skill": "tables"}, {"q": "Combien font 4 × 9 ?", "options": ["36", "40", "45", "38"], "correct": 0, "skill": "tables"}, {"q": "Combien font 4 × 10 ?", "options": ["40", "44", "50", "42"], "correct": 0, "skill": "tables"}, {"q": "Combien font 5 × 2 ?", "options": ["10", "15", "12", "8"], "correct": 0, "skill": "tables"}, {"q": "Combien font 5 × 3 ?", "options": ["15", "20", "18", "17"], "correct": 0, "skill": "tables"}, {"q": "Combien font 5 × 4 ?", "options": ["20", "25", "24", "22"], "correct": 0, "skill": "tables"}, {"q": "Combien font 5 × 5 ?", "options": ["25", "30", "27", "23"], "correct": 0, "skill": "tables"}, {"q": "Combien font 5 × 6 ?", "options": ["30", "35", "36", "32"], "correct": 0, "skill": "tables"}, {"q": "Combien font 5 × 7 ?", "options": ["35", "40", "42", "37"], "correct": 0, "skill": "tables"}, {"q": "Combien font 5 × 8 ?", "options": ["40", "45", "48", "42"], "correct": 0, "skill": "tables"}, {"q": "Combien font 5 × 9 ?", "options": ["45", "50", "54", "47"], "correct": 0, "skill": "tables"}, {"q": "Combien font 5 × 10 ?", "options": ["50", "55", "60", "52"], "correct": 0, "skill": "tables"}, {"q": "Combien font 6 × 2 ?", "options": ["12", "18", "14", "10"], "correct": 0, "skill": "tables"}, {"q": "Combien font 6 × 3 ?", "options": ["18", "24", "21", "20"], "correct": 0, "skill": "tables"}, {"q": "Combien font 6 × 4 ?", "options": ["24", "30", "28", "26"], "correct": 0, "skill": "tables"}, {"q": "Combien font 6 × 5 ?", "options": ["30", "36", "35", "32"], "correct": 0, "skill": "tables"}, {"q": "Combien font 6 × 6 ?", "options": ["36", "42", "38", "34"], "correct": 0, "skill": "tables"}, {"q": "Combien font 6 × 7 ?", "options": ["42", "48", "49", "44"], "correct": 0, "skill": "tables"}, {"q": "Combien font 6 × 8 ?", "options": ["48", "54", "56", "50"], "correct": 0, "skill": "tables"}, {"q": "Combien font 6 × 9 ?", "options": ["54", "60", "63", "56"], "correct": 0, "skill": "tables"}, {"q": "Combien font 6 × 10 ?", "options": ["60", "66", "70", "62"], "correct": 0, "skill": "tables"}, {"q": "Combien font 7 × 2 ?", "options": ["14", "21", "16", "12"], "correct": 0, "skill": "tables"}, {"q": "Combien font 7 × 3 ?", "options": ["21", "28", "24", "23"], "correct": 0, "skill": "tables"}, {"q": "Combien font 7 × 4 ?", "options": ["28", "35", "32", "30"], "correct": 0, "skill": "tables"}, {"q": "Combien font 7 × 5 ?", "options": ["35", "42", "40", "37"], "correct": 0, "skill": "tables"}, {"q": "Combien font 7 × 6 ?", "options": ["42", "49", "48", "44"], "correct": 0, "skill": "tables"}, {"q": "Combien font 7 × 7 ?", "options": ["49", "56", "51", "47"], "correct": 0, "skill": "tables"}, {"q": "Combien font 7 × 8 ?", "options": ["56", "63", "64", "58"], "correct": 0, "skill": "tables"}, {"q": "Combien font 7 × 9 ?", "options": ["63", "70", "72", "65"], "correct": 0, "skill": "tables"}, {"q": "Combien font 7 × 10 ?", "options": ["70", "77", "80", "72"], "correct": 0, "skill": "tables"}, {"q": "Combien font 8 × 2 ?", "options": ["16", "24", "18", "14"], "correct": 0, "skill": "tables"}, {"q": "Combien font 8 × 3 ?", "options": ["24", "32", "27", "26"], "correct": 0, "skill": "tables"}, {"q": "Combien font 8 × 4 ?", "options": ["32", "40", "36", "34"], "correct": 0, "skill": "tables"}, {"q": "Combien font 8 × 5 ?", "options": ["40", "48", "45", "42"], "correct": 0, "skill": "tables"}, {"q": "Combien font 8 × 6 ?", "options": ["48", "56", "54", "50"], "correct": 0, "skill": "tables"}, {"q": "Combien font 8 × 7 ?", "options": ["56", "64", "63", "58"], "correct": 0, "skill": "tables"}, {"q": "Combien font 8 × 8 ?", "options": ["64", "72", "66", "62"], "correct": 0, "skill": "tables"}, {"q": "Combien font 8 × 9 ?", "options": ["72", "80", "81", "74"], "correct": 0, "skill": "tables"}, {"q": "Combien font 8 × 10 ?", "options": ["80", "88", "90", "82"], "correct": 0, "skill": "tables"}, {"q": "Combien font 9 × 2 ?", "options": ["18", "27", "20", "16"], "correct": 0, "skill": "tables"}, {"q": "Combien font 9 × 3 ?", "options": ["27", "36", "30", "29"], "correct": 0, "skill": "tables"}, {"q": "Combien font 9 × 4 ?", "options": ["36", "45", "40", "38"], "correct": 0, "skill": "tables"}, {"q": "Combien font 9 × 5 ?", "options": ["45", "54", "50", "47"], "correct": 0, "skill": "tables"}, {"q": "Combien font 9 × 6 ?", "options": ["54", "63", "60", "56"], "correct": 0, "skill": "tables"}, {"q": "Combien font 9 × 7 ?", "options": ["63", "72", "70", "65"], "correct": 0, "skill": "tables"}, {"q": "Combien font 9 × 8 ?", "options": ["72", "81", "80", "74"], "correct": 0, "skill": "tables"}, {"q": "Combien font 9 × 9 ?", "options": ["81", "90", "83", "79"], "correct": 0, "skill": "tables"}, {"q": "Combien font 9 × 10 ?", "options": ["90", "99", "100", "92"], "correct": 0, "skill": "tables"}, {"q": "Combien font 10 × 2 ?", "options": ["20", "30", "22", "18"], "correct": 0, "skill": "tables"}, {"q": "Combien font 10 × 3 ?", "options": ["30", "40", "33", "32"], "correct": 0, "skill": "tables"}, {"q": "Combien font 10 × 4 ?", "options": ["40", "50", "44", "42"], "correct": 0, "skill": "tables"}, {"q": "Combien font 10 × 5 ?", "options": ["50", "60", "55", "52"], "correct": 0, "skill": "tables"}, {"q": "Combien font 10 × 6 ?", "options": ["60", "70", "66", "62"], "correct": 0, "skill": "tables"}, {"q": "Combien font 10 × 7 ?", "options": ["70", "80", "77", "72"], "correct": 0, "skill": "tables"}, {"q": "Combien font 10 × 8 ?", "options": ["80", "90", "88", "82"], "correct": 0, "skill": "tables"}, {"q": "Combien font 10 × 9 ?", "options": ["90", "100", "99", "92"], "correct": 0, "skill": "tables"}, {"q": "Combien font 10 × 10 ?", "options": ["100", "110", "102", "98"], "correct": 0, "skill": "tables"}, {"q": "Quel est le double de 12 ?", "options": ["24", "22", "28", "34"], "correct": 0, "skill": "calcul mental"}, {"q": "Quel est le double de 16 ?", "options": ["32", "30", "36", "42"], "correct": 0, "skill": "calcul mental"}, {"q": "Quel est le double de 20 ?", "options": ["40", "38", "44", "50"], "correct": 0, "skill": "calcul mental"}, {"q": "Quel est le double de 24 ?", "options": ["48", "46", "52", "58"], "correct": 0, "skill": "calcul mental"}, {"q": "Quel est le double de 28 ?", "options": ["56", "54", "60", "66"], "correct": 0, "skill": "calcul mental"}, {"q": "Quel est le double de 32 ?", "options": ["64", "62", "68", "74"], "correct": 0, "skill": "calcul mental"}, {"q": "Quel est le double de 36 ?", "options": ["72", "70", "76", "82"], "correct": 0, "skill": "calcul mental"}, {"q": "Quel est le double de 40 ?", "options": ["80", "78", "84", "90"], "correct": 0, "skill": "calcul mental"}, {"q": "Quel est le double de 44 ?", "options": ["88", "86", "92", "98"], "correct": 0, "skill": "calcul mental"}, {"q": "Quel est le double de 48 ?", "options": ["96", "94", "100", "106"], "correct": 0, "skill": "calcul mental"}, {"q": "Quelle est la moitié de 10 ?", "options": ["5", "7", "3", "10"], "correct": 0, "skill": "calcul mental"}, {"q": "Quelle est la moitié de 15 ?", "options": ["7", "9", "5", "15"], "correct": 0, "skill": "calcul mental"}, {"q": "Quelle est la moitié de 20 ?", "options": ["10", "12", "8", "20"], "correct": 0, "skill": "calcul mental"}, {"q": "Quelle est la moitié de 25 ?", "options": ["12", "14", "10", "25"], "correct": 0, "skill": "calcul mental"}, {"q": "Quelle est la moitié de 30 ?", "options": ["15", "17", "13", "30"], "correct": 0, "skill": "calcul mental"}, {"q": "Quelle est la moitié de 35 ?", "options": ["17", "19", "15", "35"], "correct": 0, "skill": "calcul mental"}, {"q": "Quelle est la moitié de 40 ?", "options": ["20", "22", "18", "40"], "correct": 0, "skill": "calcul mental"}, {"q": "Calcule 145 + 230.", "options": ["375", "385", "365", "475"], "correct": 0, "skill": "addition"}, {"q": "Calcule 308 + 120.", "options": ["428", "438", "418", "528"], "correct": 0, "skill": "addition"}, {"q": "Calcule 450 + 75.", "options": ["525", "535", "515", "625"], "correct": 0, "skill": "addition"}, {"q": "Calcule 199 + 101.", "options": ["300", "310", "290", "400"], "correct": 0, "skill": "addition"}, {"q": "Calcule 620 + 180.", "options": ["800", "810", "790", "900"], "correct": 0, "skill": "addition"}, {"q": "Calcule 275 + 125.", "options": ["400", "410", "390", "500"], "correct": 0, "skill": "addition"}, {"q": "Calcule 540 + 60.", "options": ["600", "610", "590", "700"], "correct": 0, "skill": "addition"}, {"q": "Calcule 389 + 210.", "options": ["599", "609", "589", "699"], "correct": 0, "skill": "addition"}, {"q": "Calcule 700 + 95.", "options": ["795", "805", "785", "895"], "correct": 0, "skill": "addition"}, {"q": "Calcule 1250 + 300.", "options": ["1550", "1560", "1540", "1650"], "correct": 0, "skill": "addition"}, {"q": "Calcule 500 - 125.", "options": ["375", "385", "365", "475"], "correct": 0, "skill": "soustraction"}, {"q": "Calcule 742 - 200.", "options": ["542", "552", "532", "642"], "correct": 0, "skill": "soustraction"}, {"q": "Calcule 900 - 350.", "options": ["550", "560", "540", "650"], "correct": 0, "skill": "soustraction"}, {"q": "Calcule 1000 - 250.", "options": ["750", "760", "740", "850"], "correct": 0, "skill": "soustraction"}, {"q": "Calcule 680 - 80.", "options": ["600", "610", "590", "700"], "correct": 0, "skill": "soustraction"}, {"q": "Calcule 421 - 121.", "options": ["300", "310", "290", "400"], "correct": 0, "skill": "soustraction"}, {"q": "Calcule 360 - 45.", "options": ["315", "325", "305", "415"], "correct": 0, "skill": "soustraction"}, {"q": "Calcule 850 - 150.", "options": ["700", "710", "690", "800"], "correct": 0, "skill": "soustraction"}, {"q": "Calcule 604 - 104.", "options": ["500", "510", "490", "600"], "correct": 0, "skill": "soustraction"}, {"q": "Calcule 1200 - 600.", "options": ["600", "610", "590", "700"], "correct": 0, "skill": "soustraction"}, {"q": "Dans 4582, quel chiffre est celui des centaines ?", "options": ["4", "5", "8", "2"], "correct": 1, "skill": "numération"}, {"q": "Dans 7306, quel chiffre est celui des centaines ?", "options": ["7", "3", "0", "6"], "correct": 0, "skill": "numération"}, {"q": "Dans 6091, quel chiffre est celui des centaines ?", "options": ["6", "0", "9", "1"], "correct": 1, "skill": "numération"}, {"q": "Dans 1248, quel chiffre est celui des centaines ?", "options": ["1", "2", "4", "8"], "correct": 1, "skill": "numération"}, {"q": "Dans 9850, quel chiffre est celui des centaines ?", "options": ["9", "8", "5", "0"], "correct": 1, "skill": "numération"}, {"q": "Quel nombre est le plus grand ?", "options": ["2 450", "2 405", "2 540", "2 054"], "correct": 2, "skill": "numération"}, {"q": "Quel nombre est le plus grand ?", "options": ["6 099", "6 900", "6 090", "6 009"], "correct": 1, "skill": "numération"}, {"q": "Quel nombre est le plus grand ?", "options": ["3 310", "3 130", "3 301", "3 031"], "correct": 0, "skill": "numération"}, {"q": "Quel nombre est le plus grand ?", "options": ["9 001", "9 010", "9 100", "8 999"], "correct": 2, "skill": "numération"}, {"q": "Quel nombre est le plus grand ?", "options": ["1 999", "2 001", "2 010", "2 100"], "correct": 3, "skill": "numération"}, {"q": "Combien y a-t-il de centimètres dans 1 mètre ?", "options": ["100", "10", "60", "1000"], "correct": 0, "skill": "mesures"}, {"q": "Combien y a-t-il de grammes dans 1 kilogramme ?", "options": ["1000", "100", "10", "60"], "correct": 0, "skill": "mesures"}, {"q": "Combien y a-t-il de minutes dans 2 heures ?", "options": ["120", "60", "100", "90"], "correct": 0, "skill": "mesures"}, {"q": "Quelle unité utilise-t-on pour mesurer une longueur de cahier ?", "options": ["centimètre", "kilogramme", "litre", "heure"], "correct": 0, "skill": "mesures"}, {"q": "Un carré a combien de côtés égaux ?", "options": ["4", "2", "3", "5"], "correct": 0, "skill": "géométrie"}, {"q": "Un triangle a combien de côtés ?", "options": ["3", "4", "5", "2"], "correct": 0, "skill": "géométrie"}, {"q": "Un rectangle a combien d’angles droits ?", "options": ["4", "2", "3", "0"], "correct": 0, "skill": "géométrie"}, {"q": "Le périmètre d’un carré de côté 5 cm est...", "options": ["20 cm", "10 cm", "25 cm", "15 cm"], "correct": 0, "skill": "géométrie"}, {"q": "Léa a 3 paquets de 4 billes. Combien a-t-elle de billes ?", "options": ["12", "7", "10", "14"], "correct": 0, "skill": "problème"}, {"q": "Paul achète 2 livres à 6 €. Combien paie-t-il ?", "options": ["12 €", "8 €", "10 €", "14 €"], "correct": 0, "skill": "problème"}, {"q": "Il y a 24 élèves rangés par équipes de 4. Combien d’équipes ?", "options": ["6", "5", "7", "8"], "correct": 0, "skill": "problème"}, {"q": "Un bus transporte 35 enfants. 10 descendent. Combien restent ?", "options": ["25", "45", "20", "30"], "correct": 0, "skill": "problème"}], "francais": [{"q": "Dans « Le chat dort sur le tapis. », quel mot est un nom commun ?", "options": ["chat", "est", "sur"], "correct": 0, "skill": "nom commun"}, {"q": "Dans « Une fille lit un livre. », quel mot est un nom commun ?", "options": ["fille", "est", "sur"], "correct": 0, "skill": "nom commun"}, {"q": "Dans « Le maître écrit au tableau. », quel mot est un nom commun ?", "options": ["maître", "est", "sur"], "correct": 0, "skill": "nom commun"}, {"q": "Dans « La voiture roule vite. », quel mot est un nom commun ?", "options": ["voiture", "est", "sur"], "correct": 0, "skill": "nom commun"}, {"q": "Dans « Un oiseau chante. », quel mot est un nom commun ?", "options": ["oiseau", "est", "sur"], "correct": 0, "skill": "nom commun"}, {"q": "Dans « Le cartable est lourd. », quel mot est un nom commun ?", "options": ["cartable", "est", "sur"], "correct": 0, "skill": "nom commun"}, {"q": "Dans « La rivière traverse la ville. », quel mot est un nom commun ?", "options": ["rivière", "est", "sur"], "correct": 0, "skill": "nom commun"}, {"q": "Dans « Mon frère joue dehors. », quel mot est un nom commun ?", "options": ["frère", "est", "sur"], "correct": 0, "skill": "nom commun"}, {"q": "Dans « Cette fleur est rouge. », quel mot est un nom commun ?", "options": ["fleur", "est", "sur"], "correct": 0, "skill": "nom commun"}, {"q": "Dans « Le ballon tombe. », quel mot est un nom commun ?", "options": ["ballon", "est", "sur"], "correct": 0, "skill": "nom commun"}, {"q": "Dans « Les enfants jouent dans la cour. », quel est le verbe ?", "options": ["jouent", "maison", "le"], "correct": 0, "skill": "verbe"}, {"q": "Dans « Je mange une pomme. », quel est le verbe ?", "options": ["mange", "maison", "le"], "correct": 0, "skill": "verbe"}, {"q": "Dans « Nous chantons ensemble. », quel est le verbe ?", "options": ["chantons", "maison", "le"], "correct": 0, "skill": "verbe"}, {"q": "Dans « Tu regardes le ciel. », quel est le verbe ?", "options": ["regardes", "maison", "le"], "correct": 0, "skill": "verbe"}, {"q": "Dans « Elle dessine une maison. », quel est le verbe ?", "options": ["dessine", "maison", "le"], "correct": 0, "skill": "verbe"}, {"q": "Dans « Ils lisent un conte. », quel est le verbe ?", "options": ["lisent", "maison", "le"], "correct": 0, "skill": "verbe"}, {"q": "Dans « Le chien aboie. », quel est le verbe ?", "options": ["aboie", "maison", "le"], "correct": 0, "skill": "verbe"}, {"q": "Dans « Vous écoutez la maîtresse. », quel est le verbe ?", "options": ["écoutez", "maison", "le"], "correct": 0, "skill": "verbe"}, {"q": "Dans « Je finis mon exercice. », quel est le verbe ?", "options": ["finis", "maison", "le"], "correct": 0, "skill": "verbe"}, {"q": "Dans « Le bébé dort. », quel est le verbe ?", "options": ["dort", "maison", "le"], "correct": 0, "skill": "verbe"}, {"q": "Quel mot est un adjectif ?", "options": ["rapide", "courir", "table"], "correct": 0, "skill": "adjectif"}, {"q": "Quel mot est un adjectif ?", "options": ["gentil", "école", "chanter"], "correct": 0, "skill": "adjectif"}, {"q": "Quel mot est un déterminant ?", "options": ["une", "manger", "bleu"], "correct": 0, "skill": "déterminant"}, {"q": "Quel déterminant convient : ___ arbre ?", "options": ["un", "une", "des"], "correct": 0, "skill": "déterminant"}, {"q": "Quel déterminant convient : ___ maisons ?", "options": ["des", "un", "une"], "correct": 0, "skill": "déterminant"}, {"q": "Quel est le pluriel de « un journal » ?", "options": ["des journaux", "des journals", "des journal"], "correct": 0, "skill": "pluriel"}, {"q": "Quel est le pluriel de « une souris » ?", "options": ["des souris", "des sourises", "des souri"], "correct": 0, "skill": "pluriel"}, {"q": "Quel est le pluriel de « un bateau » ?", "options": ["des bateaux", "des bateaus", "des bateau"], "correct": 0, "skill": "pluriel"}, {"q": "Quelle phrase est correcte ?", "options": ["Les enfants jouent.", "Les enfant joue.", "Les enfants joue."], "correct": 0, "skill": "accord"}, {"q": "Quelle phrase est correcte ?", "options": ["La fille chante.", "La fille chantent.", "Les fille chantent."], "correct": 0, "skill": "accord"}, {"q": "Quel signe termine une question ?", "options": ["?", ".", "!"], "correct": 0, "skill": "ponctuation"}, {"q": "Quel signe marque une exclamation ?", "options": ["!", "?", ","], "correct": 0, "skill": "ponctuation"}, {"q": "Une phrase commence par...", "options": ["une majuscule", "un point", "une virgule"], "correct": 0, "skill": "phrase"}, {"q": "Une phrase se termine souvent par...", "options": ["un point", "une majuscule", "un déterminant"], "correct": 0, "skill": "phrase"}, {"q": "Quel mot est de la même famille que “chant” ?", "options": ["chanter", "château", "champ"], "correct": 0, "skill": "vocabulaire"}, {"q": "Quel est le contraire de “grand” ?", "options": ["petit", "immense", "haut"], "correct": 0, "skill": "vocabulaire"}, {"q": "Quel est le synonyme de “rapide” ?", "options": ["vite", "lent", "calme"], "correct": 0, "skill": "vocabulaire"}, {"q": "Dans l’ordre alphabétique, quel mot vient en premier ?", "options": ["abricot", "banane", "cerise"], "correct": 0, "skill": "vocabulaire"}, {"q": "Quel mot contient le son [ou] ?", "options": ["loup", "lit", "lac"], "correct": 0, "skill": "lecture"}, {"q": "Quel mot contient le son [an] ?", "options": ["maman", "mimi", "moto"], "correct": 0, "skill": "lecture"}, {"q": "Complète : je ___", "options": ["suis", "est", "sont"], "correct": 0, "skill": "conjugaison"}, {"q": "Complète : tu ___", "options": ["es", "est", "sont"], "correct": 0, "skill": "conjugaison"}, {"q": "Complète : il ___", "options": ["est", "est", "sont"], "correct": 0, "skill": "conjugaison"}, {"q": "Complète : nous ___", "options": ["sommes", "est", "sont"], "correct": 0, "skill": "conjugaison"}, {"q": "Complète : vous ___", "options": ["êtes", "est", "sont"], "correct": 0, "skill": "conjugaison"}, {"q": "Complète : ils ___", "options": ["sont", "est", "sont"], "correct": 0, "skill": "conjugaison"}, {"q": "Complète : j’ ___", "options": ["ai", "est", "sont"], "correct": 0, "skill": "conjugaison"}, {"q": "Complète : tu ___", "options": ["as", "est", "sont"], "correct": 0, "skill": "conjugaison"}, {"q": "Complète : elle ___", "options": ["a", "est", "sont"], "correct": 0, "skill": "conjugaison"}, {"q": "Complète : nous ___", "options": ["avons", "est", "sont"], "correct": 0, "skill": "conjugaison"}, {"q": "Complète : vous ___", "options": ["avez", "est", "sont"], "correct": 0, "skill": "conjugaison"}, {"q": "Complète : ils ___", "options": ["ont", "est", "sont"], "correct": 0, "skill": "conjugaison"}], "sciences": [{"q": "La Terre tourne autour...", "options": ["du Soleil", "de la Lune", "de Mars"], "correct": 0, "skill": "système solaire"}, {"q": "La Lune tourne autour...", "options": ["de la Terre", "du Soleil", "de Jupiter"], "correct": 0, "skill": "système solaire"}, {"q": "Quelle planète est la planète rouge ?", "options": ["Mars", "Vénus", "Saturne"], "correct": 0, "skill": "système solaire"}, {"q": "Le Soleil est...", "options": ["une étoile", "une planète", "un satellite"], "correct": 0, "skill": "système solaire"}, {"q": "La planète la plus proche du Soleil est...", "options": ["Mercure", "Mars", "Neptune"], "correct": 0, "skill": "système solaire"}, {"q": "Une journée correspond à...", "options": ["un tour de la Terre sur elle-même", "un tour de la Lune", "un mois"], "correct": 0, "skill": "système solaire"}, {"q": "Une année correspond environ à...", "options": ["un tour de la Terre autour du Soleil", "un tour de la Terre sur elle-même", "une semaine"], "correct": 0, "skill": "système solaire"}, {"q": "De quoi une plante a-t-elle besoin ?", "options": ["eau, lumière, air", "seulement pierre", "seulement sucre"], "correct": 0, "skill": "vivant"}, {"q": "La racine sert surtout à...", "options": ["absorber l’eau", "faire des fleurs", "voler"], "correct": 0, "skill": "vivant"}, {"q": "Les feuilles aident la plante à...", "options": ["fabriquer sa nourriture", "marcher", "dormir"], "correct": 0, "skill": "vivant"}, {"q": "Un animal herbivore mange surtout...", "options": ["des plantes", "de la viande", "des cailloux"], "correct": 0, "skill": "vivant"}, {"q": "Un carnivore mange surtout...", "options": ["d’autres animaux", "des feuilles", "du sable"], "correct": 0, "skill": "vivant"}, {"q": "Un être vivant...", "options": ["naît, grandit, se nourrit", "reste toujours pareil", "n’a besoin de rien"], "correct": 0, "skill": "vivant"}, {"q": "Les poumons servent à...", "options": ["respirer", "digérer", "voir"], "correct": 0, "skill": "corps humain"}, {"q": "Le cœur sert à...", "options": ["faire circuler le sang", "entendre", "mâcher"], "correct": 0, "skill": "corps humain"}, {"q": "Le squelette sert à...", "options": ["soutenir le corps", "fabriquer l’air", "voir les couleurs"], "correct": 0, "skill": "corps humain"}, {"q": "Les muscles permettent...", "options": ["de bouger", "de lire", "de respirer sous l’eau"], "correct": 0, "skill": "corps humain"}, {"q": "Les dents servent à...", "options": ["couper et mâcher", "respirer", "voir"], "correct": 0, "skill": "corps humain"}, {"q": "L’eau solide est...", "options": ["la glace", "la vapeur", "la pluie"], "correct": 0, "skill": "matière"}, {"q": "Quand l’eau chauffe beaucoup, elle devient...", "options": ["vapeur", "glace", "pierre"], "correct": 0, "skill": "matière"}, {"q": "L’eau liquide peut devenir solide si...", "options": ["elle gèle", "elle chante", "elle est verte"], "correct": 0, "skill": "matière"}, {"q": "Un objet transparent...", "options": ["laisse passer la lumière", "cache tout", "est toujours lourd"], "correct": 0, "skill": "matière"}, {"q": "Un aimant attire surtout...", "options": ["le fer", "le bois", "le papier"], "correct": 0, "skill": "matière"}, {"q": "Pour voir, il faut...", "options": ["de la lumière", "du silence", "du sucre"], "correct": 0, "skill": "lumière"}, {"q": "Une ombre se forme quand...", "options": ["un objet bloque la lumière", "il pleut", "on ferme un livre"], "correct": 0, "skill": "lumière"}], "geographie": [{"q": "La capitale de la France est...", "options": ["Paris", "Lyon", "Toulouse"], "correct": 0, "skill": "France"}, {"q": "La France se trouve en...", "options": ["Europe", "Afrique", "Asie"], "correct": 0, "skill": "Europe"}, {"q": "Quel océan borde l’ouest de la France ?", "options": ["Atlantique", "Pacifique", "Indien"], "correct": 0, "skill": "France"}, {"q": "Quelle mer borde le sud-est de la France ?", "options": ["Méditerranée", "Mer Rouge", "Mer du Nord"], "correct": 0, "skill": "France"}, {"q": "Les Pyrénées sont...", "options": ["des montagnes", "des fleuves", "des îles"], "correct": 0, "skill": "relief"}, {"q": "Les Alpes sont...", "options": ["une chaîne de montagnes", "une mer", "un pays"], "correct": 0, "skill": "relief"}, {"q": "La Seine traverse...", "options": ["Paris", "Carcassonne", "Brest"], "correct": 0, "skill": "France"}, {"q": "La Loire est...", "options": ["un fleuve", "une montagne", "une ville"], "correct": 0, "skill": "France"}, {"q": "Sur une carte, le nord est souvent...", "options": ["en haut", "en bas", "à gauche uniquement"], "correct": 0, "skill": "carte"}, {"q": "Une légende de carte sert à...", "options": ["comprendre les symboles", "effacer la carte", "mesurer le poids"], "correct": 0, "skill": "carte"}, {"q": "Une boussole indique...", "options": ["le nord", "l’heure", "la pluie"], "correct": 0, "skill": "carte"}, {"q": "La France est divisée en...", "options": ["régions", "planètes", "océans"], "correct": 0, "skill": "France"}, {"q": "Toulouse se trouve dans le...", "options": ["sud-ouest", "nord", "centre-est"], "correct": 0, "skill": "France"}, {"q": "Carcassonne est connue pour...", "options": ["sa cité médiévale", "son volcan", "sa banquise"], "correct": 0, "skill": "France"}, {"q": "L’Europe est...", "options": ["un continent", "une ville", "un fleuve"], "correct": 0, "skill": "Europe"}, {"q": "Un littoral est...", "options": ["une zone au bord de la mer", "une montagne", "un désert"], "correct": 0, "skill": "vocabulaire géo"}, {"q": "Une frontière sépare...", "options": ["deux territoires", "deux cahiers", "deux minutes"], "correct": 0, "skill": "vocabulaire géo"}, {"q": "Une ville est plus grande qu...", "options": ["un village", "un continent", "un océan"], "correct": 0, "skill": "vocabulaire géo"}, {"q": "Un plan sert souvent à...", "options": ["se repérer dans une ville", "cuire du pain", "chanter"], "correct": 0, "skill": "carte"}, {"q": "Le Rhône est...", "options": ["un fleuve", "une mer", "une île"], "correct": 0, "skill": "France"}, {"q": "La Garonne traverse...", "options": ["Toulouse", "Paris", "Lille"], "correct": 0, "skill": "France"}, {"q": "La Manche se trouve au...", "options": ["nord-ouest de la France", "sud de l’Espagne", "milieu de l’Afrique"], "correct": 0, "skill": "France"}, {"q": "La Corse est...", "options": ["une île", "un fleuve", "une montagne"], "correct": 0, "skill": "France"}, {"q": "Un relief désigne...", "options": ["les formes du terrain", "les couleurs d’un drapeau", "les habitants"], "correct": 0, "skill": "relief"}, {"q": "Une plaine est...", "options": ["un espace plutôt plat", "un sommet très haut", "une mer"], "correct": 0, "skill": "relief"}], "anglais": [{"q": "Comment dit-on « rouge » en anglais ?", "options": ["red", "blue", "green"], "correct": 0, "skill": "colors"}, {"q": "Comment dit-on « bleu » en anglais ?", "options": ["blue", "red", "green"], "correct": 0, "skill": "colors"}, {"q": "Comment dit-on « vert » en anglais ?", "options": ["green", "red", "blue"], "correct": 0, "skill": "colors"}, {"q": "Comment dit-on « jaune » en anglais ?", "options": ["yellow", "red", "blue"], "correct": 0, "skill": "colors"}, {"q": "Comment dit-on « noir » en anglais ?", "options": ["black", "red", "blue"], "correct": 0, "skill": "colors"}, {"q": "Comment dit-on « blanc » en anglais ?", "options": ["white", "red", "blue"], "correct": 0, "skill": "colors"}, {"q": "Comment dit-on « bonjour » en anglais ?", "options": ["hello", "red", "blue"], "correct": 0, "skill": "salutations"}, {"q": "Comment dit-on « au revoir » en anglais ?", "options": ["goodbye", "red", "blue"], "correct": 0, "skill": "salutations"}, {"q": "Comment dit-on « merci » en anglais ?", "options": ["thank you", "red", "blue"], "correct": 0, "skill": "politesse"}, {"q": "Comment dit-on « s’il te plaît » en anglais ?", "options": ["please", "red", "blue"], "correct": 0, "skill": "politesse"}, {"q": "Comment dit-on « un » en anglais ?", "options": ["one", "red", "blue"], "correct": 0, "skill": "numbers"}, {"q": "Comment dit-on « deux » en anglais ?", "options": ["two", "red", "blue"], "correct": 0, "skill": "numbers"}, {"q": "Comment dit-on « trois » en anglais ?", "options": ["three", "red", "blue"], "correct": 0, "skill": "numbers"}, {"q": "Comment dit-on « quatre » en anglais ?", "options": ["four", "red", "blue"], "correct": 0, "skill": "numbers"}, {"q": "Comment dit-on « cinq » en anglais ?", "options": ["five", "red", "blue"], "correct": 0, "skill": "numbers"}, {"q": "Comment dit-on « six » en anglais ?", "options": ["six", "red", "blue"], "correct": 0, "skill": "numbers"}, {"q": "Comment dit-on « sept » en anglais ?", "options": ["seven", "red", "blue"], "correct": 0, "skill": "numbers"}, {"q": "Comment dit-on « huit » en anglais ?", "options": ["eight", "red", "blue"], "correct": 0, "skill": "numbers"}, {"q": "Comment dit-on « neuf » en anglais ?", "options": ["nine", "red", "blue"], "correct": 0, "skill": "numbers"}, {"q": "Comment dit-on « dix » en anglais ?", "options": ["ten", "red", "blue"], "correct": 0, "skill": "numbers"}, {"q": "Comment dit-on « chat » en anglais ?", "options": ["cat", "red", "blue"], "correct": 0, "skill": "animals"}, {"q": "Comment dit-on « chien » en anglais ?", "options": ["dog", "red", "blue"], "correct": 0, "skill": "animals"}, {"q": "Comment dit-on « oiseau » en anglais ?", "options": ["bird", "red", "blue"], "correct": 0, "skill": "animals"}, {"q": "Comment dit-on « poisson » en anglais ?", "options": ["fish", "red", "blue"], "correct": 0, "skill": "animals"}, {"q": "Comment dit-on « maison » en anglais ?", "options": ["house", "red", "blue"], "correct": 0, "skill": "school words"}, {"q": "Comment dit-on « école » en anglais ?", "options": ["school", "red", "blue"], "correct": 0, "skill": "school words"}, {"q": "Comment dit-on « livre » en anglais ?", "options": ["book", "red", "blue"], "correct": 0, "skill": "school words"}, {"q": "Comment dit-on « stylo » en anglais ?", "options": ["pen", "red", "blue"], "correct": 0, "skill": "school words"}]};
-Object.keys(banqueCE2Phase4).forEach(function(matiere){
-  if (!banqueCE2[matiere]) banqueCE2[matiere] = [];
-  const existing = new Set(banqueCE2[matiere].map(q => q.q));
-  banqueCE2Phase4[matiere].forEach(function(q){
-    if (!existing.has(q.q)) banqueCE2[matiere].push(q);
-  });
-});
-function getBankCount(subject){ return (banqueCE2[subject] || []).length; }
-function getBankSummaryText(){
-  return `Banque locale : ${getBankCount('maths')} maths · ${getBankCount('francais')} français · ${getBankCount('sciences')} sciences · ${getBankCount('geographie')} géographie · ${getBankCount('anglais')} anglais`;
-}
-
-challengeCatalog.nomCommun.questions = banqueCE2.francais.filter(q => ['nom commun','déterminant','phrase','pluriel','accord'].includes(q.skill));
-challengeCatalog.systemeSolaire.questions = banqueCE2.sciences.filter(q => q.skill === 'système solaire');
-challengeCatalog.france.questions = banqueCE2.geographie.filter(q => ['France','Europe','relief','carte'].includes(q.skill));
-
-
-window.addEventListener('load', () => {
-  document.getElementById('modalOverlay').classList.add('hidden');
-  const pInput = document.getElementById('prenomInput');
-  if(pInput) {
-    pInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') savePrenom();
-    });
-    pInput.focus();
-  }
-});
-
-function savePrenom() {
-  const input = document.getElementById('prenomInput').value.trim();
-  const error = document.getElementById('prenomError');
-  if (!input) { error.textContent = 'Entre ton prénom !'; return; }
-  
-  prenomActuel = input;
-  addStudentToRoster(prenomActuel);
-  document.getElementById('prenomOverlay').classList.add('hidden');
-  document.getElementById('eleveBadge').style.display = 'flex';
-  document.getElementById('eleveNom').textContent = prenomActuel;
-  
-  loadStudentProgress();
-  refreshScoreDisplays();
-  renderStudentProgressPanel();
-  renderMasterChallengeCard();
-  if (typeof refreshHibouProfile === "function") refreshHibouProfile();
-  
-  const container = document.getElementById('chatContainer');
-  const savedMsg = score > 0 ? ` Tu as déjà <strong>${score} points</strong> ! 🌟` : '';
-  const div = document.createElement('div');
-  div.className = 'message prof';
-  div.innerHTML = `<div class="avatar prof">🦉</div><div class="bubble">Bonjour <strong>${prenomActuel}</strong> ! Ravi de te revoir !${savedMsg} Prêt(e) à travailler ? 😊</div>`;
-  container.appendChild(div);
-  
-  const savedKey = localStorage.getItem('groq_key');
-  if (savedKey) GROQ_KEY = savedKey;
-  loadWelcomeQuiz();
-  if (!savedKey && (typeof securityMode === 'undefined' || securityMode !== 'local')) {
-    document.getElementById('modalOverlay').classList.remove('hidden');
-    document.getElementById('apiKeyInput').focus();
-  }
-}
-
-function saveApiKey() {
-  const input = document.getElementById('apiKeyInput').value.trim();
-  const error = document.getElementById('modalError');
-  if (!input) { error.textContent = 'Entre ta clé API !'; return; }
-  GROQ_KEY = input;
-  localStorage.setItem('groq_key', input);
-  document.getElementById('modalOverlay').classList.add('hidden');
-  loadWelcomeQuiz();
-}
-
-function getStudentKey(suffix) {
-  const name = (prenomActuel || 'eleve').toLowerCase().trim();
-  return 'hibou_' + suffix + '_' + name;
-}
-
-function computeLevel(points) {
-  if (points >= 500) return 5;
-  if (points >= 300) return 4;
-  if (points >= 150) return 3;
-  if (points >= 50) return 2;
-  return 1;
-}
-
-function loadStudentProgress() {
-  score = Number(localStorage.getItem(getStudentKey('score')) || 0);
-  badges = JSON.parse(localStorage.getItem(getStudentKey('badges')) || '[]');
-  streak = Number(localStorage.getItem(getStudentKey('streak')) || 1);
-}
-
-function saveStudentProgress() {
-  if (!prenomActuel) return;
-  localStorage.setItem(getStudentKey('score'), score);
-  localStorage.setItem(getStudentKey('badges'), JSON.stringify(badges));
-  localStorage.setItem(getStudentKey('streak'), streak);
-}
-
-function addStudentToRoster(name) {
-  const clean = name.trim();
-  if (!clean) return;
-  const roster = JSON.parse(localStorage.getItem('hibou_roster') || '[]');
-  const exists = roster.some(n => n.toLowerCase() === clean.toLowerCase());
-  if (!exists) {
-    roster.push(clean);
-    roster.sort((a,b) => a.localeCompare(b, 'fr'));
-    localStorage.setItem('hibou_roster', JSON.stringify(roster));
-  }
-}
-
-function getStudentData(name) {
-  const oldName = prenomActuel;
-  prenomActuel = name;
-  const data = {
-    name,
-    score: Number(localStorage.getItem(getStudentKey('score')) || 0),
-    badges: JSON.parse(localStorage.getItem(getStudentKey('badges')) || '[]'),
-    streak: Number(localStorage.getItem(getStudentKey('streak')) || 1),
-    history: JSON.parse(localStorage.getItem(getStudentKey('history')) || '[]'),
-    skills: JSON.parse(localStorage.getItem(getStudentKey('skills')) || '{}')
-  };
-  prenomActuel = oldName;
-  data.level = computeLevel(data.score);
-  return data;
-}
-
-function logActivity(type, points, detail) {
-  if (!prenomActuel) return;
-  const history = JSON.parse(localStorage.getItem(getStudentKey('history')) || '[]');
-  history.unshift({
-    date: new Date().toLocaleString('fr-FR'),
-    type,
-    points,
-    detail: detail || ''
-  });
-  localStorage.setItem(getStudentKey('history'), JSON.stringify(history.slice(0, 30)));
-}
-
-
-function getSkillStats() {
-  if (!prenomActuel) return {};
-  return JSON.parse(localStorage.getItem(getStudentKey('skills')) || '{}');
-}
-function saveSkillStats(stats) {
-  if (!prenomActuel) return;
-  localStorage.setItem(getStudentKey('skills'), JSON.stringify(stats));
-}
-function recordSkillResult(subject, skill, isCorrect) {
-  if (!prenomActuel) return;
-  const stats = getSkillStats();
-  const key = subject || 'general';
-  if (!stats[key]) stats[key] = {attempts:0, correct:0, skills:{}};
-  stats[key].attempts++;
-  if (isCorrect) stats[key].correct++;
-  const sk = skill || 'général';
-  if (!stats[key].skills[sk]) stats[key].skills[sk] = {attempts:0, correct:0};
-  stats[key].skills[sk].attempts++;
-  if (isCorrect) stats[key].skills[sk].correct++;
-  saveSkillStats(stats);
-  renderStudentProgressPanel();
-}
-function subjectPercent(stats, subject) {
-  const d = stats[subject];
-  if (!d || !d.attempts) return 0;
-  return Math.round((d.correct / d.attempts) * 100);
-}
-function renderStudentProgressPanel() {
-  const mini = document.getElementById('progressMiniWrap');
-  if (!mini) return;
-  // V4.4 : le bouton Mes progrès reste disponible dès qu'un élève est connecté.
-  mini.style.display = prenomActuel ? 'block' : 'none';
-}
-
-function buildProgressPopupHTML() {
-  const stats = getSkillStats();
-  const subjects = [
-    ['maths','Maths'],['francais','Français'],['sciences','Sciences'],['geographie','Géo'],['anglais','Anglais']
-  ];
-  const totalAttempts = Object.values(stats || {}).reduce((sum, item) => sum + (item.attempts || 0), 0);
-  const totalCorrect = Object.values(stats || {}).reduce((sum, item) => sum + (item.correct || 0), 0);
-  const globalPct = totalAttempts ? Math.round(totalCorrect / totalAttempts * 100) : 0;
-  const level = computeLevel(score);
-  let html = `
-    <div class="tablet-stats-strip">
-      <div class="tablet-stat-card">⭐ Niveau ${level}</div>
-      <div class="tablet-stat-card">🏆 ${score} pts</div>
-      <div class="tablet-stat-card">🔥 Série ${streak} jour${streak > 1 ? 's' : ''}</div>
-      <div class="tablet-stat-card">🎖️ ${badges.length} badge${badges.length > 1 ? 's' : ''}</div>
-    </div>
-    <div class="tablet-layout-note">Les statistiques sont rangées ici pour garder plus de place au chat sur tablette.</div>
-    <div class="progress-summary">🎯 Réussite globale : <strong>${globalPct}%</strong> · ${totalCorrect}/${totalAttempts} bonnes réponses</div>`;
-  html += subjects.map(([k,label]) => {
-    const pct = subjectPercent(stats,k);
-    return `<div class="progress-row"><span>${label}</span><div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div><span>${pct}%</span></div>`;
-  }).join('');
-  html += buildStudentDiagnosticHTML(stats);
-  return html;
-}
-
-function openProgressPopup() {
-  const overlay = document.getElementById('progressOverlay');
-  const content = document.getElementById('progressPopupContent');
-  if (!overlay || !content) return;
-  content.innerHTML = buildProgressPopupHTML();
-  overlay.classList.remove('hidden');
-}
-
-function closeProgressPopup() {
-  const overlay = document.getElementById('progressOverlay');
-  if (overlay) overlay.classList.add('hidden');
-}
-
-function getStudentSkillStats(name) {
-  const oldName = prenomActuel; prenomActuel = name;
-  const stats = JSON.parse(localStorage.getItem(getStudentKey('skills')) || '{}');
-  prenomActuel = oldName; return stats;
-}
-
-function openTeacherDashboard() {
-  renderTeacherDashboard();
-  document.getElementById('teacherDashboardOverlay').classList.remove('hidden');
-}
-
-function closeTeacherDashboard() {
-  document.getElementById('teacherDashboardOverlay').classList.add('hidden');
-}
-
-function teacherSuccessRate(skills) {
-  const vals = Object.values(skills || {});
-  const attempts = vals.reduce((a,v)=>a+(v.attempts||0),0);
-  const correct = vals.reduce((a,v)=>a+(v.correct||0),0);
-  return attempts ? Math.round(correct/attempts*100) + '%' : '—';
-}
-
-
-
-function getSkillPercent(item) {
-  if (!item || !item.attempts) return null;
-  return Math.round((item.correct || 0) / item.attempts * 100);
-}
-function flattenSkillStats(skills) {
-  const rows = [];
-  Object.entries(skills || {}).forEach(([subject, data]) => {
-    Object.entries((data && data.skills) || {}).forEach(([skill, item]) => {
-      const pct = getSkillPercent(item);
-      rows.push({subject, skill, attempts:item.attempts || 0, correct:item.correct || 0, pct:pct === null ? 0 : pct});
-    });
-  });
-  return rows.sort((a,b) => a.pct - b.pct || b.attempts - a.attempts);
-}
-function analyzeStudentSkills(skills) {
-  const rows = flattenSkillStats(skills);
-  const practiced = rows.filter(r => r.attempts >= 2);
-  const weak = practiced.filter(r => r.pct < 60).slice(0,3);
-  const watch = practiced.filter(r => r.pct >= 60 && r.pct < 80).slice(0,3);
-  const strong = practiced.filter(r => r.pct >= 80).slice(-3).reverse();
-  const totalAttempts = Object.values(skills || {}).reduce((a,v)=>a+(v.attempts||0),0);
-  const totalCorrect = Object.values(skills || {}).reduce((a,v)=>a+(v.correct||0),0);
-  const globalPct = totalAttempts ? Math.round(totalCorrect / totalAttempts * 100) : null;
-  let alert = 'ok';
-  if (weak.length || (globalPct !== null && globalPct < 60)) alert = 'danger';
-  else if (watch.length || (globalPct !== null && globalPct < 80)) alert = 'warn';
-  return {rows, practiced, weak, watch, strong, totalAttempts, totalCorrect, globalPct, alert};
-}
-function subjectLabel(subject) {
-  return ({maths:'Maths', francais:'Français', sciences:'Sciences', geographie:'Géographie', anglais:'Anglais', general:'Général'})[subject] || subject;
-}
-function buildStudentDiagnosticHTML(stats) {
-  const a = analyzeStudentSkills(stats);
-  if (!a.totalAttempts) return '';
-  let content = '<div class="diagnostic-title" style="margin-top:14px;">🦉 Conseil de Maître Hibou</div>';
-  if (a.weak.length) {
-    const w = a.weak[0];
-    content += `<div class="diagnostic-card alert">⚠️ À revoir en priorité : <strong>${escapeHTML(w.skill)}</strong> en ${escapeHTML(subjectLabel(w.subject))} (${w.pct}% de réussite).<br><button onclick="closeProgressPopup(); startRemediationQuiz('${escapeHTML(w.subject)}','${escapeHTML(w.skill)}')">🎯 Réviser cette compétence</button></div>`;
-  } else if (a.watch.length) {
-    const w = a.watch[0];
-    content += `<div class="diagnostic-card">🔎 Presque acquis : <strong>${escapeHTML(w.skill)}</strong> en ${escapeHTML(subjectLabel(w.subject))} (${w.pct}%). Encore un petit entraînement !<br><button onclick="closeProgressPopup(); startRemediationQuiz('${escapeHTML(w.subject)}','${escapeHTML(w.skill)}')">💪 M'entraîner</button></div>`;
-  } else {
-    content += `<div class="diagnostic-card ok">✅ Bravo ! Tes résultats sont solides. Continue à t'entraîner régulièrement.</div>`;
-  }
-  return content;
-}
-
-function renderStudentDiagnostic(stats) {
-  // Depuis la V4.3, le diagnostic élève est affiché dans la popup Progrès.
-  return;
-}
-
-function startRemediationQuiz(subject, skill) {
-  const pool = (banqueCE2[subject] || []).filter(q => (q.skill || 'général') === skill);
-  const questions = pool.length ? pool : getLocalQuestions(subject, 5);
-  startLocalQuiz(subject, '🎯 Révision ciblée : ' + skill, questions.slice(0, Math.min(8, questions.length)), false);
-  logActivity('Révision ciblée', 0, skill);
-}
-
-function renderTeacherDashboard() {
-  renderTeacherChallenge();
-  renderTeacherSafetyPanel();
-  const content = document.getElementById('teacherDashboardContent');
-  const roster = JSON.parse(localStorage.getItem('hibou_roster') || '[]');
-  if (!content) return;
-  if (roster.length === 0) {
-    content.innerHTML = '<div class="teacher-empty">Aucun élève enregistré pour le moment.</div>';
-    return;
-  }
-  const students = roster.map(getStudentData).map(s => ({...s, analysis: analyzeStudentSkills(s.skills)}));
-  const rows = students.map(s => `
-    <tr>
-      <td><strong>${escapeHTML(s.name)}</strong></td>
-      <td>${s.score}</td>
-      <td>${s.level}</td>
-      <td>${s.badges.length}</td>
-      <td>${teacherSuccessRate(s.skills)}</td>
-      <td>${studentAlertBadge(s.analysis)}</td>
-      <td>${formatWeakSkills(s.analysis)}</td>
-      <td>${s.history[0] ? escapeHTML(s.history[0].type + ' · ' + s.history[0].date) : '—'}</td>
-      <td><button class="teacher-btn danger" onclick="resetStudent('${encodeURIComponent(s.name)}')">Réinitialiser</button></td>
-    </tr>`).join('');
-  const total = students.reduce((sum, s) => sum + s.score, 0);
-  const best = students.slice().sort((a,b) => b.score - a.score)[0];
-  const toHelp = students.filter(s => s.analysis.alert === 'danger');
-  const toWatch = students.filter(s => s.analysis.alert === 'warn');
-  const history = students.flatMap(s => s.history.map(h => ({...h, name:s.name}))).slice(0, 12);
-  const diagnosticCards = students.map(s => `<div class="teacher-diagnostic-card"><h4>${escapeHTML(s.name)} ${studentAlertBadge(s.analysis)}</h4><div>${formatWeakSkills(s.analysis)}</div><div class="teacher-small">${escapeHTML(teacherAdviceFor(s.analysis))}</div></div>`).join('');
-  content.innerHTML = `
-    <div class="teacher-actions">
-      <div class="stat-card">👥 ${students.length} élève(s)</div>
-      <div class="stat-card">🏆 ${total} points cumulés</div>
-      <div class="stat-card">⭐ Meilleur score : ${best ? escapeHTML(best.name) + ' (' + best.score + ')' : '—'}</div>
-      <div class="stat-card">⚠️ ${toHelp.length} à aider</div>
-      <div class="stat-card">🔎 ${toWatch.length} à surveiller</div>
-    </div>
-    <div class="teacher-table-wrap">
-      <table class="teacher-table">
-        <thead><tr><th>Élève</th><th>Points</th><th>Niveau</th><th>Badges</th><th>Réussite</th><th>Alerte</th><th>À travailler</th><th>Dernière activité</th><th>Action</th></tr></thead>
-        <tbody>${rows}</tbody>
-      </table>
-    </div>
-    <div class="teacher-section">
-      <h3>🧠 Diagnostic automatique</h3>
-      <div class="teacher-diagnostic-grid">${diagnosticCards}</div>
-    </div>
-    <div class="history-list">
-      <strong>Dernières activités</strong>
-      ${history.length ? history.map(h => `<div class="history-item">${escapeHTML(h.name)} — ${escapeHTML(h.type)} — ${h.points >= 0 ? '+' : ''}${h.points} pts — ${escapeHTML(h.date)}</div>`).join('') : '<div class="history-item">Aucune activité enregistrée.</div>'}
-    </div>`;
-}
-
-function exportTeacherCSV() {
-  const roster = JSON.parse(localStorage.getItem('hibou_roster') || '[]');
-  const students = roster.map(getStudentData);
-  const blockedLogs = JSON.parse(localStorage.getItem('hibou_blocked_log') || '[]');
-  const lines = [['Eleve','Score','Niveau','Nombre de badges','Taux reussite','Alerte','Competences a travailler','Conseil','Questions bloquees','Badges','Derniere activite']];
-  students.forEach(s => {
-    const a = analyzeStudentSkills(s.skills);
-    const weakText = (a.weak.length ? a.weak : a.watch).map(x => `${x.skill} ${x.pct}%`).join(' | ');
-    lines.push([
-      s.name,
-      s.score,
-      s.level,
-      s.badges.length,
-      teacherSuccessRate(s.skills),
-      a.alert,
-      weakText,
-      teacherAdviceFor(a),
-      blockedLogs.filter(l => String(l.student).toLowerCase() === String(s.name).toLowerCase()).length,
-      s.badges.join('|'),
-      s.history[0] ? `${s.history[0].type} ${s.history[0].date}` : ''
-    ]);
-  });
-  const csv = lines.map(row => row.map(v => '"' + String(v).replaceAll('"','""') + '"').join(';')).join('\n');
-  const blob = new Blob(['\ufeff' + csv], {type:'text/csv;charset=utf-8;'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'maitre_hibou_diagnostic_eleves.csv';
-  a.click();
-  URL.revokeObjectURL(url);
-}
-
-function resetStudent(encodedName) {
-  const name = decodeURIComponent(encodedName);
-  if (!confirm('Réinitialiser les données de ' + name + ' ?')) return;
-  const oldName = prenomActuel;
-  prenomActuel = name;
-  localStorage.removeItem(getStudentKey('score'));
-  localStorage.removeItem(getStudentKey('badges'));
-  localStorage.removeItem(getStudentKey('streak'));
-  localStorage.removeItem(getStudentKey('history'));
-  localStorage.removeItem(getStudentKey('skills'));
-  prenomActuel = oldName;
-  if (prenomActuel && prenomActuel.toLowerCase() === name.toLowerCase()) {
-    score = 0; badges = []; streak = 1; refreshScoreDisplays();
-  }
-  renderTeacherDashboard();
-}
-
-function resetAllStudents() {
-  if (!confirm('Tout réinitialiser ? Scores, badges et historiques seront supprimés sur cet appareil.')) return;
-  const roster = JSON.parse(localStorage.getItem('hibou_roster') || '[]');
-  roster.forEach(name => {
-    const oldName = prenomActuel;
-    prenomActuel = name;
-    localStorage.removeItem(getStudentKey('score'));
-    localStorage.removeItem(getStudentKey('badges'));
-    localStorage.removeItem(getStudentKey('streak'));
-    localStorage.removeItem(getStudentKey('history'));
-  localStorage.removeItem(getStudentKey('skills'));
-    prenomActuel = oldName;
-  });
-  localStorage.removeItem('hibou_roster');
-  score = 0; badges = []; streak = 1; refreshScoreDisplays();
-  renderTeacherDashboard();
-}
-
-function escapeHTML(str) {
-  return String(str).replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
-}
-
-function refreshScoreDisplays() {
-  const level = computeLevel(score);
-  const scoreVal = document.getElementById('scoreVal');
-  const scoreValue = document.getElementById('scoreValue');
-  const levelValue = document.getElementById('levelValue');
-  const streakValue = document.getElementById('streakValue');
-  const badgeValue = document.getElementById('badgeValue');
-  if (scoreVal) scoreVal.textContent = score;
-  if (scoreValue) scoreValue.textContent = score;
-  if (levelValue) levelValue.textContent = level;
-  if (streakValue) streakValue.textContent = streak;
-  if (badgeValue) badgeValue.textContent = badges.length;
-}
-
-function unlockBadge(id, label) {
-  if (badges.includes(id)) return;
-  badges.push(id);
-  saveStudentProgress();
-  refreshScoreDisplays();
-  const toast = document.getElementById('badgeToast');
-  if (toast) {
-    toast.innerHTML = `🎖️ Nouveau badge !<br>${label}`;
-    toast.style.display = 'block';
-    setTimeout(() => toast.style.display = 'none', 2600);
-  }
-  speak('Bravo ! Tu as gagné un nouveau badge !');
-}
-
-function checkBadges(context='') {
-  if (score >= 20) unlockBadge('premiers-points', '🌟 Premiers points');
-  if (score >= 100) unlockBadge('cent-points', '💯 100 points');
-  if (score >= 300) unlockBadge('trois-cents-points', '🚀 300 points');
-  if (context.includes('math')) unlockBadge('maths', '🧮 Champion des maths');
-  if (context.includes('nom commun')) unlockBadge('nom-commun', '✍️ Expert des noms communs');
-  if (context.includes('quiz')) unlockBadge('quiz', '🎯 Premier quiz terminé');
-}
-
-function hideWelcomeQuizFrame() {
-  const frame = document.getElementById('welcomeQuizFrame');
-  if (!frame) return;
-  frame.style.display = 'none';
-  frame.style.opacity = '1';
-  frame.style.transform = 'scale(1)';
-  frame.innerHTML = '';
-}
-
-function buildDailyChallengeQuestion() {
-  const days = [
-    {subject:'maths', label:'Maths'},
-    {subject:'francais', label:'Français'},
-    {subject:'geographie', label:'Géographie'},
-    {subject:'sciences', label:'Sciences'},
-    {subject:'anglais', label:'Anglais'}
-  ];
-  const d = days[new Date().getDay() % days.length];
-  const pool = banqueCE2[d.subject] || [];
-  const q = pool.length ? pool[Math.floor(Math.random() * pool.length)] : (banqueCE2.maths || [])[0];
-  return { subject:d.subject, label:d.label, question:{...q, subject:d.subject} };
-}
-
-async function loadWelcomeQuiz() {
-  const frame = document.getElementById('welcomeQuizFrame');
-  if (!frame) return;
-
-  // Règle Phase 4.2 : un seul défi visible.
-  // Si le défi du maître est actif, le défi du jour/bienvenue disparaît.
-  const activeChallenge = getActiveChallenge();
-  if (activeChallenge) {
-    hideWelcomeQuizFrame();
-    return;
-  }
-
-  const daily = buildDailyChallengeQuestion();
-  const q = daily.question;
-  if (!q || !q.options) {
-    hideWelcomeQuizFrame();
-    return;
-  }
-
-  welcomeQuizSubject = daily.subject;
-  frame.style.display = 'block';
-  frame.style.opacity = '1';
-  frame.style.transform = 'scale(1)';
-  frame.innerHTML = `
-    <div class="wq-title-bar">
-      <span class="wq-label">🎯 Défi du jour</span>
-      <span class="wq-subject">${daily.label}</span>
-    </div>
     <div class="wq-question">${escapeHTML(q.q)}</div>
     <div class="wq-options">
       ${q.options.map((opt, i) => `<button class="wq-option" onclick="answerWelcomeQuiz(this, ${i}, ${q.correct})">${escapeHTML(opt)}</button>`).join('')}
@@ -3689,166 +3053,7 @@ function renderMasterChallengeCard() {
   const objectif = c.id === 'tables2a10'
     ? 'Objectif : réussir 20 calculs tirés au hasard dans les tables de 2 à 10.'
     : 'Réussis le défi proposé.';
-  card.innerHTML = `<h3>🏆 Défi du maître</h3><p>${escapeHTML(c.title)}</p><p>${objectif}</p><p>Récompense : +${c.reward} points et un badge spécial.</p><div class="challenge-actions"><button type="button" class="challenge-btn" onclick="startActiveChallenge()">${done ? '✅ Refaire le défi' : '🚀 Commencer le défi'}</button></div>`;
-}
-
-function startActiveChallenge() {
-  const c = getActiveChallenge();
-  if (!c) { alert('Aucun défi actif.'); return; }
-  const catalog = challengeCatalog[c.id];
-  if (!catalog) { alert('Défi introuvable.'); return; }
-  let questions = catalog.questions || [];
-  if (c.id === 'tables2a10') questions = makeTablesChallenge20Questions();
-  if (!questions.length) questions = getLocalQuestions(catalog.subject || c.subject || 'maths', 10);
-  startLocalQuiz(catalog.subject || c.subject || 'maths', '🏆 Défi du maître : ' + c.title, questions, true);
-}
-function renderTeacherChallenge() {
-  const box = document.getElementById('teacherChallengeContent'); if (!box) return;
-  const active = getActiveChallenge();
-  box.innerHTML = `<div class="teacher-section"><h3>🏆 Défi du maître</h3><div class="teacher-form-row"><select class="teacher-select" id="challengeSelect"><option value="tables2a10">Méga défi : 20 calculs tables 2 à 10</option><option value="nomCommun">Nom commun</option><option value="systemeSolaire">Système solaire</option><option value="france">Géographie : la France</option></select><button class="teacher-btn" onclick="setActiveChallenge(document.getElementById('challengeSelect').value)">Activer</button><button class="teacher-btn secondary" onclick="clearActiveChallenge()">Désactiver</button></div><div class="teacher-small">Défi actif : <strong>${active ? escapeHTML(active.title) + ' (+ ' + active.reward + ' pts)' : 'aucun'}</strong></div></div>`;
-}
-function showLocalQuizMenu() {
-  const container = document.getElementById('chatContainer');
-  const div = document.createElement('div'); div.className='message prof';
-  div.innerHTML = `<div class="avatar prof">🦉</div><div class="bubble"><strong>📚 Banque CE2 locale — Phase 4</strong><br><span style="font-size:12px;color:var(--text-muted);font-weight:800;">${getBankSummaryText()}</span><br>Choisis un entraînement sans IA :<div class="local-quiz-grid"><button class="local-quiz-card" onclick="startLocalQuiz('maths','🧮 Quiz local Maths CE2')">🧮 Maths CE2<br><small>${getBankCount('maths')} questions</small></button><button class="local-quiz-card" onclick="startLocalQuiz('francais','✍️ Quiz local Français CE2')">✍️ Français CE2<br><small>${getBankCount('francais')} questions</small></button><button class="local-quiz-card" onclick="startLocalQuiz('sciences','💡 Quiz local Sciences CE2')">💡 Sciences CE2<br><small>${getBankCount('sciences')} questions</small></button><button class="local-quiz-card" onclick="startLocalQuiz('geographie','🌍 Quiz local Géographie CE2')">🌍 Géographie CE2<br><small>${getBankCount('geographie')} questions</small></button><button class="local-quiz-card" onclick="startLocalQuiz('anglais','🇬🇧 Quiz local Anglais CE2')">🇬🇧 Anglais CE2<br><small>${getBankCount('anglais')} questions</small></button></div></div>`;
-  container.appendChild(div); container.scrollTop=container.scrollHeight;
-}
-
-
-function pickRandomQuestions(subject, count) {
-  const pool = (banqueCE2[subject] || []).slice().sort(() => Math.random() - 0.5);
-  return pool.slice(0, Math.min(count, pool.length)).map(q => ({ ...q, subject: subject }));
-}
-
-function buildDefiExpressQuestions() {
-  // Proposition 1 : 2 maths + 2 français + 1 sciences, issus de la banque locale CE2.
-  return [
-    ...pickRandomQuestions('maths', 2),
-    ...pickRandomQuestions('francais', 2),
-    ...pickRandomQuestions('sciences', 1)
-  ].sort(() => Math.random() - 0.5);
-}
-
-function showReviewWheel() {
-  const container = document.getElementById('chatContainer');
-  const div = document.createElement('div');
-  div.className = 'message prof';
-  div.innerHTML = `<div class="avatar prof">🦉</div><div class="bubble"><strong>🎡 Roue du Hibou</strong><br><span style="font-size:12px;color:var(--text-muted);font-weight:800;">La roue lance un Défi Express avec la banque locale, sans IA. Les couleurs indiquent les matières possibles.</span><div class="review-wheel-box"><div class="review-wheel-wrap"><div class="review-pointer">🔻</div><div class="review-wheel" id="reviewWheel"><div class="review-wheel-center">Défi<br>Express</div></div></div><div class="review-wheel-labels">
-  <span class="wheel-legend-item"><span class="wheel-color" style="background:#FFD93D"></span>Maths</span>
-  <span class="wheel-legend-item"><span class="wheel-color" style="background:#EAE8FF"></span>Français</span>
-  <span class="wheel-legend-item"><span class="wheel-color" style="background:#6BCB77"></span>Sciences</span>
-  <span class="wheel-legend-item"><span class="wheel-color" style="background:#FFEAEA"></span>Géographie</span>
-  <span class="wheel-legend-item"><span class="wheel-color" style="background:#DFF3FF"></span>Anglais</span>
-</div><button class="review-launch-btn" id="reviewWheelBtn" onclick="spinReviewWheel()">🎡 Faire tourner la roue</button><div class="review-wheel-result" id="reviewWheelResult"></div></div></div>`;
-  container.appendChild(div);
-  container.scrollTop = container.scrollHeight;
-}
-
-function spinReviewWheel() {
-  const wheel = document.getElementById('reviewWheel');
-  const btn = document.getElementById('reviewWheelBtn');
-  const result = document.getElementById('reviewWheelResult');
-  if (!wheel || !btn) return;
-  btn.disabled = true;
-  if (result) result.textContent = 'La roue tourne... 🦉';
-  wheel.classList.remove('spin');
-  void wheel.offsetWidth;
-  wheel.classList.add('spin');
-  setTimeout(() => {
-    if (result) result.textContent = 'Défi Express choisi ! 5 questions mélangées 🎯';
-    const questions = buildDefiExpressQuestions();
-    if (!questions.length) {
-      if (result) result.textContent = 'Oups, la banque locale est vide.';
-      btn.disabled = false;
-      return;
-    }
-    logActivity('Roue du Hibou', 0, 'Défi express lancé');
-    startLocalQuiz('revision', '🎮 Défi Express Maître Hibou', questions, false);
-  }, 2800);
-}
-
-async function generateQuiz(topic) {
-  const isWelcome = topic.includes('question surprise');
-  const count = isWelcome ? 1 : 10;
-  const maxTokens = isWelcome ? 500 : 2500;
-  const targetLevel = isWelcome ? "CE2 (8-9 ans)" : "CE2 (8-9 ans)";
-
-  const quizPrompt = `Crée un quiz de EXACTEMENT ${count} questions à choix multiples sur ce sujet pour un élève de ${targetLevel} : "${topic}".
-Réponds UNIQUEMENT en JSON valide, sans markdown, sans backticks, exactement comme ceci :
-{"questions":[{"q":"La question 1 ?","options":["Réponse A","Réponse B","Réponse C"],"correct":0}]}
-- correct est l'index numérique de la bonne réponse (commençant à 0)
-- Les questions doivent être adaptées au programme officiel choisi
-- Propose 3 ou 4 options par question
-- une seule bonne réponse`;
-
-  try {
-    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${GROQ_KEY}` },
-      body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
-        messages: [{ role: 'user', content: quizPrompt }],
-        max_tokens: maxTokens, 
-        temperature: 0.5
-      })
-    });
-    const data = await response.json();
-    let raw = data.choices[0].message.content.trim();
-    
-    const firstBrace = raw.indexOf('{');
-    const lastBrace = raw.lastIndexOf('}');
-    if (firstBrace !== -1 && lastBrace !== -1) {
-      raw = raw.substring(firstBrace, lastBrace + 1);
-    }
-    
-    return JSON.parse(raw);
-  } catch(e) {
-    console.error('Quiz JSON error:', e);
-    return null;
-  }
-}
-
-async function startQuiz(topic, btnEl) {
-  btnEl.textContent = '⏳ Préparation du grand quiz...';
-  btnEl.disabled = true;
-  
-  const quizData = await generateQuiz(topic);
-  if (!quizData || !quizData.questions) {
-    const fallbackSubject = normalizeSubjectForStats(currentSubject);
-    const local = getLocalQuestions(fallbackSubject, 10);
-    if (local.length) {
-      btnEl.textContent = '📚 Quiz local lancé !';
-      startLocalQuiz(fallbackSubject, '📚 Quiz local CE2', local, false);
-      btnEl.parentElement.style.display = 'none';
-      return;
-    }
-    btnEl.textContent = '😕 Erreur, réessaie !';
-    btnEl.disabled = false;
-    return;
-  }
-  
-  currentQuizData = quizData.questions.map(q => ({ ...q, isRetry: false }));
-  currentQuizIndex = 0;
-  currentQuizScore = 0;
-  totalPointsEarnedThisSession = 0;
-  originalQuizLength = currentQuizData.length;
-
-  const container = document.getElementById('chatContainer');
-  const div = document.createElement('div');
-  div.className = 'message prof';
-  div.innerHTML = `<div class="avatar prof">🦉</div><div class="bubble"><div class="quiz-container" id="quizBox"></div></div>`;
-  container.appendChild(div);
-  container.scrollTop = container.scrollHeight;
-  quizContainer = document.getElementById('quizBox');
-  btnEl.parentElement.style.display = 'none';
-  
-  renderRulesAndStart();
-}
-
-function renderRulesAndStart() {
-  if (currentQuizIsChallenge) {
-    quizContainer.innerHTML = `
-      <div class="quiz-progress" style="font-size:14px; margin-bottom:10px;">🏆 Défi du maître : tables de 2 à 10</div>
+  card.innerHTML = `<h3>🏆 Défi du maître</h3><p>${escapeHTML(c.title)}</p><p>${objectif}</p><p>Récompense : +${c.reward} points et un badge spécial.</p>
       <div class="rules-explainer">
         <div>🎯 <strong>20 calculs</strong> tirés au hasard dans les tables de 2 à 10.</div>
         <div>✅ <strong>Une seule réponse par question.</strong></div>
@@ -7914,11 +7119,6 @@ body.competence-mode #masterChallengeCard.master-challenge-card{
     overlay.id = "challengePopupOverlay";
     overlay.className = "challenge-popup-overlay";
     overlay.innerHTML = `
-      <div class="challenge-popup-box" role="dialog" aria-modal="true" aria-label="Défi du maître">
-        <div class="challenge-popup-head">
-          <div class="challenge-popup-owl">🦉</div>
-          <div>
-            <div class="challenge-popup-title">Défi du maître</div>
             <div class="challenge-popup-sub">Réponds à 5 questions dans cette fenêtre.</div>
           </div>
         </div>
@@ -7969,284 +7169,6 @@ body.competence-mode #masterChallengeCard.master-challenge-card{
         <div class="challenge-reward">🎁 Jusqu'à +50 points</div>
       </div>
       <div class="challenge-popup-actions">
-        <button class="challenge-popup-btn primary full" onclick="startPopupMasterChallenge()">🚀 Commencer le défi</button>
-        <button class="challenge-popup-btn secondary full" onclick="closeMasterChallengePopup()">Fermer</button>
-      </div>
-    `;
-  }
-
-  function renderQuestion(){
-    challengeState.locked = false;
-    updatePopupProgress();
-    const zone = document.getElementById("challengeGameZone");
-    if(!zone) return;
-
-    const item = challengeQuestions[challengeState.index];
-    const buttons = item.options.map(function(opt){
-      return `<button class="challenge-option" onclick="answerPopupMasterChallenge('${String(opt).replace(/'/g,"\\'")}')">${opt}</button>`;
-    }).join("");
-
-    zone.innerHTML = `
-      <div class="challenge-question-card">
-        <div class="challenge-question-number">Question ${challengeState.index + 1} / ${challengeQuestions.length} · ${item.skill}</div>
-        <div class="challenge-question-text">${item.q}</div>
-        <div class="challenge-options">${buttons}</div>
-        <div class="challenge-feedback" id="challengeFeedback"></div>
-      </div>
-      <div class="challenge-popup-actions">
-        <button class="challenge-popup-btn secondary full" onclick="closeMasterChallengePopup()">🔙 Quitter le défi</button>
-      </div>
-    `;
-  }
-
-  function addChallengePoints(points){
-    try{
-      if(typeof addPoints === "function"){
-        addPoints(points);
-        return;
-      }
-      const scoreEl = document.getElementById("scoreVal");
-      if(scoreEl){
-        const current = parseInt(scoreEl.textContent || "0", 10) || 0;
-        scoreEl.textContent = current + points;
-      }
-    }catch(e){}
-  }
-
-  function renderEnd(){
-    challengeState.index = challengeQuestions.length;
-    updatePopupProgress();
-    const zone = document.getElementById("challengeGameZone");
-    if(!zone) return;
-
-    const points = challengeState.score * 10;
-    if(points > 0 && !challengeState.rewardGiven){
-      challengeState.rewardGiven = true;
-      addChallengePoints(points);
-    }
-
-    const success = challengeState.score >= 4;
-    zone.innerHTML = `
-      <div class="challenge-result-box">
-        <div class="challenge-result-title">${success ? "🎉 Défi réussi !" : "💪 Défi terminé !"}</div>
-        <div class="challenge-result-score">Score : ${challengeState.score} / ${challengeQuestions.length}</div>
-        <div class="challenge-reward">⭐ +${points} points</div>
-        <div style="margin-top:12px;font-weight:900;color:#2D2B55;">
-          ${success ? "Bravo, tu as très bien travaillé !" : "Tu peux réessayer pour battre ton score."}
-        </div>
-      </div>
-      <div class="challenge-popup-actions">
-        <button class="challenge-popup-btn primary" onclick="startPopupMasterChallenge()">🔁 Rejouer</button>
-        <button class="challenge-popup-btn purple" onclick="closeMasterChallengePopup()">Terminer</button>
-      </div>
-    `;
-  }
-
-  window.openMasterChallengePopup = function(){
-    ensureChallengePopup();
-    const overlay = document.getElementById("challengePopupOverlay");
-    if(overlay) overlay.classList.add("visible");
-    renderStart();
-  };
-
-  window.closeMasterChallengePopup = function(){
-    const overlay = document.getElementById("challengePopupOverlay");
-    if(overlay) overlay.classList.remove("visible");
-  };
-
-  window.startPopupMasterChallenge = function(){
-    challengeState = { index:0, score:0, locked:false, rewardGiven:false };
-    renderQuestion();
-  };
-
-  window.answerPopupMasterChallenge = function(choice){
-    if(challengeState.locked) return;
-    challengeState.locked = true;
-
-    const item = challengeQuestions[challengeState.index];
-    const ok = choice === item.answer;
-    if(ok) challengeState.score++;
-
-    document.querySelectorAll(".challenge-option").forEach(function(btn){
-      btn.disabled = true;
-      const val = (btn.textContent || "").trim();
-      if(val === item.answer) btn.classList.add("correct");
-      else if(val === choice) btn.classList.add("wrong");
-    });
-
-    const feedback = document.getElementById("challengeFeedback");
-    if(feedback){
-      feedback.className = "challenge-feedback " + (ok ? "ok" : "bad");
-      feedback.textContent = ok ? "✅ Bravo !" : "❌ Presque ! La bonne réponse était " + item.answer + ".";
-    }
-
-    setTimeout(function(){
-      challengeState.index++;
-      if(challengeState.index >= challengeQuestions.length) renderEnd();
-      else renderQuestion();
-    }, 950);
-  };
-
-  function makeChallengeClickable(){
-    ensureChallengePopup();
-
-    document.querySelectorAll(".mockup-challenge-top").forEach(function(el){
-      el.onclick = openMasterChallengePopup;
-      el.title = "Ouvrir le défi du maître";
-    });
-
-    const sideCards = document.querySelectorAll(".mockup-side-card");
-    if(sideCards[0]){
-      sideCards[0].onclick = openMasterChallengePopup;
-      sideCards[0].title = "Ouvrir le défi du maître";
-      if(!sideCards[0].querySelector(".challenge-click-note")){
-        const note = document.createElement("div");
-        note.className = "challenge-click-note";
-        note.textContent = "👆 Clique ici pour jouer le défi";
-        sideCards[0].appendChild(note);
-      }
-    }
-  }
-
-  document.addEventListener("DOMContentLoaded", function(){
-    setTimeout(makeChallengeClickable, 180);
-  });
-  window.addEventListener("load", function(){
-    setTimeout(makeChallengeClickable, 240);
-  });
-})();
-</script>
-
-
-<script id="patch-corrections-affichage-v124">
-(function(){
-  function cleanBadVersionText(){
-    const badPatterns = [
-      /dans\s+Ma[iî]tre\s+Hibou\s+V8[_\.\-\s]*[^<\n\r]*/gi,
-      /Ma[iî]tre\s+Hibou\s+V8_[^<\n\r]*/gi
-    ];
-
-    function cleanNode(node){
-      if(!node || node.nodeType !== Node.TEXT_NODE) return;
-      let txt = node.nodeValue || "";
-      let cleaned = txt;
-      badPatterns.forEach(function(rx){
-        cleaned = cleaned.replace(rx, "").trim();
-      });
-      if(cleaned !== txt){
-        node.nodeValue = cleaned;
-      }
-    }
-
-    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
-    const nodes = [];
-    while(walker.nextNode()) nodes.push(walker.currentNode);
-    nodes.forEach(cleanNode);
-
-    // Cas fréquent : titre de popup ou phrase contenant le nom du fichier
-    document.querySelectorAll("*").forEach(function(el){
-      if(el.children.length === 0){
-        let t = el.textContent || "";
-        if(/Ma[iî]tre\s+Hibou\s+V8_/i.test(t) || /dans\s+Ma[iî]tre\s+Hibou\s+V8/i.test(t)){
-          badPatterns.forEach(function(rx){ t = t.replace(rx, "").trim(); });
-          el.textContent = t;
-        }
-      }
-    });
-  }
-
-  document.addEventListener("DOMContentLoaded", function(){
-    setTimeout(cleanBadVersionText, 100);
-    setTimeout(cleanBadVersionText, 500);
-  });
-  window.addEventListener("load", function(){
-    setTimeout(cleanBadVersionText, 200);
-  });
-})();
-</script>
-
-
-<style id="patch-anglais-harmonise-v84">
-.english-lesson{
-  background:#F8F7FF;
-  border:2px solid var(--primary-light);
-  border-radius:16px;
-  padding:16px;
-  margin-top:10px;
-  width:100%;
-}
-.english-lesson h3{
-  font-family:'Baloo 2',sans-serif;
-  color:var(--primary);
-  font-size:20px;
-  margin:0 0 8px 0;
-}
-.english-rule{
-  background:#FFFCEB;
-  border:2px solid var(--accent);
-  border-radius:14px;
-  padding:10px 12px;
-  font-weight:900;
-  color:#7A5C00;
-  margin:10px 0;
-  line-height:1.4;
-}
-.english-examples{
-  background:white;
-  border:2px solid #ECEBF3;
-  border-radius:14px;
-  padding:10px 12px;
-  font-weight:800;
-  line-height:1.55;
-  margin:10px 0;
-}
-.english-mini-note{
-  font-size:13px;
-  color:var(--text-muted);
-  font-weight:800;
-  margin:8px 0;
-}
-.english-quiz-btn{
-  background:var(--primary);
-  color:white;
-  border:none;
-  border-radius:14px;
-  padding:10px 14px;
-  font-weight:900;
-  font-family:inherit;
-  cursor:pointer;
-  width:100%;
-  margin-top:8px;
-}
-.english-quiz-btn.secondary{
-  background:#fff;
-  color:var(--primary);
-  border:2px solid var(--primary-light);
-}
-</style>
-
-<script id="patch-anglais-harmonise-v84">
-(function(){
-  if(window.__patchAnglaisHarmoniseV84) return;
-  window.__patchAnglaisHarmoniseV84 = true;
-
-  function getChat(){ return document.getElementById('chatContainer'); }
-  function scrollChat(){ const c = getChat(); if(c) c.scrollTop = c.scrollHeight; }
-
-  function addEnglishLesson(title, rule, examples, quizTitle, quizKind){
-    const chat = getChat();
-    if(!chat) return;
-    const d = document.createElement('div');
-    d.className = 'message prof';
-    d.innerHTML = `
-      <div class="avatar prof">🦉</div>
-      <div class="bubble">
-        <div class="english-lesson">
-          <h3>${title}</h3>
-          <div class="english-rule">${rule}</div>
-          <div class="english-examples">${examples}</div>
-          <div class="english-mini-note">Quand tu as relu la mini-leçon, tu peux faire le quiz.</div>
-          <button class="english-quiz-btn" onclick="startEnglishLessonQuiz('${quizKind}')">➡️ Faire le quiz</button>
           <button class="english-quiz-btn secondary" onclick="startLocalQuiz('anglais','🇬🇧 Quiz local Anglais CE2')">📚 Quiz local Anglais CE2</button>
         </div>
       </div>`;

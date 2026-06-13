@@ -7798,8 +7798,8 @@ body.competence-mode #masterChallengeCard.master-challenge-card{
     }catch(e){}
     const top = document.getElementById("mockupCompetenceCount");
     const side = document.getElementById("mockupSideSkills");
-    if(top) top.textContent = skillCount || "8";
-    if(side) side.textContent = skillCount || "8";
+    if(top) top.textContent = String(skillCount || 0);
+    if(side) side.textContent = String(skillCount || 0);
   }
 
   function patchHeader(){
@@ -8942,6 +8942,77 @@ header{
     setInterval(refreshHeaderCards, 1500);
   });
   window.addEventListener("load", function(){ setTimeout(refreshHeaderCards, 150); });
+})();
+</script>
+
+
+<!-- PATCH V12.7 - Corrections bandeau : compteur fiable et bouton unique -->
+<style id="patch-bandeau-corrections-v127">
+/* Empêche l'ancien CSS d'ajouter une deuxième fois le texte du bouton. */
+.competence-header-btn .competence-label::after{
+  content:none !important;
+  display:none !important;
+}
+.competence-header-btn .competence-label{
+  font-size:17px !important;
+  line-height:1.05 !important;
+  color:#fff !important;
+  display:inline !important;
+}
+</style>
+<script id="patch-bandeau-corrections-v127">
+(function(){
+  if(window.__bandeauCorrectionsV127) return;
+  window.__bandeauCorrectionsV127 = true;
+
+  function cleanStudentName(name){
+    return String(name || "eleve").trim().toLowerCase()
+      .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-z0-9_-]/g, "_") || "eleve";
+  }
+  function currentName(){
+    return window.prenomActuel || localStorage.getItem("hibou_prenom") || localStorage.getItem("maitreHibouCurrentStudent") || localStorage.getItem("elevePrenom") || "eleve";
+  }
+  function countValidatedSkills(){
+    const name = currentName();
+    const clean = cleanStudentName(name);
+    let count = 0;
+    try{
+      // Stockage principal du tableau de compétences : un id = une compétence, la valeur = nombre de validations.
+      const v51 = JSON.parse(localStorage.getItem("hibou_skills_v51_" + clean) || "{}");
+      count = Object.values(v51).filter(v => Number(v || 0) > 0).length;
+      if(count > 0) return count;
+    }catch(e){}
+    try{
+      // Ancien stockage éventuel : on ne compte que les compétences explicitement validées.
+      const legacy = JSON.parse(localStorage.getItem("maitreHibouSkills_" + name) || localStorage.getItem("maitreHibouSkills") || "{}");
+      count = Object.values(legacy).filter(v => v && (v.validated === true || Number(v.count || v) > 0)).length;
+    }catch(e){}
+    return count || 0;
+  }
+  function fixHeader(){
+    // Un seul bouton "Valider une compétence" dans le bandeau.
+    const buttons = Array.from(document.querySelectorAll(".competence-header-btn"));
+    buttons.forEach((btn, index) => {
+      if(index > 0){ btn.remove(); return; }
+      btn.innerHTML = '<span class="competence-icon">⭐</span><span class="competence-label">Valider une compétence</span>';
+      btn.title = "Valider une compétence";
+    });
+
+    // Le compteur n'utilise plus le faux nombre de démonstration 8.
+    const value = String(countValidatedSkills());
+    const top = document.getElementById("mockupCompetenceCount");
+    const side = document.getElementById("mockupSideSkills");
+    if(top) top.textContent = value;
+    if(side) side.textContent = value;
+  }
+  document.addEventListener("DOMContentLoaded", function(){
+    fixHeader();
+    setTimeout(fixHeader, 100);
+    setTimeout(fixHeader, 700);
+    setInterval(fixHeader, 600);
+  });
+  window.addEventListener("load", function(){ setTimeout(fixHeader, 150); });
 })();
 </script>
 

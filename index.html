@@ -7791,10 +7791,14 @@ body.competence-mode #masterChallengeCard.master-challenge-card{
 
     let skillCount = 0;
     try{
-      const current = localStorage.getItem("maitreHibouCurrentStudent") || localStorage.getItem("elevePrenom") || "";
-      const raw = localStorage.getItem("maitreHibouSkills_" + current) || localStorage.getItem("maitreHibouSkills") || "{}";
-      const skills = JSON.parse(raw);
-      skillCount = Object.values(skills).filter(v => (v && (v.validated || v.count > 0 || v >= 1))).length;
+      const current = (typeof prenomActuel !== "undefined" && prenomActuel)
+        ? prenomActuel
+        : (localStorage.getItem("hibou_prenom") || localStorage.getItem("maitreHibouCurrentStudent") || localStorage.getItem("elevePrenom") || "eleve");
+      const clean = String(current || "eleve").trim().toLowerCase()
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9_-]/g, "_") || "eleve";
+      const data = JSON.parse(localStorage.getItem("hibou_skills_v51_" + clean) || localStorage.getItem("hibou_skills_v51_eleve") || "{}");
+      skillCount = Object.values(data).filter(v => Number(v || 0) > 0).length;
     }catch(e){}
     const top = document.getElementById("mockupCompetenceCount");
     const side = document.getElementById("mockupSideSkills");
@@ -8832,12 +8836,12 @@ header{
       .replace(/[^a-z0-9_-]/g,"_") || "eleve";
   }
   function currentName(){
-    return window.prenomActuel || localStorage.getItem("hibou_prenom") || localStorage.getItem("maitreHibouCurrentStudent") || localStorage.getItem("elevePrenom") || "eleve";
+    return (typeof prenomActuel !== "undefined" && prenomActuel) ? prenomActuel : (localStorage.getItem("hibou_prenom") || localStorage.getItem("maitreHibouCurrentStudent") || localStorage.getItem("elevePrenom") || "eleve");
   }
   function getSkillCount(){
     try{
       const key = "hibou_skills_v51_" + cleanStudentName(currentName());
-      const data = JSON.parse(localStorage.getItem(key) || "{}");
+      const data = JSON.parse(localStorage.getItem(key) || localStorage.getItem("hibou_skills_v51_eleve") || "{}");
       return Object.values(data).filter(v => Number(v || 0) > 0).length;
     }catch(e){ return 0; }
   }
@@ -8971,24 +8975,18 @@ header{
       .replace(/[^a-z0-9_-]/g, "_") || "eleve";
   }
   function currentName(){
-    return window.prenomActuel || localStorage.getItem("hibou_prenom") || localStorage.getItem("maitreHibouCurrentStudent") || localStorage.getItem("elevePrenom") || "eleve";
+    return (typeof prenomActuel !== "undefined" && prenomActuel) ? prenomActuel : (localStorage.getItem("hibou_prenom") || localStorage.getItem("maitreHibouCurrentStudent") || localStorage.getItem("elevePrenom") || "eleve");
   }
   function countValidatedSkills(){
     const name = currentName();
     const clean = cleanStudentName(name);
-    let count = 0;
     try{
-      // Stockage principal du tableau de compétences : un id = une compétence, la valeur = nombre de validations.
-      const v51 = JSON.parse(localStorage.getItem("hibou_skills_v51_" + clean) || "{}");
-      count = Object.values(v51).filter(v => Number(v || 0) > 0).length;
-      if(count > 0) return count;
+      // Source unique et stable : tableau de compétences V51.
+      // On ne bascule plus sur l'ancien stockage, ce qui provoquait l'alternance 0 / 3.
+      const data = JSON.parse(localStorage.getItem("hibou_skills_v51_" + clean) || localStorage.getItem("hibou_skills_v51_eleve") || "{}");
+      return Object.values(data).filter(v => Number(v || 0) > 0).length;
     }catch(e){}
-    try{
-      // Ancien stockage éventuel : on ne compte que les compétences explicitement validées.
-      const legacy = JSON.parse(localStorage.getItem("maitreHibouSkills_" + name) || localStorage.getItem("maitreHibouSkills") || "{}");
-      count = Object.values(legacy).filter(v => v && (v.validated === true || Number(v.count || v) > 0)).length;
-    }catch(e){}
-    return count || 0;
+    return 0;
   }
   function fixHeader(){
     // Un seul bouton "Valider une compétence" dans le bandeau.
@@ -9013,6 +9011,58 @@ header{
     setInterval(fixHeader, 600);
   });
   window.addEventListener("load", function(){ setTimeout(fixHeader, 150); });
+})();
+</script>
+
+
+
+<!-- PATCH V12.8 - Compteur compétences stable : source unique, plus d'alternance 0/3 -->
+<script id="patch-compteur-competences-stable-v128">
+(function(){
+  if(window.__compteurCompetencesStableV128) return;
+  window.__compteurCompetencesStableV128 = true;
+
+  function cleanStudentName(name){
+    return String(name || "eleve").trim().toLowerCase()
+      .normalize("NFD").replace(/[̀-ͯ]/g, "")
+      .replace(/[^a-z0-9_-]/g, "_") || "eleve";
+  }
+  function currentName(){
+    return (typeof prenomActuel !== "undefined" && prenomActuel)
+      ? prenomActuel
+      : (localStorage.getItem("hibou_prenom") || localStorage.getItem("maitreHibouCurrentStudent") || localStorage.getItem("elevePrenom") || "eleve");
+  }
+  function countV51Only(){
+    try{
+      const key = "hibou_skills_v51_" + cleanStudentName(currentName());
+      const raw = localStorage.getItem(key) || localStorage.getItem("hibou_skills_v51_eleve") || "{}";
+      const data = JSON.parse(raw) || {};
+      return Object.values(data).filter(v => Number(v || 0) > 0).length;
+    }catch(e){ return 0; }
+  }
+  function refreshStableSkillCount(){
+    const value = String(countV51Only());
+    ["mockupCompetenceCount", "mockupSideSkills"].forEach(function(id){
+      const el = document.getElementById(id);
+      if(el) el.textContent = value;
+    });
+  }
+
+  const oldValidate = window.hibouValidateSkill;
+  if(typeof oldValidate === "function"){
+    window.hibouValidateSkill = function(){
+      const result = oldValidate.apply(this, arguments);
+      setTimeout(refreshStableSkillCount, 0);
+      setTimeout(refreshStableSkillCount, 100);
+      return result;
+    };
+  }
+  document.addEventListener("DOMContentLoaded", function(){
+    refreshStableSkillCount();
+    setTimeout(refreshStableSkillCount, 250);
+    setTimeout(refreshStableSkillCount, 900);
+  });
+  window.addEventListener("load", function(){ setTimeout(refreshStableSkillCount, 200); });
 })();
 </script>
 

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 Maître Hibou V15.1 - Accueil personnalisé</title>
+<title>🦉 Maître Hibou V15.2 - Bandeau calme</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -3274,24 +3274,58 @@ body.device-phone .desktop-teacher-home{display:none !important;}
 
 
 
-<style id="patch-v151-calme-et-accueil">
-/* V15.1 - Bandeau plus calme : plus de flash/stroboscope */
-.subject-btn,
-.subject-btn:hover,
-.subject-btn.active,
-.quick-questions,
-.quick-questions.submenu-flash,
-.badge.score.bump {
-  animation: none !important;
-  transition: background-color .15s ease, border-color .15s ease, box-shadow .15s ease !important;
+
+<style id="patch-v152-bandeau-calme-alignement">
+/* V15.2 - Correction définitive : 6 matières alignées + bandeau calme */
+
+/* Le bandeau des matières reste une grille stable de 6 colonnes */
+#subjectsBar,
+.subjects-bar {
+  display: grid !important;
+  grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+  gap: 10px !important;
+  width: 100% !important;
+  max-width: 1180px !important;
+  margin: 0 auto !important;
+  padding: 12px 14px !important;
+  overflow: visible !important;
+  white-space: normal !important;
+  align-items: stretch !important;
 }
-.subject-btn:hover,
-.subject-btn.active {
+
+/* Les boutons gardent la même hauteur, sans rebond, zoom ou flash */
+#subjectsBar .subject-btn,
+.subjects-bar .subject-btn {
+  min-width: 0 !important;
+  min-height: 74px !important;
+  height: 74px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
   transform: none !important;
+  animation: none !important;
+  transition: border-color .15s ease, box-shadow .15s ease, background-color .15s ease !important;
   filter: none !important;
 }
+
+/* Aucun effet stroboscopique sur actif/survol */
+#subjectsBar .subject-btn:hover,
+#subjectsBar .subject-btn.active,
+.subjects-bar .subject-btn:hover,
+.subjects-bar .subject-btn.active {
+  transform: none !important;
+  animation: none !important;
+  filter: none !important;
+}
+
+/* Le sous-menu ne flashe plus */
+#quickQuestions,
+.quick-questions,
+#quickQuestions.submenu-flash,
 .quick-questions.submenu-flash {
-  box-shadow: var(--shadow) !important;
+  animation: none !important;
+  transform: none !important;
 }
 @keyframes submenuFlash {
   0%, 45%, 100% {
@@ -3300,41 +3334,42 @@ body.device-phone .desktop-teacher-home{display:none !important;}
   }
 }
 
-/* Message d'accueil personnalisé à la place de "" */
-.device-mode-badge,
-.v15-device-badge,
-#deviceModeBadge,
-#v15DeviceBadge {
+/* Neutralisation des animations visuelles fatigantes liées aux badges/bandeau */
+.badge.score.bump,
+.subject-btn.active,
+.subject-btn:hover {
+  animation: none !important;
+}
+
+/* Message de bienvenue intégré au profil, sans casser le bandeau matières */
+#v15WelcomeMessage {
   display: none !important;
 }
-.v15-welcome-message {
-  background: linear-gradient(135deg,#FFFCEB 0%,#FFFFFF 100%);
-  border: 2px solid var(--accent);
-  color: var(--text);
-  border-radius: 18px;
-  padding: 7px 12px;
+.v15-student-welcome {
   font-weight: 900;
-  line-height: 1.15;
-  box-shadow: var(--shadow);
-  min-width: 190px;
-}
-.v15-welcome-message .v15-welcome-line1 {
-  font-size: 14px;
   color: var(--primary);
 }
-.v15-welcome-message .v15-welcome-line2 {
-  font-size: 12px;
+.v15-student-welcome small {
+  display: block;
   color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 900;
   margin-top: 2px;
 }
-@media (max-width: 620px) {
-  .v15-welcome-message {
-    min-width: 0;
-    max-width: 170px;
-    padding: 6px 9px;
+
+@media (max-width: 900px) {
+  #subjectsBar,
+  .subjects-bar {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 8px !important;
   }
-  .v15-welcome-message .v15-welcome-line1 { font-size: 12px; }
-  .v15-welcome-message .v15-welcome-line2 { font-size: 10px; }
+}
+
+@media (max-width: 520px) {
+  #subjectsBar,
+  .subjects-bar {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
 }
 </style>
 
@@ -11174,7 +11209,8 @@ window.HIBOU_CLASS_STUDENTS = [
 </script>
 
 
-<script id="patch-v151-message-bienvenue">
+
+<script id="patch-v152-accueil-prenom-sans-casser-bandeau">
 (function(){
   function getCurrentStudentName(){
     try {
@@ -11185,57 +11221,55 @@ window.HIBOU_CLASS_STUDENTS = [
     return "";
   }
 
-  function updateV15WelcomeMessage(){
-    const headerActions = document.querySelector(".header-actions");
-    if (!headerActions) return;
-
+  function updateStudentWelcome(){
     const name = getCurrentStudentName();
     if (!name) return;
 
-    let welcome = document.getElementById("v15WelcomeMessage");
-    if (!welcome) {
-      welcome = document.createElement("div");
-      welcome.id = "v15WelcomeMessage";
-      welcome.className = "v15-welcome-message";
-      headerActions.appendChild(welcome);
+    // On ne met rien dans le bandeau des matières pour ne pas casser l'alignement.
+    const profileName = document.querySelector(".hibou-profile-name");
+    if (profileName) {
+      profileName.innerHTML =
+        '<span class="v15-student-welcome">Bonjour ' + name + ' 🌟' +
+        '<small>Que souhaites-tu apprendre aujourd’hui ?</small></span>';
     }
 
-    welcome.innerHTML =
-      '<div class="v15-welcome-line1">Bonjour ' + name + ' 🌟</div>' +
-      '<div class="v15-welcome-line2">Que souhaites-tu apprendre aujourd’hui ?</div>';
-
-    // Masque les anciens badges éventuels contenant "".
+    // Supprime/masque les anciens badges de mode appareil s'ils existent.
     document.querySelectorAll(".badge, .device-mode-badge, .v15-device-badge").forEach(function(el){
-      if ((el.textContent || "").toLowerCase().includes("tablette élève")) {
+      const t = (el.textContent || "").toLowerCase();
+      if (t.includes("tablette") || t.includes("pc enseignant") || t.includes("mode élève")) {
         el.style.display = "none";
       }
     });
   }
 
   document.addEventListener("DOMContentLoaded", function(){
-    updateV15WelcomeMessage();
+    updateStudentWelcome();
 
     const oldSavePrenom = window.savePrenom;
-    if (typeof oldSavePrenom === "function") {
-      window.savePrenom = async function(){
+    if (typeof oldSavePrenom === "function" && !oldSavePrenom.__v152Wrapped) {
+      const wrapped = async function(){
         const result = await oldSavePrenom.apply(this, arguments);
-        setTimeout(updateV15WelcomeMessage, 80);
-        setTimeout(updateV15WelcomeMessage, 350);
+        setTimeout(updateStudentWelcome, 80);
+        setTimeout(updateStudentWelcome, 400);
         return result;
       };
+      wrapped.__v152Wrapped = true;
+      window.savePrenom = wrapped;
     }
 
     const oldRefreshHibouProfile = window.refreshHibouProfile;
-    if (typeof oldRefreshHibouProfile === "function") {
-      window.refreshHibouProfile = function(){
+    if (typeof oldRefreshHibouProfile === "function" && !oldRefreshHibouProfile.__v152Wrapped) {
+      const wrappedProfile = function(){
         const result = oldRefreshHibouProfile.apply(this, arguments);
-        setTimeout(updateV15WelcomeMessage, 50);
+        setTimeout(updateStudentWelcome, 60);
         return result;
       };
+      wrappedProfile.__v152Wrapped = true;
+      window.refreshHibouProfile = wrappedProfile;
     }
   });
 
-  window.updateV15WelcomeMessage = updateV15WelcomeMessage;
+  window.updateStudentWelcomeV152 = updateStudentWelcome;
 })();
 </script>
 

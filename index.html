@@ -3021,6 +3021,39 @@ font-size:12px;font-weight:700;white-space:nowrap;
 .alert-danger{background:#FFE4E4;color:#D92D20;}
 </style>
 
+
+<style id="patch-format-weak-skills-v17">
+/* V17 - Correction tableau enseignant : compétences fragiles */
+.weak-skills-list{
+  display:flex;
+  flex-wrap:wrap;
+  gap:4px;
+  align-items:center;
+}
+.weak-skill-chip{
+  display:inline-block;
+  background:#FFEAEA;
+  color:#7A2222;
+  border:1px solid #FFB8B8;
+  border-radius:999px;
+  padding:3px 8px;
+  font-size:12px;
+  font-weight:900;
+  white-space:nowrap;
+}
+.weak-skill-ok{
+  display:inline-block;
+  background:#E6F7E9;
+  color:#1E5627;
+  border:1px solid #BFECC8;
+  border-radius:999px;
+  padding:3px 8px;
+  font-size:12px;
+  font-weight:900;
+  white-space:nowrap;
+}
+</style>
+
 </head>
 <body>
 
@@ -10499,6 +10532,41 @@ function studentAlertBadge(analysis){
      return '<span class="alert-badge alert-ok">🟢 OK</span>';
  }
 }
+</script>
+
+
+<script id="patch-format-weak-skills-v17-js">
+(function(){
+  if(window.__hibouFormatWeakSkillsV17) return;
+  window.__hibouFormatWeakSkillsV17 = true;
+
+  window.formatWeakSkills = function(analysis){
+    try{
+      if(!analysis){
+        return '<span class="weak-skill-ok">🟢 Rien à signaler</span>';
+      }
+
+      let skills = analysis.weakSkills || analysis.weak_skills || analysis.weak || analysis.toReview || analysis.needsWork || [];
+
+      if(typeof skills === 'string'){
+        skills = skills.split(/[,;|]/).map(function(s){ return s.trim(); }).filter(Boolean);
+      }
+
+      if(!Array.isArray(skills) || skills.length === 0){
+        return '<span class="weak-skill-ok">🟢 Rien à signaler</span>';
+      }
+
+      return '<div class="weak-skills-list">' + skills.slice(0, 6).map(function(skill){
+        const label = String(skill).replace(/[<>&"]/g, function(c){
+          return {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c];
+        });
+        return '<span class="weak-skill-chip">⚠️ ' + label + '</span>';
+      }).join('') + '</div>';
+    }catch(e){
+      return '<span class="weak-skill-ok">🟢 Rien à signaler</span>';
+    }
+  };
+})();
 </script>
 
 </body>

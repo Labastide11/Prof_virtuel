@@ -9503,5 +9503,181 @@ header{
 })();
 </script>
 
+
+
+<!-- PATCH V13.1 - Géographie : blocs harmonisés, instance unique et défilement automatique -->
+<style id="patch-geographie-blocs-harmonises-v131">
+.hibou-lesson-box{
+  background:#F8F7FF;
+  border:2px solid var(--primary-light);
+  border-radius:16px;
+  padding:16px;
+  margin-top:10px;
+  width:100%;
+}
+.hibou-lesson-box h3{
+  font-family:'Baloo 2',sans-serif;
+  color:var(--primary);
+  font-size:20px;
+  margin:0 0 8px 0;
+}
+.hibou-lesson-rule{
+  background:#FFFCEB;
+  border:2px solid var(--accent);
+  border-radius:14px;
+  padding:10px 12px;
+  font-weight:900;
+  color:#7A5C00;
+  margin:10px 0;
+  line-height:1.4;
+}
+.hibou-lesson-examples{
+  background:white;
+  border:2px solid #ECEBF3;
+  border-radius:14px;
+  padding:10px 12px;
+  font-weight:800;
+  line-height:1.45;
+  margin:10px 0;
+}
+.hibou-lesson-btn{
+  background:var(--primary);
+  color:white;
+  border:none;
+  border-radius:14px;
+  padding:10px 14px;
+  font-weight:900;
+  font-family:inherit;
+  cursor:pointer;
+  width:100%;
+  margin-top:8px;
+}
+.hibou-lesson-btn:hover{transform:translateY(-1px);}
+</style>
+
+<script id="patch-geographie-blocs-harmonises-v131">
+(function(){
+  if(window.__hibouGeoBlocsHarmonisesV131) return;
+  window.__hibouGeoBlocsHarmonisesV131 = true;
+
+  function getScrollContainer(){
+    return document.getElementById('hibouScrollZone') || document.getElementById('chatContainer');
+  }
+
+  function scrollToElement(el){
+    if(!el) return;
+    const scroll = getScrollContainer();
+    el.classList.add('hibou-activity-flash');
+    if(scroll && scroll !== document.getElementById('chatContainer') && scroll.contains(el)){
+      const top = el.offsetTop - 12;
+      scroll.scrollTo({top: Math.max(0, top), behavior:'smooth'});
+    }else{
+      el.scrollIntoView({behavior:'smooth', block:'start'});
+    }
+    setTimeout(function(){ el.classList.remove('hibou-activity-flash'); }, 900);
+  }
+
+  function addUniqueGeoLesson(id, html){
+    const existing = document.getElementById(id);
+    if(existing){ scrollToElement(existing); return existing; }
+    const chat = document.getElementById('chatContainer');
+    if(!chat) return null;
+    const div = document.createElement('div');
+    div.className = 'message prof hibou-activity-item';
+    div.id = id;
+    div.setAttribute('data-hibou-activity-key', id);
+    div.innerHTML = '<div class="avatar prof">🦉</div><div class="bubble">' + html + '</div>';
+    chat.appendChild(div);
+    setTimeout(function(){ scrollToElement(div); }, 60);
+    return div;
+  }
+
+  window.startGeoFrance = function(){
+    addUniqueGeoLesson('geo-france-lesson', `
+      <div class="hibou-lesson-box geographie-lesson">
+        <h3>🗺️ Géographie : la France</h3>
+        <div class="hibou-lesson-rule">
+          La France est un pays d’Europe. Sa capitale est Paris. Elle possède des villes, des fleuves, des montagnes, des mers et des frontières.
+        </div>
+        <div class="hibou-lesson-examples">
+          ✅ Capitale : <b>Paris</b><br>
+          ✅ Pays voisin : <b>Espagne, Italie, Allemagne, Belgique...</b><br>
+          ✅ Mer ou océan : <b>océan Atlantique, mer Méditerranée, Manche</b><br>
+          ✅ On utilise une <b>carte</b> pour se repérer.
+        </div>
+        <button class="hibou-lesson-btn" onclick="startLocalQuiz('geographie','🌍 Quiz local Géographie CE2')">📚 Faire le quiz de géographie</button>
+      </div>
+    `);
+  };
+
+  window.startGeoReliefs = function(){
+    addUniqueGeoLesson('geo-reliefs-fleuves-lesson', `
+      <div class="hibou-lesson-box geographie-lesson">
+        <h3>⛰️ Reliefs et fleuves de France</h3>
+        <div class="hibou-lesson-rule">
+          Le relief, c’est la forme du paysage : montagnes, plaines, plateaux. Un fleuve est un grand cours d’eau qui se jette dans la mer ou l’océan.
+        </div>
+        <div class="hibou-lesson-examples">
+          ✅ Montagnes : <b>les Alpes, les Pyrénées, le Massif central, les Vosges, le Jura</b><br>
+          ✅ Fleuves : <b>la Seine, la Loire, le Rhône, la Garonne</b><br>
+          ✅ Exemple : <b>la Seine traverse Paris</b>.<br>
+          ✅ Pour comprendre un paysage, on observe la carte et la légende.
+        </div>
+        <button class="hibou-lesson-btn" onclick="startLocalQuiz('geographie','🌍 Quiz local Géographie CE2')">📚 Faire le quiz de géographie</button>
+      </div>
+    `);
+  };
+
+  function patchGeographieButtons(){
+    const q = document.getElementById('quickQuestions');
+    if(!q) return;
+    const buttons = Array.from(q.querySelectorAll('button.quick-btn'));
+    buttons.forEach(function(btn){
+      const text = (btn.textContent || '').toLowerCase();
+      const onclick = btn.getAttribute('onclick') || '';
+      if(text.includes('la france') || onclick.includes('la France en géographie')){
+        btn.textContent = '🗺️ La France';
+        btn.setAttribute('onclick','startGeoFrance()');
+      }
+      if(text.includes('reliefs') || text.includes('fleuves') || onclick.includes('montagnes et les fleuves')){
+        btn.textContent = '⛰️ Reliefs et fleuves';
+        btn.setAttribute('onclick','startGeoReliefs()');
+      }
+    });
+  }
+
+  const oldUpdate = window.updateQuickQuestions;
+  if(typeof oldUpdate === 'function' && !oldUpdate.__hibouGeoV131){
+    window.updateQuickQuestions = function(subject){
+      const result = oldUpdate.apply(this, arguments);
+      const clean = String(subject || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+      if(clean === 'geographie'){
+        setTimeout(patchGeographieButtons, 0);
+        setTimeout(patchGeographieButtons, 80);
+      }
+      return result;
+    };
+    window.updateQuickQuestions.__hibouGeoV131 = true;
+  }
+
+  const oldSelect = window.selectSubject;
+  if(typeof oldSelect === 'function' && !oldSelect.__hibouGeoV131){
+    window.selectSubject = function(btn, subject){
+      const result = oldSelect.apply(this, arguments);
+      const clean = String(subject || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+      if(clean === 'geographie'){
+        setTimeout(patchGeographieButtons, 60);
+        setTimeout(patchGeographieButtons, 160);
+      }
+      return result;
+    };
+    window.selectSubject.__hibouGeoV131 = true;
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){ setTimeout(patchGeographieButtons, 120); });
+  window.addEventListener('load', function(){ setTimeout(patchGeographieButtons, 180); });
+})();
+</script>
+
 </body>
 </html>

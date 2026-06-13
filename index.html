@@ -2708,6 +2708,41 @@ body.fullscreen-active .mockup-right-panel .mockup-full-progress-btn{
 </style>
 
 
+<style id="patch-v11-illustrations-lecons">
+/* V11 - Illustrations pédagogiques sans doublon de titre */
+.lesson-illustration-v11{
+  width:100%;
+  min-height:118px;
+  border-radius:18px;
+  margin:0 0 12px 0;
+  background:linear-gradient(135deg,#FFFFFF 0%,#F8F7FF 100%);
+  border:2px solid #EAE8FF;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.8);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+.lesson-illustration-v11 svg{
+  width:100%;
+  max-width:360px;
+  height:112px;
+  display:block;
+}
+.lesson-illustration-v11[data-kind="plantes"]{background:linear-gradient(135deg,#E9F9EE 0%,#FFFFFF 100%);}
+.lesson-illustration-v11[data-kind="systeme"]{background:linear-gradient(135deg,#EEF0FF 0%,#FFFFFF 100%);}
+.lesson-illustration-v11[data-kind="squelette"]{background:linear-gradient(135deg,#F7F6FF 0%,#FFFFFF 100%);}
+.lesson-illustration-v11[data-kind="nom"]{background:linear-gradient(135deg,#FFF4F6 0%,#FFFFFF 100%);}
+.lesson-illustration-v11[data-kind="verbe"]{background:linear-gradient(135deg,#FFF7E8 0%,#FFFFFF 100%);}
+.lesson-illustration-v11[data-kind="geo"]{background:linear-gradient(135deg,#FFF2E0 0%,#FFFFFF 100%);}
+.lesson-illustration-v11[data-kind="relief"]{background:linear-gradient(135deg,#E9F9EE 0%,#FFF8E8 100%);}
+.lesson-illustration-v11[data-kind="english"]{background:linear-gradient(135deg,#F3E9FF 0%,#FFFFFF 100%);}
+@media(max-width:560px){
+  .lesson-illustration-v11{min-height:96px;border-radius:16px;margin-bottom:10px;}
+  .lesson-illustration-v11 svg{height:92px;}
+}
+</style>
+
 </head>
 <body>
 
@@ -6927,7 +6962,7 @@ setTimeout(removeVieDeClassePanel, 1000);
       <div class="avatar prof">🦉</div>
       <div class="bubble">
         <div class="nom-commun-lesson">
-          
+          <h3>✍️ Nom commun</h3>
           <div class="nom-commun-rule">
             Un <b>nom commun</b> sert à nommer une personne, un animal, une chose ou un lieu.
           </div>
@@ -7327,7 +7362,7 @@ setTimeout(removeVieDeClassePanel, 1000);
       <div class="avatar prof">🦉</div>
       <div class="bubble">
         <div class="plantes-lesson">
-          
+          <h3>🌱 Les plantes</h3>
           <div class="plantes-rule">
             Une plante est un être vivant : elle naît, grandit, se nourrit et peut se reproduire.
           </div>
@@ -7418,7 +7453,7 @@ setTimeout(removeVieDeClassePanel, 1000);
       <div class="avatar prof">🦉</div>
       <div class="bubble">
         <div class="squelette-lesson">
-          
+          <h3>🦴 Le squelette</h3>
           <div class="squelette-rule">
             Le <b>squelette</b>, c’est l’ensemble des os de notre corps.
           </div>
@@ -9681,407 +9716,134 @@ header{
 </script>
 
 
-
-<!-- PATCH V13.2 - Illustrations harmonisées : chaque bloc de leçon reçoit une image/dessin intégré -->
-<style id="patch-lecons-illustrees-v132">
-.hibou-lesson-visual{
-  width:100%;
-  min-height:118px;
-  border-radius:18px;
-  margin:0 0 12px 0;
-  padding:14px 16px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:14px;
-  overflow:hidden;
-  position:relative;
-  background:linear-gradient(135deg,#FFFFFF 0%,#F8F7FF 55%,#EAE8FF 100%);
-  border:2px solid #ECEBF3;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.7), 0 6px 18px rgba(108,99,255,.10);
-}
-.hibou-lesson-visual::before{
-  content:"";
-  position:absolute;
-  right:-22px;
-  top:-30px;
-  width:116px;
-  height:116px;
-  border-radius:50%;
-  background:rgba(255,217,61,.22);
-}
-.hibou-lesson-visual::after{
-  content:"";
-  position:absolute;
-  left:-34px;
-  bottom:-46px;
-  width:128px;
-  height:128px;
-  border-radius:50%;
-  background:rgba(108,99,255,.11);
-}
-.hibou-visual-main{
-  position:relative;
-  z-index:1;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  min-width:0;
-}
-.hibou-visual-kicker{
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  color:var(--primary);
-  font-weight:900;
-  font-size:12px;
-  text-transform:uppercase;
-  letter-spacing:.04em;
-  margin-bottom:4px;
-}
-.hibou-visual-title{
-  font-family:'Baloo 2',sans-serif;
-  font-size:22px;
-  line-height:1.05;
-  font-weight:900;
-  color:var(--text);
-}
-.hibou-visual-subtitle{
-  margin-top:4px;
-  font-size:13px;
-  line-height:1.25;
-  font-weight:800;
-  color:var(--text-muted);
-}
-.hibou-visual-emoji{
-  position:relative;
-  z-index:1;
-  width:96px;
-  height:96px;
-  border-radius:24px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex-shrink:0;
-  font-size:54px;
-  background:linear-gradient(135deg,#FFF9E6 0%,#FFFFFF 100%);
-  border:3px solid rgba(255,255,255,.85);
-  box-shadow:0 8px 22px rgba(45,43,85,.12), inset 0 1px 0 rgba(255,255,255,.9);
-}
-.hibou-visual-emoji small{
-  position:absolute;
-  right:-4px;
-  bottom:-6px;
-  font-size:28px;
-  filter:drop-shadow(0 2px 2px rgba(0,0,0,.12));
-}
-.hibou-lesson-visual[data-theme="francais"]{background:linear-gradient(135deg,#FFF1F3 0%,#FFFFFF 55%,#FFECEF 100%);}
-.hibou-lesson-visual[data-theme="maths"]{background:linear-gradient(135deg,#E8F4FF 0%,#FFFFFF 55%,#DFF0FF 100%);}
-.hibou-lesson-visual[data-theme="sciences"]{background:linear-gradient(135deg,#E9F9EE 0%,#FFFFFF 55%,#DFF7E7 100%);}
-.hibou-lesson-visual[data-theme="geographie"]{background:linear-gradient(135deg,#FFF2E0 0%,#FFFFFF 55%,#FFE6BE 100%);}
-.hibou-lesson-visual[data-theme="anglais"]{background:linear-gradient(135deg,#F3E9FF 0%,#FFFFFF 55%,#EEE0FF 100%);}
-.hibou-lesson-visual[data-theme="jeux"]{background:linear-gradient(135deg,#E7FAFF 0%,#FFFFFF 55%,#DDF7FF 100%);}
-.hibou-lesson-visual[data-theme="francais"] .hibou-visual-kicker{color:#FF3B57;}
-.hibou-lesson-visual[data-theme="maths"] .hibou-visual-kicker{color:#1683F7;}
-.hibou-lesson-visual[data-theme="sciences"] .hibou-visual-kicker{color:#24A84A;}
-.hibou-lesson-visual[data-theme="geographie"] .hibou-visual-kicker{color:#D97200;}
-.hibou-lesson-visual[data-theme="anglais"] .hibou-visual-kicker{color:#8A3DDF;}
-.hibou-lesson-visual[data-theme="jeux"] .hibou-visual-kicker{color:#0086AD;}
-@media(max-width:560px){
-  .hibou-lesson-visual{min-height:104px;padding:12px;gap:10px;border-radius:16px;}
-  .hibou-visual-title{font-size:19px;}
-  .hibou-visual-subtitle{font-size:12px;}
-  .hibou-visual-emoji{width:78px;height:78px;border-radius:20px;font-size:44px;}
-  .hibou-visual-emoji small{font-size:23px;}
-}
-</style>
-
-<script id="patch-lecons-illustrees-v132">
+<script id="patch-v11-illustrations-lecons-js">
 (function(){
-  if(window.__hibouLeconsIllustreesV132) return;
-  window.__hibouLeconsIllustreesV132 = true;
-
-  const VISUALS = [
-    {test:/nom commun|noms communs/i, theme:'francais', kicker:'Français', title:'Nom commun', subtitle:'Je vois, je nomme, je comprends.', emoji:'📘', small:'✏️'},
-    {test:/verbe/i, theme:'francais', kicker:'Français', title:'Le verbe', subtitle:'Le mot qui indique l’action.', emoji:'🏃', small:'💬'},
-    {test:/idées pour écrire|ecrire|écrire/i, theme:'francais', kicker:'Français', title:'Idées pour écrire', subtitle:'Une image mentale pour démarrer.', emoji:'📝', small:'💡'},
-    {test:/calcul mental/i, theme:'maths', kicker:'Maths', title:'Calcul mental', subtitle:'Je calcule vite et juste.', emoji:'🧮', small:'⚡'},
-    {test:/multiplication|tables/i, theme:'maths', kicker:'Maths', title:'Multiplication', subtitle:'Je construis mes calculs étape par étape.', emoji:'✖️', small:'🔢'},
-    {test:/plantes|plante/i, theme:'sciences', kicker:'Sciences', title:'Les plantes', subtitle:'Observer pour comprendre le vivant.', emoji:'🌱', small:'☀️'},
-    {test:/système solaire|systeme solaire|soleil|planète|planete/i, theme:'sciences', kicker:'Sciences', title:'Système solaire', subtitle:'Planètes, Soleil et espace.', emoji:'🪐', small:'☀️'},
-    {test:/squelette|os/i, theme:'sciences', kicker:'Sciences', title:'Le squelette', subtitle:'Comprendre le corps humain.', emoji:'🦴', small:'🧍'},
-    {test:/france/i, theme:'geographie', kicker:'Géographie', title:'La France', subtitle:'Carte, villes, mers et frontières.', emoji:'🗺️', small:'🇫🇷'},
-    {test:/relief|fleuve|montagne|plaine/i, theme:'geographie', kicker:'Géographie', title:'Reliefs et fleuves', subtitle:'Lire les formes du paysage.', emoji:'⛰️', small:'🌊'},
-    {test:/couleurs|colours|colors/i, theme:'anglais', kicker:'Anglais', title:'Colours', subtitle:'Associer les mots aux couleurs.', emoji:'🎨', small:'🇬🇧'},
-    {test:/présenter|presenter|hello|my name/i, theme:'anglais', kicker:'Anglais', title:'Se présenter', subtitle:'Des phrases courtes à répéter.', emoji:'👋', small:'💬'},
-    {test:/anglais|english/i, theme:'anglais', kicker:'Anglais', title:'Mini-leçon', subtitle:'Écouter, répéter, comprendre.', emoji:'🇬🇧', small:'⭐'},
-    {test:/devinette|roue|quiz|jeu/i, theme:'jeux', kicker:'Jeu', title:'Activité', subtitle:'J’apprends en jouant.', emoji:'🎲', small:'🦉'}
-  ];
-
-  function cleanText(el){ return (el ? el.textContent : '').replace(/\s+/g,' ').trim(); }
-
-  function pickVisual(box){
-    const text = cleanText(box).toLowerCase();
-    for(const v of VISUALS){ if(v.test.test(text)) return v; }
-    if(box.classList.contains('geographie-lesson')) return VISUALS.find(v=>v.theme==='geographie');
-    if(box.classList.contains('english-lesson')) return VISUALS.find(v=>v.theme==='anglais');
-    if(box.classList.contains('plantes-lesson') || box.classList.contains('systeme-lesson') || box.classList.contains('squelette-lesson')) return VISUALS.find(v=>v.theme==='sciences');
-    if(box.classList.contains('nom-commun-lesson') || box.classList.contains('verbe-lesson') || box.classList.contains('writing-idea-box')) return VISUALS.find(v=>v.theme==='francais');
-    if(box.classList.contains('mental-game-container') || box.classList.contains('multi-box')) return VISUALS.find(v=>v.theme==='maths');
-    return null;
-  }
-
-  function addVisual(box){
-    if(!box || box.querySelector(':scope > .hibou-lesson-visual')) return;
-    const visual = pickVisual(box);
-    if(!visual) return;
-    const titleEl = box.querySelector('h3,.mental-title-line,.writing-idea-title,.devinette-title-line');
-    const actualTitle = titleEl ? cleanText(titleEl).replace(/^[-–—\s]+/,'') : visual.title;
-    const div = document.createElement('div');
-    div.className = 'hibou-lesson-visual';
-    div.dataset.theme = visual.theme;
-    div.innerHTML = `
-      <div class="hibou-visual-main">
-        <div class="hibou-visual-kicker">${visual.kicker}</div>
-        <div class="hibou-visual-title">${actualTitle || visual.title}</div>
-        <div class="hibou-visual-subtitle">${visual.subtitle}</div>
-      </div>
-      <div class="hibou-visual-emoji" aria-hidden="true">${visual.emoji}<small>${visual.small || ''}</small></div>`;
-    box.insertBefore(div, box.firstChild);
-  }
-
-  function enhanceLessons(root){
-    root = root || document;
-    const selector = [
-      '.nom-commun-lesson','.verbe-lesson','.plantes-lesson','.systeme-lesson','.squelette-lesson',
-      '.english-lesson','.hibou-lesson-box','.writing-idea-box','.mental-game-container','.multi-box',
-      '.devinette-game-container','.review-wheel-box'
-    ].join(',');
-    root.querySelectorAll(selector).forEach(addVisual);
-  }
-
-  function observeChat(){
-    const chat = document.getElementById('chatContainer');
-    if(!chat || chat.__hibouVisualObserverV132) return;
-    chat.__hibouVisualObserverV132 = true;
-    const obs = new MutationObserver(function(muts){
-      muts.forEach(function(m){
-        m.addedNodes.forEach(function(n){ if(n && n.nodeType===1) setTimeout(function(){ enhanceLessons(n); }, 30); });
-      });
-    });
-    obs.observe(chat, {childList:true, subtree:true});
-  }
-
-  function init(){ enhanceLessons(document); observeChat(); }
-  document.addEventListener('DOMContentLoaded', function(){ setTimeout(init,60); setTimeout(init,400); });
-  window.addEventListener('load', function(){ setTimeout(init,120); setTimeout(init,700); });
-
-  // Les sous-menus recréent parfois des blocs : on relance après les clics et les changements de matière.
-  document.addEventListener('click', function(){ setTimeout(init,120); setTimeout(init,500); }, true);
-  const oldSelect = window.selectSubject;
-  if(typeof oldSelect === 'function' && !oldSelect.__hibouVisualV132){
-    window.selectSubject = function(){ const r = oldSelect.apply(this, arguments); setTimeout(init,120); return r; };
-    window.selectSubject.__hibouVisualV132 = true;
-  }
-})();
-</script>
-
-
-
-<!-- PATCH V13.3 - Correction scroll après illustrations : sous-matières visibles sans scroller -->
-<style id="patch-scroll-fiable-v133">
-.hibou-activity-flash .bubble,
-.hibou-scroll-focus .bubble{
-  animation: hibouScrollFocusV133 .95s ease-out;
-}
-@keyframes hibouScrollFocusV133{
-  0%{box-shadow:0 0 0 0 rgba(108,99,255,0); transform:scale(1);}
-  45%{box-shadow:0 0 0 7px rgba(108,99,255,.18); transform:scale(1.01);}
-  100%{box-shadow:var(--shadow); transform:scale(1);}
-}
-</style>
-<script id="patch-scroll-fiable-v133">
-(function(){
-  if(window.__hibouScrollFiableV133) return;
-  window.__hibouScrollFiableV133 = true;
-
-  function chat(){ return document.getElementById('chatContainer'); }
-  function scrollZone(){ return document.getElementById('hibouScrollZone') || document.scrollingElement || document.documentElement; }
-  function visibleMessages(){
-    const c = chat();
-    if(!c) return [];
-    return Array.from(c.children).filter(function(el){
-      return el && el.nodeType === 1 && el.id !== 'typingIndicator' && !el.classList.contains('typing-indicator');
-    });
-  }
-  function lastMessage(){
-    const msgs = visibleMessages();
-    return msgs.length ? msgs[msgs.length-1] : null;
-  }
-  function norm(s){
-    return String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ').trim();
-  }
-  function textOf(el){ return norm(el ? el.textContent : ''); }
-  function findBySelectors(selectors){
-    for(const sel of selectors){
-      const found = document.querySelector(sel);
-      if(found) return found.closest('.message') || found;
-    }
-    return null;
-  }
-  function findByText(patterns){
-    const msgs = visibleMessages();
-    for(let i=msgs.length-1;i>=0;i--){
-      const t = textOf(msgs[i]);
-      if(patterns.some(function(p){ return t.includes(p); })) return msgs[i];
-    }
-    return null;
-  }
-  function targetFromHint(hint){
-    const h = norm(hint);
-    if(!h) return lastMessage();
-    if(h.includes('nom commun')) return findBySelectors(['.nom-commun-lesson']) || findByText(['nom commun']);
-    if(h.includes('verbe')) return findBySelectors(['.verbe-lesson']) || findByText(['verbe']);
-    if(h.includes('idee') || h.includes('ecrire')) return findBySelectors(['.writing-idea-box']) || findByText(['idee pour ecrire']);
-    if(h.includes('calcul mental')) return findBySelectors(['.mental-game-container']) || findByText(['calcul mental']);
-    if(h.includes('multiplication')) return findBySelectors(['.multi-box']) || findByText(['multiplication posee','multiplication']);
-    if(h.includes('plante')) return findBySelectors(['.plantes-lesson']) || findByText(['les plantes']);
-    if(h.includes('systeme solaire') || h.includes('soleil')) return findBySelectors(['.systeme-lesson']) || findByText(['systeme solaire']);
-    if(h.includes('squelette') || h.includes(' os')) return findBySelectors(['.squelette-lesson']) || findByText(['squelette']);
-    if(h.includes('france') && (h.includes('geo') || h.includes('geographie') || h.includes('carte'))) return document.getElementById('geo-france-lesson') || findByText(['geographie : la france','la france est un pays']);
-    if(h.includes('relief') || h.includes('fleuve') || h.includes('montagne')) return document.getElementById('geo-reliefs-fleuves-lesson') || findByText(['reliefs et fleuves','le relief']);
-    if(h.includes('couleur') || h.includes('colour') || h.includes('color')) return findBySelectors(['.english-lesson']) || findByText(['colours','couleurs']);
-    if(h.includes('present') || h.includes('se presenter') || h.includes('hello') || h.includes('my name')) return findByText(['se presenter','my name','hello']);
-    if(h.includes('devinette')) return findBySelectors(['.devinette-game-container']) || findByText(['devinette']);
-    if(h.includes('roue')) return findBySelectors(['.review-wheel-box']) || findByText(['roue']);
-    if(h.includes('quiz')) return findBySelectors(['.quiz-container.active-quiz','.quiz-container']) || findByText(['quiz']);
-    return lastMessage();
-  }
-  function robustScroll(el){
-    if(!el) return false;
-    const target = el.closest && el.closest('.message') ? el.closest('.message') : el;
-    const zone = scrollZone();
-    try{
-      target.classList.add('hibou-scroll-focus','hibou-activity-flash');
-      if(zone && zone !== document.documentElement && zone !== document.body && zone.contains(target)){
-        const zr = zone.getBoundingClientRect();
-        const tr = target.getBoundingClientRect();
-        const top = zone.scrollTop + (tr.top - zr.top) - 10;
-        zone.scrollTo({top: Math.max(0, top), behavior:'smooth'});
-      }else{
-        target.scrollIntoView({behavior:'smooth', block:'start'});
-      }
-      setTimeout(function(){ target.classList.remove('hibou-scroll-focus','hibou-activity-flash'); }, 1000);
-      return true;
-    }catch(e){
-      try{ target.scrollIntoView(); return true; }catch(_){ return false; }
-    }
-  }
-  window.hibouScrollToLesson = function(hint){
-    const el = (hint && hint.nodeType === 1) ? hint : targetFromHint(hint);
-    return robustScroll(el);
+  const SVG = {
+    nom:`<svg viewBox="0 0 360 120" role="img" aria-label="Cahier et crayon">
+      <rect x="72" y="22" width="130" height="78" rx="12" fill="#fff" stroke="#6C63FF" stroke-width="5"/>
+      <line x1="95" y1="43" x2="178" y2="43" stroke="#EAE8FF" stroke-width="6" stroke-linecap="round"/>
+      <line x1="95" y1="62" x2="168" y2="62" stroke="#EAE8FF" stroke-width="6" stroke-linecap="round"/>
+      <line x1="95" y1="81" x2="155" y2="81" stroke="#EAE8FF" stroke-width="6" stroke-linecap="round"/>
+      <rect x="214" y="36" width="78" height="18" rx="9" fill="#FFD93D" transform="rotate(35 253 45)"/>
+      <polygon points="286,83 309,92 298,70" fill="#FF6B6B"/>
+      <circle cx="65" cy="29" r="11" fill="#FF6B6B"/>
+      <circle cx="300" cy="28" r="8" fill="#6BCB77"/>
+    </svg>`,
+    verbe:`<svg viewBox="0 0 360 120" role="img" aria-label="Personnage en mouvement">
+      <circle cx="174" cy="31" r="18" fill="#FFD93D" stroke="#2D2B55" stroke-width="4"/>
+      <path d="M170 52 C148 66 138 79 124 99" stroke="#6C63FF" stroke-width="12" stroke-linecap="round" fill="none"/>
+      <path d="M174 57 C198 62 211 74 231 91" stroke="#6C63FF" stroke-width="12" stroke-linecap="round" fill="none"/>
+      <path d="M151 72 L110 72" stroke="#FF6B6B" stroke-width="10" stroke-linecap="round"/>
+      <path d="M192 71 L233 54" stroke="#FF6B6B" stroke-width="10" stroke-linecap="round"/>
+      <path d="M86 35 H126" stroke="#EAE8FF" stroke-width="7" stroke-linecap="round"/>
+      <path d="M68 58 H118" stroke="#EAE8FF" stroke-width="7" stroke-linecap="round"/>
+      <path d="M76 83 H108" stroke="#EAE8FF" stroke-width="7" stroke-linecap="round"/>
+      <text x="248" y="45" font-size="22" font-weight="900" fill="#6C63FF">agir</text>
+    </svg>`,
+    plantes:`<svg viewBox="0 0 360 120" role="img" aria-label="Plante en pot">
+      <ellipse cx="180" cy="100" rx="75" ry="12" fill="#DDEFE2"/>
+      <path d="M144 68 H216 L204 103 H156 Z" fill="#FFB23F" stroke="#7A5C00" stroke-width="4"/>
+      <path d="M180 72 C178 48 177 35 180 20" stroke="#24A84A" stroke-width="8" stroke-linecap="round"/>
+      <path d="M178 50 C146 38 130 50 119 70 C145 73 165 68 178 50Z" fill="#6BCB77" stroke="#24A84A" stroke-width="4"/>
+      <path d="M184 47 C218 31 240 43 250 66 C218 70 197 64 184 47Z" fill="#6BCB77" stroke="#24A84A" stroke-width="4"/>
+      <circle cx="84" cy="28" r="9" fill="#FFD93D"/>
+      <circle cx="278" cy="26" r="7" fill="#FFD93D"/>
+    </svg>`,
+    systeme:`<svg viewBox="0 0 360 120" role="img" aria-label="Système solaire">
+      <circle cx="84" cy="60" r="28" fill="#FFD93D"/>
+      <circle cx="155" cy="42" r="11" fill="#6C63FF"/>
+      <circle cx="204" cy="72" r="17" fill="#4DB0FF"/>
+      <circle cx="270" cy="49" r="22" fill="#FF8A00"/>
+      <ellipse cx="270" cy="49" rx="36" ry="9" fill="none" stroke="#EAE8FF" stroke-width="5" transform="rotate(-18 270 49)"/>
+      <path d="M120 60 C170 14 236 21 310 42" fill="none" stroke="#EAE8FF" stroke-width="4" stroke-dasharray="8 8"/>
+      <path d="M115 70 C174 111 238 103 303 65" fill="none" stroke="#EAE8FF" stroke-width="4" stroke-dasharray="8 8"/>
+      <circle cx="319" cy="25" r="4" fill="#6C63FF"/>
+      <circle cx="135" cy="91" r="4" fill="#FF6B6B"/>
+    </svg>`,
+    squelette:`<svg viewBox="0 0 360 120" role="img" aria-label="Squelette simplifié">
+      <circle cx="180" cy="25" r="17" fill="#fff" stroke="#2D2B55" stroke-width="4"/>
+      <circle cx="174" cy="23" r="3" fill="#2D2B55"/><circle cx="186" cy="23" r="3" fill="#2D2B55"/>
+      <path d="M180 42 V84" stroke="#6C63FF" stroke-width="7" stroke-linecap="round"/>
+      <path d="M150 56 H210" stroke="#6C63FF" stroke-width="7" stroke-linecap="round"/>
+      <path d="M160 58 L143 83" stroke="#6C63FF" stroke-width="7" stroke-linecap="round"/>
+      <path d="M200 58 L217 83" stroke="#6C63FF" stroke-width="7" stroke-linecap="round"/>
+      <path d="M178 84 L158 107" stroke="#6C63FF" stroke-width="7" stroke-linecap="round"/>
+      <path d="M182 84 L204 107" stroke="#6C63FF" stroke-width="7" stroke-linecap="round"/>
+      <rect x="90" y="28" width="46" height="12" rx="6" fill="#EAE8FF"/>
+      <rect x="224" y="28" width="46" height="12" rx="6" fill="#EAE8FF"/>
+    </svg>`,
+    geo:`<svg viewBox="0 0 360 120" role="img" aria-label="Carte de France stylisée">
+      <path d="M170 16 L222 28 L242 66 L213 101 L162 96 L127 72 L139 32 Z" fill="#FFF2E0" stroke="#FF8A00" stroke-width="6" stroke-linejoin="round"/>
+      <circle cx="190" cy="59" r="9" fill="#6C63FF"/>
+      <path d="M190 68 C184 78 180 85 176 92" stroke="#6C63FF" stroke-width="5" stroke-linecap="round"/>
+      <path d="M110 95 H251" stroke="#EAE8FF" stroke-width="7" stroke-linecap="round"/>
+      <text x="147" y="62" font-size="18" font-weight="900" fill="#2D2B55">France</text>
+    </svg>`,
+    relief:`<svg viewBox="0 0 360 120" role="img" aria-label="Montagnes et fleuve">
+      <path d="M55 92 L124 28 L184 92 Z" fill="#E9F9EE" stroke="#24A84A" stroke-width="5" stroke-linejoin="round"/>
+      <path d="M135 92 L217 22 L306 92 Z" fill="#FFF2E0" stroke="#FF8A00" stroke-width="5" stroke-linejoin="round"/>
+      <path d="M103 48 L124 28 L145 49" stroke="#fff" stroke-width="6" stroke-linecap="round" fill="none"/>
+      <path d="M188 47 L217 22 L246 48" stroke="#fff" stroke-width="6" stroke-linecap="round" fill="none"/>
+      <path d="M64 104 C105 82 137 117 181 96 C224 75 252 106 306 90" fill="none" stroke="#4DB0FF" stroke-width="8" stroke-linecap="round"/>
+    </svg>`,
+    english:`<svg viewBox="0 0 360 120" role="img" aria-label="Deux enfants qui se saluent">
+      <circle cx="134" cy="35" r="18" fill="#FFD93D" stroke="#2D2B55" stroke-width="4"/>
+      <circle cx="226" cy="35" r="18" fill="#FFD93D" stroke="#2D2B55" stroke-width="4"/>
+      <path d="M134 55 V92" stroke="#6C63FF" stroke-width="12" stroke-linecap="round"/>
+      <path d="M226 55 V92" stroke="#9C4DFF" stroke-width="12" stroke-linecap="round"/>
+      <path d="M145 63 C164 48 189 48 211 63" stroke="#FF6B6B" stroke-width="8" stroke-linecap="round" fill="none"/>
+      <text x="138" y="108" font-size="19" font-weight="900" fill="#6C63FF">Hello!</text>
+      <circle cx="94" cy="28" r="7" fill="#C084FF"/>
+      <circle cx="270" cy="28" r="7" fill="#C084FF"/>
+    </svg>`
   };
-  function scheduleScroll(hint){
-    [80, 220, 520, 900].forEach(function(delay){
-      setTimeout(function(){ window.hibouScrollToLesson(hint); }, delay);
+
+  function kindFor(box){
+    const cls = box.className || "";
+    const text = (box.textContent || "").toLowerCase();
+    if(cls.includes("nom-commun")) return "nom";
+    if(cls.includes("verbe")) return "verbe";
+    if(cls.includes("plantes")) return "plantes";
+    if(cls.includes("systeme")) return "systeme";
+    if(cls.includes("squelette")) return "squelette";
+    if(cls.includes("english")) return "english";
+    if(cls.includes("geo") && (text.includes("relief") || text.includes("fleuve"))) return "relief";
+    if(cls.includes("geo")) return "geo";
+    if(text.includes("relief") || text.includes("fleuve")) return "relief";
+    if(text.includes("géographie") || text.includes("france")) return "geo";
+    if(text.includes("hello") || text.includes("anglais") || text.includes("couleur")) return "english";
+    return null;
+  }
+
+  function addIllustrations(){
+    const selectors = [
+      ".nom-commun-lesson",
+      ".verbe-lesson",
+      ".plantes-lesson",
+      ".systeme-lesson",
+      ".squelette-lesson",
+      ".geo-lesson",
+      ".english-lesson"
+    ];
+
+    document.querySelectorAll(selectors.join(",")).forEach(function(box){
+      if(box.querySelector(":scope > .lesson-illustration-v11")) return;
+      const kind = kindFor(box);
+      if(!kind || !SVG[kind]) return;
+      const illu = document.createElement("div");
+      illu.className = "lesson-illustration-v11";
+      illu.dataset.kind = kind;
+      illu.innerHTML = SVG[kind];
+      box.insertBefore(illu, box.firstChild);
     });
   }
-  function wrap(name, hint){
-    const old = window[name];
-    if(typeof old !== 'function' || old.__hibouScrollV133) return;
-    window[name] = function(){
-      const result = old.apply(this, arguments);
-      scheduleScroll(typeof hint === 'function' ? hint.apply(this, arguments) : (hint || name));
-      return result;
-    };
-    window[name].__hibouScrollV133 = true;
-    window[name].__hibouOriginal = old;
-  }
-  function installWrappers(){
-    wrap('showNomCommunLesson','nom commun');
-    wrap('startNomCommun','nom commun');
-    wrap('showVerbeLesson','verbe');
-    wrap('startVerbe','verbe');
-    wrap('startIdeesPourEcrire','idees pour ecrire');
-    wrap('startCalculMentalCE2','calcul mental');
-    wrap('startMultiplicationPosee','multiplication');
-    wrap('startPlantes','plantes');
-    wrap('startSystemeSolaire','systeme solaire');
-    wrap('startSquelette','squelette');
-    wrap('startGeoFrance','geographie france');
-    wrap('startGeoReliefs','reliefs fleuves');
-    wrap('startEnglishColors','couleurs anglais');
-    wrap('startEnglishPresentation','se presenter anglais');
-    wrap('startEnglishMiniLesson','anglais');
-    wrap('startDevinettesHibou','devinettes');
-    wrap('showReviewWheel','roue');
-    wrap('showLocalQuizMenu','quiz locaux');
-    wrap('startSkillCheckMenu','competences');
-    const sq = window.sendQuick;
-    if(typeof sq === 'function' && !sq.__hibouScrollV133){
-      window.sendQuick = function(text){
-        const result = sq.apply(this, arguments);
-        scheduleScroll(text || 'question rapide');
-        return result;
-      };
-      window.sendQuick.__hibouScrollV133 = true;
-    }
-    const slq = window.startLocalQuiz;
-    if(typeof slq === 'function' && !slq.__hibouScrollV133){
-      window.startLocalQuiz = function(subject, title){
-        const result = slq.apply(this, arguments);
-        scheduleScroll(title || subject || 'quiz');
-        return result;
-      };
-      window.startLocalQuiz.__hibouScrollV133 = true;
-    }
-  }
-  function patchButtons(){
-    document.querySelectorAll('#quickQuestions button.quick-btn, button.quick-btn').forEach(function(btn){
-      if(btn.__hibouScrollButtonV133) return;
-      btn.__hibouScrollButtonV133 = true;
-      btn.addEventListener('click', function(){ scheduleScroll(btn.textContent || btn.getAttribute('onclick') || ''); }, true);
-    });
-  }
-  function observeNewMessages(){
-    const c = chat();
-    if(!c || c.__hibouScrollObserverV133) return;
-    c.__hibouScrollObserverV133 = true;
-    const obs = new MutationObserver(function(muts){
-      let last = null;
-      muts.forEach(function(m){
-        m.addedNodes.forEach(function(n){
-          if(n && n.nodeType === 1 && n.id !== 'typingIndicator') last = n.closest && n.closest('.message') ? n.closest('.message') : n;
-        });
-      });
-      if(last){
-        setTimeout(function(){ robustScroll(last); }, 120);
-        setTimeout(function(){ robustScroll(last); }, 520);
-      }
-    });
-    obs.observe(c, {childList:true});
-  }
-  function init(){ installWrappers(); patchButtons(); observeNewMessages(); }
-  init();
-  document.addEventListener('DOMContentLoaded', function(){ setTimeout(init,80); setTimeout(init,400); });
-  window.addEventListener('load', function(){ setTimeout(init,150); setTimeout(init,700); });
-  document.addEventListener('click', function(e){
-    const btn = e.target && e.target.closest ? e.target.closest('button.quick-btn') : null;
-    if(btn) scheduleScroll(btn.textContent || btn.getAttribute('onclick') || '');
-  }, true);
-  const oldUpdate = window.updateQuickQuestions;
-  if(typeof oldUpdate === 'function' && !oldUpdate.__hibouScrollV133){
-    window.updateQuickQuestions = function(){
-      const result = oldUpdate.apply(this, arguments);
-      setTimeout(init,60);
-      setTimeout(init,200);
-      return result;
-    };
-    window.updateQuickQuestions.__hibouScrollV133 = true;
-  }
+
+  document.addEventListener("DOMContentLoaded", addIllustrations);
+  const observer = new MutationObserver(addIllustrations);
+  observer.observe(document.documentElement, {childList:true, subtree:true});
+  window.addLessonIllustrationsV11 = addIllustrations;
 })();
 </script>
-
 
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 Maître Hibou V15.1 - Stable</title>
+<title>🦉 Maître Hibou V15.2 - Vérifiée</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -3273,64 +3273,6 @@ body.device-phone .desktop-teacher-home{display:none !important;}
 </style>
 
 
-
-<style id="patch-v151-stable-minimal">
-/* V15.1 stable : suppression des effets visuels fatigants sans casser les boutons */
-.subject-btn,
-.subject-btn:hover,
-.subject-btn.active,
-.quick-questions,
-.quick-questions.submenu-flash,
-.badge.score.bump {
-  animation: none !important;
-}
-
-.quick-questions.submenu-flash {
-  transform: none !important;
-  box-shadow: var(--shadow) !important;
-}
-
-/* On garde l'alignement d'origine de la V15 : 6 matières quand la largeur le permet */
-.subjects-bar {
-  display: grid !important;
-  grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
-  gap: 10px !important;
-  width: 100% !important;
-  max-width: 1180px !important;
-  margin: 0 auto !important;
-  overflow: visible !important;
-}
-
-.subject-btn {
-  width: 100% !important;
-  min-width: 0 !important;
-}
-
-@media (max-width: 900px) {
-  .subjects-bar {
-    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-  }
-}
-@media (max-width: 520px) {
-  .subjects-bar {
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-  }
-}
-
-/* Message simple, sans modifier la structure des boutons */
-.v15-simple-welcome {
-  font-weight: 900;
-  color: var(--primary);
-  line-height: 1.1;
-}
-.v15-simple-welcome small {
-  display: block;
-  color: var(--text-muted);
-  font-size: 12px;
-  font-weight: 900;
-  margin-top: 2px;
-}
-</style>
 
 </head>
 <body>
@@ -11168,41 +11110,131 @@ window.HIBOU_CLASS_STUDENTS = [
 </script>
 
 
-<script id="patch-v151-stable-welcome-only">
+
+<style id="patch-v152-verifie-final">
+/* V15.2 vérifiée : ce patch est placé à la fin pour ne pas être écrasé */
+
+/* 1) Les 6 matières restent alignées sur PC */
+.subjects-bar {
+  display: grid !important;
+  grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+  gap: 10px !important;
+  width: 100% !important;
+  max-width: 1180px !important;
+  margin: 0 auto !important;
+  padding: 12px 14px !important;
+  overflow: visible !important;
+  white-space: normal !important;
+}
+
+.subjects-bar .subject-btn,
+.subject-btn {
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 74px !important;
+  transform: none !important;
+  animation: none !important;
+  transition: background-color .15s ease, border-color .15s ease, box-shadow .15s ease !important;
+  filter: none !important;
+}
+
+/* 2) Suppression des effets pénibles : pas de zoom, pas de flash, pas de pulsation */
+.subject-btn:hover,
+.subject-btn.active,
+.subjects-bar .subject-btn:hover,
+.subjects-bar .subject-btn.active,
+.quick-questions.submenu-flash,
+.badge.score.bump {
+  transform: none !important;
+  animation: none !important;
+  filter: none !important;
+}
+
+.quick-questions.submenu-flash {
+  box-shadow: var(--shadow) !important;
+}
+
+/* On neutralise aussi les animations nommées utilisées par le bandeau/sous-menu */
+@keyframes submenuFlash {
+  0%, 45%, 100% { transform: none !important; box-shadow: var(--shadow) !important; }
+}
+@keyframes bump {
+  0%, 50%, 100% { transform: none !important; }
+}
+
+/* 3) Adaptation tablette : aligné proprement, mais pas forcément 6 colonnes si l'écran est trop étroit */
+@media (max-width: 900px) {
+  .subjects-bar {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+}
+@media (max-width: 520px) {
+  .subjects-bar {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+/* 4) Message personnalisé */
+.v152-welcome-text {
+  font-weight: 900;
+  color: var(--primary);
+  line-height: 1.1;
+}
+.v152-welcome-text small {
+  display: block;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 900;
+  margin-top: 2px;
+}
+</style>
+
+<script id="patch-v152-verifie-message">
 (function(){
-  function getName(){
-    try { if (typeof prenomActuel !== "undefined" && prenomActuel) return prenomActuel; } catch(e){}
-    var el = document.getElementById("eleveNom");
-    return el && el.textContent ? el.textContent.trim() : "";
+  function getStudentName(){
+    try {
+      if (typeof prenomActuel !== "undefined" && prenomActuel) return prenomActuel;
+    } catch(e) {}
+    var eleveNom = document.getElementById("eleveNom");
+    if (eleveNom && eleveNom.textContent && eleveNom.textContent.trim() && eleveNom.textContent.trim() !== "Élève") {
+      return eleveNom.textContent.trim();
+    }
+    return "";
   }
 
-  function applyWelcome(){
-    var name = getName();
-    if(!name) return;
+  function applyWelcomeMessage(){
+    var name = getStudentName();
+    if (!name) return;
 
-    var profileName = document.querySelector(".hibou-profile-name");
-    if(profileName){
-      profileName.innerHTML =
-        '<span class="v15-simple-welcome">Bonjour ' + name + ' 🌟' +
+    /* On remplace le badge appareil par le message demandé, sans toucher aux boutons. */
+    var badge = document.getElementById("deviceModeBadge");
+    if (badge) {
+      badge.innerHTML =
+        '<span class="v152-welcome-text">Bonjour ' + name + ' 🌟' +
         '<small>Que souhaites-tu apprendre aujourd’hui ?</small></span>';
     }
 
-    document.querySelectorAll(".badge").forEach(function(el){
-      var t = (el.textContent || "").toLowerCase();
-      if(t.includes("tablette élève")){
-        el.innerHTML = "Bonjour " + name + " 🌟";
-      }
-    });
+    /* Si le profil élève existe, on le personnalise aussi. */
+    var profileName = document.querySelector(".hibou-profile-name");
+    if (profileName) {
+      profileName.innerHTML =
+        '<span class="v152-welcome-text">Bonjour ' + name + ' 🌟' +
+        '<small>Que souhaites-tu apprendre aujourd’hui ?</small></span>';
+    }
   }
 
   document.addEventListener("DOMContentLoaded", function(){
-    setTimeout(applyWelcome, 300);
+    setTimeout(applyWelcomeMessage, 300);
+    setTimeout(applyWelcomeMessage, 800);
+
+    /* Après une connexion ou un clic de navigation, on remet le message si le mode appareil l'a réécrit. */
     document.addEventListener("click", function(){
-      setTimeout(applyWelcome, 300);
+      setTimeout(applyWelcomeMessage, 200);
+      setTimeout(applyWelcomeMessage, 600);
     });
   });
 
-  window.applyV151Welcome = applyWelcome;
+  window.applyV152WelcomeMessage = applyWelcomeMessage;
 })();
 </script>
 

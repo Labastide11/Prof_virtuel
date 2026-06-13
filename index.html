@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Maître Hibou V12.5 - Texte bas supprimé</title>
+<title>🦉 Maître Hibou V15.9 - Retour base sans bug</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -70,7 +70,7 @@
     50% { transform: scale(1.2); }
     100% { transform: scale(1); }
   }
-  .badge.score.bump { animation: bump 0.3s ease-out; }
+  .badge.score.bump { animation: none !important; }
 
   .btn-round {
     background: var(--card);
@@ -451,7 +451,7 @@ animation:pop .25s ease-out;
   letter-spacing: .04em;
   margin-bottom: 2px;
 }
-.quick-questions.submenu-flash { animation: submenuFlash .55s ease-out; }
+.quick-questions.submenu-flash { animation: none !important; }
 @keyframes submenuFlash {
   0% { transform: scale(1); box-shadow: 0 0 0 rgba(108,99,255,0); }
   45% { transform: scale(1.015); box-shadow: 0 0 0 5px rgba(108,99,255,.14); }
@@ -2704,6 +2704,211 @@ body.fullscreen-active .mockup-right-panel .mockup-full-progress-btn{
   margin:0 !important;
   padding:0 !important;
   overflow:hidden !important;
+}
+</style>
+
+
+<style id="style-v159-retour-base-sans-bug">
+/* ============================================================
+   V15.9 - Retour base sans bug
+   Objectif : retrouver la disposition qui fonctionnait :
+   - matières alignées sur 1 ligne
+   - sous-matières juste dessous
+   - zone de travail + Mes progrès à droite
+   - écriture lisible
+   ============================================================ */
+
+/* Stop les effets fatigants, sans supprimer les couleurs */
+.subject-btn,
+.subject-btn:hover,
+.subject-btn.active,
+.quick-questions,
+.quick-questions.submenu-flash,
+.badge.score.bump,
+.competence-header-btn,
+.competence-header-btn:hover {
+  animation: none !important;
+  transform: none !important;
+  filter: none !important;
+}
+
+/* Bandeau matières : 6 matières sur une ligne */
+.subjects-bar {
+  display: grid !important;
+  grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+  gap: 8px !important;
+  max-width: 1520px !important;
+  width: calc(100% - 28px) !important;
+  margin: 0 auto !important;
+  padding: 14px 0 16px 0 !important;
+  overflow: visible !important;
+  white-space: normal !important;
+}
+
+.subjects-bar .subject-btn,
+.subject-btn {
+  min-width: 0 !important;
+  width: 100% !important;
+  min-height: 70px !important;
+  height: 70px !important;
+  padding: 8px 8px !important;
+  border-radius: 18px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: center !important;
+  text-align: center !important;
+  gap: 4px !important;
+}
+
+.subject-btn .subject-icon {
+  font-size: 24px !important;
+  line-height: 1 !important;
+}
+
+.subject-btn .subject-label {
+  font-size: 12px !important;
+  line-height: 1.05 !important;
+  font-weight: 900 !important;
+  white-space: nowrap !important;
+}
+
+/* Sous-matières : juste sous les matières, lisibles */
+.quick-questions {
+  max-width: 1520px !important;
+  width: calc(100% - 28px) !important;
+  margin: 0 auto 10px auto !important;
+  padding: 10px 12px !important;
+  position: sticky !important;
+  top: 88px !important;
+  z-index: 9 !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+}
+
+.quick-btn {
+  font-size: 13px !important;
+  padding: 9px 12px !important;
+  border-radius: 13px !important;
+  font-weight: 900 !important;
+  line-height: 1.1 !important;
+}
+
+/* Structure centrale du fichier sans bug : panneau principal + Mes progrès à droite */
+.mockup-main-shell {
+  max-width: 1520px !important;
+  width: calc(100% - 28px) !important;
+  margin: 8px auto 0 auto !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 400px !important;
+  gap: 12px !important;
+  align-items: stretch !important;
+}
+
+.mockup-left-panel,
+.mockup-right-panel {
+  min-width: 0 !important;
+}
+
+.mockup-right-panel {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+}
+
+/* Texte lisible : on revient à une taille confortable */
+.bubble,
+.mockup-card,
+.mockup-right-panel,
+.mockup-left-panel,
+.quick-btn,
+.quiz-option,
+.wq-option,
+.progress-mini-btn,
+.master-challenge-card p {
+  font-size: 15px !important;
+  line-height: 1.35 !important;
+}
+
+/* Le bouton Mes progrès reste lisible */
+.progress-mini-btn {
+  font-size: 19px !important;
+  min-height: 54px !important;
+  padding: 12px 16px !important;
+}
+
+/* Tablette paysage : garder la colonne de droite et les 6 matières */
+@media (min-width: 900px) {
+  .subjects-bar {
+    grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+  }
+
+  .mockup-main-shell {
+    grid-template-columns: minmax(0, 1fr) 360px !important;
+  }
+}
+
+/* Tablette portrait étroite : on garde 6 matières, mais compactes */
+@media (max-width: 899px) {
+  .subjects-bar {
+    grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+    gap: 5px !important;
+    width: calc(100% - 12px) !important;
+    padding: 8px 0 10px 0 !important;
+  }
+
+  .subjects-bar .subject-btn,
+  .subject-btn {
+    min-height: 52px !important;
+    height: 52px !important;
+    padding: 4px 2px !important;
+    border-radius: 12px !important;
+  }
+
+  .subject-btn .subject-icon {
+    font-size: 16px !important;
+  }
+
+  .subject-btn .subject-label {
+    font-size: 8px !important;
+  }
+
+  .quick-questions {
+    width: calc(100% - 12px) !important;
+    top: 72px !important;
+  }
+
+  .quick-btn {
+    font-size: 12px !important;
+    padding: 8px 10px !important;
+  }
+
+  .mockup-main-shell {
+    grid-template-columns: 1fr !important;
+    width: calc(100% - 12px) !important;
+  }
+
+  .mockup-right-panel {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+  }
+}
+
+/* Très petit écran : priorité à ne rien casser */
+@media (max-width: 560px) {
+  .subject-btn .subject-label {
+    font-size: 7px !important;
+  }
+
+  .subject-btn .subject-icon {
+    font-size: 14px !important;
+  }
+
+  .mockup-right-panel {
+    grid-template-columns: 1fr !important;
+  }
 }
 </style>
 

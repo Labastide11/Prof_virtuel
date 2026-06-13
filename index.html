@@ -9885,5 +9885,201 @@ header{
 })();
 </script>
 
+
+
+<!-- PATCH V13.3 - Correction scroll après illustrations : sous-matières visibles sans scroller -->
+<style id="patch-scroll-fiable-v133">
+.hibou-activity-flash .bubble,
+.hibou-scroll-focus .bubble{
+  animation: hibouScrollFocusV133 .95s ease-out;
+}
+@keyframes hibouScrollFocusV133{
+  0%{box-shadow:0 0 0 0 rgba(108,99,255,0); transform:scale(1);}
+  45%{box-shadow:0 0 0 7px rgba(108,99,255,.18); transform:scale(1.01);}
+  100%{box-shadow:var(--shadow); transform:scale(1);}
+}
+</style>
+<script id="patch-scroll-fiable-v133">
+(function(){
+  if(window.__hibouScrollFiableV133) return;
+  window.__hibouScrollFiableV133 = true;
+
+  function chat(){ return document.getElementById('chatContainer'); }
+  function scrollZone(){ return document.getElementById('hibouScrollZone') || document.scrollingElement || document.documentElement; }
+  function visibleMessages(){
+    const c = chat();
+    if(!c) return [];
+    return Array.from(c.children).filter(function(el){
+      return el && el.nodeType === 1 && el.id !== 'typingIndicator' && !el.classList.contains('typing-indicator');
+    });
+  }
+  function lastMessage(){
+    const msgs = visibleMessages();
+    return msgs.length ? msgs[msgs.length-1] : null;
+  }
+  function norm(s){
+    return String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ').trim();
+  }
+  function textOf(el){ return norm(el ? el.textContent : ''); }
+  function findBySelectors(selectors){
+    for(const sel of selectors){
+      const found = document.querySelector(sel);
+      if(found) return found.closest('.message') || found;
+    }
+    return null;
+  }
+  function findByText(patterns){
+    const msgs = visibleMessages();
+    for(let i=msgs.length-1;i>=0;i--){
+      const t = textOf(msgs[i]);
+      if(patterns.some(function(p){ return t.includes(p); })) return msgs[i];
+    }
+    return null;
+  }
+  function targetFromHint(hint){
+    const h = norm(hint);
+    if(!h) return lastMessage();
+    if(h.includes('nom commun')) return findBySelectors(['.nom-commun-lesson']) || findByText(['nom commun']);
+    if(h.includes('verbe')) return findBySelectors(['.verbe-lesson']) || findByText(['verbe']);
+    if(h.includes('idee') || h.includes('ecrire')) return findBySelectors(['.writing-idea-box']) || findByText(['idee pour ecrire']);
+    if(h.includes('calcul mental')) return findBySelectors(['.mental-game-container']) || findByText(['calcul mental']);
+    if(h.includes('multiplication')) return findBySelectors(['.multi-box']) || findByText(['multiplication posee','multiplication']);
+    if(h.includes('plante')) return findBySelectors(['.plantes-lesson']) || findByText(['les plantes']);
+    if(h.includes('systeme solaire') || h.includes('soleil')) return findBySelectors(['.systeme-lesson']) || findByText(['systeme solaire']);
+    if(h.includes('squelette') || h.includes(' os')) return findBySelectors(['.squelette-lesson']) || findByText(['squelette']);
+    if(h.includes('france') && (h.includes('geo') || h.includes('geographie') || h.includes('carte'))) return document.getElementById('geo-france-lesson') || findByText(['geographie : la france','la france est un pays']);
+    if(h.includes('relief') || h.includes('fleuve') || h.includes('montagne')) return document.getElementById('geo-reliefs-fleuves-lesson') || findByText(['reliefs et fleuves','le relief']);
+    if(h.includes('couleur') || h.includes('colour') || h.includes('color')) return findBySelectors(['.english-lesson']) || findByText(['colours','couleurs']);
+    if(h.includes('present') || h.includes('se presenter') || h.includes('hello') || h.includes('my name')) return findByText(['se presenter','my name','hello']);
+    if(h.includes('devinette')) return findBySelectors(['.devinette-game-container']) || findByText(['devinette']);
+    if(h.includes('roue')) return findBySelectors(['.review-wheel-box']) || findByText(['roue']);
+    if(h.includes('quiz')) return findBySelectors(['.quiz-container.active-quiz','.quiz-container']) || findByText(['quiz']);
+    return lastMessage();
+  }
+  function robustScroll(el){
+    if(!el) return false;
+    const target = el.closest && el.closest('.message') ? el.closest('.message') : el;
+    const zone = scrollZone();
+    try{
+      target.classList.add('hibou-scroll-focus','hibou-activity-flash');
+      if(zone && zone !== document.documentElement && zone !== document.body && zone.contains(target)){
+        const zr = zone.getBoundingClientRect();
+        const tr = target.getBoundingClientRect();
+        const top = zone.scrollTop + (tr.top - zr.top) - 10;
+        zone.scrollTo({top: Math.max(0, top), behavior:'smooth'});
+      }else{
+        target.scrollIntoView({behavior:'smooth', block:'start'});
+      }
+      setTimeout(function(){ target.classList.remove('hibou-scroll-focus','hibou-activity-flash'); }, 1000);
+      return true;
+    }catch(e){
+      try{ target.scrollIntoView(); return true; }catch(_){ return false; }
+    }
+  }
+  window.hibouScrollToLesson = function(hint){
+    const el = (hint && hint.nodeType === 1) ? hint : targetFromHint(hint);
+    return robustScroll(el);
+  };
+  function scheduleScroll(hint){
+    [80, 220, 520, 900].forEach(function(delay){
+      setTimeout(function(){ window.hibouScrollToLesson(hint); }, delay);
+    });
+  }
+  function wrap(name, hint){
+    const old = window[name];
+    if(typeof old !== 'function' || old.__hibouScrollV133) return;
+    window[name] = function(){
+      const result = old.apply(this, arguments);
+      scheduleScroll(typeof hint === 'function' ? hint.apply(this, arguments) : (hint || name));
+      return result;
+    };
+    window[name].__hibouScrollV133 = true;
+    window[name].__hibouOriginal = old;
+  }
+  function installWrappers(){
+    wrap('showNomCommunLesson','nom commun');
+    wrap('startNomCommun','nom commun');
+    wrap('showVerbeLesson','verbe');
+    wrap('startVerbe','verbe');
+    wrap('startIdeesPourEcrire','idees pour ecrire');
+    wrap('startCalculMentalCE2','calcul mental');
+    wrap('startMultiplicationPosee','multiplication');
+    wrap('startPlantes','plantes');
+    wrap('startSystemeSolaire','systeme solaire');
+    wrap('startSquelette','squelette');
+    wrap('startGeoFrance','geographie france');
+    wrap('startGeoReliefs','reliefs fleuves');
+    wrap('startEnglishColors','couleurs anglais');
+    wrap('startEnglishPresentation','se presenter anglais');
+    wrap('startEnglishMiniLesson','anglais');
+    wrap('startDevinettesHibou','devinettes');
+    wrap('showReviewWheel','roue');
+    wrap('showLocalQuizMenu','quiz locaux');
+    wrap('startSkillCheckMenu','competences');
+    const sq = window.sendQuick;
+    if(typeof sq === 'function' && !sq.__hibouScrollV133){
+      window.sendQuick = function(text){
+        const result = sq.apply(this, arguments);
+        scheduleScroll(text || 'question rapide');
+        return result;
+      };
+      window.sendQuick.__hibouScrollV133 = true;
+    }
+    const slq = window.startLocalQuiz;
+    if(typeof slq === 'function' && !slq.__hibouScrollV133){
+      window.startLocalQuiz = function(subject, title){
+        const result = slq.apply(this, arguments);
+        scheduleScroll(title || subject || 'quiz');
+        return result;
+      };
+      window.startLocalQuiz.__hibouScrollV133 = true;
+    }
+  }
+  function patchButtons(){
+    document.querySelectorAll('#quickQuestions button.quick-btn, button.quick-btn').forEach(function(btn){
+      if(btn.__hibouScrollButtonV133) return;
+      btn.__hibouScrollButtonV133 = true;
+      btn.addEventListener('click', function(){ scheduleScroll(btn.textContent || btn.getAttribute('onclick') || ''); }, true);
+    });
+  }
+  function observeNewMessages(){
+    const c = chat();
+    if(!c || c.__hibouScrollObserverV133) return;
+    c.__hibouScrollObserverV133 = true;
+    const obs = new MutationObserver(function(muts){
+      let last = null;
+      muts.forEach(function(m){
+        m.addedNodes.forEach(function(n){
+          if(n && n.nodeType === 1 && n.id !== 'typingIndicator') last = n.closest && n.closest('.message') ? n.closest('.message') : n;
+        });
+      });
+      if(last){
+        setTimeout(function(){ robustScroll(last); }, 120);
+        setTimeout(function(){ robustScroll(last); }, 520);
+      }
+    });
+    obs.observe(c, {childList:true});
+  }
+  function init(){ installWrappers(); patchButtons(); observeNewMessages(); }
+  init();
+  document.addEventListener('DOMContentLoaded', function(){ setTimeout(init,80); setTimeout(init,400); });
+  window.addEventListener('load', function(){ setTimeout(init,150); setTimeout(init,700); });
+  document.addEventListener('click', function(e){
+    const btn = e.target && e.target.closest ? e.target.closest('button.quick-btn') : null;
+    if(btn) scheduleScroll(btn.textContent || btn.getAttribute('onclick') || '');
+  }, true);
+  const oldUpdate = window.updateQuickQuestions;
+  if(typeof oldUpdate === 'function' && !oldUpdate.__hibouScrollV133){
+    window.updateQuickQuestions = function(){
+      const result = oldUpdate.apply(this, arguments);
+      setTimeout(init,60);
+      setTimeout(init,200);
+      return result;
+    };
+    window.updateQuickQuestions.__hibouScrollV133 = true;
+  }
+})();
+</script>
+
 </body>
 </html>

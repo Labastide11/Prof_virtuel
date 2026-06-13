@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 Maître Hibou V16.1 - Mode enseignant plein écran</title>
+<title>🦉 Maître Hibou V16.2 - Accueil simplifié</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -3148,6 +3148,171 @@ body.teacher-mode #teacherDashboardOverlay {
 }
 </style>
 
+
+<style id="style-v162-accueil-simplifie">
+/* V16.2 - Accueil élève simplifié : au démarrage, pas de bandeau ni de chat */
+
+/* Page d'accueil élève */
+.student-home-screen {
+  min-height: 100vh;
+  width: 100%;
+  background:
+    radial-gradient(circle at 20% 15%, rgba(255,217,61,.28) 0 120px, transparent 121px),
+    radial-gradient(circle at 85% 20%, rgba(108,99,255,.18) 0 140px, transparent 141px),
+    linear-gradient(135deg, #F7F6FF 0%, #FFFFFF 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 22px;
+}
+
+.student-home-screen.hidden {
+  display: none !important;
+}
+
+.student-home-card {
+  width: min(980px, 100%);
+  background: rgba(255,255,255,.96);
+  border: 3px solid var(--primary-light);
+  border-radius: 34px;
+  box-shadow: 0 18px 50px rgba(108,99,255,.16);
+  padding: 28px;
+  text-align: center;
+}
+
+.student-home-owl {
+  width: 112px;
+  height: 112px;
+  margin: 0 auto 12px auto;
+  border-radius: 30px;
+  background: linear-gradient(135deg, #FFF9E6 0%, #EAE8FF 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 76px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.8), 0 8px 22px rgba(108,99,255,.16);
+}
+
+.student-home-card h1 {
+  font-family: 'Baloo 2', sans-serif;
+  color: var(--primary);
+  font-size: 42px;
+  line-height: 1;
+  margin: 6px 0;
+}
+
+.student-home-card p {
+  color: var(--text);
+  font-weight: 900;
+  font-size: 22px;
+  margin: 0 0 22px 0;
+}
+
+.student-home-subjects {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  gap: 14px;
+}
+
+.student-home-subject {
+  border: 3px solid rgba(255,255,255,.7);
+  border-radius: 24px;
+  min-height: 116px;
+  padding: 14px 10px;
+  color: white;
+  font-family: inherit;
+  font-weight: 900;
+  font-size: 42px;
+  cursor: pointer;
+  box-shadow: 0 10px 25px rgba(45,43,85,.13);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+}
+
+.student-home-subject span {
+  font-size: 19px;
+  line-height: 1;
+  text-shadow: 0 1px 1px rgba(0,0,0,.2);
+}
+
+.student-home-subject.maths{background:linear-gradient(135deg,#1683F7,#4DB0FF);}
+.student-home-subject.francais{background:linear-gradient(135deg,#FF3B57,#FF7A8C);}
+.student-home-subject.sciences{background:linear-gradient(135deg,#24A84A,#63D878);}
+.student-home-subject.anglais{background:linear-gradient(135deg,#9C4DFF,#C084FF);}
+.student-home-subject.geographie{background:linear-gradient(135deg,#FF8A00,#FFB23F);}
+.student-home-subject.jeux{background:linear-gradient(135deg,#00A6D6,#43D5FF);}
+
+/* Tant que l'élève est sur l'accueil, l'interface de travail est cachée. */
+body.student-home-mode header,
+body.student-home-mode .subjects-bar,
+body.student-home-mode #quickQuestions,
+body.student-home-mode .quick-questions,
+body.student-home-mode .mockup-main-shell,
+body.student-home-mode .mockup-left-panel,
+body.student-home-mode .mockup-right-panel,
+body.student-home-mode .chat-container,
+body.student-home-mode .input-area,
+body.student-home-mode .logout-area,
+body.student-home-mode .hibou-profile-panel,
+body.student-home-mode .hibou-advice-card,
+body.student-home-mode .hibou-success-card,
+body.student-home-mode .welcome-quiz-container,
+body.student-home-mode .master-challenge-card,
+body.student-home-mode .progress-mini-wrap,
+body.student-home-mode .progress-panel,
+body.student-home-mode .diagnostic-panel,
+body.student-home-mode .class-motivation-panel {
+  display: none !important;
+}
+
+/* Mais les overlays essentiels restent utilisables */
+body.student-home-mode #prenomOverlay,
+body.student-home-mode #modalOverlay,
+body.student-home-mode #teacherDashboardOverlay,
+body.student-home-mode #progressModal {
+  display: flex;
+}
+
+@media (max-width: 760px) {
+  .student-home-screen {
+    padding: 14px;
+  }
+  .student-home-card {
+    padding: 18px;
+    border-radius: 26px;
+  }
+  .student-home-owl {
+    width: 88px;
+    height: 88px;
+    font-size: 60px;
+    border-radius: 24px;
+  }
+  .student-home-card h1 {
+    font-size: 31px;
+  }
+  .student-home-card p {
+    font-size: 17px;
+    margin-bottom: 16px;
+  }
+  .student-home-subjects {
+    grid-template-columns: repeat(3, minmax(0,1fr));
+    gap: 8px;
+  }
+  .student-home-subject {
+    min-height: 82px;
+    font-size: 28px;
+    border-radius: 18px;
+    padding: 8px 4px;
+  }
+  .student-home-subject span {
+    font-size: 12px;
+  }
+}
+</style>
+
 </head>
 <body>
 
@@ -3267,6 +3432,24 @@ body.teacher-mode #teacherDashboardOverlay {
     <button class="prenom-btn" onclick="savePrenom()">C'est parti ! 🚀</button>
   </div>
 </div>
+
+<section id="studentHomeScreen" class="student-home-screen hidden" aria-label="Accueil élève">
+  <div class="student-home-card">
+    <div class="student-home-owl">🦉</div>
+    <h1 id="studentHomeTitle">Bonjour 🌟</h1>
+    <p id="studentHomeSubtitle">Que souhaites-tu apprendre aujourd’hui ?</p>
+
+    <div class="student-home-subjects">
+      <button class="student-home-subject maths" data-home-subject="maths">🔢<span>Maths</span></button>
+      <button class="student-home-subject francais" data-home-subject="francais">📚<span>Français</span></button>
+      <button class="student-home-subject sciences" data-home-subject="sciences">🔬<span>Sciences</span></button>
+      <button class="student-home-subject anglais" data-home-subject="anglais">🇬🇧<span>Anglais</span></button>
+      <button class="student-home-subject geographie" data-home-subject="geographie">🌍<span>Géographie</span></button>
+      <button class="student-home-subject jeux" data-home-subject="jeux">🎲<span>Jeux</span></button>
+    </div>
+  </div>
+</section>
+
 
 <div class="badge-toast" id="badgeToast"></div>
 
@@ -10143,6 +10326,100 @@ header{
 
   document.addEventListener("DOMContentLoaded", installHiddenAccess);
   window.addEventListener("load", installHiddenAccess);
+})();
+</script>
+
+
+<script id="script-v162-accueil-simplifie">
+(function(){
+  if (window.__studentHomeV162) return;
+  window.__studentHomeV162 = true;
+
+  function cleanName(value){
+    value = String(value || "").trim();
+    if (!value || value === "Élève" || value === "DEV") return "";
+    if (value.toLowerCase().includes("bonjour")) return "";
+    return value;
+  }
+
+  function getStudentName(){
+    try {
+      if (typeof prenomActuel !== "undefined") {
+        const n = cleanName(prenomActuel);
+        if (n) return n;
+      }
+    } catch(e) {}
+
+    const el = document.getElementById("eleveNom");
+    if (el) {
+      const n = cleanName(el.textContent);
+      if (n) return n;
+    }
+    return "";
+  }
+
+  function updateHomeName(){
+    const title = document.getElementById("studentHomeTitle");
+    if (!title) return;
+    const name = getStudentName();
+    title.textContent = name ? ("Bonjour " + name + " 🌟") : "Bonjour 🌟";
+  }
+
+  function showStudentHome(){
+    const home = document.getElementById("studentHomeScreen");
+    if (!home) return;
+    updateHomeName();
+    home.classList.remove("hidden");
+    document.body.classList.add("student-home-mode");
+  }
+
+  function enterWorkspace(subject){
+    const home = document.getElementById("studentHomeScreen");
+    if (home) home.classList.add("hidden");
+    document.body.classList.remove("student-home-mode");
+
+    if (subject && typeof window.selectSubject === "function") {
+      setTimeout(function(){ window.selectSubject(subject); }, 50);
+    }
+  }
+
+  function installHomeSubjectButtons(){
+    document.querySelectorAll("[data-home-subject]").forEach(function(btn){
+      if (btn.dataset.homeInstalled === "1") return;
+      btn.dataset.homeInstalled = "1";
+      btn.addEventListener("click", function(){
+        enterWorkspace(btn.dataset.homeSubject);
+      });
+    });
+  }
+
+  const oldSavePrenom = window.savePrenom;
+  if (typeof oldSavePrenom === "function" && !oldSavePrenom.__v162HomeWrapped) {
+    const wrapped = async function(){
+      const result = await oldSavePrenom.apply(this, arguments);
+      setTimeout(showStudentHome, 120);
+      setTimeout(showStudentHome, 600);
+      return result;
+    };
+    wrapped.__v162HomeWrapped = true;
+    window.savePrenom = wrapped;
+  }
+
+  document.addEventListener("DOMContentLoaded", function(){
+    installHomeSubjectButtons();
+
+    const prenomOverlay = document.getElementById("prenomOverlay");
+    if (prenomOverlay && prenomOverlay.classList.contains("hidden")) {
+      showStudentHome();
+    }
+  });
+
+  window.addEventListener("load", function(){
+    installHomeSubjectButtons();
+  });
+
+  window.showStudentHomeV162 = showStudentHome;
+  window.enterWorkspaceV162 = enterWorkspace;
 })();
 </script>
 

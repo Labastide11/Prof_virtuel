@@ -2743,6 +2743,31 @@ body.fullscreen-active .mockup-right-panel .mockup-full-progress-btn{
 }
 </style>
 
+
+<style id="patch-v11-scroll-hibou-visible">
+/* V11.1 - Défilement corrigé : on garde l'avatar Maître Hibou visible */
+.message.prof{
+  scroll-margin-top: 135px !important;
+}
+.nom-commun-lesson,
+.verbe-lesson,
+.plantes-lesson,
+.systeme-lesson,
+.squelette-lesson,
+.geo-lesson,
+.english-lesson,
+.multi-box,
+.mental-game-container,
+.writing-idea-box,
+.devinette-game-container,
+.skill-check-box{
+  scroll-margin-top: 150px !important;
+}
+.lesson-illustration-v11{
+  margin-top: 0 !important;
+}
+</style>
+
 </head>
 <body>
 
@@ -9855,6 +9880,81 @@ header{
 
   window.addLessonIllustrationsV11 = addIllustrations;
   window.scheduleLessonIllustrationsV11 = scheduleIllustrations;
+})();
+</script>
+
+
+<script id="patch-v11-scroll-hibou-visible-js">
+(function(){
+  if(window.__hibouScrollAvatarVisibleV11) return;
+  window.__hibouScrollAvatarVisibleV11 = true;
+
+  const lessonSelectors = [
+    '.nom-commun-lesson',
+    '.verbe-lesson',
+    '.plantes-lesson',
+    '.systeme-lesson',
+    '.squelette-lesson',
+    '.geo-lesson',
+    '.english-lesson',
+    '.multi-box',
+    '.mental-game-container',
+    '.writing-idea-box',
+    '.devinette-game-container',
+    '.skill-check-box',
+    '.lesson-illustration-v11'
+  ].join(',');
+
+  function findScrollableParent(el){
+    let parent = el && el.parentElement;
+    while(parent && parent !== document.body){
+      const style = window.getComputedStyle(parent);
+      const canScroll = /(auto|scroll)/.test(style.overflowY) && parent.scrollHeight > parent.clientHeight;
+      if(canScroll) return parent;
+      parent = parent.parentElement;
+    }
+    return document.scrollingElement || document.documentElement;
+  }
+
+  function scrollWithAvatar(target, behavior){
+    if(!target) return false;
+
+    const lesson = target.matches && target.matches(lessonSelectors)
+      ? target
+      : (target.closest ? target.closest(lessonSelectors) : null);
+
+    const message = target.closest ? target.closest('.message.prof') : null;
+    const finalTarget = message || lesson || target;
+
+    const scroller = findScrollableParent(finalTarget);
+    const offset = 92; // laisse apparaître le hibou + un peu d'air sous le sous-menu
+
+    if(scroller === document.scrollingElement || scroller === document.documentElement || scroller === document.body){
+      const y = finalTarget.getBoundingClientRect().top + window.pageYOffset - offset;
+      window.scrollTo({ top: Math.max(0, y), behavior: behavior || 'smooth' });
+    }else{
+      const scrollerRect = scroller.getBoundingClientRect();
+      const targetRect = finalTarget.getBoundingClientRect();
+      const y = scroller.scrollTop + (targetRect.top - scrollerRect.top) - offset;
+      scroller.scrollTo({ top: Math.max(0, y), behavior: behavior || 'smooth' });
+    }
+    return true;
+  }
+
+  const nativeScrollIntoView = Element.prototype.scrollIntoView;
+  Element.prototype.scrollIntoView = function(arg){
+    try{
+      const isLesson = (this.matches && this.matches(lessonSelectors)) || (this.closest && this.closest(lessonSelectors));
+      const isProfMessage = this.matches && this.matches('.message.prof');
+      if(isLesson || isProfMessage){
+        const behavior = (arg && typeof arg === 'object' && arg.behavior) ? arg.behavior : 'smooth';
+        if(scrollWithAvatar(this, behavior)) return;
+      }
+    }catch(e){}
+    return nativeScrollIntoView.call(this, arg);
+  };
+
+  window.hibouScrollToLessonWithAvatar = scrollWithAvatar;
 })();
 </script>
 

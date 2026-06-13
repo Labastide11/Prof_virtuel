@@ -2939,6 +2939,114 @@ button[onclick*="openAdmin"]{
 }
 </style>
 
+
+<style id="patch-teacher-fullscreen-v15">
+/* V15 - Tableau enseignant plein écran */
+.teacher-dashboard-modal,
+#teacherDashboardModal,
+#teacherModal{
+  position:fixed !important;
+  inset:0 !important;
+  z-index:10001 !important;
+  background:rgba(45,43,85,.64) !important;
+  backdrop-filter:blur(8px) !important;
+  padding:10px !important;
+  align-items:center !important;
+  justify-content:center !important;
+}
+
+.teacher-dashboard-modal:not(.hidden),
+#teacherDashboardModal:not(.hidden),
+#teacherModal:not(.hidden){
+  display:flex !important;
+}
+
+.teacher-dashboard-modal .modal-box,
+#teacherDashboardModal .modal-box,
+#teacherModal .modal-box{
+  width:min(1180px,96vw) !important;
+  max-width:1180px !important;
+  height:94vh !important;
+  max-height:94vh !important;
+  overflow:auto !important;
+  text-align:left !important;
+  border-radius:26px !important;
+  padding:20px !important;
+  box-shadow:0 18px 50px rgba(0,0,0,.25) !important;
+  position:relative !important;
+}
+
+.teacher-dashboard-modal .modal-box::before,
+#teacherDashboardModal .modal-box::before,
+#teacherModal .modal-box::before{
+  content:"🦉 Tableau de bord enseignant";
+  position:sticky;
+  top:-20px;
+  z-index:5;
+  display:block;
+  background:linear-gradient(135deg,#FFFFFF 0%,#F8F7FF 100%);
+  border-bottom:3px solid var(--primary-light);
+  margin:-20px -20px 16px -20px;
+  padding:16px 58px 14px 20px;
+  font-family:'Baloo 2',sans-serif;
+  font-size:24px;
+  font-weight:900;
+  color:var(--primary);
+}
+
+.teacher-fullscreen-close{
+  position:sticky !important;
+  top:8px !important;
+  float:right !important;
+  margin:0 0 -48px 0 !important;
+  z-index:20 !important;
+  width:44px !important;
+  height:44px !important;
+  border:none !important;
+  border-radius:50% !important;
+  background:var(--secondary) !important;
+  color:white !important;
+  font-size:24px !important;
+  font-weight:900 !important;
+  cursor:pointer !important;
+  box-shadow:0 6px 18px rgba(255,107,107,.28) !important;
+}
+
+body.teacher-fullscreen-open{
+  overflow:hidden !important;
+}
+
+@media(max-width:768px){
+  .teacher-dashboard-modal,
+  #teacherDashboardModal,
+  #teacherModal{
+    padding:6px !important;
+  }
+  .teacher-dashboard-modal .modal-box,
+  #teacherDashboardModal .modal-box,
+  #teacherModal .modal-box{
+    width:98vw !important;
+    height:96vh !important;
+    max-height:96vh !important;
+    border-radius:20px !important;
+    padding:14px !important;
+  }
+  .teacher-dashboard-modal .modal-box::before,
+  #teacherDashboardModal .modal-box::before,
+  #teacherModal .modal-box::before{
+    top:-14px;
+    margin:-14px -14px 12px -14px;
+    padding:14px 54px 12px 14px;
+    font-size:20px;
+  }
+  .teacher-fullscreen-close{
+    width:42px !important;
+    height:42px !important;
+    font-size:22px !important;
+  }
+}
+</style>
+
 </head>
 <body>
 
@@ -10371,6 +10479,106 @@ header{
 
   window.openTeacherSecret = openTeacherSecret;
   window.closeTeacherSecret = closeTeacherSecret;
+})();
+</script>
+
+
+<script id="patch-teacher-fullscreen-v15-js">
+(function(){
+  if(window.__hibouTeacherFullscreenV15) return;
+  window.__hibouTeacherFullscreenV15 = true;
+
+  function getTeacherModals(){
+    return Array.from(document.querySelectorAll('.teacher-dashboard-modal,#teacherDashboardModal,#teacherModal'));
+  }
+
+  function isVisible(el){
+    if(!el) return false;
+    const style = getComputedStyle(el);
+    return !el.classList.contains('hidden') && style.display !== 'none' && style.visibility !== 'hidden';
+  }
+
+  function closeTeacherModal(modal){
+    if(!modal) return;
+    modal.classList.add('hidden');
+    modal.style.display = 'none';
+    document.body.classList.remove('teacher-fullscreen-open');
+  }
+
+  function addCloseButton(modal){
+    if(!modal) return;
+    const box = modal.querySelector('.modal-box') || modal;
+    if(box.querySelector('.teacher-fullscreen-close')) return;
+
+    const close = document.createElement('button');
+    close.type = 'button';
+    close.className = 'teacher-fullscreen-close';
+    close.setAttribute('aria-label','Fermer le tableau enseignant');
+    close.textContent = '×';
+    close.addEventListener('click', function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      closeTeacherModal(modal);
+    });
+    box.insertBefore(close, box.firstChild);
+  }
+
+  function upgradeTeacherModal(){
+    getTeacherModals().forEach(function(modal){
+      addCloseButton(modal);
+
+      if(!modal.dataset.fullscreenCloseInstalled){
+        modal.dataset.fullscreenCloseInstalled = 'true';
+
+        modal.addEventListener('click', function(e){
+          if(e.target === modal) closeTeacherModal(modal);
+        });
+
+        // Répare les anciens boutons fermer s'ils existent mais ne fonctionnent pas bien
+        modal.querySelectorAll('button').forEach(function(btn){
+          const text = (btn.textContent || '').trim().toLowerCase();
+          const aria = (btn.getAttribute('aria-label') || '').toLowerCase();
+          if(text === '×' || text === 'x' || text.includes('fermer') || text.includes('annuler') || aria.includes('fermer')){
+            if(!btn.classList.contains('teacher-fullscreen-close')){
+              btn.addEventListener('click', function(e){
+                const insideSecret = btn.closest('.teacher-secret-box');
+                if(insideSecret) return;
+                e.preventDefault();
+                e.stopPropagation();
+                closeTeacherModal(modal);
+              });
+            }
+          }
+        });
+      }
+
+      if(isVisible(modal)){
+        document.body.classList.add('teacher-fullscreen-open');
+        modal.style.display = 'flex';
+      }
+    });
+  }
+
+  document.addEventListener('keydown', function(e){
+    if(e.key !== 'Escape') return;
+    getTeacherModals().forEach(function(modal){
+      if(isVisible(modal)) closeTeacherModal(modal);
+    });
+  });
+
+  document.addEventListener('DOMContentLoaded', function(){
+    upgradeTeacherModal();
+    new MutationObserver(upgradeTeacherModal).observe(document.body, {
+      childList:true,
+      subtree:true,
+      attributes:true,
+      attributeFilter:['class','style']
+    });
+  });
+
+  window.closeTeacherFullscreen = function(){
+    getTeacherModals().forEach(closeTeacherModal);
+  };
 })();
 </script>
 

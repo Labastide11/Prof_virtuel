@@ -2761,6 +2761,55 @@ body.fullscreen-active .mockup-right-panel .mockup-full-progress-btn{
 }
 </style>
 
+
+<style id="patch-login-ecran-propre-v12">
+/* V12 - Avant connexion : écran prénom propre, sans bandeaux ni menus */
+body.login-active header,
+body.login-active .subjects-bar,
+body.login-active #quickQuestions,
+body.login-active .quick-questions,
+body.login-active .welcome-quiz-container,
+body.login-active #welcomeQuizContainer,
+body.login-active .hibou-profile-panel,
+body.login-active .hibou-advice-card,
+body.login-active .hibou-success-card,
+body.login-active .progress-mini-wrap,
+body.login-active .master-challenge-card,
+body.login-active .progress-panel,
+body.login-active .diagnostic-panel,
+body.login-active .input-area,
+body.login-active .logout-area{
+  display:none !important;
+}
+
+body.login-active{
+  min-height:100vh;
+  overflow:hidden;
+}
+
+body.login-active .prenom-overlay{
+  display:flex !important;
+  z-index:9999 !important;
+  background:linear-gradient(135deg,#F7F6FF 0%,#FFFFFF 100%);
+}
+
+body.login-active .prenom-box{
+  background:white;
+  border:3px solid var(--primary-light);
+  border-radius:28px;
+  padding:28px;
+  box-shadow:0 12px 34px rgba(108,99,255,.16);
+}
+
+body.login-active .prenom-box .owl{
+  font-size:86px;
+}
+
+body.login-active .prenom-box h2{
+  color:var(--primary);
+}
+</style>
+
 </head>
 <body>
 
@@ -9950,6 +9999,46 @@ header{
 
   document.addEventListener('DOMContentLoaded', function(){
     observer.observe(document.body, {childList:true, subtree:true});
+  });
+})();
+</script>
+
+
+<script id="patch-login-ecran-propre-v12-js">
+(function(){
+  if(window.__hibouLoginCleanV12) return;
+  window.__hibouLoginCleanV12 = true;
+
+  function isPrenomVisible(){
+    const overlay = document.querySelector('.prenom-overlay');
+    if(!overlay) return false;
+    return !overlay.classList.contains('hidden') && getComputedStyle(overlay).display !== 'none';
+  }
+
+  function updateLoginState(){
+    document.body.classList.toggle('login-active', isPrenomVisible());
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    updateLoginState();
+
+    const overlay = document.querySelector('.prenom-overlay');
+    if(overlay){
+      new MutationObserver(updateLoginState).observe(overlay, {
+        attributes:true,
+        attributeFilter:['class','style']
+      });
+    }
+
+    document.addEventListener('click', function(){
+      setTimeout(updateLoginState, 80);
+      setTimeout(updateLoginState, 300);
+    }, false);
+
+    document.addEventListener('keydown', function(){
+      setTimeout(updateLoginState, 80);
+      setTimeout(updateLoginState, 300);
+    }, false);
   });
 })();
 </script>

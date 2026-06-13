@@ -2810,6 +2810,135 @@ body.login-active .prenom-box h2{
 }
 </style>
 
+
+<style id="patch-acces-enseignant-secret-v14">
+/* V14 - Accès enseignant invisible pour les élèves */
+#teacherBtn,
+#teacherButton,
+.teacher-access-btn,
+.teacher-btn-floating,
+button[onclick*="Teacher"],
+button[onclick*="teacher"],
+button[onclick*="openTeacher"],
+button[onclick*="openTeacherDashboard"],
+button[onclick*="showTeacher"],
+button[onclick*="openAdmin"]{
+  display:none !important;
+}
+
+/* Le logo devient la zone secrète d'accès enseignant */
+.logo-area{
+  cursor:default;
+  user-select:none;
+  -webkit-user-select:none;
+  touch-action:manipulation;
+}
+.logo-area.teacher-long-pressing{
+  transform:scale(1.03);
+  filter:brightness(1.03);
+}
+
+/* Popup code enseignant */
+.teacher-secret-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(45,43,85,.62);
+  backdrop-filter:blur(7px);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:10000;
+  padding:20px;
+}
+.teacher-secret-overlay.visible{
+  display:flex;
+}
+.teacher-secret-box{
+  width:min(420px,100%);
+  background:white;
+  border:3px solid var(--primary-light);
+  border-radius:26px;
+  box-shadow:0 14px 42px rgba(0,0,0,.20);
+  padding:24px;
+  text-align:center;
+  position:relative;
+  animation:pop .25s ease-out;
+}
+.teacher-secret-close{
+  position:absolute;
+  top:10px;
+  right:10px;
+  width:34px;
+  height:34px;
+  border:none;
+  border-radius:50%;
+  background:#F4F3F8;
+  color:var(--text);
+  font-size:18px;
+  font-weight:900;
+  cursor:pointer;
+}
+.teacher-secret-title{
+  font-family:'Baloo 2',sans-serif;
+  color:var(--primary);
+  font-size:24px;
+  font-weight:900;
+  margin:8px 0 4px 0;
+}
+.teacher-secret-text{
+  color:var(--text-muted);
+  font-size:14px;
+  font-weight:800;
+  margin-bottom:14px;
+}
+.teacher-secret-input{
+  width:100%;
+  padding:14px 16px;
+  border-radius:16px;
+  border:3px solid var(--primary-light);
+  outline:none;
+  font-family:inherit;
+  font-size:18px;
+  font-weight:900;
+  text-align:center;
+  color:var(--text);
+  margin-bottom:10px;
+}
+.teacher-secret-input:focus{
+  border-color:var(--primary);
+  box-shadow:0 0 0 4px var(--primary-light);
+}
+.teacher-secret-error{
+  min-height:20px;
+  color:var(--secondary);
+  font-size:13px;
+  font-weight:900;
+  margin-bottom:10px;
+}
+.teacher-secret-actions{
+  display:flex;
+  gap:8px;
+}
+.teacher-secret-actions button{
+  flex:1;
+  border:none;
+  border-radius:15px;
+  padding:12px;
+  font-family:inherit;
+  font-size:15px;
+  font-weight:900;
+  cursor:pointer;
+}
+.teacher-secret-cancel{
+  background:#F4F3F8;
+  color:var(--text);
+}
+.teacher-secret-validate{
+  background:var(--primary);
+  color:white;
+}
+</style>
+
 </head>
 <body>
 
@@ -10040,6 +10169,208 @@ header{
       setTimeout(updateLoginState, 300);
     }, false);
   });
+})();
+</script>
+
+
+<script id="patch-acces-enseignant-secret-v14-js">
+(function(){
+  if(window.__hibouTeacherSecretV14) return;
+  window.__hibouTeacherSecretV14 = true;
+
+  const TEACHER_CODE = "1234"; // Code enseignant modifiable ici.
+
+  function removeVisibleTeacherButtons(){
+    const selectors = [
+      '#teacherBtn',
+      '#teacherButton',
+      '.teacher-access-btn',
+      '.teacher-btn-floating',
+      'button[onclick*="Teacher"]',
+      'button[onclick*="teacher"]',
+      'button[onclick*="openTeacher"]',
+      'button[onclick*="openTeacherDashboard"]',
+      'button[onclick*="showTeacher"]',
+      'button[onclick*="openAdmin"]'
+    ];
+    document.querySelectorAll(selectors.join(',')).forEach(function(btn){
+      btn.style.display = 'none';
+      btn.setAttribute('aria-hidden','true');
+      btn.tabIndex = -1;
+    });
+  }
+
+  function ensureSecretPopup(){
+    let overlay = document.getElementById('teacherSecretOverlay');
+    if(overlay) return overlay;
+
+    overlay = document.createElement('div');
+    overlay.id = 'teacherSecretOverlay';
+    overlay.className = 'teacher-secret-overlay';
+    overlay.innerHTML = `
+      <div class="teacher-secret-box" role="dialog" aria-modal="true" aria-labelledby="teacherSecretTitle">
+        <button class="teacher-secret-close" type="button" aria-label="Fermer">×</button>
+        <div style="font-size:46px;line-height:1;">🦉</div>
+        <div id="teacherSecretTitle" class="teacher-secret-title">Accès enseignant</div>
+        <div class="teacher-secret-text">Entre le code enseignant pour ouvrir le tableau de bord.</div>
+        <input id="teacherSecretInput" class="teacher-secret-input" type="password" inputmode="numeric" autocomplete="off" placeholder="Code enseignant">
+        <div id="teacherSecretError" class="teacher-secret-error"></div>
+        <div class="teacher-secret-actions">
+          <button type="button" class="teacher-secret-cancel">Annuler</button>
+          <button type="button" class="teacher-secret-validate">Ouvrir</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+
+    overlay.addEventListener('click', function(e){
+      if(e.target === overlay) closeTeacherSecret();
+    });
+
+    overlay.querySelector('.teacher-secret-close').addEventListener('click', closeTeacherSecret);
+    overlay.querySelector('.teacher-secret-cancel').addEventListener('click', closeTeacherSecret);
+    overlay.querySelector('.teacher-secret-validate').addEventListener('click', validateTeacherSecret);
+    overlay.querySelector('#teacherSecretInput').addEventListener('keydown', function(e){
+      if(e.key === 'Enter') validateTeacherSecret();
+      if(e.key === 'Escape') closeTeacherSecret();
+    });
+
+    document.addEventListener('keydown', function(e){
+      if(e.key === 'Escape' && overlay.classList.contains('visible')) closeTeacherSecret();
+    });
+
+    return overlay;
+  }
+
+  function openTeacherSecret(){
+    const overlay = ensureSecretPopup();
+    const input = overlay.querySelector('#teacherSecretInput');
+    const error = overlay.querySelector('#teacherSecretError');
+    input.value = '';
+    error.textContent = '';
+    overlay.classList.add('visible');
+    setTimeout(function(){ input.focus(); }, 80);
+  }
+
+  function closeTeacherSecret(){
+    const overlay = document.getElementById('teacherSecretOverlay');
+    if(!overlay) return;
+    overlay.classList.remove('visible');
+    const input = overlay.querySelector('#teacherSecretInput');
+    if(input) input.blur();
+  }
+
+  function openRealTeacherDashboard(){
+    const candidates = [
+      'openTeacherDashboard',
+      'showTeacherDashboard',
+      'openTeacherPanel',
+      'showTeacherPanel',
+      'openTeacher',
+      'showTeacher',
+      'openAdminDashboard'
+    ];
+
+    for(const name of candidates){
+      if(typeof window[name] === 'function'){
+        window[name]();
+        return true;
+      }
+    }
+
+    const hiddenBtn = document.querySelector(
+      '#teacherBtn,#teacherButton,.teacher-access-btn,.teacher-btn-floating,button[onclick*="Teacher"],button[onclick*="teacher"],button[onclick*="openTeacher"],button[onclick*="openTeacherDashboard"],button[onclick*="showTeacher"],button[onclick*="openAdmin"]'
+    );
+    if(hiddenBtn){
+      hiddenBtn.style.display = '';
+      hiddenBtn.click();
+      hiddenBtn.style.display = 'none';
+      return true;
+    }
+
+    const modal = document.querySelector('.teacher-dashboard-modal, #teacherDashboardModal, #teacherModal');
+    if(modal){
+      modal.classList.remove('hidden');
+      modal.style.display = 'flex';
+      return true;
+    }
+
+    return false;
+  }
+
+  function validateTeacherSecret(){
+    const overlay = ensureSecretPopup();
+    const input = overlay.querySelector('#teacherSecretInput');
+    const error = overlay.querySelector('#teacherSecretError');
+    const value = (input.value || '').trim();
+
+    if(value !== TEACHER_CODE){
+      error.textContent = 'Code incorrect.';
+      input.select();
+      return;
+    }
+
+    closeTeacherSecret();
+
+    setTimeout(function(){
+      const opened = openRealTeacherDashboard();
+      if(!opened){
+        alert("Le tableau enseignant n'a pas été trouvé dans cette version.");
+      }
+    }, 120);
+  }
+
+  function installLongPress(){
+    const logo = document.querySelector('.logo-area');
+    if(!logo || logo.dataset.teacherSecretInstalled === 'true') return;
+
+    logo.dataset.teacherSecretInstalled = 'true';
+    let timer = null;
+    let started = false;
+
+    function start(e){
+      if(e && e.target && e.target.closest && e.target.closest('button,input,textarea,a')) return;
+      started = true;
+      logo.classList.add('teacher-long-pressing');
+      clearTimeout(timer);
+      timer = setTimeout(function(){
+        timer = null;
+        if(started) openTeacherSecret();
+      }, 3000);
+    }
+
+    function stop(){
+      started = false;
+      logo.classList.remove('teacher-long-pressing');
+      clearTimeout(timer);
+      timer = null;
+    }
+
+    logo.addEventListener('pointerdown', start);
+    logo.addEventListener('pointerup', stop);
+    logo.addEventListener('pointercancel', stop);
+    logo.addEventListener('pointerleave', stop);
+
+    // Secours PC : double-clic sur logo
+    logo.addEventListener('dblclick', function(e){
+      e.preventDefault();
+      openTeacherSecret();
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    removeVisibleTeacherButtons();
+    installLongPress();
+    ensureSecretPopup();
+
+    new MutationObserver(function(){
+      removeVisibleTeacherButtons();
+      installLongPress();
+    }).observe(document.body, {childList:true, subtree:true});
+  });
+
+  window.openTeacherSecret = openTeacherSecret;
+  window.closeTeacherSecret = closeTeacherSecret;
 })();
 </script>
 

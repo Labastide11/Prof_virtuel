@@ -2744,10 +2744,11 @@ body.fullscreen-active .mockup-right-panel .mockup-full-progress-btn{
 </style>
 
 
-<style id="patch-v11-scroll-hibou-visible">
-/* V11.1 - Défilement corrigé : on garde l'avatar Maître Hibou visible */
+
+<style id="patch-v11-1-stable-scroll-hibou">
+/* V11.1 stable : garde le hibou visible sans bloquer les boutons */
 .message.prof{
-  scroll-margin-top: 135px !important;
+  scroll-margin-top: 125px !important;
 }
 .nom-commun-lesson,
 .verbe-lesson,
@@ -2755,16 +2756,8 @@ body.fullscreen-active .mockup-right-panel .mockup-full-progress-btn{
 .systeme-lesson,
 .squelette-lesson,
 .geo-lesson,
-.english-lesson,
-.multi-box,
-.mental-game-container,
-.writing-idea-box,
-.devinette-game-container,
-.skill-check-box{
-  scroll-margin-top: 150px !important;
-}
-.lesson-illustration-v11{
-  margin-top: 0 !important;
+.english-lesson{
+  scroll-margin-top: 145px !important;
 }
 </style>
 
@@ -9884,77 +9877,80 @@ header{
 </script>
 
 
-<script id="patch-v11-scroll-hibou-visible-js">
-(function(){
-  if(window.__hibouScrollAvatarVisibleV11) return;
-  window.__hibouScrollAvatarVisibleV11 = true;
 
-  const lessonSelectors = [
+<script id="patch-v11-1-stable-scroll-hibou-js">
+(function(){
+  if(window.__hibouV111StableScroll) return;
+  window.__hibouV111StableScroll = true;
+
+  const lessonSelector = [
     '.nom-commun-lesson',
     '.verbe-lesson',
     '.plantes-lesson',
     '.systeme-lesson',
     '.squelette-lesson',
     '.geo-lesson',
-    '.english-lesson',
-    '.multi-box',
-    '.mental-game-container',
-    '.writing-idea-box',
-    '.devinette-game-container',
-    '.skill-check-box',
-    '.lesson-illustration-v11'
+    '.english-lesson'
   ].join(',');
 
-  function findScrollableParent(el){
-    let parent = el && el.parentElement;
-    while(parent && parent !== document.body){
-      const style = window.getComputedStyle(parent);
-      const canScroll = /(auto|scroll)/.test(style.overflowY) && parent.scrollHeight > parent.clientHeight;
-      if(canScroll) return parent;
-      parent = parent.parentElement;
-    }
-    return document.scrollingElement || document.documentElement;
+  function getChatContainer(){
+    return document.querySelector('.chat-container') || document.getElementById('chatContainer');
   }
 
-  function scrollWithAvatar(target, behavior){
-    if(!target) return false;
+  function scrollMessageWithOwlVisible(lesson){
+    if(!lesson) return;
+    const msg = lesson.closest ? lesson.closest('.message.prof') : null;
+    const target = msg || lesson;
+    const chat = getChatContainer();
 
-    const lesson = target.matches && target.matches(lessonSelectors)
-      ? target
-      : (target.closest ? target.closest(lessonSelectors) : null);
-
-    const message = target.closest ? target.closest('.message.prof') : null;
-    const finalTarget = message || lesson || target;
-
-    const scroller = findScrollableParent(finalTarget);
-    const offset = 92; // laisse apparaître le hibou + un peu d'air sous le sous-menu
-
-    if(scroller === document.scrollingElement || scroller === document.documentElement || scroller === document.body){
-      const y = finalTarget.getBoundingClientRect().top + window.pageYOffset - offset;
-      window.scrollTo({ top: Math.max(0, y), behavior: behavior || 'smooth' });
-    }else{
-      const scrollerRect = scroller.getBoundingClientRect();
-      const targetRect = finalTarget.getBoundingClientRect();
-      const y = scroller.scrollTop + (targetRect.top - scrollerRect.top) - offset;
-      scroller.scrollTo({ top: Math.max(0, y), behavior: behavior || 'smooth' });
-    }
-    return true;
+    setTimeout(function(){
+      try{
+        if(chat && chat.scrollHeight > chat.clientHeight){
+          const chatRect = chat.getBoundingClientRect();
+          const targetRect = target.getBoundingClientRect();
+          const offset = 70;
+          const top = chat.scrollTop + (targetRect.top - chatRect.top) - offset;
+          chat.scrollTo({top: Math.max(0, top), behavior:'smooth'});
+        }else{
+          target.scrollIntoView({behavior:'smooth', block:'start'});
+        }
+      }catch(e){}
+    }, 120);
   }
 
-  const nativeScrollIntoView = Element.prototype.scrollIntoView;
-  Element.prototype.scrollIntoView = function(arg){
-    try{
-      const isLesson = (this.matches && this.matches(lessonSelectors)) || (this.closest && this.closest(lessonSelectors));
-      const isProfMessage = this.matches && this.matches('.message.prof');
-      if(isLesson || isProfMessage){
-        const behavior = (arg && typeof arg === 'object' && arg.behavior) ? arg.behavior : 'smooth';
-        if(scrollWithAvatar(this, behavior)) return;
-      }
-    }catch(e){}
-    return nativeScrollIntoView.call(this, arg);
-  };
+  function scrollLastLesson(){
+    const lessons = document.querySelectorAll(lessonSelector);
+    if(!lessons.length) return;
+    scrollMessageWithOwlVisible(lessons[lessons.length - 1]);
+  }
 
-  window.hibouScrollToLessonWithAvatar = scrollWithAvatar;
+  // Après un clic normal, on laisse d'abord le code original fonctionner.
+  document.addEventListener('click', function(e){
+    const btn = e.target.closest && e.target.closest('button, .quick-btn, .subject-btn');
+    if(!btn) return;
+    setTimeout(scrollLastLesson, 220);
+  }, false);
+
+  // Après création dynamique d'une leçon, on replace seulement le message complet.
+  let timer = null;
+  const observer = new MutationObserver(function(mutations){
+    let addedLesson = null;
+    mutations.forEach(function(m){
+      m.addedNodes && m.addedNodes.forEach(function(node){
+        if(!node || node.nodeType !== 1) return;
+        if(node.matches && node.matches(lessonSelector)) addedLesson = node;
+        if(!addedLesson && node.querySelector) addedLesson = node.querySelector(lessonSelector);
+      });
+    });
+    if(addedLesson){
+      clearTimeout(timer);
+      timer = setTimeout(function(){ scrollMessageWithOwlVisible(addedLesson); }, 150);
+    }
+  });
+
+  document.addEventListener('DOMContentLoaded', function(){
+    observer.observe(document.body, {childList:true, subtree:true});
+  });
 })();
 </script>
 

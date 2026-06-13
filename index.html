@@ -9827,7 +9827,7 @@ header{
     ];
 
     document.querySelectorAll(selectors.join(",")).forEach(function(box){
-      if(box.querySelector(":scope > .lesson-illustration-v11")) return;
+      if(box.firstElementChild && box.firstElementChild.classList && box.firstElementChild.classList.contains("lesson-illustration-v11")) return;
       const kind = kindFor(box);
       if(!kind || !SVG[kind]) return;
       const illu = document.createElement("div");
@@ -9838,10 +9838,23 @@ header{
     });
   }
 
-  document.addEventListener("DOMContentLoaded", addIllustrations);
-  const observer = new MutationObserver(addIllustrations);
-  observer.observe(document.documentElement, {childList:true, subtree:true});
+  function scheduleIllustrations(){
+    setTimeout(addIllustrations, 40);
+    setTimeout(addIllustrations, 180);
+    setTimeout(addIllustrations, 420);
+  }
+
+  document.addEventListener("DOMContentLoaded", scheduleIllustrations);
+
+  /* Correction V11.1 : pas de MutationObserver permanent.
+     L'ancien observateur se relançait pendant la navigation et rendait certains clics aléatoires.
+     Ici on relance seulement après les clics, quand une leçon peut apparaître. */
+  document.addEventListener("click", function(){
+    scheduleIllustrations();
+  }, true);
+
   window.addLessonIllustrationsV11 = addIllustrations;
+  window.scheduleLessonIllustrationsV11 = scheduleIllustrations;
 })();
 </script>
 

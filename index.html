@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 Maître Hibou V16.7 - Espace enseignant en onglets</title>
+<title>🦉 Maître Hibou V16.7.1 - Onglets corrigés</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -10765,6 +10765,12 @@ header{
 
 
 
+
+<script id="script-v1671-disable-old-teacher-injection">
+/* V16.7.1 : l'espace enseignant est rendu uniquement par les onglets V16.7. */
+window.__skillsTeacherV51 = true;
+</script>
+
 <script id="script-v167-teacher-tabs">
 (function(){
   if (window.__maitreHibouV167TeacherTabs) return;
@@ -11011,14 +11017,14 @@ header{
     const text = String(value).trim();
     if (!text) return null;
 
-    let match = text.match(/^(\\d{1,2})[\\/\\-.](\\d{1,2})(?:[\\/\\-.](\\d{2,4}))?$/);
+    let match = text.match(/^(\d{1,2})[\/.-](\d{1,2})(?:[\/.-](\d{2,4}))?$/);
     if (match) {
       const day = Number(match[1]);
       const month = Number(match[2]);
       if (day >= 1 && day <= 31 && month >= 1 && month <= 12) return { day, month };
     }
 
-    match = text.match(/^(\\d{4})-(\\d{1,2})-(\\d{1,2})/);
+    match = text.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
     if (match) {
       const month = Number(match[2]);
       const day = Number(match[3]);

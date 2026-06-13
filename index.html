@@ -9246,5 +9246,262 @@ header{
 })();
 </script>
 
+
+
+<script id="patch-ergonomie-globale-instance-scroll-v130">
+/* V13.0 - Ergonomie globale : une seule instance par activité + défilement doux vers le bloc existant.
+   Objectif tablette CE2 : l'élève clique, le bloc apparaît immédiatement ; au clic suivant, on revient au même bloc sans doublon. */
+(function(){
+  if(window.__hibouErgoGlobaleInstanceScrollV130) return;
+  window.__hibouErgoGlobaleInstanceScrollV130 = true;
+
+  const ACTIVITY_CLASS = 'hibou-unique-activity';
+  const FLASH_CLASS = 'hibou-activity-flash';
+  const PENDING_KEYS = new Set();
+
+  function chat(){ return document.getElementById('chatContainer'); }
+
+  function safeId(value){
+    return String(value || 'activite')
+      .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+      .toLowerCase().replace(/[^a-z0-9]+/g,'-')
+      .replace(/^-+|-+$/g,'').slice(0,80) || 'activite';
+  }
+
+  function scrollToActivity(el){
+    if(!el) return false;
+    try{
+      el.scrollIntoView({behavior:'smooth', block:'center'});
+      el.classList.add(FLASH_CLASS);
+      setTimeout(function(){ el.classList.remove(FLASH_CLASS); }, 900);
+      const c = chat();
+      if(c && c.scrollTop + c.clientHeight < el.offsetTop){ c.scrollTop = Math.max(0, el.offsetTop - 18); }
+    }catch(e){
+      const c = chat();
+      if(c) c.scrollTop = c.scrollHeight;
+    }
+    return true;
+  }
+
+  function findByKey(key){
+    if(!key) return null;
+    const id = 'hibou-activity-' + safeId(key);
+    return document.getElementById(id) || document.querySelector('[data-hibou-activity-key="' + CSS.escape(key) + '"]');
+  }
+
+  function markElement(el, key){
+    if(!el || !key) return null;
+    el.id = el.id || ('hibou-activity-' + safeId(key));
+    el.dataset.hibouActivityKey = key;
+    el.classList.add(ACTIVITY_CLASS);
+    return el;
+  }
+
+  function addedMessages(before){
+    const c = chat();
+    if(!c) return [];
+    const old = new Set(before || []);
+    return Array.from(c.children).filter(function(el){ return !old.has(el); });
+  }
+
+  function firstUsefulAdded(before){
+    const added = addedMessages(before);
+    // On privilégie la carte professeur, mais on accepte la première carte ajoutée si besoin.
+    return added.find(function(el){ return el.classList && el.classList.contains('prof') && !el.id?.includes('typingIndicator'); }) ||
+           added.find(function(el){ return el.id !== 'typingIndicator'; }) || null;
+  }
+
+  function watchNextUsefulMessage(key, timeoutMs){
+    const c = chat();
+    if(!c || !key) return;
+    const existing = findByKey(key);
+    if(existing){ scrollToActivity(existing); return; }
+    const observer = new MutationObserver(function(mutations){
+      for(const m of mutations){
+        for(const node of m.addedNodes){
+          if(node && node.nodeType === 1 && node.id !== 'typingIndicator'){
+            const el = node.classList && node.classList.contains('message') ? node : node.querySelector && node.querySelector('.message');
+            if(el){
+              markElement(el, key);
+              scrollToActivity(el);
+              observer.disconnect();
+              PENDING_KEYS.delete(key);
+              return;
+            }
+          }
+        }
+      }
+    });
+    observer.observe(c, {childList:true});
+    setTimeout(function(){ observer.disconnect(); PENDING_KEYS.delete(key); }, timeoutMs || 8000);
+  }
+
+  function uniqueRun(key, fn, options){
+    options = options || {};
+    const existing = findByKey(key);
+    if(existing){ scrollToActivity(existing); return existing; }
+    if(PENDING_KEYS.has(key)) return null;
+    PENDING_KEYS.add(key);
+    const c = chat();
+    const before = c ? Array.from(c.children) : [];
+    let result;
+    try{ result = fn(); }
+    finally{
+      setTimeout(function(){
+        let el = findByKey(key) || firstUsefulAdded(before);
+        if(el){
+          markElement(el, key);
+          scrollToActivity(el);
+          PENDING_KEYS.delete(key);
+        }else if(options.watch !== false){
+          watchNextUsefulMessage(key, options.timeout || 8000);
+        }else{
+          PENDING_KEYS.delete(key);
+        }
+      }, options.delay || 80);
+    }
+    return result;
+  }
+
+  function wrapFunction(name, key, label){
+    const original = window[name];
+    if(typeof original !== 'function' || original.__hibouUniqueWrapped) return;
+    const wrapped = function(){
+      const ctx = this;
+      const args = arguments;
+      return uniqueRun(key || name, function(){ return original.apply(ctx, args); });
+    };
+    wrapped.__hibouUniqueWrapped = true;
+    wrapped.__hibouOriginal = original;
+    window[name] = wrapped;
+  }
+
+  function wrapKnownActivities(){
+    // Français
+    wrapFunction('showNomCommunLesson', 'francais-nom-commun-lecon');
+    wrapFunction('startNomCommun', 'francais-nom-commun');
+    wrapFunction('showVerbeLesson', 'francais-verbe-lecon');
+    wrapFunction('startVerbe', 'francais-verbe');
+    wrapFunction('startIdeesPourEcrire', 'francais-idees-pour-ecrire');
+
+    // Maths
+    wrapFunction('startCalculMentalCE2', 'maths-calcul-mental-ce2');
+    wrapFunction('startMultiplicationPosee', 'maths-multiplication-posee');
+    wrapFunction('startMasterTablesChallenge', 'maths-defi-tables-2-a-10');
+
+    // Sciences
+    wrapFunction('startPlantes', 'sciences-plantes');
+    wrapFunction('startSystemeSolaire', 'sciences-systeme-solaire');
+    wrapFunction('startSquelette', 'sciences-squelette');
+
+    // Anglais
+    wrapFunction('startEnglishColors', 'anglais-couleurs');
+    wrapFunction('startEnglishPresentation', 'anglais-se-presenter');
+    wrapFunction('startEnglishMiniLesson', 'anglais-mini-lecon');
+
+    // Jeux / menus
+    wrapFunction('showLocalQuizMenu', 'menu-banque-locale-ce2');
+    wrapFunction('showReviewWheel', 'jeux-roue-du-hibou');
+    wrapFunction('startDevinettesHibou', 'jeux-devinettes-du-hibou');
+    wrapFunction('startSkillCheckMenu', 'competences-menu-validation');
+  }
+
+  function wrapSendQuick(){
+    const original = window.sendQuick;
+    if(typeof original !== 'function' || original.__hibouUniqueWrapped) return;
+    const wrapped = function(text){
+      const ctx = this;
+      const args = arguments;
+      const key = 'question-rapide-' + safeId(text || 'question');
+      return uniqueRun(key, function(){ return original.apply(ctx, args); }, {delay:250, timeout:12000});
+    };
+    wrapped.__hibouUniqueWrapped = true;
+    wrapped.__hibouOriginal = original;
+    window.sendQuick = wrapped;
+  }
+
+  function wrapLocalQuiz(){
+    const original = window.startLocalQuiz;
+    if(typeof original !== 'function' || original.__hibouUniqueWrappedGlobal) return;
+    const wrapped = function(subject, title, questions, isChallenge){
+      // Si un quiz est en cours, la fonction d'origine sait déjà ramener vers lui.
+      if(window.hibouQuizInProgress) return original.apply(this, arguments);
+      const key = 'quiz-' + safeId(subject || 'local') + '-' + safeId(title || 'quiz-local');
+      const ctx = this;
+      const args = arguments;
+      return uniqueRun(key, function(){ return original.apply(ctx, args); }, {delay:80, watch:false});
+    };
+    wrapped.__hibouUniqueWrappedGlobal = true;
+    wrapped.__hibouOriginal = original;
+    window.startLocalQuiz = wrapped;
+  }
+
+  function patchQuickButtonsForScroll(){
+    document.querySelectorAll('#quickQuestions button.quick-btn, button.quick-btn').forEach(function(btn){
+      if(btn.__hibouScrollPatch) return;
+      btn.__hibouScrollPatch = true;
+      btn.addEventListener('click', function(){
+        setTimeout(function(){
+          const c = chat();
+          const last = c ? Array.from(c.children).filter(function(el){ return el.id !== 'typingIndicator'; }).pop() : null;
+          if(last) scrollToActivity(last);
+        }, 120);
+      }, {passive:true});
+    });
+  }
+
+  function injectStyle(){
+    if(document.getElementById('style-ergonomie-globale-v130')) return;
+    const style = document.createElement('style');
+    style.id = 'style-ergonomie-globale-v130';
+    style.textContent = `
+      .${ACTIVITY_CLASS}{ scroll-margin-top: 96px; }
+      .${FLASH_CLASS} .bubble{
+        animation: hibouActivityFlashV130 .9s ease-out;
+      }
+      @keyframes hibouActivityFlashV130{
+        0%{ box-shadow:0 0 0 0 rgba(108,99,255,0); transform:scale(1); }
+        40%{ box-shadow:0 0 0 6px rgba(108,99,255,.16); transform:scale(1.01); }
+        100%{ box-shadow:var(--shadow); transform:scale(1); }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  function init(){
+    injectStyle();
+    wrapKnownActivities();
+    wrapSendQuick();
+    wrapLocalQuiz();
+    patchQuickButtonsForScroll();
+  }
+
+  init();
+  document.addEventListener('DOMContentLoaded', function(){ setTimeout(init, 80); });
+  window.addEventListener('load', function(){ setTimeout(init, 150); });
+
+  // Important : après chaque changement de matière, les boutons du sous-menu sont recréés.
+  const oldUpdate = window.updateQuickQuestions;
+  if(typeof oldUpdate === 'function' && !oldUpdate.__hibouErgoGlobalV130){
+    window.updateQuickQuestions = function(){
+      const result = oldUpdate.apply(this, arguments);
+      setTimeout(function(){ init(); patchQuickButtonsForScroll(); }, 60);
+      return result;
+    };
+    window.updateQuickQuestions.__hibouErgoGlobalV130 = true;
+  }
+
+  const oldSelect = window.selectSubject;
+  if(typeof oldSelect === 'function' && !oldSelect.__hibouErgoGlobalV130){
+    window.selectSubject = function(){
+      const result = oldSelect.apply(this, arguments);
+      setTimeout(function(){ init(); patchQuickButtonsForScroll(); }, 90);
+      return result;
+    };
+    window.selectSubject.__hibouErgoGlobalV130 = true;
+  }
+})();
+</script>
+
 </body>
 </html>

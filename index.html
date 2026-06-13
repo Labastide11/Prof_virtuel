@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 Maître Hibou V15.4 - Tablette stable</title>
+<title>🦉 Maître Hibou V15.8 - Nettoyée tablette</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -1968,7 +1968,7 @@ header.mockup-header{
     grid-template-columns:repeat(3,1fr) auto auto!important;
   }
   .subjects-bar{
-    grid-template-columns:repeat(3,1fr)!important;
+    grid-template-columns:repeat(6,1fr)!important;
   }
   .mockup-main-shell{
     grid-template-columns:1fr!important;
@@ -1985,7 +1985,7 @@ header.mockup-header{
   .logo-text::after{font-size:13px;}
   .header-actions{grid-template-columns:repeat(2,1fr)!important;}
   .mockup-stat-card,.badge.score,.competence-header-btn{min-height:62px!important;padding:8px!important;}
-  .subjects-bar{width:calc(100% - 12px)!important;grid-template-columns:repeat(2,1fr)!important;padding:8px!important;}
+  .subjects-bar{width:calc(100% - 12px)!important;grid-template-columns:repeat(6,1fr)!important;padding:8px!important;}
   .subject-btn{min-height:70px!important;padding:12px!important;}
   .subject-btn .subject-icon{font-size:30px!important;width:34px!important;}
   .subject-btn .subject-label{font-size:17px!important;}
@@ -3208,7 +3208,7 @@ body.device-tablet .competence-header-btn{
   min-height:38px;
 }
 body.device-tablet .subjects-bar{
-  grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+  grid-template-columns:repeat(6,minmax(0,1fr)) !important;
   gap:8px !important;
   padding:9px 10px !important;
 }
@@ -3270,6 +3270,773 @@ body.device-phone .desktop-teacher-home{display:none !important;}
 </style>
 
 
+
+
+
+
+
+
+
+
+
+<style id="patch-anglais-harmonise-v84">
+.english-lesson{
+  background:#F8F7FF;
+  border:2px solid var(--primary-light);
+  border-radius:16px;
+  padding:16px;
+  margin-top:10px;
+  width:100%;
+}
+.english-lesson h3{
+  font-family:'Baloo 2',sans-serif;
+  color:var(--primary);
+  font-size:20px;
+  margin:0 0 8px 0;
+}
+.english-rule{
+  background:#FFFCEB;
+  border:2px solid var(--accent);
+  border-radius:14px;
+  padding:10px 12px;
+  font-weight:900;
+  color:#7A5C00;
+  margin:10px 0;
+  line-height:1.4;
+}
+.english-examples{
+  background:white;
+  border:2px solid #ECEBF3;
+  border-radius:14px;
+  padding:10px 12px;
+  font-weight:800;
+  line-height:1.55;
+  margin:10px 0;
+}
+.english-mini-note{
+  font-size:13px;
+  color:var(--text-muted);
+  font-weight:800;
+  margin:8px 0;
+}
+.english-quiz-btn{
+  background:var(--primary);
+  color:white;
+  border:none;
+  border-radius:14px;
+  padding:10px 14px;
+  font-weight:900;
+  font-family:inherit;
+  cursor:pointer;
+  width:100%;
+  margin-top:8px;
+}
+.english-quiz-btn.secondary{
+  background:#fff;
+  color:var(--primary);
+  border:2px solid var(--primary-light);
+}
+</style>
+
+
+
+<style id="patch-anglais-instance-unique-v85-style">
+.english-lesson-flash .bubble{
+  box-shadow:0 0 0 5px rgba(108,99,255,.18), var(--shadow) !important;
+  transform:scale(1.01);
+  transition:all .2s ease;
+}
+</style>
+
+
+
+<style id="patch-v93-navigation-fixe-zone-scrollable">
+/* V9.3 - Vraie ergonomie tablette : haut fixe + reste de la page scrollable */
+:root{ --hibou-fixed-zone-h: 0px; }
+html, body{
+  height:100%;
+  height:100dvh;
+  overflow:hidden !important;
+}
+body{
+  min-height:100dvh !important;
+  display:flex !important;
+  flex-direction:column !important;
+}
+.hibou-fixed-zone{
+  flex:0 0 auto !important;
+  position:relative !important;
+  z-index:5000 !important;
+  background:var(--bg) !important;
+  box-shadow:0 6px 18px rgba(45,43,85,.10) !important;
+}
+.hibou-fixed-zone header,
+.hibou-fixed-zone .subjects-bar,
+.hibou-fixed-zone .quick-questions{
+  position:relative !important;
+  top:auto !important;
+  z-index:auto !important;
+}
+.hibou-fixed-zone header{
+  flex-shrink:0 !important;
+}
+.hibou-fixed-zone .subjects-bar{
+  flex-shrink:0 !important;
+}
+.hibou-fixed-zone .quick-questions{
+  flex-shrink:0 !important;
+  max-height:20vh !important;
+  overflow-y:auto !important;
+  -webkit-overflow-scrolling:touch !important;
+  margin-bottom:0 !important;
+}
+.hibou-scroll-zone{
+  flex:1 1 auto !important;
+  min-height:0 !important;
+  height:calc(100dvh - var(--hibou-fixed-zone-h)) !important;
+  overflow-y:auto !important;
+  overflow-x:hidden !important;
+  -webkit-overflow-scrolling:touch !important;
+  overscroll-behavior:contain !important;
+  padding-bottom:18px !important;
+}
+.hibou-scroll-zone .chat-container{
+  flex:none !important;
+  max-height:none !important;
+  min-height:260px !important;
+  height:auto !important;
+  overflow:visible !important;
+}
+.hibou-scroll-zone .input-area{
+  position:relative !important;
+  bottom:auto !important;
+  z-index:auto !important;
+}
+.hibou-scroll-zone .welcome-quiz-container,
+.hibou-scroll-zone .master-challenge-card,
+.hibou-scroll-zone .progress-mini-wrap,
+.hibou-scroll-zone .diagnostic-panel,
+.hibou-scroll-zone .progress-panel{
+  flex:none !important;
+}
+@media (orientation:landscape) and (max-height:760px){
+  .hibou-fixed-zone .quick-questions{max-height:18vh !important;}
+  .hibou-scroll-zone .chat-container{min-height:210px !important;}
+}
+@media (orientation:portrait) and (max-width:900px){
+  .hibou-fixed-zone .quick-questions{max-height:22vh !important;}
+}
+@media (max-width:520px){
+  .hibou-fixed-zone .quick-questions{max-height:24vh !important;}
+}
+</style>
+
+
+
+<style id="patch-v94-restore-defi-maitre">
+/* On conserve le cadre Défi du Maître dans la zone élève.
+   Seul le bouton doublon "Voir mes progrès" du cadre a été supprimé. */
+#masterChallengeCard.master-challenge-card{
+  display:block;
+}
+body.competence-mode #masterChallengeCard.master-challenge-card{
+  display:none !important;
+}
+</style>
+
+
+
+<style id="patch-bandeau-superieur-v126">
+/* On repart proprement du fichier 46 : le bandeau du haut devient la zone d'information élève. */
+header.mockup-header,
+header{
+  grid-template-columns:auto 1fr !important;
+  align-items:center !important;
+}
+.header-actions{
+  grid-template-columns:repeat(4,minmax(150px,1fr)) auto auto !important;
+  gap:12px !important;
+}
+#eleveBadge,
+.mockup-challenge-top,
+#masterChallengeCard,
+.master-challenge-card{
+  display:none !important;
+  visibility:hidden !important;
+  height:0 !important;
+  min-height:0 !important;
+  padding:0 !important;
+  margin:0 !important;
+  overflow:hidden !important;
+}
+.mockup-side-card.defi-maitre-card,
+.mockup-right-panel .mockup-side-card:first-child{
+  display:none !important;
+}
+.bandeau-info-card,
+#scoreBadge.badge.score,
+#mockupCompetencesCard,
+.competence-header-btn{
+  min-height:74px !important;
+  border-radius:18px !important;
+  border:2px solid #ECEBF3 !important;
+  background:linear-gradient(135deg,#FFFFFF 0%,#F8F7FF 100%) !important;
+  box-shadow:0 6px 18px rgba(108,99,255,.10) !important;
+  padding:10px 13px !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:10px !important;
+  font-family:inherit !important;
+  font-weight:900 !important;
+  line-height:1.08 !important;
+  white-space:normal !important;
+  text-align:left !important;
+}
+#scoreBadge.badge.score{
+  border-color:#FFD76E !important;
+  color:#D88900 !important;
+  font-size:0 !important;
+}
+#scoreBadge.badge.score::before{content:"⭐";font-size:38px;line-height:1;}
+#scoreBadge.badge.score #scoreVal{font-size:24px !important;color:#D88900 !important;font-weight:900 !important;line-height:1;}
+#scoreBadge.badge.score::after{content:"points";font-size:14px;font-weight:900;color:#D88900;margin-left:-5px;margin-top:20px;}
+#bandeauLastCard{
+  border-color:#BDE0FF !important;
+  color:#075EBC !important;
+  background:linear-gradient(135deg,#FFFFFF 0%,#F0F8FF 100%) !important;
+}
+.bandeau-info-icon{font-size:34px;line-height:1;flex-shrink:0;}
+.bandeau-info-text{font-size:13px;color:inherit;font-weight:900;line-height:1.12;min-width:0;}
+.bandeau-info-label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.03em;opacity:.75;margin-bottom:3px;}
+#bandeauLastText{display:block;max-width:210px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:15px;}
+#mockupCompetencesCard{
+  border-color:#D8C6FF !important;
+  color:#6B37E8 !important;
+  background:linear-gradient(135deg,#FFFFFF 0%,#FAF7FF 100%) !important;
+}
+#mockupCompetencesCard .mockup-stat-icon{font-size:36px !important;}
+#mockupCompetencesCard .mockup-stat-text{font-size:16px !important;line-height:1.08 !important;color:#6B37E8 !important;}
+.competence-header-btn{
+  min-height:74px !important;
+  border-color:#7C3AED !important;
+  background:linear-gradient(135deg,#7C3AED 0%,#8E5BFF 100%) !important;
+  color:white !important;
+  font-size:17px !important;
+  text-align:center !important;
+  cursor:pointer !important;
+}
+.competence-header-btn::before{content:"" !important;display:none !important;}
+.competence-header-btn .competence-icon,
+.competence-header-btn > :first-child{font-size:30px !important;line-height:1 !important;}
+.competence-header-btn .competence-label{font-size:17px !important;line-height:1.05 !important;color:white !important;display:inline !important;}
+@media (max-width:1180px){
+  header.mockup-header, header{grid-template-columns:1fr !important;}
+  .header-actions{grid-template-columns:repeat(2,minmax(0,1fr)) auto auto !important;width:100% !important;}
+}
+@media (max-width:620px){
+  .header-actions{grid-template-columns:1fr 1fr !important;}
+  .btn-round{display:none !important;}
+  .bandeau-info-card,#scoreBadge.badge.score,#mockupCompetencesCard,.competence-header-btn{min-height:62px !important;padding:8px !important;}
+  #bandeauLastText{max-width:135px;font-size:13px;}
+  .competence-header-btn .competence-label{font-size:13px !important;}
+}
+</style>
+
+
+<style id="patch-bandeau-corrections-v127">
+/* Empêche l'ancien CSS d'ajouter une deuxième fois le texte du bouton. */
+.competence-header-btn .competence-label::after{
+  content:none !important;
+  display:none !important;
+}
+.competence-header-btn .competence-label{
+  font-size:17px !important;
+  line-height:1.05 !important;
+  color:#fff !important;
+  display:inline !important;
+}
+</style>
+
+
+<style id="patch-bandeau-harmonise-v129">
+/* Les 4 éléments principaux du bandeau restent visibles et harmonisés. */
+header.mockup-header,
+header{
+  padding:8px 12px !important;
+}
+.header-actions{
+  display:grid !important;
+  grid-template-columns:minmax(98px,.75fr) minmax(170px,1.25fr) minmax(112px,.85fr) minmax(142px,1fr) auto auto !important;
+  gap:8px !important;
+  align-items:stretch !important;
+  width:100% !important;
+}
+.bandeau-info-card,
+#scoreBadge.badge.score,
+#mockupCompetencesCard,
+.competence-header-btn{
+  min-height:58px !important;
+  height:auto !important;
+  border-radius:15px !important;
+  padding:7px 9px !important;
+  gap:7px !important;
+  line-height:1.08 !important;
+  overflow:visible !important;
+  text-align:center !important;
+}
+#scoreBadge.badge.score::before{
+  font-size:27px !important;
+}
+#scoreBadge.badge.score #scoreVal{
+  font-size:18px !important;
+}
+#scoreBadge.badge.score::after{
+  font-size:11px !important;
+  margin-left:-3px !important;
+  margin-top:15px !important;
+}
+.bandeau-info-icon{
+  font-size:25px !important;
+}
+.bandeau-info-text{
+  font-size:12px !important;
+  line-height:1.08 !important;
+  width:100% !important;
+}
+.bandeau-info-label{
+  font-size:9px !important;
+  margin-bottom:2px !important;
+}
+#bandeauLastText{
+  display:block !important;
+  max-width:none !important;
+  overflow:visible !important;
+  text-overflow:clip !important;
+  white-space:normal !important;
+  font-size:12px !important;
+  line-height:1.08 !important;
+  text-align:center !important;
+}
+#mockupCompetencesCard .mockup-stat-icon{
+  font-size:27px !important;
+}
+#mockupCompetencesCard .mockup-stat-text{
+  font-size:12px !important;
+  line-height:1.05 !important;
+}
+.competence-header-btn{
+  font-size:12px !important;
+  white-space:normal !important;
+  flex-direction:row !important;
+}
+.competence-header-btn .competence-icon,
+.competence-header-btn > :first-child{
+  font-size:24px !important;
+}
+.competence-header-btn .competence-label{
+  font-size:12px !important;
+  line-height:1.05 !important;
+  display:inline !important;
+}
+@media (max-width:1180px){
+  .header-actions{
+    grid-template-columns:repeat(4,minmax(0,1fr)) auto auto !important;
+  }
+}
+@media (max-width:760px){
+  .header-actions{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  }
+  .btn-round{
+    display:none !important;
+  }
+  .bandeau-info-card,
+  #scoreBadge.badge.score,
+  #mockupCompetencesCard,
+  .competence-header-btn{
+    min-height:54px !important;
+    padding:6px 7px !important;
+  }
+}
+</style>
+
+
+<style id="patch-geographie-blocs-harmonises-v131">
+.hibou-lesson-box{
+  background:#F8F7FF;
+  border:2px solid var(--primary-light);
+  border-radius:16px;
+  padding:16px;
+  margin-top:10px;
+  width:100%;
+}
+.hibou-lesson-box h3{
+  font-family:'Baloo 2',sans-serif;
+  color:var(--primary);
+  font-size:20px;
+  margin:0 0 8px 0;
+}
+.hibou-lesson-rule{
+  background:#FFFCEB;
+  border:2px solid var(--accent);
+  border-radius:14px;
+  padding:10px 12px;
+  font-weight:900;
+  color:#7A5C00;
+  margin:10px 0;
+  line-height:1.4;
+}
+.hibou-lesson-examples{
+  background:white;
+  border:2px solid #ECEBF3;
+  border-radius:14px;
+  padding:10px 12px;
+  font-weight:800;
+  line-height:1.45;
+  margin:10px 0;
+}
+.hibou-lesson-btn{
+  background:var(--primary);
+  color:white;
+  border:none;
+  border-radius:14px;
+  padding:10px 14px;
+  font-weight:900;
+  font-family:inherit;
+  cursor:pointer;
+  width:100%;
+  margin-top:8px;
+}
+.hibou-lesson-btn:hover{transform:translateY(-1px);}
+</style>
+
+
+
+<style id="style-v158-tablette-nettoyee-final">
+/* ============================================================
+   V15.8 - Nettoyage structurel tablette
+   Une seule règle finale contrôle le bandeau et les 6 matières.
+   ============================================================ */
+
+/* Stop animations fatigantes du bandeau uniquement */
+header,
+header *,
+.header-actions,
+.header-actions *,
+.badge,
+.device-mode-badge,
+.mockup-stat-card,
+.competence-header-btn,
+.btn-round,
+.subjects-bar,
+.subjects-bar *,
+.quick-questions.submenu-flash {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+  filter: none !important;
+}
+
+/* Bandeau supérieur : grille stable */
+header.mockup-header,
+header {
+  width: calc(100% - 12px) !important;
+  max-width: none !important;
+  min-height: 70px !important;
+  margin: 6px auto 0 auto !important;
+  padding: 7px 8px !important;
+  display: grid !important;
+  grid-template-columns: 145px minmax(0, 1fr) !important;
+  gap: 7px !important;
+  align-items: center !important;
+  overflow: visible !important;
+  box-sizing: border-box !important;
+}
+
+.logo-area {
+  min-width: 0 !important;
+  gap: 7px !important;
+}
+
+.logo-icon {
+  width: 50px !important;
+  height: 50px !important;
+  font-size: 34px !important;
+  border-radius: 16px !important;
+  flex-shrink: 0 !important;
+}
+
+.logo-text {
+  font-size: 21px !important;
+  line-height: .85 !important;
+}
+
+.logo-text::after {
+  font-size: 10px !important;
+  line-height: 1.05 !important;
+  margin-top: 5px !important;
+}
+
+/* Cartes bandeau : grille régulière */
+.header-actions {
+  display: grid !important;
+  grid-template-columns: minmax(150px, 1.35fr) 72px minmax(105px, .85fr) minmax(108px, .85fr) minmax(122px, .9fr) 34px !important;
+  gap: 5px !important;
+  align-items: stretch !important;
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+#deviceModeBadge,
+.bandeau-info-card,
+#scoreBadge.badge.score,
+#mockupCompetencesCard,
+.competence-header-btn,
+#soundBtn,
+.header-actions .badge,
+.header-actions .mockup-stat-card {
+  min-height: 46px !important;
+  height: 46px !important;
+  border-radius: 13px !important;
+  padding: 4px 6px !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+  min-width: 0 !important;
+  max-width: none !important;
+}
+
+/* Message d'accueil */
+#deviceModeBadge {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  text-align: center !important;
+  white-space: normal !important;
+}
+
+.v158-welcome-line1 {
+  display: block !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  line-height: 1.05 !important;
+  color: var(--primary) !important;
+  white-space: nowrap !important;
+}
+
+.v158-welcome-line2 {
+  display: block !important;
+  margin-top: 2px !important;
+  font-size: 9px !important;
+  font-weight: 900 !important;
+  line-height: 1.05 !important;
+  color: var(--text-muted) !important;
+}
+
+/* Points : vraiment compact */
+#scoreBadge.badge.score {
+  width: 72px !important;
+  min-width: 72px !important;
+  max-width: 72px !important;
+  justify-content: center !important;
+  gap: 3px !important;
+}
+
+#scoreBadge.badge.score #scoreVal {
+  font-size: 15px !important;
+  line-height: 1 !important;
+}
+
+/* Textes des cartes */
+.bandeau-info-icon,
+.mockup-stat-icon,
+.competence-header-btn .competence-icon {
+  font-size: 20px !important;
+  line-height: 1 !important;
+}
+
+.bandeau-info-text,
+#mockupCompetencesCard .mockup-stat-text,
+.competence-header-btn,
+.competence-header-btn .competence-label {
+  font-size: 9px !important;
+  line-height: 1.05 !important;
+  text-align: center !important;
+  white-space: normal !important;
+}
+
+.bandeau-info-label {
+  font-size: 7px !important;
+  line-height: 1 !important;
+}
+
+#bandeauLastText {
+  font-size: 9px !important;
+  line-height: 1.05 !important;
+  white-space: normal !important;
+  overflow: hidden !important;
+}
+
+#mockupCompetenceCount {
+  font-size: 13px !important;
+  line-height: 1 !important;
+}
+
+/* Son */
+#soundBtn {
+  width: 34px !important;
+  min-width: 34px !important;
+  max-width: 34px !important;
+  padding: 0 !important;
+  border-radius: 50% !important;
+}
+
+/* MATIÈRES : 1 ligne stricte, 6 colonnes, tablette comprise */
+.subjects-bar,
+body.device-tablet .subjects-bar,
+body.device-phone .subjects-bar {
+  display: grid !important;
+  grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+  grid-template-rows: 54px !important;
+  grid-auto-rows: 54px !important;
+  gap: 5px !important;
+  width: calc(100% - 12px) !important;
+  max-width: none !important;
+  margin: 7px auto 9px auto !important;
+  padding: 6px !important;
+  overflow: visible !important;
+  white-space: normal !important;
+  align-items: stretch !important;
+  box-sizing: border-box !important;
+}
+
+.subjects-bar .subject-btn,
+body.device-tablet .subjects-bar .subject-btn,
+body.device-phone .subjects-bar .subject-btn {
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 54px !important;
+  height: 54px !important;
+  padding: 4px 2px !important;
+  border-radius: 12px !important;
+  border-width: 2px !important;
+  gap: 2px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+}
+
+.subject-btn:hover,
+.subject-btn.active,
+body.device-tablet .subject-btn:hover,
+body.device-tablet .subject-btn.active {
+  transform: none !important;
+  filter: none !important;
+  animation: none !important;
+}
+
+.subject-btn .subject-icon,
+body.device-tablet .subject-btn .subject-icon {
+  font-size: 15px !important;
+  line-height: 1 !important;
+  width: auto !important;
+  min-width: 0 !important;
+}
+
+.subject-btn .subject-label,
+body.device-tablet .subject-btn .subject-label {
+  font-size: 8.5px !important;
+  line-height: 1 !important;
+  font-weight: 900 !important;
+  white-space: nowrap !important;
+}
+
+/* Tablette très étroite : toujours 6 en ligne */
+@media (max-width: 700px) {
+  header.mockup-header,
+  header {
+    grid-template-columns: 112px minmax(0, 1fr) !important;
+    padding: 6px !important;
+    gap: 5px !important;
+  }
+
+  .logo-icon {
+    width: 42px !important;
+    height: 42px !important;
+    font-size: 28px !important;
+  }
+
+  .logo-text {
+    font-size: 17px !important;
+  }
+
+  .header-actions {
+    grid-template-columns: minmax(112px, 1fr) 58px minmax(78px, .8fr) minmax(82px, .8fr) 32px !important;
+    gap: 4px !important;
+  }
+
+  #bandeauLastCard {
+    display: none !important;
+  }
+
+  #scoreBadge.badge.score {
+    width: 58px !important;
+    min-width: 58px !important;
+    max-width: 58px !important;
+  }
+
+  #deviceModeBadge,
+  .bandeau-info-card,
+  #scoreBadge.badge.score,
+  #mockupCompetencesCard,
+  .competence-header-btn,
+  #soundBtn {
+    height: 42px !important;
+    min-height: 42px !important;
+    padding: 3px 4px !important;
+  }
+
+  .v158-welcome-line1 {
+    font-size: 9.5px !important;
+  }
+
+  .v158-welcome-line2 {
+    font-size: 7.5px !important;
+  }
+
+  .subjects-bar,
+  body.device-tablet .subjects-bar,
+  body.device-phone .subjects-bar {
+    grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+    grid-template-rows: 46px !important;
+    grid-auto-rows: 46px !important;
+    gap: 3px !important;
+    width: calc(100% - 6px) !important;
+    padding: 4px !important;
+  }
+
+  .subjects-bar .subject-btn,
+  body.device-tablet .subjects-bar .subject-btn,
+  body.device-phone .subjects-bar .subject-btn {
+    height: 46px !important;
+    min-height: 46px !important;
+    border-radius: 9px !important;
+    padding: 2px 1px !important;
+  }
+
+  .subject-btn .subject-icon {
+    font-size: 12px !important;
+  }
+
+  .subject-btn .subject-label {
+    font-size: 7px !important;
+  }
+}
+</style>
 
 </head>
 <body>
@@ -8190,192 +8957,15 @@ setTimeout(removeVieDeClassePanel, 1000);
 <!-- PATCH V8.4 - Anglais harmonisé : titre + mini-leçon + quiz
      À coller juste AVANT 
 <!-- PATCH V9.4 - Restauration du cadre Défi du Maître -->
-<style id="patch-v94-restore-defi-maitre">
-/* On conserve le cadre Défi du Maître dans la zone élève.
-   Seul le bouton doublon "Voir mes progrès" du cadre a été supprimé. */
-#masterChallengeCard.master-challenge-card{
-  display:block;
-}
-body.competence-mode #masterChallengeCard.master-challenge-card{
-  display:none !important;
-}
-</style>
-
-<script id="patch-v94-restore-defi-maitre">
-(function(){
-  if(window.__restoreDefiMaitreV94) return;
-  window.__restoreDefiMaitreV94 = true;
-
-  function restoreDefiMaitre(){
-    if(document.body.classList.contains('competence-mode')) return;
-    if(typeof window.renderMasterChallengeCard === 'function'){
-      window.renderMasterChallengeCard();
-    }
-    var card = document.getElementById('masterChallengeCard');
-    if(card && card.innerHTML.trim()){
-      card.style.display = 'block';
-    }
-  }
-
-  document.addEventListener('DOMContentLoaded', function(){
-    setTimeout(restoreDefiMaitre, 150);
-    setTimeout(restoreDefiMaitre, 500);
-  });
-  window.addEventListener('load', function(){
-    setTimeout(restoreDefiMaitre, 150);
-  });
-
-  var oldSelectSubject = window.selectSubject;
-  if(typeof oldSelectSubject === 'function'){
-    window.selectSubject = function(){
-      var result = oldSelectSubject.apply(this, arguments);
-      setTimeout(restoreDefiMaitre, 80);
-      return result;
-    };
-  }
-
-  var oldSavePrenom = window.savePrenom;
-  if(typeof oldSavePrenom === 'function'){
-    window.savePrenom = function(){
-      var result = oldSavePrenom.apply(this, arguments);
-      setTimeout(restoreDefiMaitre, 80);
-      return result;
-    };
-  }
-})();
-</script>
 
 
-<script id="patch-profil-hibou-v101-script">
-(function(){
-  if(window.__profilHibouV101) return;
-  window.__profilHibouV101 = true;
 
-  window.getHibouLevelInfo = function(points){
-    points = Number(points || 0);
-    const levels = [
-      {min:0, max:49, label:'🐣 Apprenti Hibou', next:50},
-      {min:50, max:149, label:'🦉 Petit Hibou', next:150},
-      {min:150, max:299, label:'🎓 Hibou Confirmé', next:300},
-      {min:300, max:499, label:'🚀 Super Hibou', next:500},
-      {min:500, max:799, label:'🌟 Hibou Expert', next:800},
-      {min:800, max:999999, label:'👑 Maître Hibou', next:null}
-    ];
-    const current = levels.find(l => points >= l.min && points <= l.max) || levels[0];
-    const levelNumber = levels.indexOf(current) + 1;
-    const base = current.min;
-    const next = current.next;
-    const progress = next ? Math.max(0, Math.min(100, ((points - base) / (next - base)) * 100)) : 100;
-    return {label:current.label, levelNumber, next, base, progress};
-  };
 
-  window.getHibouAdvice = function(){
-    try{
-      const stats = (typeof getSkillStats === 'function') ? getSkillStats() : {};
-      let weakest = null;
-      Object.keys(stats || {}).forEach(k => {
-        const s = stats[k];
-        if(!s || !s.attempts) return;
-        const pct = s.correct / s.attempts;
-        if(!weakest || pct < weakest.pct) weakest = {subject:k, pct, attempts:s.attempts};
-      });
-      if(weakest && weakest.attempts >= 2 && weakest.pct < .75){
-        const names = {maths:'les maths', francais:'le français', sciences:'les sciences', geographie:'la géographie', anglais:"l'anglais"};
-        return {
-          advice:`Tu progresses bien. Continue à t'entraîner sur <strong>${names[weakest.subject] || weakest.subject}</strong>.`,
-          goal:'Réussir 3 questions dans cette matière.',
-          subject:weakest.subject
-        };
-      }
-    }catch(e){}
-    return {
-      advice:'Bravo ! Continue à gagner des étoiles en validant des compétences.',
-      goal:'Réussir un mini-défi CE2.',
-      subject:'maths'
-    };
-  };
 
-  window.refreshHibouProfile = function(){
-    const panel = document.getElementById('hibouProfilePanel');
-    const adviceCard = document.getElementById('hibouAdviceCard');
-    const successCard = document.getElementById('hibouSuccessCard');
-    if(!panel) return;
 
-    const prenom = (typeof prenomActuel !== 'undefined' && prenomActuel) ? prenomActuel : '';
-    if(!prenom){
-      panel.classList.remove('visible');
-      if(adviceCard) adviceCard.classList.remove('visible');
-      if(successCard) successCard.classList.remove('visible');
-      return;
-    }
 
-    const pts = (typeof score !== 'undefined') ? Number(score || 0) : 0;
-    const bdg = (typeof badges !== 'undefined' && Array.isArray(badges)) ? badges.length : 0;
-    const strk = (typeof streak !== 'undefined') ? streak : 1;
-    const info = window.getHibouLevelInfo(pts);
 
-    document.getElementById('hibouProfileName').textContent = prenom;
-    document.getElementById('hibouProfileLevel').textContent = info.label;
-    document.getElementById('hibouProfileScore').textContent = pts;
-    document.getElementById('hibouProfileBadges').textContent = bdg;
-    document.getElementById('hibouProfileStreak').textContent = strk;
-    document.getElementById('hibouXpFill').style.width = info.progress + '%';
-    document.getElementById('hibouXpText').textContent = info.next ? `${pts} / ${info.next} étoiles` : `${pts} étoiles`;
-    document.getElementById('hibouNextText').textContent = info.next ? `${Math.max(0, info.next - pts)} étoiles pour passer au niveau suivant` : 'Niveau maximum atteint';
 
-    const adv = window.getHibouAdvice();
-    document.getElementById('hibouAdviceText').innerHTML = adv.advice;
-    document.getElementById('hibouGoalText').textContent = adv.goal;
-
-    const last = localStorage.getItem('hibou_last_success_' + prenom);
-    if(last){
-      document.getElementById('hibouLastSuccess').textContent = last;
-      successCard?.classList.add('visible');
-    }
-
-    panel.classList.add('visible');
-    adviceCard?.classList.add('visible');
-  };
-
-  window.startHibouRecommendedTraining = function(){
-    const adv = window.getHibouAdvice ? window.getHibouAdvice() : {subject:'maths'};
-    if(typeof startLocalQuiz === 'function'){
-      startLocalQuiz(adv.subject || 'maths', '🔄 Entraînement conseillé par le Hibou');
-    }else if(typeof addMessage === 'function'){
-      addMessage('prof', 'Choisis une matière puis lance un mini-quiz pour t’entraîner. 🦉');
-    }
-  };
-
-  const oldRefresh = window.refreshScoreDisplays;
-  window.refreshScoreDisplays = function(){
-    if(typeof oldRefresh === 'function') oldRefresh.apply(this, arguments);
-    setTimeout(window.refreshHibouProfile, 0);
-  };
-
-  const oldUnlock = window.unlockBadge;
-  window.unlockBadge = function(id, label){
-    if(typeof oldUnlock === 'function') oldUnlock.apply(this, arguments);
-    try{
-      const prenom = (typeof prenomActuel !== 'undefined' && prenomActuel) ? prenomActuel : '';
-      if(prenom && label) localStorage.setItem('hibou_last_success_' + prenom, `Badge obtenu : ${label}`);
-    }catch(e){}
-    setTimeout(window.refreshHibouProfile, 0);
-  };
-
-  document.addEventListener('DOMContentLoaded', () => setTimeout(window.refreshHibouProfile, 300));
-  window.addEventListener('load', () => setTimeout(window.refreshHibouProfile, 500));
-})();
-</script>
-
-<script id="patch-bandeau-matieres-v101">
-(function(){
-  const themes=["maths","francais","sciences","jeux","geographie","anglais"];
-  function applySubjectTheme(subject){document.body.classList.remove(...themes.map(t=>"theme-"+t));if(themes.includes(subject)){document.body.classList.add("theme-"+subject);}}
-  const oldSelectSubject=window.selectSubject;
-  if(typeof oldSelectSubject==="function"&&!window.__bandeauMatieresV101){window.__bandeauMatieresV101=true;window.selectSubject=function(btn,subject){applySubjectTheme(subject);return oldSelectSubject.apply(this,arguments);};}
-  document.addEventListener("DOMContentLoaded",function(){const active=document.querySelector(".subject-btn.active");applySubjectTheme(active?active.getAttribute("data-subject"):"maths");});
-})();
-</script>
 
 <script id="patch-maquette-accueil-v11-5">
 (function(){
@@ -8843,65 +9433,6 @@ body.competence-mode #masterChallengeCard.master-challenge-card{
 </script>
 
 
-<style id="patch-anglais-harmonise-v84">
-.english-lesson{
-  background:#F8F7FF;
-  border:2px solid var(--primary-light);
-  border-radius:16px;
-  padding:16px;
-  margin-top:10px;
-  width:100%;
-}
-.english-lesson h3{
-  font-family:'Baloo 2',sans-serif;
-  color:var(--primary);
-  font-size:20px;
-  margin:0 0 8px 0;
-}
-.english-rule{
-  background:#FFFCEB;
-  border:2px solid var(--accent);
-  border-radius:14px;
-  padding:10px 12px;
-  font-weight:900;
-  color:#7A5C00;
-  margin:10px 0;
-  line-height:1.4;
-}
-.english-examples{
-  background:white;
-  border:2px solid #ECEBF3;
-  border-radius:14px;
-  padding:10px 12px;
-  font-weight:800;
-  line-height:1.55;
-  margin:10px 0;
-}
-.english-mini-note{
-  font-size:13px;
-  color:var(--text-muted);
-  font-weight:800;
-  margin:8px 0;
-}
-.english-quiz-btn{
-  background:var(--primary);
-  color:white;
-  border:none;
-  border-radius:14px;
-  padding:10px 14px;
-  font-weight:900;
-  font-family:inherit;
-  cursor:pointer;
-  width:100%;
-  margin-top:8px;
-}
-.english-quiz-btn.secondary{
-  background:#fff;
-  color:var(--primary);
-  border:2px solid var(--primary-light);
-}
-</style>
-
 <script id="patch-anglais-harmonise-v85-instance-unique">
 (function(){
   if(window.__patchAnglaisHarmoniseV85) return;
@@ -9071,95 +9602,6 @@ body.competence-mode #masterChallengeCard.master-challenge-card{
 })();
 </script>
 
-<style id="patch-anglais-instance-unique-v85-style">
-.english-lesson-flash .bubble{
-  box-shadow:0 0 0 5px rgba(108,99,255,.18), var(--shadow) !important;
-  transform:scale(1.01);
-  transition:all .2s ease;
-}
-</style>
-
-
-<style id="patch-v93-navigation-fixe-zone-scrollable">
-/* V9.3 - Vraie ergonomie tablette : haut fixe + reste de la page scrollable */
-:root{ --hibou-fixed-zone-h: 0px; }
-html, body{
-  height:100%;
-  height:100dvh;
-  overflow:hidden !important;
-}
-body{
-  min-height:100dvh !important;
-  display:flex !important;
-  flex-direction:column !important;
-}
-.hibou-fixed-zone{
-  flex:0 0 auto !important;
-  position:relative !important;
-  z-index:5000 !important;
-  background:var(--bg) !important;
-  box-shadow:0 6px 18px rgba(45,43,85,.10) !important;
-}
-.hibou-fixed-zone header,
-.hibou-fixed-zone .subjects-bar,
-.hibou-fixed-zone .quick-questions{
-  position:relative !important;
-  top:auto !important;
-  z-index:auto !important;
-}
-.hibou-fixed-zone header{
-  flex-shrink:0 !important;
-}
-.hibou-fixed-zone .subjects-bar{
-  flex-shrink:0 !important;
-}
-.hibou-fixed-zone .quick-questions{
-  flex-shrink:0 !important;
-  max-height:20vh !important;
-  overflow-y:auto !important;
-  -webkit-overflow-scrolling:touch !important;
-  margin-bottom:0 !important;
-}
-.hibou-scroll-zone{
-  flex:1 1 auto !important;
-  min-height:0 !important;
-  height:calc(100dvh - var(--hibou-fixed-zone-h)) !important;
-  overflow-y:auto !important;
-  overflow-x:hidden !important;
-  -webkit-overflow-scrolling:touch !important;
-  overscroll-behavior:contain !important;
-  padding-bottom:18px !important;
-}
-.hibou-scroll-zone .chat-container{
-  flex:none !important;
-  max-height:none !important;
-  min-height:260px !important;
-  height:auto !important;
-  overflow:visible !important;
-}
-.hibou-scroll-zone .input-area{
-  position:relative !important;
-  bottom:auto !important;
-  z-index:auto !important;
-}
-.hibou-scroll-zone .welcome-quiz-container,
-.hibou-scroll-zone .master-challenge-card,
-.hibou-scroll-zone .progress-mini-wrap,
-.hibou-scroll-zone .diagnostic-panel,
-.hibou-scroll-zone .progress-panel{
-  flex:none !important;
-}
-@media (orientation:landscape) and (max-height:760px){
-  .hibou-fixed-zone .quick-questions{max-height:18vh !important;}
-  .hibou-scroll-zone .chat-container{min-height:210px !important;}
-}
-@media (orientation:portrait) and (max-width:900px){
-  .hibou-fixed-zone .quick-questions{max-height:22vh !important;}
-}
-@media (max-width:520px){
-  .hibou-fixed-zone .quick-questions{max-height:24vh !important;}
-}
-</style>
 
 <script id="patch-v93-navigation-fixe-zone-scrollable">
 (function(){
@@ -9256,17 +9698,6 @@ body{
 
 
 <!-- PATCH V9.4 - Restauration du cadre Défi du Maître -->
-<style id="patch-v94-restore-defi-maitre">
-/* On conserve le cadre Défi du Maître dans la zone élève.
-   Seul le bouton doublon "Voir mes progrès" du cadre a été supprimé. */
-#masterChallengeCard.master-challenge-card{
-  display:block;
-}
-body.competence-mode #masterChallengeCard.master-challenge-card{
-  display:none !important;
-}
-</style>
-
 <script id="patch-v94-restore-defi-maitre">
 (function(){
   if(window.__restoreDefiMaitreV94) return;
@@ -9445,102 +9876,6 @@ body.competence-mode #masterChallengeCard.master-challenge-card{
 
 
 <!-- PATCH V12.6 - Bandeau supérieur simplifié : logo, points, dernière réussite, compétences, validation -->
-<style id="patch-bandeau-superieur-v126">
-/* On repart proprement du fichier 46 : le bandeau du haut devient la zone d'information élève. */
-header.mockup-header,
-header{
-  grid-template-columns:auto 1fr !important;
-  align-items:center !important;
-}
-.header-actions{
-  grid-template-columns:repeat(4,minmax(150px,1fr)) auto auto !important;
-  gap:12px !important;
-}
-#eleveBadge,
-.mockup-challenge-top,
-#masterChallengeCard,
-.master-challenge-card{
-  display:none !important;
-  visibility:hidden !important;
-  height:0 !important;
-  min-height:0 !important;
-  padding:0 !important;
-  margin:0 !important;
-  overflow:hidden !important;
-}
-.mockup-side-card.defi-maitre-card,
-.mockup-right-panel .mockup-side-card:first-child{
-  display:none !important;
-}
-.bandeau-info-card,
-#scoreBadge.badge.score,
-#mockupCompetencesCard,
-.competence-header-btn{
-  min-height:74px !important;
-  border-radius:18px !important;
-  border:2px solid #ECEBF3 !important;
-  background:linear-gradient(135deg,#FFFFFF 0%,#F8F7FF 100%) !important;
-  box-shadow:0 6px 18px rgba(108,99,255,.10) !important;
-  padding:10px 13px !important;
-  display:flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-  gap:10px !important;
-  font-family:inherit !important;
-  font-weight:900 !important;
-  line-height:1.08 !important;
-  white-space:normal !important;
-  text-align:left !important;
-}
-#scoreBadge.badge.score{
-  border-color:#FFD76E !important;
-  color:#D88900 !important;
-  font-size:0 !important;
-}
-#scoreBadge.badge.score::before{content:"⭐";font-size:38px;line-height:1;}
-#scoreBadge.badge.score #scoreVal{font-size:24px !important;color:#D88900 !important;font-weight:900 !important;line-height:1;}
-#scoreBadge.badge.score::after{content:"points";font-size:14px;font-weight:900;color:#D88900;margin-left:-5px;margin-top:20px;}
-#bandeauLastCard{
-  border-color:#BDE0FF !important;
-  color:#075EBC !important;
-  background:linear-gradient(135deg,#FFFFFF 0%,#F0F8FF 100%) !important;
-}
-.bandeau-info-icon{font-size:34px;line-height:1;flex-shrink:0;}
-.bandeau-info-text{font-size:13px;color:inherit;font-weight:900;line-height:1.12;min-width:0;}
-.bandeau-info-label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.03em;opacity:.75;margin-bottom:3px;}
-#bandeauLastText{display:block;max-width:210px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:15px;}
-#mockupCompetencesCard{
-  border-color:#D8C6FF !important;
-  color:#6B37E8 !important;
-  background:linear-gradient(135deg,#FFFFFF 0%,#FAF7FF 100%) !important;
-}
-#mockupCompetencesCard .mockup-stat-icon{font-size:36px !important;}
-#mockupCompetencesCard .mockup-stat-text{font-size:16px !important;line-height:1.08 !important;color:#6B37E8 !important;}
-.competence-header-btn{
-  min-height:74px !important;
-  border-color:#7C3AED !important;
-  background:linear-gradient(135deg,#7C3AED 0%,#8E5BFF 100%) !important;
-  color:white !important;
-  font-size:17px !important;
-  text-align:center !important;
-  cursor:pointer !important;
-}
-.competence-header-btn::before{content:"" !important;display:none !important;}
-.competence-header-btn .competence-icon,
-.competence-header-btn > :first-child{font-size:30px !important;line-height:1 !important;}
-.competence-header-btn .competence-label{font-size:17px !important;line-height:1.05 !important;color:white !important;display:inline !important;}
-@media (max-width:1180px){
-  header.mockup-header, header{grid-template-columns:1fr !important;}
-  .header-actions{grid-template-columns:repeat(2,minmax(0,1fr)) auto auto !important;width:100% !important;}
-}
-@media (max-width:620px){
-  .header-actions{grid-template-columns:1fr 1fr !important;}
-  .btn-round{display:none !important;}
-  .bandeau-info-card,#scoreBadge.badge.score,#mockupCompetencesCard,.competence-header-btn{min-height:62px !important;padding:8px !important;}
-  #bandeauLastText{max-width:135px;font-size:13px;}
-  .competence-header-btn .competence-label{font-size:13px !important;}
-}
-</style>
 <script id="patch-bandeau-superieur-v126">
 (function(){
   if(window.__bandeauSuperieurV126) return;
@@ -9667,19 +10002,6 @@ header{
 
 
 <!-- PATCH V12.7 - Corrections bandeau : compteur fiable et bouton unique -->
-<style id="patch-bandeau-corrections-v127">
-/* Empêche l'ancien CSS d'ajouter une deuxième fois le texte du bouton. */
-.competence-header-btn .competence-label::after{
-  content:none !important;
-  display:none !important;
-}
-.competence-header-btn .competence-label{
-  font-size:17px !important;
-  line-height:1.05 !important;
-  color:#fff !important;
-  display:inline !important;
-}
-</style>
 <script id="patch-bandeau-corrections-v127">
 (function(){
   if(window.__bandeauCorrectionsV127) return;
@@ -9784,107 +10106,6 @@ header{
 
 
 <!-- PATCH V12.9 - Bandeau harmonisé : 4 boutons plus compacts et texte non tronqué -->
-<style id="patch-bandeau-harmonise-v129">
-/* Les 4 éléments principaux du bandeau restent visibles et harmonisés. */
-header.mockup-header,
-header{
-  padding:8px 12px !important;
-}
-.header-actions{
-  display:grid !important;
-  grid-template-columns:minmax(98px,.75fr) minmax(170px,1.25fr) minmax(112px,.85fr) minmax(142px,1fr) auto auto !important;
-  gap:8px !important;
-  align-items:stretch !important;
-  width:100% !important;
-}
-.bandeau-info-card,
-#scoreBadge.badge.score,
-#mockupCompetencesCard,
-.competence-header-btn{
-  min-height:58px !important;
-  height:auto !important;
-  border-radius:15px !important;
-  padding:7px 9px !important;
-  gap:7px !important;
-  line-height:1.08 !important;
-  overflow:visible !important;
-  text-align:center !important;
-}
-#scoreBadge.badge.score::before{
-  font-size:27px !important;
-}
-#scoreBadge.badge.score #scoreVal{
-  font-size:18px !important;
-}
-#scoreBadge.badge.score::after{
-  font-size:11px !important;
-  margin-left:-3px !important;
-  margin-top:15px !important;
-}
-.bandeau-info-icon{
-  font-size:25px !important;
-}
-.bandeau-info-text{
-  font-size:12px !important;
-  line-height:1.08 !important;
-  width:100% !important;
-}
-.bandeau-info-label{
-  font-size:9px !important;
-  margin-bottom:2px !important;
-}
-#bandeauLastText{
-  display:block !important;
-  max-width:none !important;
-  overflow:visible !important;
-  text-overflow:clip !important;
-  white-space:normal !important;
-  font-size:12px !important;
-  line-height:1.08 !important;
-  text-align:center !important;
-}
-#mockupCompetencesCard .mockup-stat-icon{
-  font-size:27px !important;
-}
-#mockupCompetencesCard .mockup-stat-text{
-  font-size:12px !important;
-  line-height:1.05 !important;
-}
-.competence-header-btn{
-  font-size:12px !important;
-  white-space:normal !important;
-  flex-direction:row !important;
-}
-.competence-header-btn .competence-icon,
-.competence-header-btn > :first-child{
-  font-size:24px !important;
-}
-.competence-header-btn .competence-label{
-  font-size:12px !important;
-  line-height:1.05 !important;
-  display:inline !important;
-}
-@media (max-width:1180px){
-  .header-actions{
-    grid-template-columns:repeat(4,minmax(0,1fr)) auto auto !important;
-  }
-}
-@media (max-width:760px){
-  .header-actions{
-    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
-  }
-  .btn-round{
-    display:none !important;
-  }
-  .bandeau-info-card,
-  #scoreBadge.badge.score,
-  #mockupCompetencesCard,
-  .competence-header-btn{
-    min-height:54px !important;
-    padding:6px 7px !important;
-  }
-}
-</style>
 <script id="patch-bandeau-harmonise-v129">
 (function(){
   if(window.__bandeauHarmoniseV129) return;
@@ -10179,55 +10400,6 @@ header{
 
 
 <!-- PATCH V13.1 - Géographie : blocs harmonisés, instance unique et défilement automatique -->
-<style id="patch-geographie-blocs-harmonises-v131">
-.hibou-lesson-box{
-  background:#F8F7FF;
-  border:2px solid var(--primary-light);
-  border-radius:16px;
-  padding:16px;
-  margin-top:10px;
-  width:100%;
-}
-.hibou-lesson-box h3{
-  font-family:'Baloo 2',sans-serif;
-  color:var(--primary);
-  font-size:20px;
-  margin:0 0 8px 0;
-}
-.hibou-lesson-rule{
-  background:#FFFCEB;
-  border:2px solid var(--accent);
-  border-radius:14px;
-  padding:10px 12px;
-  font-weight:900;
-  color:#7A5C00;
-  margin:10px 0;
-  line-height:1.4;
-}
-.hibou-lesson-examples{
-  background:white;
-  border:2px solid #ECEBF3;
-  border-radius:14px;
-  padding:10px 12px;
-  font-weight:800;
-  line-height:1.45;
-  margin:10px 0;
-}
-.hibou-lesson-btn{
-  background:var(--primary);
-  color:white;
-  border:none;
-  border-radius:14px;
-  padding:10px 14px;
-  font-weight:900;
-  font-family:inherit;
-  cursor:pointer;
-  width:100%;
-  margin-top:8px;
-}
-.hibou-lesson-btn:hover{transform:translateY(-1px);}
-</style>
-
 <script id="patch-geographie-blocs-harmonises-v131">
 (function(){
   if(window.__hibouGeoBlocsHarmonisesV131) return;
@@ -11111,95 +11283,10 @@ window.HIBOU_CLASS_STUDENTS = [
 
 
 
-<style id="patch-v154-tablette-stable">
-/* V15.4 - Tablette stable : aucune animation dans le bandeau supérieur */
-header,
-.header-actions,
-.header-actions *,
-.device-mode-badge,
-.badge,
-.mockup-stat-card,
-.competence-header-btn,
-.btn-round {
-  animation: none !important;
-  transition: none !important;
-  transform: none !important;
-}
 
-/* Taille fixe : la police ne grossit/rétrécit plus */
-header.mockup-header,
-header {
-  min-height: 84px !important;
-}
-.header-actions {
-  align-items: stretch !important;
-}
-.device-mode-badge,
-#deviceModeBadge,
-.badge,
-.mockup-stat-card,
-.competence-header-btn {
-  min-height: 54px !important;
-  height: 54px !important;
-  box-sizing: border-box !important;
-  line-height: 1.05 !important;
-  flex-shrink: 0 !important;
-}
 
-#deviceModeBadge {
-  width: 150px !important;
-  min-width: 150px !important;
-  max-width: 150px !important;
-  justify-content: center !important;
-  text-align: center !important;
-  overflow: hidden !important;
-  padding: 6px 8px !important;
-}
 
-.v154-welcome-line1 {
-  display: block !important;
-  font-size: 12px !important;
-  font-weight: 900 !important;
-  line-height: 1.05 !important;
-  color: var(--primary) !important;
-  white-space: nowrap !important;
-}
-.v154-welcome-line2 {
-  display: block !important;
-  margin-top: 2px !important;
-  font-size: 9px !important;
-  font-weight: 900 !important;
-  line-height: 1.05 !important;
-  color: var(--text-muted) !important;
-  white-space: normal !important;
-}
-
-/* Matières : pas de zoom actif/survol */
-.subject-btn,
-.subject-btn:hover,
-.subject-btn.active,
-.subjects-bar .subject-btn:hover,
-.subjects-bar .subject-btn.active {
-  animation: none !important;
-  transition: none !important;
-  transform: none !important;
-  filter: none !important;
-}
-
-/* Garde un alignement stable en tablette */
-@media (orientation:landscape) and (max-width:1280px) {
-  .subjects-bar {
-    grid-template-columns: repeat(6, minmax(0,1fr)) !important;
-  }
-}
-@media (orientation:portrait) and (max-width:900px) {
-  .subjects-bar {
-    grid-template-columns: repeat(3, minmax(0,1fr)) !important;
-  }
-}
-</style>
-
-<script id="patch-v154-tablette-stable-js">
+<script id="script-v158-tablette-nettoyee-final">
 (function(){
   function cleanName(value){
     value = String(value || "").trim();
@@ -11208,72 +11295,52 @@ header {
     return value;
   }
 
-  function getName(){
+  function currentStudentName(){
     try {
       if (typeof prenomActuel !== "undefined") {
-        var n1 = cleanName(prenomActuel);
-        if (n1) return n1;
+        const n = cleanName(prenomActuel);
+        if (n) return n;
       }
     } catch(e) {}
 
-    var el = document.getElementById("eleveNom");
+    const el = document.getElementById("eleveNom");
     if (el) {
-      var n2 = cleanName(el.textContent);
-      if (n2) return n2;
+      const n = cleanName(el.textContent);
+      if (n) return n;
     }
-
-    try {
-      var keys = ["hibou_prenom", "maitreHibouCurrentStudent", "elevePrenom", "prenomActuel"];
-      for (var i=0; i<keys.length; i++) {
-        var n3 = cleanName(localStorage.getItem(keys[i]));
-        if (n3) return n3;
-      }
-    } catch(e) {}
 
     return "";
   }
 
-  function setWelcome(){
-    var badge = document.getElementById("deviceModeBadge");
+  function setWelcomeMessage(){
+    const badge = document.getElementById("deviceModeBadge");
     if (!badge) return;
 
-    var name = getName();
-    if (!name) return;
-
-    var html =
-      '<span class="v154-welcome-line1">Bonjour ' + name + ' 🌟</span>' +
-      '<span class="v154-welcome-line2">Que souhaites-tu apprendre ?</span>';
-
-    if (badge.innerHTML !== html) {
-      badge.dataset.studentWelcomeActive = "1";
-      badge.innerHTML = html;
-    }
+    const name = currentStudentName() || "élève";
+    badge.dataset.studentWelcomeActive = "1";
+    badge.innerHTML =
+      '<span class="v158-welcome-line1">Bonjour ' + name + ' 🌟</span>' +
+      '<span class="v158-welcome-line2">Que souhaites-tu apprendre ?</span>';
   }
 
   document.addEventListener("DOMContentLoaded", function(){
-    setWelcome();
-    setTimeout(setWelcome, 250);
-    setTimeout(setWelcome, 900);
+    setTimeout(setWelcomeMessage, 200);
+    setTimeout(setWelcomeMessage, 800);
   });
 
-  window.addEventListener("load", function(){
-    setTimeout(setWelcome, 250);
-  });
-
-  // Après connexion élève uniquement : pas de boucle permanente.
-  var oldSavePrenom = window.savePrenom;
-  if (typeof oldSavePrenom === "function" && !oldSavePrenom.__v154StableWrapped) {
-    var wrapped = async function(){
-      var result = await oldSavePrenom.apply(this, arguments);
-      setTimeout(setWelcome, 120);
-      setTimeout(setWelcome, 600);
+  const oldSavePrenomV158 = window.savePrenom;
+  if (typeof oldSavePrenomV158 === "function" && !oldSavePrenomV158.__v158CleanWrapped) {
+    const wrappedSavePrenomV158 = async function(){
+      const result = await oldSavePrenomV158.apply(this, arguments);
+      setTimeout(setWelcomeMessage, 120);
+      setTimeout(setWelcomeMessage, 450);
       return result;
     };
-    wrapped.__v154StableWrapped = true;
-    window.savePrenom = wrapped;
+    wrappedSavePrenomV158.__v158CleanWrapped = true;
+    window.savePrenom = wrappedSavePrenomV158;
   }
 
-  window.applyV154Welcome = setWelcome;
+  window.setWelcomeMessageV158 = setWelcomeMessage;
 })();
 </script>
 

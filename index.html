@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 Maître Hibou V16.6 - Synchronisation compétences</title>
+<title>🦉 Maître Hibou V16.7 - Espace enseignant en onglets</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -3403,6 +3403,232 @@ body.prenom-mode .class-motivation-panel {
 }
 @media (max-width: 520px) {
   .teacher-v166-metrics { grid-template-columns: 1fr; }
+}
+</style>
+
+
+<style id="style-v167-teacher-tabs">
+/* V16.7 - Espace enseignant en onglets : tablette lisible, logique pédagogique claire */
+
+.teacher-v167-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: rgba(255,255,255,.96);
+  backdrop-filter: blur(8px);
+  border: 2px solid #EAE8FF;
+  border-radius: 18px;
+  padding: 8px;
+  margin: 0 0 14px 0;
+  box-shadow: 0 4px 18px rgba(108,99,255,.10);
+}
+
+.teacher-v167-tab {
+  border: 2px solid #EAE8FF;
+  background: #F7F6FF;
+  color: var(--primary);
+  border-radius: 999px;
+  padding: 9px 12px;
+  font-family: inherit;
+  font-weight: 900;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.teacher-v167-tab.active {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+.teacher-v167-pane { display: none; }
+.teacher-v167-pane.active { display: block; }
+
+.teacher-v167-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0 0 14px 0;
+}
+
+.teacher-v167-card,
+.teacher-v167-section,
+.teacher-v167-birthdays,
+.teacher-v167-sync {
+  background: #F7F6FF;
+  border: 2px solid #EAE8FF;
+  border-radius: 18px;
+  padding: 14px;
+  margin: 0 0 14px 0;
+}
+
+.teacher-v167-section.training { border-color: #CFEAFF; background: #F1FAFF; }
+.teacher-v167-section.skills { border-color: #FFD93D; background: #FFFCEB; }
+.teacher-v167-section.review { border-color: #FFB8B8; background: #FFF7F7; }
+
+.teacher-v167-sync {
+  border-color: var(--primary);
+  background: linear-gradient(135deg, #F7F6FF 0%, #FFFFFF 100%);
+}
+
+.teacher-v167-card h3,
+.teacher-v167-section h3,
+.teacher-v167-birthdays h3,
+.teacher-v167-sync h3 {
+  font-family: 'Baloo 2', sans-serif;
+  color: var(--primary);
+  font-size: 22px;
+  margin: 0 0 10px 0;
+}
+
+.teacher-v167-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 8px;
+}
+
+.teacher-v167-metric {
+  background: white;
+  border: 2px solid #ECEBF3;
+  border-radius: 14px;
+  padding: 10px;
+  text-align: center;
+  font-weight: 900;
+}
+
+.teacher-v167-metric strong {
+  display: block;
+  color: var(--primary);
+  font-size: 22px;
+  line-height: 1.05;
+}
+
+.teacher-v167-metric span {
+  display: block;
+  color: var(--text-muted);
+  font-size: 12px;
+  margin-top: 3px;
+}
+
+.teacher-v167-metric.ok strong { color: #1E5627; }
+.teacher-v167-metric.warn strong { color: #7A5C00; }
+.teacher-v167-metric.danger strong { color: #7A2222; }
+
+.teacher-v167-table-wrap {
+  overflow-x: auto;
+  background: white;
+  border: 2px solid #ECEBF3;
+  border-radius: 14px;
+}
+
+.teacher-v167-table td,
+.teacher-v167-table th {
+  white-space: normal;
+  vertical-align: top;
+}
+
+.teacher-v167-pill {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.teacher-v167-pill.ok { background: #E6F7E9; color: #1E5627; }
+.teacher-v167-pill.warn { background: #FFF3CD; color: #7A5C00; }
+.teacher-v167-pill.danger { background: #FFEAEA; color: #7A2222; }
+.teacher-v167-pill.neutral { background: #ECEBF3; color: var(--text); }
+
+.teacher-v167-legend {
+  background: white;
+  border: 2px solid #ECEBF3;
+  border-radius: 14px;
+  padding: 10px 12px;
+  font-size: 13px;
+  font-weight: 850;
+  line-height: 1.4;
+  margin: 0 0 10px 0;
+}
+
+.teacher-v167-birthday-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px,1fr));
+  gap: 8px;
+}
+
+.teacher-v167-birthday-item {
+  background: white;
+  border: 2px solid #ECEBF3;
+  border-radius: 14px;
+  padding: 10px;
+  font-weight: 900;
+}
+
+.teacher-v167-birthday-date {
+  color: var(--primary);
+  font-size: 13px;
+  margin-top: 2px;
+}
+
+.teacher-v167-small {
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.teacher-v167-sync-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.teacher-v167-sync-result {
+  background: #FFFFFF;
+  border: 2px solid #ECEBF3;
+  border-radius: 14px;
+  padding: 10px 12px;
+  font-size: 13px;
+  font-weight: 850;
+  line-height: 1.45;
+  margin-top: 10px;
+}
+
+.teacher-v167-sync-result.ok { border-color: #BFECC7; background: #F1FFF4; color: #1E5627; }
+.teacher-v167-sync-result.warn { border-color: #FFE2A6; background: #FFF9E6; color: #7A5C00; }
+.teacher-v167-sync-result.error { border-color: #FFB8B8; background: #FFEAEA; color: #7A2222; }
+
+.teacher-v167-medal-cell {
+  font-size: 16px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.teacher-v167-error {
+  background:#FFEAEA;
+  border:2px solid #FFB8B8;
+  color:#7A2222;
+  border-radius:16px;
+  padding:12px;
+  font-weight:900;
+  margin:12px 0;
+}
+
+@media (max-width: 850px) {
+  .teacher-v167-grid { grid-template-columns: 1fr; }
+  .teacher-v167-metrics { grid-template-columns: repeat(2, minmax(0,1fr)); }
+}
+
+@media (max-width: 560px) {
+  .teacher-v167-tabs { gap: 6px; padding: 6px; }
+  .teacher-v167-tab { font-size: 12px; padding: 8px 9px; }
+  .teacher-v167-metrics { grid-template-columns: 1fr; }
 }
 </style>
 
@@ -10538,22 +10764,24 @@ header{
 
 
 
-<script id="script-v166-sync-competences">
+
+<script id="script-v167-teacher-tabs">
 (function(){
-  if (window.__maitreHibouV166SyncCompetences) return;
-  window.__maitreHibouV166SyncCompetences = true;
+  if (window.__maitreHibouV167TeacherTabs) return;
+  window.__maitreHibouV167TeacherTabs = true;
 
   const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxz1vYS24sv-c3XVja12geWEXIQl6bQyBoQKBx5kg_fwQaj80_Oc7Y34yeBSRN4lF1f/exec";
   const SHEETS_CACHE_MS = 5 * 60 * 1000;
-  const LAST_SYNC_SIGNATURE_KEY = "hibou_v166_last_sync_signature";
-  const LAST_SYNC_DATE_KEY = "hibou_v166_last_sync_date";
+  const LAST_SYNC_SIGNATURE_KEY = "hibou_v167_last_sync_signature";
+  const LAST_SYNC_DATE_KEY = "hibou_v167_last_sync_date";
+  const ACTIVE_TAB_KEY = "hibou_v167_teacher_active_tab";
+  const MANUAL_SKILL_PREFIX = "hibou_skills_v51_";
 
   let sheetsStudentsCache = null;
   let sheetsStudentsLoadedAt = 0;
   let sheetsStudentsPromise = null;
 
-  const MANUAL_SKILL_PREFIX = "hibou_skills_v51_";
-  const manualSkillCatalogV166 = [
+  const manualSkillCatalogV167 = [
     {id:"calc_mental", domain:"Maths", label:"Je sais calculer mentalement"},
     {id:"mult_ligne", domain:"Maths", label:"Je sais multiplier en ligne"},
     {id:"mult_1_sans", domain:"Maths", label:"Je sais multiplier à 1 chiffre sans retenue"},
@@ -10783,14 +11011,14 @@ header{
     const text = String(value).trim();
     if (!text) return null;
 
-    let match = text.match(/^(\d{1,2})[\/\-.](\d{1,2})(?:[\/\-.](\d{2,4}))?$/);
+    let match = text.match(/^(\\d{1,2})[\\/\\-.](\\d{1,2})(?:[\\/\\-.](\\d{2,4}))?$/);
     if (match) {
       const day = Number(match[1]);
       const month = Number(match[2]);
       if (day >= 1 && day <= 31 && month >= 1 && month <= 12) return { day, month };
     }
 
-    match = text.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+    match = text.match(/^(\\d{4})-(\\d{1,2})-(\\d{1,2})/);
     if (match) {
       const month = Number(match[2]);
       const day = Number(match[3]);
@@ -10849,7 +11077,7 @@ header{
 
         const pct = Math.round((correct / attempts) * 100);
         let statut = "à consolider";
-        if (pct >= 80) statut = "validée";
+        if (pct >= 80) statut = "réussi à l'entraînement";
         else if (pct < 60) statut = "à revoir";
 
         rows.push({
@@ -10877,17 +11105,22 @@ header{
     return "";
   }
 
+  function manualMedalEmoji(count){
+    count = Number(count || 0);
+    if (count >= 5) return "🥇 Or";
+    if (count >= 3) return "🥈 Argent";
+    if (count >= 1) return "🥉 Bronze";
+    return "";
+  }
+
   function getManualSkillRowsForStudent(name, nowText, deviceName){
     const rows = [];
     const storageKey = MANUAL_SKILL_PREFIX + storageSafeNameForManualSkills(name);
     let data = {};
-    try {
-      data = JSON.parse(localStorage.getItem(storageKey) || "{}") || {};
-    } catch(e) {
-      data = {};
-    }
+    try { data = JSON.parse(localStorage.getItem(storageKey) || "{}") || {}; }
+    catch(e) { data = {}; }
 
-    manualSkillCatalogV166.forEach(function(skill){
+    manualSkillCatalogV167.forEach(function(skill){
       const count = Number(data[skill.id] || 0);
       if (!count) return;
       rows.push({
@@ -10904,9 +11137,32 @@ header{
     return rows;
   }
 
-  function collectCompetencePayloadV166(){
+  function getManualCompetenceRowsForStudent(name){
+    const rows = [];
+    const storageKey = MANUAL_SKILL_PREFIX + storageSafeNameForManualSkills(name);
+    let data = {};
+    try { data = JSON.parse(localStorage.getItem(storageKey) || "{}") || {}; }
+    catch(e) { data = {}; }
+
+    manualSkillCatalogV167.forEach(function(skill){
+      const count = Number(data[skill.id] || 0);
+      if (!count) return;
+      rows.push({
+        name,
+        subject: skill.domain,
+        skill: skill.label,
+        count,
+        medaille: manualMedalEmoji(count)
+      });
+    });
+
+    return rows;
+  }
+
+  function collectCompetencePayloadV167(){
     const nowText = new Date().toLocaleString("fr-FR");
-    const deviceName = (navigator.userAgent || "").includes("Mobile") || (navigator.userAgent || "").includes("Android") ? "Tablette / mobile" : "PC";
+    const ua = navigator.userAgent || "";
+    const deviceName = ua.includes("Mobile") || ua.includes("Android") ? "Tablette / mobile" : "PC";
     const names = getKnownStudentNames();
 
     const competencesQuiz = [];
@@ -10918,16 +11174,14 @@ header{
       competencesValidees.push.apply(competencesValidees, getManualSkillRowsForStudent(name, nowText, deviceName));
     });
 
-    const payload = {
-      source: "maitre_hibou_v16_6",
+    return {
+      source: "maitre_hibou_v16_7",
       generated_at: nowText,
       appareil: deviceName,
       eleves_analyses: names.length,
       competences_quiz: competencesQuiz,
       competences_validees: competencesValidees
     };
-
-    return payload;
   }
 
   function stableSignatureFromPayload(payload){
@@ -10944,30 +11198,30 @@ header{
   }
 
   function renderSyncStatus(message, type){
-    const box = document.getElementById("teacherSyncStatusV166");
+    const box = document.getElementById("teacherSyncStatusV167");
     if (!box) return;
-    box.className = "teacher-v166-sync-result " + (type || "");
+    box.className = "teacher-v167-sync-result " + (type || "");
     box.innerHTML = message;
   }
 
-  function updateSyncPreviewV166(){
-    const payload = collectCompetencePayloadV166();
-    const preview = document.getElementById("teacherSyncPreviewV166");
+  function updateSyncPreviewV167(){
+    const payload = collectCompetencePayloadV167();
+    const preview = document.getElementById("teacherSyncPreviewV167");
     if (!preview) return payload;
 
     const lastDate = localStorage.getItem(LAST_SYNC_DATE_KEY) || "jamais";
     preview.innerHTML = `
       Données locales détectées : <strong>${payload.eleves_analyses}</strong> élève(s),
-      <strong>${payload.competences_quiz.length}</strong> ligne(s) quiz,
-      <strong>${payload.competences_validees.length}</strong> compétence(s) validée(s).<br>
+      <strong>${payload.competences_quiz.length}</strong> ligne(s) d'entraînement,
+      <strong>${payload.competences_validees.length}</strong> compétence(s) médaillée(s).<br>
       Dernière synchronisation : <strong>${h(lastDate)}</strong>.
     `;
     return payload;
   }
 
-  async function syncCompetencesToGoogleSheetsV166(){
-    const btn = document.getElementById("teacherSyncBtnV166");
-    const payload = updateSyncPreviewV166();
+  async function syncCompetencesToGoogleSheetsV167(){
+    const btn = document.getElementById("teacherSyncBtnV167");
+    const payload = updateSyncPreviewV167();
     const signature = stableSignatureFromPayload(payload);
     const lastSignature = localStorage.getItem(LAST_SYNC_SIGNATURE_KEY);
 
@@ -11002,13 +11256,13 @@ header{
       renderSyncStatus(
         `✅ Synchronisation envoyée vers Google Sheets.<br>
          Élèves analysés : <strong>${payload.eleves_analyses}</strong><br>
-         Lignes quiz : <strong>${payload.competences_quiz.length}</strong><br>
-         Compétences validées : <strong>${payload.competences_validees.length}</strong><br>
-         <span class="teacher-v166-small">Google Apps Script reçoit les données en arrière-plan. Vérifie les deux onglets après quelques secondes.</span>`,
+         Lignes d'entraînement : <strong>${payload.competences_quiz.length}</strong><br>
+         Compétences médaillées : <strong>${payload.competences_validees.length}</strong><br>
+         <span class="teacher-v167-small">Google Apps Script reçoit les données en arrière-plan. Vérifie les deux onglets après quelques secondes.</span>`,
         "ok"
       );
 
-      updateSyncPreviewV166();
+      updateSyncPreviewV167();
     } catch(error) {
       console.error("Erreur synchronisation compétences :", error);
       renderSyncStatus("❌ Synchronisation impossible : " + h(error.message), "error");
@@ -11020,11 +11274,28 @@ header{
     }
   }
 
+  function renderSyncBlock(){
+    return `
+      <div class="teacher-v167-sync">
+        <h3>🔄 Synchronisation Google Sheets</h3>
+        <div class="teacher-v167-legend">
+          Les données restent locales tant que tu ne synchronises pas. Le bouton envoie les entraînements et les compétences médaillées vers Google Sheets.
+        </div>
+        <div id="teacherSyncPreviewV167" class="teacher-v167-small">Analyse des données locales…</div>
+        <div class="teacher-v167-sync-actions">
+          <button id="teacherSyncBtnV167" class="teacher-btn" onclick="syncCompetencesToGoogleSheetsV167()">🔄 Synchroniser les compétences</button>
+          <button class="teacher-btn secondary" onclick="updateSyncPreviewV167()">🔍 Recompter</button>
+        </div>
+        <div id="teacherSyncStatusV167" class="teacher-v167-sync-result">En attente de synchronisation.</div>
+      </div>
+    `;
+  }
+
   function renderBirthdayBlockLoading(){
     return `
-      <div id="teacherSheetsDashboardContent" class="teacher-v166-birthdays">
+      <div id="teacherSheetsDashboardContent" class="teacher-v167-birthdays">
         <h3>🎂 Anniversaires du mois</h3>
-        <div class="teacher-v166-small">Chargement des données Google Sheets…</div>
+        <div class="teacher-v167-small">Chargement des données Google Sheets…</div>
       </div>
     `;
   }
@@ -11048,19 +11319,19 @@ header{
 
     const birthdayHTML = birthdays.length ? birthdays.map(function(s){
       return `
-        <div class="teacher-v166-birthday-item">
+        <div class="teacher-v167-birthday-item">
           🎂 ${h(s.prenom)}
-          <div class="teacher-v166-birthday-date">${s.birthday.day} ${monthName(s.birthday.month)}</div>
+          <div class="teacher-v167-birthday-date">${s.birthday.day} ${monthName(s.birthday.month)}</div>
         </div>
       `;
-    }).join("") : `<div class="teacher-v166-birthday-item">Aucun anniversaire actif ce mois-ci.</div>`;
+    }).join("") : `<div class="teacher-v167-birthday-item">Aucun anniversaire actif ce mois-ci.</div>`;
 
     const testText = testProfiles.length ? " · profil test détecté : " + testProfiles.map(function(s){ return h(s.prenom); }).join(", ") : "";
 
     host.innerHTML = `
       <h3>🎂 Anniversaires du mois</h3>
-      <div class="teacher-v166-birthday-list">${birthdayHTML}</div>
-      <div class="teacher-v166-small" style="margin-top:8px;">
+      <div class="teacher-v167-birthday-list">${birthdayHTML}</div>
+      <div class="teacher-v167-small" style="margin-top:8px;">
         Source : Google Sheets — ${activeStudents.length} profil(s) actif(s)${testText}
       </div>
     `;
@@ -11069,7 +11340,7 @@ header{
   async function renderTeacherSheetsDashboard(){
     const host = document.getElementById("teacherSheetsDashboardContent");
     if (!host) return;
-    host.innerHTML = `<h3>🎂 Anniversaires du mois</h3><div class="teacher-v166-small">Chargement des données Google Sheets…</div>`;
+    host.innerHTML = `<h3>🎂 Anniversaires du mois</h3><div class="teacher-v167-small">Chargement des données Google Sheets…</div>`;
 
     try {
       const students = await fetchSheetsStudents(false);
@@ -11077,23 +11348,33 @@ header{
     } catch(error) {
       host.innerHTML = `
         <h3>🎂 Anniversaires du mois</h3>
-        <div class="teacher-v166-small">Impossible de charger les anniversaires depuis Google Sheets : ${h(error.message)}</div>
+        <div class="teacher-v167-small">Impossible de charger les anniversaires depuis Google Sheets : ${h(error.message)}</div>
       `;
     }
   }
 
-  function renderSyncBlock(){
+  function setTeacherTabV167(tabName){
+    const valid = ["dashboard", "skills", "review", "training", "admin"];
+    const selected = valid.includes(tabName) ? tabName : "dashboard";
+
+    document.querySelectorAll(".teacher-v167-tab").forEach(function(btn){
+      btn.classList.toggle("active", btn.dataset.tab === selected);
+    });
+    document.querySelectorAll(".teacher-v167-pane").forEach(function(pane){
+      pane.classList.toggle("active", pane.dataset.pane === selected);
+    });
+
+    try { localStorage.setItem(ACTIVE_TAB_KEY, selected); } catch(e) {}
+  }
+
+  function buildTeacherTabs(){
     return `
-      <div class="teacher-v166-sync">
-        <h3>🔄 Synchronisation des compétences</h3>
-        <div id="teacherSyncPreviewV166" class="teacher-v166-small">Analyse des données locales…</div>
-        <div class="teacher-v166-sync-actions">
-          <button id="teacherSyncBtnV166" class="teacher-btn" onclick="syncCompetencesToGoogleSheetsV166()">🔄 Synchroniser les compétences</button>
-          <button class="teacher-btn secondary" onclick="updateSyncPreviewV166()">🔍 Recompter</button>
-        </div>
-        <div id="teacherSyncStatusV166" class="teacher-v166-sync-result">
-          Les compétences restent en local tant que tu n’appuies pas sur synchroniser.
-        </div>
+      <div class="teacher-v167-tabs">
+        <button class="teacher-v167-tab active" data-tab="dashboard" onclick="setTeacherTabV167('dashboard')">📊 Tableau</button>
+        <button class="teacher-v167-tab" data-tab="skills" onclick="setTeacherTabV167('skills')">🎯 Compétences</button>
+        <button class="teacher-v167-tab" data-tab="review" onclick="setTeacherTabV167('review')">🔁 Difficultés</button>
+        <button class="teacher-v167-tab" data-tab="training" onclick="setTeacherTabV167('training')">🏋️ Quiz</button>
+        <button class="teacher-v167-tab" data-tab="admin" onclick="setTeacherTabV167('admin')">⚙️ Admin</button>
       </div>
     `;
   }
@@ -11117,15 +11398,50 @@ header{
       const toWatch = students.filter(function(s){ return s.analysis.alert === "warn"; });
       const best = students.slice().sort(function(a,b){ return (b.score || 0) - (a.score || 0); })[0];
 
-      const validatedRows = students.flatMap(function(s){
-        return (s.analysis.strong || []).map(function(skill){
-          return { name:s.name, subject:skill.subject, skill:skill.skill, pct:skill.pct, attempts:skill.attempts };
+      const trainingRows = students.flatMap(function(s){
+        return (s.analysis.rows || []).filter(function(skill){
+          return Number(skill.attempts || 0) > 0;
+        }).map(function(skill){
+          const pct = Number(skill.pct || 0);
+          let statut = "À consolider";
+          let cls = "warn";
+          if (pct >= 80) { statut = "Réussi à l'entraînement"; cls = "ok"; }
+          else if (pct < 60) { statut = "À revoir"; cls = "danger"; }
+          return {
+            name:s.name,
+            subject:skill.subject,
+            skill:skill.skill,
+            pct:pct,
+            attempts:skill.attempts,
+            correct:skill.correct,
+            statut:statut,
+            cls:cls
+          };
         });
+      }).sort(function(a,b){
+        return String(a.name).localeCompare(String(b.name), "fr") ||
+               String(a.subject).localeCompare(String(b.subject), "fr") ||
+               String(a.skill).localeCompare(String(b.skill), "fr");
+      });
+
+      const competenceRows = students.flatMap(function(s){
+        return getManualCompetenceRowsForStudent(s.name);
+      }).sort(function(a,b){
+        return String(a.name).localeCompare(String(b.name), "fr") ||
+               String(a.subject).localeCompare(String(b.subject), "fr") ||
+               String(a.skill).localeCompare(String(b.skill), "fr");
       });
 
       const reviewRows = students.flatMap(function(s){
         return [...(s.analysis.weak || []), ...(s.analysis.watch || [])].map(function(skill){
-          return { name:s.name, subject:skill.subject, skill:skill.skill, pct:skill.pct, attempts:skill.attempts, level:skill.pct < 60 ? "danger" : "warn" };
+          return {
+            name:s.name,
+            subject:skill.subject,
+            skill:skill.skill,
+            pct:skill.pct,
+            attempts:skill.attempts,
+            level:skill.pct < 60 ? "danger" : "warn"
+          };
         });
       }).sort(function(a,b){
         const pa = a.level === "danger" ? 0 : 1;
@@ -11133,17 +11449,30 @@ header{
         return pa - pb || a.pct - b.pct;
       });
 
-      const validatedHTML = validatedRows.length ? validatedRows.map(function(r){
+      const trainingHTML = trainingRows.length ? trainingRows.map(function(r){
         return `
           <tr>
             <td><strong>${h(r.name)}</strong></td>
             <td>${h(safeSubjectLabel(r.subject))}</td>
             <td>${h(r.skill)}</td>
-            <td><span class="teacher-v166-pill ok">${r.pct}%</span></td>
-            <td>${r.attempts}</td>
+            <td><span class="teacher-v167-pill ${r.cls}">${r.pct}%</span></td>
+            <td>${r.correct || 0}/${r.attempts}</td>
+            <td>${h(r.statut)}</td>
           </tr>
         `;
-      }).join("") : `<tr><td colspan="5">Aucune compétence validée pour le moment. Les compétences apparaissent après plusieurs réussites.</td></tr>`;
+      }).join("") : `<tr><td colspan="6">Aucun entraînement quiz enregistré pour le moment.</td></tr>`;
+
+      const competenceHTML = competenceRows.length ? competenceRows.map(function(r){
+        return `
+          <tr>
+            <td><strong>${h(r.name)}</strong></td>
+            <td>${h(safeSubjectLabel(r.subject))}</td>
+            <td>${h(r.skill)}</td>
+            <td class="teacher-v167-medal-cell">${h(r.medaille)}</td>
+            <td>${r.count}/5</td>
+          </tr>
+        `;
+      }).join("") : `<tr><td colspan="5">Aucune compétence à médaille validée pour le moment.</td></tr>`;
 
       const reviewHTML = reviewRows.length ? reviewRows.map(function(r){
         return `
@@ -11151,11 +11480,11 @@ header{
             <td><strong>${h(r.name)}</strong></td>
             <td>${h(safeSubjectLabel(r.subject))}</td>
             <td>${h(r.skill)}</td>
-            <td><span class="teacher-v166-pill ${r.level === "danger" ? "danger" : "warn"}">${r.pct}%</span></td>
+            <td><span class="teacher-v167-pill ${r.level === "danger" ? "danger" : "warn"}">${r.pct}%</span></td>
             <td>${r.level === "danger" ? "À revoir en priorité" : "À consolider"}</td>
           </tr>
         `;
-      }).join("") : `<tr><td colspan="5">Aucune compétence à revoir pour le moment.</td></tr>`;
+      }).join("") : `<tr><td colspan="5">Aucune difficulté détectée pour le moment.</td></tr>`;
 
       const studentRows = students.map(function(s){
         return `
@@ -11178,77 +11507,111 @@ header{
       }).slice(0, 12);
 
       content.innerHTML = `
-        ${renderBirthdayBlockLoading()}
-        ${renderSyncBlock()}
+        ${buildTeacherTabs()}
 
-        <div class="teacher-v166-grid">
-          <div class="teacher-v166-card">
-            <h3>👥 Résumé classe</h3>
-            <div class="teacher-v166-metrics">
-              <div class="teacher-v166-metric"><strong>${students.length}</strong><span>profils locaux</span></div>
-              <div class="teacher-v166-metric"><strong>${practicedStudents.length}</strong><span>élèves avec entraînements</span></div>
-              <div class="teacher-v166-metric"><strong>${totalPoints}</strong><span>points cumulés</span></div>
-              <div class="teacher-v166-metric"><strong>${best ? h(best.name) : "—"}</strong><span>meilleur score</span></div>
+        <div class="teacher-v167-pane active" data-pane="dashboard">
+          ${renderBirthdayBlockLoading()}
+          ${renderSyncBlock()}
+
+          <div class="teacher-v167-grid">
+            <div class="teacher-v167-card">
+              <h3>👥 Résumé classe</h3>
+              <div class="teacher-v167-metrics">
+                <div class="teacher-v167-metric"><strong>${students.length}</strong><span>profils locaux</span></div>
+                <div class="teacher-v167-metric"><strong>${practicedStudents.length}</strong><span>élèves avec entraînements</span></div>
+                <div class="teacher-v167-metric"><strong>${totalPoints}</strong><span>points cumulés</span></div>
+                <div class="teacher-v167-metric"><strong>${best ? h(best.name) : "—"}</strong><span>meilleur score</span></div>
+              </div>
+            </div>
+
+            <div class="teacher-v167-card">
+              <h3>🚦 Lecture pédagogique</h3>
+              <div class="teacher-v167-metrics">
+                <div class="teacher-v167-metric"><strong>${trainingRows.length}</strong><span>entraînements suivis</span></div>
+                <div class="teacher-v167-metric ok"><strong>${competenceRows.length}</strong><span>compétences médaillées</span></div>
+                <div class="teacher-v167-metric danger"><strong>${toHelp.length}</strong><span>élèves à aider</span></div>
+                <div class="teacher-v167-metric warn"><strong>${toWatch.length}</strong><span>élèves à surveiller</span></div>
+              </div>
             </div>
           </div>
+        </div>
 
-          <div class="teacher-v166-card">
-            <h3>🚦 Alertes pédagogiques</h3>
-            <div class="teacher-v166-metrics">
-              <div class="teacher-v166-metric danger"><strong>${toHelp.length}</strong><span>à aider</span></div>
-              <div class="teacher-v166-metric warn"><strong>${toWatch.length}</strong><span>à surveiller</span></div>
-              <div class="teacher-v166-metric ok"><strong>${validatedRows.length}</strong><span>compétences validées</span></div>
-              <div class="teacher-v166-metric"><strong>${reviewRows.length}</strong><span>compétences à revoir</span></div>
+        <div class="teacher-v167-pane" data-pane="skills">
+          <div class="teacher-v167-section skills">
+            <h3>🎯 Compétences médaillées</h3>
+            <div class="teacher-v167-legend">
+              Les médailles représentent l'acquisition progressive d'une compétence : 🥉 Bronze = début de validation · 🥈 Argent = compétence solide · 🥇 Or = compétence maîtrisée.
             </div>
-          </div>
-        </div>
-
-        <div class="teacher-v166-section">
-          <h3>🏆 Compétences validées</h3>
-          <div class="teacher-v166-table-wrap">
-            <table class="teacher-table teacher-v166-table">
-              <thead><tr><th>Élève</th><th>Matière</th><th>Compétence</th><th>Réussite</th><th>Essais</th></tr></thead>
-              <tbody>${validatedHTML}</tbody>
-            </table>
-          </div>
-        </div>
-
-        <div class="teacher-v166-section">
-          <h3>🔁 Compétences à revoir</h3>
-          <div class="teacher-v166-table-wrap">
-            <table class="teacher-table teacher-v166-table">
-              <thead><tr><th>Élève</th><th>Matière</th><th>Compétence</th><th>Réussite</th><th>Priorité</th></tr></thead>
-              <tbody>${reviewHTML}</tbody>
-            </table>
-          </div>
-        </div>
-
-        <div class="teacher-v166-section">
-          <h3>📋 Suivi détaillé local</h3>
-          ${students.length ? `
-            <div class="teacher-table-wrap">
-              <table class="teacher-table">
-                <thead><tr><th>Élève</th><th>Points</th><th>Niveau</th><th>Badges</th><th>Réussite</th><th>Alerte</th><th>À travailler</th><th>Dernière activité</th><th>Action</th></tr></thead>
-                <tbody>${studentRows}</tbody>
+            <div class="teacher-v167-table-wrap">
+              <table class="teacher-table teacher-v167-table">
+                <thead><tr><th>Élève</th><th>Domaine</th><th>Compétence</th><th>Médaille</th><th>Validations</th></tr></thead>
+                <tbody>${competenceHTML}</tbody>
               </table>
             </div>
-          ` : '<div class="teacher-empty">Aucun entraînement local enregistré pour le moment.</div>'}
+          </div>
         </div>
 
-        <div class="history-list">
-          <strong>Dernières activités</strong>
-          ${history.length ? history.map(function(item){
-            return `<div class="history-item">${h(item.name)} — ${h(item.type)} — ${(item.points || 0) >= 0 ? "+" : ""}${item.points || 0} pts — ${h(item.date)}</div>`;
-          }).join("") : '<div class="history-item">Aucune activité enregistrée.</div>'}
+        <div class="teacher-v167-pane" data-pane="review">
+          <div class="teacher-v167-section review">
+            <h3>🔁 Difficultés détectées</h3>
+            <div class="teacher-v167-legend">
+              Cette partie est déduite des entraînements. Elle sert à préparer les révisions, l'APC ou les groupes de besoin.
+            </div>
+            <div class="teacher-v167-table-wrap">
+              <table class="teacher-table teacher-v167-table">
+                <thead><tr><th>Élève</th><th>Matière</th><th>Notion</th><th>Réussite</th><th>Priorité</th></tr></thead>
+                <tbody>${reviewHTML}</tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="teacher-v167-pane" data-pane="training">
+          <div class="teacher-v167-section training">
+            <h3>🏋️ Entraînements quiz</h3>
+            <div class="teacher-v167-legend">
+              Les quiz sont des exercices d'entraînement. Ils servent à repérer les réussites du moment et les difficultés, mais ne valident pas seuls une compétence.
+            </div>
+            <div class="teacher-v167-table-wrap">
+              <table class="teacher-table teacher-v167-table">
+                <thead><tr><th>Élève</th><th>Matière</th><th>Exercice / notion</th><th>Réussite</th><th>Score</th><th>Lecture</th></tr></thead>
+                <tbody>${trainingHTML}</tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="teacher-v167-pane" data-pane="admin">
+          <div class="teacher-v167-section">
+            <h3>⚙️ Administration locale</h3>
+            ${students.length ? `
+              <div class="teacher-table-wrap">
+                <table class="teacher-table">
+                  <thead><tr><th>Élève</th><th>Points</th><th>Niveau</th><th>Badges</th><th>Réussite entraînements</th><th>Alerte</th><th>À travailler</th><th>Dernière activité</th><th>Action</th></tr></thead>
+                  <tbody>${studentRows}</tbody>
+                </table>
+              </div>
+            ` : '<div class="teacher-empty">Aucun entraînement local enregistré pour le moment.</div>'}
+          </div>
+
+          <div class="history-list">
+            <strong>Dernières activités</strong>
+            ${history.length ? history.map(function(item){
+              return `<div class="history-item">${h(item.name)} — ${h(item.type)} — ${(item.points || 0) >= 0 ? "+" : ""}${item.points || 0} pts — ${h(item.date)}</div>`;
+            }).join("") : '<div class="history-item">Aucune activité enregistrée.</div>'}
+          </div>
         </div>
       `;
 
       renderTeacherSheetsDashboard();
-      updateSyncPreviewV166();
+      updateSyncPreviewV167();
+
+      const savedTab = localStorage.getItem(ACTIVE_TAB_KEY) || "dashboard";
+      setTeacherTabV167(savedTab);
     } catch(error) {
-      console.error("Erreur tableau enseignant V16.6 :", error);
+      console.error("Erreur tableau enseignant V16.7 onglets :", error);
       const content = document.getElementById("teacherDashboardContent");
-      if (content) content.innerHTML = `<div class="teacher-v166-error">Erreur dans le tableau enseignant : ${h(error.message)}</div>`;
+      if (content) content.innerHTML = `<div class="teacher-v167-error">Erreur dans le tableau enseignant : ${h(error.message)}</div>`;
     }
   };
 
@@ -11274,11 +11637,16 @@ header{
   }
 
   window.savePrenom = savePrenomWithSheets;
-  window.fetchSheetsStudentsV166 = fetchSheetsStudents;
-  window.normalizeStudentNameV166 = normalizeName;
-  window.collectCompetencePayloadV166 = collectCompetencePayloadV166;
-  window.updateSyncPreviewV166 = updateSyncPreviewV166;
-  window.syncCompetencesToGoogleSheetsV166 = syncCompetencesToGoogleSheetsV166;
+  window.fetchSheetsStudentsV167 = fetchSheetsStudents;
+  window.normalizeStudentNameV167 = normalizeName;
+  window.collectCompetencePayloadV167 = collectCompetencePayloadV167;
+  window.updateSyncPreviewV167 = updateSyncPreviewV167;
+  window.syncCompetencesToGoogleSheetsV167 = syncCompetencesToGoogleSheetsV167;
+  window.setTeacherTabV167 = setTeacherTabV167;
+
+  window.collectCompetencePayloadV166 = collectCompetencePayloadV167;
+  window.updateSyncPreviewV166 = updateSyncPreviewV167;
+  window.syncCompetencesToGoogleSheetsV166 = syncCompetencesToGoogleSheetsV167;
 
   window.openTeacherDashboard = function(){
     const overlay = document.getElementById("teacherDashboardOverlay");

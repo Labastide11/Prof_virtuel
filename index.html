@@ -2707,6 +2707,15 @@ body.fullscreen-active .mockup-right-panel .mockup-full-progress-btn{
 }
 </style>
 
+
+<style id="patch-titre-doublon-illustrations-v58">
+/* Masque uniquement le titre interne repris par l'en-tête illustré.
+   Ne touche pas aux autres titres de l'application. */
+.lesson-title-duplicated-by-visual{
+  display:none !important;
+}
+</style>
+
 </head>
 <body>
 
@@ -10078,6 +10087,48 @@ header{
     };
     window.updateQuickQuestions.__hibouScrollV133 = true;
   }
+})();
+</script>
+
+
+<script id="patch-titre-doublon-illustrations-v58-js">
+(function(){
+  function hideDuplicatedLessonTitles(){
+    const selectors = [
+      '.nom-commun-lesson',
+      '.verbe-lesson',
+      '.plantes-lesson',
+      '.systeme-lesson',
+      '.squelette-lesson',
+      '.geo-lesson',
+      '.english-lesson',
+      '.mh-lesson-card',
+      '.illustrated-lesson'
+    ];
+
+    selectors.forEach(function(sel){
+      document.querySelectorAll(sel).forEach(function(box){
+        const visual = box.querySelector('.lesson-visual-header, .lesson-visual, .mh-lesson-visual');
+        const firstTitle = box.querySelector('h3');
+        if(visual && firstTitle){
+          firstTitle.classList.add('lesson-title-duplicated-by-visual');
+        }
+      });
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', hideDuplicatedLessonTitles);
+
+  const observer = new MutationObserver(function(){
+    hideDuplicatedLessonTitles();
+  });
+
+  observer.observe(document.documentElement, {
+    childList:true,
+    subtree:true
+  });
+
+  window.hideDuplicatedLessonTitles = hideDuplicatedLessonTitles;
 })();
 </script>
 

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 Maître Hibou V14.0 - Anniversaires</title>
+<title>🦉 Maître Hibou V15.0 - Multi-appareils</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -3054,6 +3054,224 @@ font-size:12px;font-weight:700;white-space:nowrap;
 }
 </style>
 
+
+<style id="patch-v15-multi-appareils">
+/* === V15.0 : affichage adaptatif PC / tablette === */
+.device-mode-badge{
+  background:#F7F6FF;
+  color:var(--primary);
+  border:2px solid var(--primary-light);
+  border-radius:999px;
+  padding:6px 10px;
+  font-weight:900;
+  font-size:12px;
+  display:flex;
+  align-items:center;
+  gap:5px;
+  white-space:nowrap;
+}
+.desktop-teacher-home{
+  display:none;
+  max-width:1180px;
+  width:calc(100% - 28px);
+  margin:12px auto 10px auto;
+  background:linear-gradient(135deg,#FFFFFF 0%,#F8F7FF 100%);
+  border:3px solid var(--primary-light);
+  border-radius:26px;
+  box-shadow:0 8px 24px rgba(108,99,255,.13);
+  padding:16px;
+}
+.desktop-teacher-home.visible{display:block;}
+.desktop-teacher-title{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:12px;
+}
+.desktop-teacher-title h2{
+  font-family:'Baloo 2',sans-serif;
+  color:var(--primary);
+  font-size:28px;
+  line-height:1;
+  margin:0;
+}
+.desktop-teacher-title p{
+  color:var(--text-muted);
+  font-weight:800;
+  font-size:14px;
+  margin-top:4px;
+}
+.desktop-teacher-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:10px;
+}
+.desktop-teacher-card{
+  background:white;
+  border:2px solid #ECEBF3;
+  border-radius:18px;
+  padding:13px;
+  box-shadow:var(--shadow);
+  font-weight:900;
+}
+.desktop-teacher-card .big{
+  font-size:26px;
+  color:var(--primary);
+  font-family:'Baloo 2',sans-serif;
+}
+.desktop-teacher-card .label{
+  font-size:13px;
+  color:var(--text-muted);
+  margin-top:2px;
+}
+.desktop-teacher-actions-v15{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+.v15-btn{
+  border:none;
+  border-radius:14px;
+  padding:10px 13px;
+  font-family:inherit;
+  font-weight:900;
+  cursor:pointer;
+  background:var(--primary);
+  color:white;
+  box-shadow:0 6px 16px rgba(108,99,255,.20);
+}
+.v15-btn.secondary{
+  background:white;
+  color:var(--primary);
+  border:2px solid var(--primary-light);
+  box-shadow:none;
+}
+.v15-btn.warning{
+  background:var(--accent);
+  color:#7A5C00;
+}
+body.device-desktop{
+  --radius:22px;
+}
+body.device-desktop .chat-container{
+  max-width:1180px;
+  flex:1 1 auto;
+  min-height:360px;
+  max-height:none;
+}
+body.device-desktop .quick-questions,
+body.device-desktop .welcome-quiz-container,
+body.device-desktop .master-challenge-card,
+body.device-desktop .progress-mini-wrap,
+body.device-desktop .hibou-profile-panel,
+body.device-desktop .hibou-advice-card{
+  max-width:1180px;
+}
+body.device-desktop #teacherBtn{
+  display:flex !important;
+  background:var(--primary);
+  color:white;
+  border-color:var(--primary);
+}
+body.device-desktop.teacher-home-mode #prenomOverlay{
+  display:none !important;
+}
+body.device-desktop.teacher-home-mode .input-area{
+  display:none;
+}
+body.device-desktop.teacher-home-mode #chatContainer{
+  display:none;
+}
+body.device-desktop.teacher-home-mode #quickQuestions{
+  display:none !important;
+}
+body.device-desktop.teacher-home-mode #hibouProfilePanel,
+body.device-desktop.teacher-home-mode #hibouAdviceCard,
+body.device-desktop.teacher-home-mode #welcomeQuizFrame,
+body.device-desktop.teacher-home-mode #masterChallengeCard,
+body.device-desktop.teacher-home-mode .progress-mini-wrap{
+  display:none !important;
+}
+
+/* Tablette élève : interface tactile et épurée */
+body.device-tablet .desktop-teacher-home{display:none !important;}
+body.device-tablet #teacherBtn{
+  display:none !important;
+}
+body.device-tablet .device-mode-badge{
+  font-size:11px;
+  padding:5px 8px;
+}
+body.device-tablet .logo-text{
+  font-size:17px;
+}
+body.device-tablet .competence-header-btn{
+  min-height:38px;
+}
+body.device-tablet .subjects-bar{
+  grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+  gap:8px !important;
+  padding:9px 10px !important;
+}
+body.device-tablet .subject-btn{
+  min-height:66px !important;
+  border-radius:18px !important;
+}
+body.device-tablet .subject-btn .subject-icon{
+  font-size:25px !important;
+}
+body.device-tablet .subject-btn .subject-label{
+  font-size:12px !important;
+}
+body.device-tablet .quick-questions{
+  top:64px !important;
+  width:calc(100% - 16px) !important;
+  padding:9px !important;
+}
+body.device-tablet .quick-questions::before{
+  font-size:11px;
+}
+body.device-tablet .chat-container{
+  flex:1 1 auto;
+  min-height:38vh;
+  max-height:52vh;
+}
+body.device-tablet .bubble{
+  font-size:16px;
+}
+body.device-tablet .quick-btn,
+body.device-tablet .quiz-option,
+body.device-tablet .skill-check-btn,
+body.device-tablet .mental-option,
+body.device-tablet .devinette-option{
+  min-height:44px;
+}
+body.device-tablet .input-wrapper{
+  border-radius:24px;
+}
+body.device-tablet .chat-input{
+  font-size:16px;
+}
+body.device-tablet .progress-mini-btn{
+  font-size:20px !important;
+}
+
+/* Petit écran non tablette : on reste prudent, proche du mode élève */
+body.device-phone #teacherBtn{display:none !important;}
+body.device-phone .desktop-teacher-home{display:none !important;}
+
+@media (max-width:900px){
+  .desktop-teacher-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
+  .desktop-teacher-title{align-items:flex-start;flex-direction:column;}
+}
+@media (max-width:560px){
+  .device-mode-badge .mode-label-full{display:none;}
+  .desktop-teacher-grid{grid-template-columns:1fr;}
+}
+</style>
+
 </head>
 <body>
 
@@ -3063,6 +3281,7 @@ font-size:12px;font-weight:700;white-space:nowrap;
     <div class="logo-text">Maître<br>Hibou</div>
   </div>
   <div class="header-actions">
+    <div class="device-mode-badge" id="deviceModeBadge" title="Mode d’affichage">🖥️ <span class="mode-label-full">Détection...</span></div>
     <div class="badge" id="eleveBadge" style="display:none; background:#ECEBF3; color:var(--text);" title="Élève connecté">
       👤 <span id="eleveNom">Élève</span>
     </div>
@@ -3072,6 +3291,40 @@ font-size:12px;font-weight:700;white-space:nowrap;
     <button class="btn-round" id="soundBtn" onclick="toggleSound()">🔊</button>
   </div>
 </header>
+
+<section id="desktopTeacherHome" class="desktop-teacher-home" aria-label="Accueil enseignant ordinateur">
+  <div class="desktop-teacher-title">
+    <div>
+      <h2>🦉 Poste enseignant</h2>
+      <p>Affichage PC détecté : suivi de classe, accès rapide au tableau enseignant et test élève si besoin.</p>
+    </div>
+    <button class="v15-btn" onclick="openTeacherDashboard()">📊 Ouvrir le tableau enseignant</button>
+  </div>
+  <div class="desktop-teacher-grid">
+    <div class="desktop-teacher-card">
+      <div class="big" id="v15RosterCount">—</div>
+      <div class="label">élèves connus</div>
+    </div>
+    <div class="desktop-teacher-card">
+      <div class="big" id="v15TotalPoints">—</div>
+      <div class="label">points enregistrés localement</div>
+    </div>
+    <div class="desktop-teacher-card">
+      <div class="big" id="v15DeviceType">PC</div>
+      <div class="label">mode d’affichage actif</div>
+    </div>
+    <div class="desktop-teacher-card">
+      <div class="big">V15</div>
+      <div class="label">multi-appareils</div>
+    </div>
+  </div>
+  <div class="desktop-teacher-actions-v15">
+    <button class="v15-btn secondary" onclick="v15SwitchToStudentMode()">👦 Tester le mode élève sur ce PC</button>
+    <button class="v15-btn secondary" onclick="v15ReturnTeacherHome()">🖥️ Revenir au poste enseignant</button>
+    <button class="v15-btn warning" onclick="v15ForceTabletPreview()">📱 Aperçu tablette</button>
+  </div>
+</section>
+
 
 <section id="hibouProfilePanel" class="hibou-profile-panel" aria-label="Profil joueur">
   <div class="hibou-profile-owl">🦉</div>
@@ -10706,6 +10959,150 @@ window.HIBOU_CLASS_STUDENTS = [
 {prenom:"Tiffany",initiale:"T.",naissance:"2017-07-24",sexe:"F"},
 {prenom:"Zoé",initiale:"V.",naissance:"2017-03-27",sexe:"F"}
 ];
+</script>
+
+
+<script id="patch-v15-multi-appareils-js">
+(function(){
+  const V15_MODE_KEY = 'hibou_v15_mode_override';
+
+  function hasTouch(){
+    return (navigator.maxTouchPoints || 0) > 0 || 'ontouchstart' in window;
+  }
+
+  function detectDeviceMode(){
+    const override = sessionStorage.getItem(V15_MODE_KEY) || localStorage.getItem(V15_MODE_KEY);
+    if (override === 'desktop' || override === 'tablet' || override === 'phone') return override;
+
+    const ua = (navigator.userAgent || '').toLowerCase();
+    const width = Math.min(window.innerWidth || 0, screen.width || window.innerWidth || 0);
+    const height = Math.min(window.innerHeight || 0, screen.height || window.innerHeight || 0);
+    const shortSide = Math.min(width, height);
+    const longSide = Math.max(width, height);
+    const touch = hasTouch();
+
+    const isIPad = /ipad/.test(ua) || (navigator.platform === 'MacIntel' && touch);
+    const isAndroid = /android/.test(ua);
+    const isMobileAndroid = isAndroid && /mobile/.test(ua);
+    const looksTablet = isIPad || (isAndroid && !isMobileAndroid) || (touch && shortSide >= 600 && longSide >= 900);
+    const looksPhone = touch && !looksTablet && shortSide < 600;
+
+    if (looksTablet) return 'tablet';
+    if (looksPhone) return 'phone';
+    return 'desktop';
+  }
+
+  function setMode(mode){
+    document.body.classList.remove('device-desktop','device-tablet','device-phone','teacher-home-mode','student-test-mode');
+    document.body.classList.add('device-' + mode);
+
+    const badge = document.getElementById('deviceModeBadge');
+    const home = document.getElementById('desktopTeacherHome');
+    const deviceCard = document.getElementById('v15DeviceType');
+
+    const labels = {
+      desktop: {icon:'🖥️', text:'PC enseignant', card:'PC'},
+      tablet: {icon:'📱', text:'Tablette élève', card:'Tablette'},
+      phone: {icon:'📞', text:'Petit écran', card:'Téléphone'}
+    };
+    const label = labels[mode] || labels.desktop;
+
+    if (badge) badge.innerHTML = label.icon + ' <span class="mode-label-full">' + label.text + '</span>';
+    if (deviceCard) deviceCard.textContent = label.card;
+
+    if (mode === 'desktop') {
+      document.body.classList.add('teacher-home-mode');
+      if (home) home.classList.add('visible');
+      setTimeout(v15RefreshTeacherHome, 80);
+    } else {
+      if (home) home.classList.remove('visible');
+    }
+  }
+
+  function getRosterFromStorage(){
+    try {
+      const sheet = JSON.parse(localStorage.getItem('hibou_roster_sheet') || '[]');
+      const local = JSON.parse(localStorage.getItem('hibou_roster') || '[]');
+      const fallback = (window.FALLBACK_STUDENTS || []);
+      return Array.from(new Set([].concat(sheet, local, fallback).filter(Boolean)));
+    } catch(e) {
+      return [];
+    }
+  }
+
+  function findLocalStudentPoints(name){
+    const variants = [
+      String(name || '').toLowerCase().trim(),
+      String(name || '').trim(),
+      String(name || '').toLowerCase().trim().normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    ];
+    for (const v of variants) {
+      const raw = localStorage.getItem('hibou_score_' + v);
+      if (raw !== null) return Number(raw || 0);
+    }
+    return 0;
+  }
+
+  window.v15RefreshTeacherHome = function(){
+    const roster = getRosterFromStorage();
+    const rosterCount = document.getElementById('v15RosterCount');
+    const totalPoints = document.getElementById('v15TotalPoints');
+    if (rosterCount) rosterCount.textContent = roster.length || '—';
+    if (totalPoints) {
+      const total = roster.reduce((sum, name) => sum + findLocalStudentPoints(name), 0);
+      totalPoints.textContent = String(total || 0);
+    }
+  };
+
+  window.v15SwitchToStudentMode = function(){
+    document.body.classList.remove('teacher-home-mode');
+    document.body.classList.add('student-test-mode');
+    const home = document.getElementById('desktopTeacherHome');
+    if (home) home.classList.remove('visible');
+    const overlay = document.getElementById('prenomOverlay');
+    if (overlay && !window.prenomActuel) {
+      overlay.classList.remove('hidden');
+      const input = document.getElementById('prenomInput');
+      if (input) setTimeout(()=>input.focus(), 60);
+    }
+  };
+
+  window.v15ReturnTeacherHome = function(){
+    sessionStorage.setItem(V15_MODE_KEY, 'desktop');
+    setMode('desktop');
+  };
+
+  window.v15ForceTabletPreview = function(){
+    sessionStorage.setItem(V15_MODE_KEY, 'tablet');
+    setMode('tablet');
+    alert('Aperçu tablette activé pour cet onglet seulement. Recharge la page pour retrouver la détection automatique.');
+  };
+
+  window.v15ClearDeviceOverride = function(){
+    sessionStorage.removeItem(V15_MODE_KEY);
+    localStorage.removeItem(V15_MODE_KEY);
+    setMode(detectDeviceMode());
+  };
+
+  function boot(){
+    setMode(detectDeviceMode());
+    if (typeof loadStudentsFromSheet === 'function') {
+      loadStudentsFromSheet().then(v15RefreshTeacherHome).catch(v15RefreshTeacherHome);
+    } else {
+      v15RefreshTeacherHome();
+    }
+    const badge = document.getElementById('deviceModeBadge');
+    if (badge && !badge.dataset.v15Bound) {
+      badge.dataset.v15Bound = '1';
+      badge.addEventListener('dblclick', window.v15ClearDeviceOverride);
+    }
+  }
+
+  window.addEventListener('load', boot);
+  window.addEventListener('resize', function(){
+    if (!sessionStorage.getItem(V15_MODE_KEY) && !localStorage.getItem(V15_MODE_KEY)) setMode(detectDeviceMode());
+  });
+})();
 </script>
 
 </body>

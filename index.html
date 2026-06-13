@@ -10569,5 +10569,46 @@ function studentAlertBadge(analysis){
 })();
 </script>
 
+
+<script id="patch-teacher-advice-for-v18-js">
+(function(){
+  if(window.__hibouTeacherAdviceForV18) return;
+  window.__hibouTeacherAdviceForV18 = true;
+
+  window.teacherAdviceFor = function(analysis){
+    try{
+      if(!analysis){
+        return "Aucun conseil particulier pour le moment.";
+      }
+
+      const alertLevel = analysis.alert || "ok";
+      let weakSkills = analysis.weakSkills || analysis.weak_skills || analysis.weak || analysis.toReview || analysis.needsWork || [];
+
+      if(typeof weakSkills === "string"){
+        weakSkills = weakSkills.split(/[,;|]/).map(function(s){ return s.trim(); }).filter(Boolean);
+      }
+
+      if(alertLevel === "danger"){
+        if(Array.isArray(weakSkills) && weakSkills.length){
+          return "À reprendre en priorité : " + weakSkills.slice(0, 3).join(", ") + ". Prévoir une aide guidée ou un petit entraînement ciblé.";
+        }
+        return "Élève à accompagner de près. Prévoir une reprise courte, guidée et très progressive.";
+      }
+
+      if(alertLevel === "warn"){
+        if(Array.isArray(weakSkills) && weakSkills.length){
+          return "À surveiller : " + weakSkills.slice(0, 3).join(", ") + ". Proposer un entraînement court pour consolider.";
+        }
+        return "Résultats corrects mais à surveiller. Continuer les entraînements réguliers.";
+      }
+
+      return "Progression satisfaisante. Continuer à valoriser les réussites et proposer de nouveaux défis.";
+    }catch(e){
+      return "Conseil indisponible pour le moment.";
+    }
+  };
+})();
+</script>
+
 </body>
 </html>

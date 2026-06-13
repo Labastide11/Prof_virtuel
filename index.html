@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 Maître Hibou V15.2 - Vérifiée</title>
+<title>🦉 Maître Hibou V15.3 - Bandeau stable</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -70,7 +70,7 @@
     50% { transform: scale(1.2); }
     100% { transform: scale(1); }
   }
-  .badge.score.bump { animation: bump 0.3s ease-out; }
+  .badge.score.bump { animation: none !important; }
 
   .btn-round {
     background: var(--card);
@@ -111,8 +111,9 @@
     align-items: center;
     gap: 6px;
   }
+  .subject-btn.active{transform:none!important;border-color:#FFFFFF!important;}
   .subject-btn.active { background: var(--primary); color: white; }
-  .subject-btn:not(.active):hover { transform: translateY(-2px); border-color: var(--primary-light); }
+  .subject-btn:not(.active):hover { transform: none; border-color: var(--primary-light); }
 
   .welcome-quiz-container {
     max-width: 768px;
@@ -451,7 +452,7 @@ animation:pop .25s ease-out;
   letter-spacing: .04em;
   margin-bottom: 2px;
 }
-.quick-questions.submenu-flash { animation: submenuFlash .55s ease-out; }
+.quick-questions.submenu-flash { animation: none !important; }
 @keyframes submenuFlash {
   0% { transform: scale(1); box-shadow: 0 0 0 rgba(108,99,255,0); }
   45% { transform: scale(1.015); box-shadow: 0 0 0 5px rgba(108,99,255,.14); }
@@ -1486,8 +1487,8 @@ box-shadow:0 6px 18px rgba(108,99,255,.12);
 .subject-btn::after{content:"";position:absolute;left:10px;right:10px;bottom:7px;height:4px;border-radius:99px;background:rgba(255,255,255,.42);opacity:.55;}
 .subject-btn .subject-icon{display:block!important;font-size:27px!important;line-height:1!important;filter:drop-shadow(0 2px 2px rgba(0,0,0,.22));}
 .subject-btn .subject-label{display:block!important;font-size:13px!important;font-weight:900!important;}
-.subject-btn:hover{transform:translateY(-2px)!important;filter:saturate(1.06) brightness(1.03);box-shadow:0 10px 24px var(--mat-shadow),inset 0 1px 0 rgba(255,255,255,.40)!important;}
-.subject-btn.active{transform:translateY(-3px) scale(1.035)!important;border-color:#FFFFFF!important;box-shadow:0 12px 28px var(--mat-shadow),0 0 0 4px var(--mat-soft),inset 0 1px 0 rgba(255,255,255,.45)!important;}
+.subject-btn:hover{transform:none!important;filter:none!important;}
+.subject-btn.active{transform:none!important;border-color:#FFFFFF!important;}
 .subject-btn.active::before{content:"✓";position:absolute;top:6px;right:7px;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:white;color:var(--mat);font-size:12px;font-weight:900;text-shadow:none;box-shadow:0 2px 6px rgba(0,0,0,.16);}
 .subject-btn.active::after{opacity:1;background:white;}
 .competence-header-btn{background:linear-gradient(135deg,#7C3AED 0%,#A78BFA 100%)!important;color:white!important;border:3px solid rgba(255,255,255,.75)!important;padding:9px 13px!important;border-radius:18px!important;font-family:inherit!important;font-weight:900!important;font-size:14px!important;cursor:pointer;display:flex!important;align-items:center!important;justify-content:center!important;gap:7px!important;box-shadow:0 7px 17px rgba(124,58,237,.24),inset 0 1px 0 rgba(255,255,255,.35)!important;white-space:nowrap!important;}
@@ -1701,12 +1702,8 @@ header.mockup-header{
   color:white!important;
 }
 .subject-btn::before,.subject-btn::after{display:none!important;}
-.subject-btn.active{
-  transform:translateY(-2px)!important;
-  outline:4px solid rgba(255,255,255,.85)!important;
-  box-shadow:0 12px 24px rgba(0,0,0,.16)!important;
-}
-.subject-btn:hover{transform:translateY(-2px)!important;}
+.subject-btn.active{transform:none!important;border-color:#FFFFFF!important;}
+.subject-btn:hover{transform:none!important;filter:none!important;}
 
 /* Anciennes zones profil/accueil masquées pour la page maquette */
 .hibou-profile-panel,
@@ -3195,7 +3192,7 @@ body.device-desktop.teacher-home-mode .progress-mini-wrap{
   display:none !important;
 }
 
-/* Bonjour élève 🌟 : interface tactile et épurée */
+/* Bonjour : interface tactile et épurée */
 body.device-tablet .desktop-teacher-home{display:none !important;}
 body.device-tablet #teacherBtn{
   display:none !important;
@@ -11006,7 +11003,7 @@ window.HIBOU_CLASS_STUDENTS = [
 
     const labels = {
       desktop: {icon:'🖥️', text:'PC enseignant', card:'PC'},
-      tablet: {icon:'📱', text:'Bonjour élève 🌟', card:'Tablette'},
+      tablet: {icon:'📱', text:'Bonjour', card:'Tablette'},
       phone: {icon:'📞', text:'Petit écran', card:'Téléphone'}
     };
     const label = labels[mode] || labels.desktop;
@@ -11111,10 +11108,28 @@ window.HIBOU_CLASS_STUDENTS = [
 
 
 
-<style id="patch-v152-verifie-final">
-/* V15.2 vérifiée : ce patch est placé à la fin pour ne pas être écrasé */
 
-/* 1) Les 6 matières restent alignées sur PC */
+<style id="patch-v153-bandeau-stable">
+/* V15.3 - Bandeau supérieur stable : plus de strobo, pas de zoom, pas de flash */
+header,
+.header-actions,
+.header-actions *,
+.badge,
+.competence-header-btn,
+.subject-btn,
+.quick-questions {
+  animation: none !important;
+}
+
+.subject-btn:hover,
+.subject-btn.active,
+.competence-header-btn:hover,
+.btn-round:hover {
+  transform: none !important;
+  filter: none !important;
+}
+
+/* Les matières restent alignées : 6 sur PC, puis adaptation tablette */
 .subjects-bar {
   display: grid !important;
   grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
@@ -11122,119 +11137,118 @@ window.HIBOU_CLASS_STUDENTS = [
   width: 100% !important;
   max-width: 1180px !important;
   margin: 0 auto !important;
-  padding: 12px 14px !important;
   overflow: visible !important;
   white-space: normal !important;
 }
-
-.subjects-bar .subject-btn,
-.subject-btn {
+.subjects-bar .subject-btn {
   width: 100% !important;
   min-width: 0 !important;
-  min-height: 74px !important;
-  transform: none !important;
-  animation: none !important;
-  transition: background-color .15s ease, border-color .15s ease, box-shadow .15s ease !important;
-  filter: none !important;
 }
-
-/* 2) Suppression des effets pénibles : pas de zoom, pas de flash, pas de pulsation */
-.subject-btn:hover,
-.subject-btn.active,
-.subjects-bar .subject-btn:hover,
-.subjects-bar .subject-btn.active,
-.quick-questions.submenu-flash,
-.badge.score.bump {
-  transform: none !important;
-  animation: none !important;
-  filter: none !important;
-}
-
-.quick-questions.submenu-flash {
-  box-shadow: var(--shadow) !important;
-}
-
-/* On neutralise aussi les animations nommées utilisées par le bandeau/sous-menu */
-@keyframes submenuFlash {
-  0%, 45%, 100% { transform: none !important; box-shadow: var(--shadow) !important; }
-}
-@keyframes bump {
-  0%, 50%, 100% { transform: none !important; }
-}
-
-/* 3) Adaptation tablette : aligné proprement, mais pas forcément 6 colonnes si l'écran est trop étroit */
 @media (max-width: 900px) {
-  .subjects-bar {
-    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-  }
+  .subjects-bar { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
 }
 @media (max-width: 520px) {
-  .subjects-bar {
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-  }
+  .subjects-bar { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
 }
 
-/* 4) Message personnalisé */
-.v152-welcome-text {
+/* Message d'accueil dans le bandeau */
+#deviceModeBadge {
+  min-width: 150px;
+  justify-content: center;
+  text-align: center;
+}
+.v153-welcome-line1 {
+  font-size: 13px;
   font-weight: 900;
   color: var(--primary);
   line-height: 1.1;
 }
-.v152-welcome-text small {
+.v153-welcome-line2 {
   display: block;
-  color: var(--text-muted);
-  font-size: 12px;
-  font-weight: 900;
   margin-top: 2px;
+  font-size: 10px;
+  font-weight: 900;
+  color: var(--text-muted);
+  line-height: 1.1;
 }
 </style>
 
-<script id="patch-v152-verifie-message">
+<script id="patch-v153-bandeau-stable-js">
 (function(){
+  let isUpdatingWelcome = false;
+
+  function cleanStudentName(raw){
+    const value = (raw || "").trim();
+    if (!value || value === "Élève" || value === "DEV" || value.toLowerCase().includes("bonjour")) return "";
+    return value;
+  }
+
   function getStudentName(){
     try {
-      if (typeof prenomActuel !== "undefined" && prenomActuel) return prenomActuel;
+      if (typeof prenomActuel !== "undefined") {
+        const n = cleanStudentName(prenomActuel);
+        if (n) return n;
+      }
     } catch(e) {}
-    var eleveNom = document.getElementById("eleveNom");
-    if (eleveNom && eleveNom.textContent && eleveNom.textContent.trim() && eleveNom.textContent.trim() !== "Élève") {
-      return eleveNom.textContent.trim();
+
+    const eleveNom = document.getElementById("eleveNom");
+    if (eleveNom) {
+      const n = cleanStudentName(eleveNom.textContent);
+      if (n) return n;
     }
+
+    try {
+      const stored = localStorage.getItem("elevePrenom") || localStorage.getItem("prenomActuel") || "";
+      const n = cleanStudentName(stored);
+      if (n) return n;
+    } catch(e) {}
+
     return "";
   }
 
-  function applyWelcomeMessage(){
-    var name = getStudentName();
-    if (!name) return;
+  function applyWelcome(){
+    if (isUpdatingWelcome) return;
+    const badge = document.getElementById("deviceModeBadge");
+    if (!badge) return;
 
-    /* On remplace le badge appareil par le message demandé, sans toucher aux boutons. */
-    var badge = document.getElementById("deviceModeBadge");
-    if (badge) {
-      badge.innerHTML =
-        '<span class="v152-welcome-text">Bonjour ' + name + ' 🌟' +
-        '<small>Que souhaites-tu apprendre aujourd’hui ?</small></span>';
-    }
+    const name = getStudentName();
+    const firstLine = name ? ("Bonjour " + name + " 🌟") : "Bonjour 🌟";
 
-    /* Si le profil élève existe, on le personnalise aussi. */
-    var profileName = document.querySelector(".hibou-profile-name");
-    if (profileName) {
-      profileName.innerHTML =
-        '<span class="v152-welcome-text">Bonjour ' + name + ' 🌟' +
-        '<small>Que souhaites-tu apprendre aujourd’hui ?</small></span>';
+    const wanted =
+      '<span class="v153-welcome-line1">' + firstLine + '</span>' +
+      '<span class="v153-welcome-line2">Que souhaites-tu apprendre aujourd’hui ?</span>';
+
+    if (badge.innerHTML !== wanted) {
+      isUpdatingWelcome = true;
+      badge.innerHTML = wanted;
+      badge.classList.remove("bump");
+      setTimeout(function(){ isUpdatingWelcome = false; }, 0);
     }
   }
 
   document.addEventListener("DOMContentLoaded", function(){
-    setTimeout(applyWelcomeMessage, 300);
-    setTimeout(applyWelcomeMessage, 800);
+    applyWelcome();
+    setTimeout(applyWelcome, 150);
+    setTimeout(applyWelcome, 600);
+    setTimeout(applyWelcome, 1200);
 
-    /* Après une connexion ou un clic de navigation, on remet le message si le mode appareil l'a réécrit. */
+    // Observer ciblé : uniquement le badge qui était réécrit par le mode appareil.
+    const badge = document.getElementById("deviceModeBadge");
+    if (badge) {
+      const observer = new MutationObserver(function(){
+        if (!isUpdatingWelcome) applyWelcome();
+      });
+      observer.observe(badge, { childList:true, characterData:true, subtree:true });
+    }
+
+    // Après la connexion élève et les changements d'interface.
     document.addEventListener("click", function(){
-      setTimeout(applyWelcomeMessage, 200);
-      setTimeout(applyWelcomeMessage, 600);
+      setTimeout(applyWelcome, 100);
+      setTimeout(applyWelcome, 500);
     });
   });
 
-  window.applyV152WelcomeMessage = applyWelcomeMessage;
+  window.applyV153Welcome = applyWelcome;
 })();
 </script>
 

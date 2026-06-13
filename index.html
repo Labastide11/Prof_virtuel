@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 Maître Hibou V16.5.1 - Tableau enseignant corrigé</title>
+<title>🦉 Maître Hibou V16.5.2 - Anniversaires corrigés</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -10704,14 +10704,42 @@ header{
   }
 
   function parseBirthdayDate(value){
-    const text = String(value || "").trim();
+    if (value === null || value === undefined || value === "") return null;
+
+    // 1) Nombre Google Sheets / Excel : jours depuis 1899-12-30
+    if (typeof value === "number" && isFinite(value)) {
+      const date = new Date(Math.round((value - 25569) * 86400 * 1000));
+      if (!isNaN(date.getTime())) {
+        return { day: date.getUTCDate(), month: date.getUTCMonth() + 1 };
+      }
+    }
+
+    const text = String(value).trim();
     if (!text) return null;
-    const match = text.match(/^(\d{1,2})[\/\-.](\d{1,2})(?:[\/\-.](\d{2,4}))?$/);
-    if (!match) return null;
-    const day = Number(match[1]);
-    const month = Number(match[2]);
-    if (!day || !month || day < 1 || day > 31 || month < 1 || month > 12) return null;
-    return { day, month };
+
+    // 2) Format français visible : 20/09/2017, 20-09-2017, 20.09.2017
+    let match = text.match(/^(\d{1,2})[\/\-.](\d{1,2})(?:[\/\-.](\d{2,4}))?$/);
+    if (match) {
+      const day = Number(match[1]);
+      const month = Number(match[2]);
+      if (day >= 1 && day <= 31 && month >= 1 && month <= 12) return { day, month };
+    }
+
+    // 3) Format ISO renvoyé par Apps Script : 2017-06-24T00:00:00.000Z ou 2017-06-24
+    match = text.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+    if (match) {
+      const month = Number(match[2]);
+      const day = Number(match[3]);
+      if (day >= 1 && day <= 31 && month >= 1 && month <= 12) return { day, month };
+    }
+
+    // 4) Format texte Date JavaScript : Sat Jun 24 2017...
+    const parsed = new Date(text);
+    if (!isNaN(parsed.getTime())) {
+      return { day: parsed.getDate(), month: parsed.getMonth() + 1 };
+    }
+
+    return null;
   }
 
   function monthName(monthIndexOneBased){

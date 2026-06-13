@@ -8229,19 +8229,35 @@ body.competence-mode #masterChallengeCard.master-challenge-card{
 }
 </style>
 
-<script id="patch-anglais-harmonise-v84">
+<script id="patch-anglais-harmonise-v85-instance-unique">
 (function(){
-  if(window.__patchAnglaisHarmoniseV84) return;
-  window.__patchAnglaisHarmoniseV84 = true;
+  if(window.__patchAnglaisHarmoniseV85) return;
+  window.__patchAnglaisHarmoniseV85 = true;
 
   function getChat(){ return document.getElementById('chatContainer'); }
   function scrollChat(){ const c = getChat(); if(c) c.scrollTop = c.scrollHeight; }
+  function scrollToExisting(el){
+    if(!el) return;
+    el.scrollIntoView({behavior:'smooth', block:'center'});
+    el.classList.add('english-lesson-flash');
+    setTimeout(function(){ el.classList.remove('english-lesson-flash'); }, 700);
+  }
 
-  function addEnglishLesson(title, rule, examples, quizTitle, quizKind){
+  function addEnglishLesson(title, rule, examples, quizTitle, quizKind, lessonId){
     const chat = getChat();
     if(!chat) return;
+
+    if(lessonId){
+      const existing = document.getElementById(lessonId);
+      if(existing){
+        scrollToExisting(existing);
+        return;
+      }
+    }
+
     const d = document.createElement('div');
-    d.className = 'message prof';
+    d.className = 'message prof english-unique-lesson';
+    if(lessonId) d.id = lessonId;
     d.innerHTML = `
       <div class="avatar prof">🦉</div>
       <div class="bubble">
@@ -8264,7 +8280,8 @@ body.competence-mode #masterChallengeCard.master-challenge-card{
       'En anglais, on apprend quelques couleurs simples pour décrire des objets.',
       '✅ red = rouge<br>✅ blue = bleu<br>✅ green = vert<br>✅ yellow = jaune<br>✅ black = noir<br>✅ white = blanc<br><br>Exemple : <b>The pen is blue.</b> = Le stylo est bleu.',
       'Quiz couleurs',
-      'colors'
+      'colors',
+      'english-lesson-colors-unique'
     );
   };
 
@@ -8274,7 +8291,8 @@ body.competence-mode #masterChallengeCard.master-challenge-card{
       'Pour se présenter, on utilise des phrases courtes que l’on peut répéter facilement.',
       '✅ Hello! = Bonjour !<br>✅ My name is ... = Je m’appelle ...<br>✅ I am 8 years old. = J’ai 8 ans.<br>✅ I live in France. = J’habite en France.<br><br>Exemple : <b>Hello, my name is Lina.</b>',
       'Quiz se présenter',
-      'presentation'
+      'presentation',
+      'english-lesson-presentation-unique'
     );
   };
 
@@ -8284,7 +8302,8 @@ body.competence-mode #masterChallengeCard.master-challenge-card{
       'En anglais CE2, on apprend surtout à comprendre et utiliser des mots très fréquents.',
       '✅ Dire bonjour : <b>Hello!</b><br>✅ Dire son prénom : <b>My name is ...</b><br>✅ Dire une couleur : <b>red, blue, green...</b><br>✅ Compter un peu : <b>one, two, three...</b><br><br>Objectif : écouter, répéter, puis répondre à un petit quiz.',
       'Mini quiz anglais',
-      'mixed'
+      'mixed',
+      'english-lesson-mini-unique'
     );
   };
 
@@ -8307,10 +8326,25 @@ body.competence-mode #masterChallengeCard.master-challenge-card{
   };
 
   window.startEnglishLessonQuiz = function(kind){
+    const uniqueQuizId = 'english-quiz-' + (kind || 'mixed') + '-unique';
+    const existing = document.getElementById(uniqueQuizId);
+    if(existing){
+      scrollToExisting(existing);
+      return;
+    }
+
+    const before = getChat() ? Array.from(getChat().children) : [];
     const questions = ENGLISH_LESSON_QUIZZES[kind] || ENGLISH_LESSON_QUIZZES.mixed;
     if(typeof startLocalQuiz === 'function'){
       const formatted = questions.map(q => ({...q, subject:'anglais', skill:'anglais CE2'}));
       startLocalQuiz('anglais', '🇬🇧 Quiz Anglais CE2', formatted, false);
+      setTimeout(function(){
+        const chat = getChat();
+        if(!chat) return;
+        const after = Array.from(chat.children);
+        const added = after.find(el => before.indexOf(el) === -1 && !el.id);
+        if(added) added.id = uniqueQuizId;
+      }, 0);
       return;
     }
     // Secours si startLocalQuiz n'existe pas.
@@ -8318,6 +8352,7 @@ body.competence-mode #masterChallengeCard.master-challenge-card{
     if(!chat) return;
     const d = document.createElement('div');
     d.className = 'message prof';
+    d.id = uniqueQuizId;
     d.innerHTML = `<div class="avatar prof">🦉</div><div class="bubble"><b>🇬🇧 Quiz Anglais CE2</b><br>Le quiz local n'est pas disponible dans cette version.</div>`;
     chat.appendChild(d);
     scrollChat();
@@ -8331,7 +8366,7 @@ body.competence-mode #masterChallengeCard.master-challenge-card{
         btn.setAttribute('onclick', 'startEnglishColors()');
       }else if(label.includes('présenter') || label.includes('presenter') || action.includes('présenter') || action.includes('presenter')){
         btn.setAttribute('onclick', 'startEnglishPresentation()');
-      }else if(label.includes('mini quiz') || action.includes('mini quiz')){
+      }else if(label.includes('mini quiz') || label.includes('mini-leçon') || action.includes('mini quiz')){
         btn.setAttribute('onclick', 'startEnglishMiniLesson()');
         btn.textContent = '🇬🇧 Mini-leçon + quiz';
       }
@@ -8362,6 +8397,14 @@ body.competence-mode #masterChallengeCard.master-challenge-card{
   window.addEventListener('load', function(){ setTimeout(patchEnglishButtons, 120); });
 })();
 </script>
+
+<style id="patch-anglais-instance-unique-v85-style">
+.english-lesson-flash .bubble{
+  box-shadow:0 0 0 5px rgba(108,99,255,.18), var(--shadow) !important;
+  transform:scale(1.01);
+  transition:all .2s ease;
+}
+</style>
 
 
 <style id="patch-v93-navigation-fixe-zone-scrollable">

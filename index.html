@@ -9679,5 +9679,211 @@ header{
 })();
 </script>
 
+
+
+<!-- PATCH V13.2 - Illustrations harmonisées : chaque bloc de leçon reçoit une image/dessin intégré -->
+<style id="patch-lecons-illustrees-v132">
+.hibou-lesson-visual{
+  width:100%;
+  min-height:118px;
+  border-radius:18px;
+  margin:0 0 12px 0;
+  padding:14px 16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  overflow:hidden;
+  position:relative;
+  background:linear-gradient(135deg,#FFFFFF 0%,#F8F7FF 55%,#EAE8FF 100%);
+  border:2px solid #ECEBF3;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.7), 0 6px 18px rgba(108,99,255,.10);
+}
+.hibou-lesson-visual::before{
+  content:"";
+  position:absolute;
+  right:-22px;
+  top:-30px;
+  width:116px;
+  height:116px;
+  border-radius:50%;
+  background:rgba(255,217,61,.22);
+}
+.hibou-lesson-visual::after{
+  content:"";
+  position:absolute;
+  left:-34px;
+  bottom:-46px;
+  width:128px;
+  height:128px;
+  border-radius:50%;
+  background:rgba(108,99,255,.11);
+}
+.hibou-visual-main{
+  position:relative;
+  z-index:1;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  min-width:0;
+}
+.hibou-visual-kicker{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  color:var(--primary);
+  font-weight:900;
+  font-size:12px;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+  margin-bottom:4px;
+}
+.hibou-visual-title{
+  font-family:'Baloo 2',sans-serif;
+  font-size:22px;
+  line-height:1.05;
+  font-weight:900;
+  color:var(--text);
+}
+.hibou-visual-subtitle{
+  margin-top:4px;
+  font-size:13px;
+  line-height:1.25;
+  font-weight:800;
+  color:var(--text-muted);
+}
+.hibou-visual-emoji{
+  position:relative;
+  z-index:1;
+  width:96px;
+  height:96px;
+  border-radius:24px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+  font-size:54px;
+  background:linear-gradient(135deg,#FFF9E6 0%,#FFFFFF 100%);
+  border:3px solid rgba(255,255,255,.85);
+  box-shadow:0 8px 22px rgba(45,43,85,.12), inset 0 1px 0 rgba(255,255,255,.9);
+}
+.hibou-visual-emoji small{
+  position:absolute;
+  right:-4px;
+  bottom:-6px;
+  font-size:28px;
+  filter:drop-shadow(0 2px 2px rgba(0,0,0,.12));
+}
+.hibou-lesson-visual[data-theme="francais"]{background:linear-gradient(135deg,#FFF1F3 0%,#FFFFFF 55%,#FFECEF 100%);}
+.hibou-lesson-visual[data-theme="maths"]{background:linear-gradient(135deg,#E8F4FF 0%,#FFFFFF 55%,#DFF0FF 100%);}
+.hibou-lesson-visual[data-theme="sciences"]{background:linear-gradient(135deg,#E9F9EE 0%,#FFFFFF 55%,#DFF7E7 100%);}
+.hibou-lesson-visual[data-theme="geographie"]{background:linear-gradient(135deg,#FFF2E0 0%,#FFFFFF 55%,#FFE6BE 100%);}
+.hibou-lesson-visual[data-theme="anglais"]{background:linear-gradient(135deg,#F3E9FF 0%,#FFFFFF 55%,#EEE0FF 100%);}
+.hibou-lesson-visual[data-theme="jeux"]{background:linear-gradient(135deg,#E7FAFF 0%,#FFFFFF 55%,#DDF7FF 100%);}
+.hibou-lesson-visual[data-theme="francais"] .hibou-visual-kicker{color:#FF3B57;}
+.hibou-lesson-visual[data-theme="maths"] .hibou-visual-kicker{color:#1683F7;}
+.hibou-lesson-visual[data-theme="sciences"] .hibou-visual-kicker{color:#24A84A;}
+.hibou-lesson-visual[data-theme="geographie"] .hibou-visual-kicker{color:#D97200;}
+.hibou-lesson-visual[data-theme="anglais"] .hibou-visual-kicker{color:#8A3DDF;}
+.hibou-lesson-visual[data-theme="jeux"] .hibou-visual-kicker{color:#0086AD;}
+@media(max-width:560px){
+  .hibou-lesson-visual{min-height:104px;padding:12px;gap:10px;border-radius:16px;}
+  .hibou-visual-title{font-size:19px;}
+  .hibou-visual-subtitle{font-size:12px;}
+  .hibou-visual-emoji{width:78px;height:78px;border-radius:20px;font-size:44px;}
+  .hibou-visual-emoji small{font-size:23px;}
+}
+</style>
+
+<script id="patch-lecons-illustrees-v132">
+(function(){
+  if(window.__hibouLeconsIllustreesV132) return;
+  window.__hibouLeconsIllustreesV132 = true;
+
+  const VISUALS = [
+    {test:/nom commun|noms communs/i, theme:'francais', kicker:'Français', title:'Nom commun', subtitle:'Je vois, je nomme, je comprends.', emoji:'📘', small:'✏️'},
+    {test:/verbe/i, theme:'francais', kicker:'Français', title:'Le verbe', subtitle:'Le mot qui indique l’action.', emoji:'🏃', small:'💬'},
+    {test:/idées pour écrire|ecrire|écrire/i, theme:'francais', kicker:'Français', title:'Idées pour écrire', subtitle:'Une image mentale pour démarrer.', emoji:'📝', small:'💡'},
+    {test:/calcul mental/i, theme:'maths', kicker:'Maths', title:'Calcul mental', subtitle:'Je calcule vite et juste.', emoji:'🧮', small:'⚡'},
+    {test:/multiplication|tables/i, theme:'maths', kicker:'Maths', title:'Multiplication', subtitle:'Je construis mes calculs étape par étape.', emoji:'✖️', small:'🔢'},
+    {test:/plantes|plante/i, theme:'sciences', kicker:'Sciences', title:'Les plantes', subtitle:'Observer pour comprendre le vivant.', emoji:'🌱', small:'☀️'},
+    {test:/système solaire|systeme solaire|soleil|planète|planete/i, theme:'sciences', kicker:'Sciences', title:'Système solaire', subtitle:'Planètes, Soleil et espace.', emoji:'🪐', small:'☀️'},
+    {test:/squelette|os/i, theme:'sciences', kicker:'Sciences', title:'Le squelette', subtitle:'Comprendre le corps humain.', emoji:'🦴', small:'🧍'},
+    {test:/france/i, theme:'geographie', kicker:'Géographie', title:'La France', subtitle:'Carte, villes, mers et frontières.', emoji:'🗺️', small:'🇫🇷'},
+    {test:/relief|fleuve|montagne|plaine/i, theme:'geographie', kicker:'Géographie', title:'Reliefs et fleuves', subtitle:'Lire les formes du paysage.', emoji:'⛰️', small:'🌊'},
+    {test:/couleurs|colours|colors/i, theme:'anglais', kicker:'Anglais', title:'Colours', subtitle:'Associer les mots aux couleurs.', emoji:'🎨', small:'🇬🇧'},
+    {test:/présenter|presenter|hello|my name/i, theme:'anglais', kicker:'Anglais', title:'Se présenter', subtitle:'Des phrases courtes à répéter.', emoji:'👋', small:'💬'},
+    {test:/anglais|english/i, theme:'anglais', kicker:'Anglais', title:'Mini-leçon', subtitle:'Écouter, répéter, comprendre.', emoji:'🇬🇧', small:'⭐'},
+    {test:/devinette|roue|quiz|jeu/i, theme:'jeux', kicker:'Jeu', title:'Activité', subtitle:'J’apprends en jouant.', emoji:'🎲', small:'🦉'}
+  ];
+
+  function cleanText(el){ return (el ? el.textContent : '').replace(/\s+/g,' ').trim(); }
+
+  function pickVisual(box){
+    const text = cleanText(box).toLowerCase();
+    for(const v of VISUALS){ if(v.test.test(text)) return v; }
+    if(box.classList.contains('geographie-lesson')) return VISUALS.find(v=>v.theme==='geographie');
+    if(box.classList.contains('english-lesson')) return VISUALS.find(v=>v.theme==='anglais');
+    if(box.classList.contains('plantes-lesson') || box.classList.contains('systeme-lesson') || box.classList.contains('squelette-lesson')) return VISUALS.find(v=>v.theme==='sciences');
+    if(box.classList.contains('nom-commun-lesson') || box.classList.contains('verbe-lesson') || box.classList.contains('writing-idea-box')) return VISUALS.find(v=>v.theme==='francais');
+    if(box.classList.contains('mental-game-container') || box.classList.contains('multi-box')) return VISUALS.find(v=>v.theme==='maths');
+    return null;
+  }
+
+  function addVisual(box){
+    if(!box || box.querySelector(':scope > .hibou-lesson-visual')) return;
+    const visual = pickVisual(box);
+    if(!visual) return;
+    const titleEl = box.querySelector('h3,.mental-title-line,.writing-idea-title,.devinette-title-line');
+    const actualTitle = titleEl ? cleanText(titleEl).replace(/^[-–—\s]+/,'') : visual.title;
+    const div = document.createElement('div');
+    div.className = 'hibou-lesson-visual';
+    div.dataset.theme = visual.theme;
+    div.innerHTML = `
+      <div class="hibou-visual-main">
+        <div class="hibou-visual-kicker">${visual.kicker}</div>
+        <div class="hibou-visual-title">${actualTitle || visual.title}</div>
+        <div class="hibou-visual-subtitle">${visual.subtitle}</div>
+      </div>
+      <div class="hibou-visual-emoji" aria-hidden="true">${visual.emoji}<small>${visual.small || ''}</small></div>`;
+    box.insertBefore(div, box.firstChild);
+  }
+
+  function enhanceLessons(root){
+    root = root || document;
+    const selector = [
+      '.nom-commun-lesson','.verbe-lesson','.plantes-lesson','.systeme-lesson','.squelette-lesson',
+      '.english-lesson','.hibou-lesson-box','.writing-idea-box','.mental-game-container','.multi-box',
+      '.devinette-game-container','.review-wheel-box'
+    ].join(',');
+    root.querySelectorAll(selector).forEach(addVisual);
+  }
+
+  function observeChat(){
+    const chat = document.getElementById('chatContainer');
+    if(!chat || chat.__hibouVisualObserverV132) return;
+    chat.__hibouVisualObserverV132 = true;
+    const obs = new MutationObserver(function(muts){
+      muts.forEach(function(m){
+        m.addedNodes.forEach(function(n){ if(n && n.nodeType===1) setTimeout(function(){ enhanceLessons(n); }, 30); });
+      });
+    });
+    obs.observe(chat, {childList:true, subtree:true});
+  }
+
+  function init(){ enhanceLessons(document); observeChat(); }
+  document.addEventListener('DOMContentLoaded', function(){ setTimeout(init,60); setTimeout(init,400); });
+  window.addEventListener('load', function(){ setTimeout(init,120); setTimeout(init,700); });
+
+  // Les sous-menus recréent parfois des blocs : on relance après les clics et les changements de matière.
+  document.addEventListener('click', function(){ setTimeout(init,120); setTimeout(init,500); }, true);
+  const oldSelect = window.selectSubject;
+  if(typeof oldSelect === 'function' && !oldSelect.__hibouVisualV132){
+    window.selectSubject = function(){ const r = oldSelect.apply(this, arguments); setTimeout(init,120); return r; };
+    window.selectSubject.__hibouVisualV132 = true;
+  }
+})();
+</script>
+
 </body>
 </html>

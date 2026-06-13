@@ -3010,6 +3010,17 @@ body.teacher-fullscreen-open{overflow:hidden !important;}
 }
 </style>
 
+
+<style id="student-alert-badge-fix-v71">
+.alert-badge{
+display:inline-block;padding:4px 10px;border-radius:12px;
+font-size:12px;font-weight:700;white-space:nowrap;
+}
+.alert-ok{background:#E8F8EC;color:#1B8A3A;}
+.alert-warn{background:#FFF4D6;color:#C47A00;}
+.alert-danger{background:#FFE4E4;color:#D92D20;}
+</style>
+
 </head>
 <body>
 
@@ -10471,6 +10482,23 @@ header{
   window.openTeacherDashboardReliable = openTeacherDashboardReliable;
   window.closeTeacherDashboard = closeTeacherDashboard;
 })();
+</script>
+
+
+<script id="student-alert-badge-fix-v71-js">
+function studentAlertBadge(analysis){
+ if(!analysis||!analysis.alert){
+   return '<span class="alert-badge alert-ok">🟢 OK</span>';
+ }
+ switch(analysis.alert){
+   case 'danger':
+     return '<span class="alert-badge alert-danger">🔴 À aider</span>';
+   case 'warn':
+     return '<span class="alert-badge alert-warn">🟠 À surveiller</span>';
+   default:
+     return '<span class="alert-badge alert-ok">🟢 OK</span>';
+ }
+}
 </script>
 
 </body>

@@ -2759,7 +2759,7 @@ body.fullscreen-active .mockup-right-panel .mockup-full-progress-btn{
 
 <section id="hibouSuccessCard" class="hibou-success-card" aria-label="Dernière réussite">
   <span>🌟 Dernière réussite :</span>
-  <strong id="hibouLastSuccess">Aucune réussite enregistrée pour l'instant.</strong>
+  <strong id="hibouLastSuccess">Prêt pour une première réussite ! enregistrée pour l'instant.</strong>
 </section>
 
 
@@ -8857,7 +8857,7 @@ header{
         return (h.detail || h.type || "Exercice réussi").toString();
       }
     }catch(e){}
-    return "Aucune réussite pour l'instant";
+    return "Prêt pour une première réussite ! pour l'instant";
   }
   function ensureHeaderCards(){
     const header = document.querySelector("header");
@@ -8885,7 +8885,7 @@ header{
       last.className = "bandeau-info-card";
       last.id = "bandeauLastCard";
       last.title = "Dernière réussite ou dernier exercice";
-      last.innerHTML = '<span class="bandeau-info-icon">🌟</span><span class="bandeau-info-text"><span class="bandeau-info-label">Dernière réussite</span><span id="bandeauLastText">Aucune réussite</span></span>';
+      last.innerHTML = '<span class="bandeau-info-icon">🌟</span><span class="bandeau-info-text"><span class="bandeau-info-label">Dernière réussite</span><span id="bandeauLastText">Prêt pour une première réussite !</span></span>';
     }
     if(validate){
       validate.innerHTML = '<span class="competence-icon">⭐</span><span class="competence-label">Valider une compétence</span>';

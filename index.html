@@ -1263,6 +1263,14 @@ body.competence-mode .master-challenge-card{
     font-size:16px;
   }
 }
+
+.competence-header-btn .competence-icon{
+  font-size:24px;
+  line-height:1;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
 </style>
 
 
@@ -1626,7 +1634,7 @@ header.mockup-header{
   font-size:18px!important;
   font-weight:900!important;
 }
-.competence-header-btn::before{content:"🏅";font-size:38px;}
+.competence-header-btn::before{content:"⭐";font-size:38px;}
 .competence-header-btn .competence-label{font-size:0!important;}
 .competence-header-btn .competence-label::after{
   content:"Valider une compétence";
@@ -2712,7 +2720,7 @@ body.fullscreen-active .mockup-right-panel .mockup-full-progress-btn{
       👤 <span id="eleveNom">Élève</span>
     </div>
     <div class="badge score" id="scoreBadge">🎯 <span id="scoreVal">0</span> pts</div>
-    <button class="competence-header-btn" onclick="openCompetenceValidation()" title="Valider une compétence">🏅 <span class="competence-label">Valider une compétence</span></button>
+    <button class="competence-header-btn" onclick="openCompetenceValidation()" title="Valider une compétence">⭐ <span class="competence-label">Valider une compétence</span></button>
     <button class="btn-round" id="teacherBtn" onclick="openTeacherDashboard()" title="Tableau de bord enseignant">👨‍🏫</button>
     <button class="btn-round" id="soundBtn" onclick="toggleSound()">🔊</button>
   </div>
@@ -2725,7 +2733,7 @@ body.fullscreen-active .mockup-right-panel .mockup-full-progress-btn{
     <div class="hibou-profile-level" id="hibouProfileLevel">🐣 Apprenti Hibou</div>
     <div class="hibou-profile-stats">
       <div class="hibou-stat-pill">⭐ <span id="hibouProfileScore">0</span> étoiles</div>
-      <div class="hibou-stat-pill">🏅 <span id="hibouProfileBadges">0</span> badges</div>
+      <div class="hibou-stat-pill">⭐ <span id="hibouProfileBadges">0</span> badges</div>
       <div class="hibou-stat-pill">🔥 Série <span id="hibouProfileStreak">1</span> jour</div>
     </div>
   </div>
@@ -5177,7 +5185,7 @@ function renderClassMotivationPanel(){
   const houses = houseScores(students);
   const champion = students.slice().sort((a,b)=>b.weeklyPoints-a.weeklyPoints)[0];
   panel.style.display='block';
-  panel.innerHTML = `<div class="class-motivation-title">🏅 Vie de classe</div>
+  panel.innerHTML = `<div class="class-motivation-title">⭐ Vie de classe</div>
     <div class="class-goal-card"><strong>🏆 Défi collectif :</strong> ${escapeHTML(goal.title)}<br>
       <div class="progress-bar" style="margin-top:8px;"><div class="progress-fill" style="width:${pct}%"></div></div>
       <div style="margin-top:5px;">${progress} / ${goal.target} bonnes réponses (${pct} %)</div></div>
@@ -5631,7 +5639,7 @@ setTimeout(removeVieDeClassePanel, 1000);
     let msg = `🏆 Résultat : <b>${s.score}/${total}</b><br>🎯 Compétence travaillée : <b>${s.competence}</b>`;
     if(perfect){
       const ok = validateCompetence(s.kind, s.score, total);
-      if(ok) msg += `<br><br>🏅 Compétence validée ! +20 points bonus.`;
+      if(ok) msg += `<br><br>⭐ Compétence validée ! +20 points bonus.`;
     }else{
       msg += `<br><br>🟡 Compétence pas encore validée. Tu peux recommencer plus tard.`;
     }
@@ -5853,7 +5861,7 @@ setTimeout(removeVieDeClassePanel, 1000);
 
     const skill = skillCatalog.find(s => s.id === skillId);
     if(options.message !== false && skill && typeof addMessage === "function"){
-      addMessage("prof", "🏅 Compétence validée : <b>" + skill.label + "</b><br>" + medal(data[skillId]) + "<br>+" + (options.bonus || 20) + " points bonus !");
+      addMessage("prof", "⭐ Compétence validée : <b>" + skill.label + "</b><br>" + medal(data[skillId]) + "<br>+" + (options.bonus || 20) + " points bonus !");
     }
     return data[skillId];
   };

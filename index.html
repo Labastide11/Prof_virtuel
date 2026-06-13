@@ -8722,5 +8722,228 @@ body.competence-mode #masterChallengeCard.master-challenge-card{
   document.addEventListener("DOMContentLoaded",function(){const active=document.querySelector(".subject-btn.active");applySubjectTheme(active?active.getAttribute("data-subject"):"maths");});
 })();
 </script>
+
+
+<!-- PATCH V12.6 - Bandeau supérieur simplifié : logo, points, dernière réussite, compétences, validation -->
+<style id="patch-bandeau-superieur-v126">
+/* On repart proprement du fichier 46 : le bandeau du haut devient la zone d'information élève. */
+header.mockup-header,
+header{
+  grid-template-columns:auto 1fr !important;
+  align-items:center !important;
+}
+.header-actions{
+  grid-template-columns:repeat(4,minmax(150px,1fr)) auto auto !important;
+  gap:12px !important;
+}
+#eleveBadge,
+.mockup-challenge-top,
+#masterChallengeCard,
+.master-challenge-card{
+  display:none !important;
+  visibility:hidden !important;
+  height:0 !important;
+  min-height:0 !important;
+  padding:0 !important;
+  margin:0 !important;
+  overflow:hidden !important;
+}
+.mockup-side-card.defi-maitre-card,
+.mockup-right-panel .mockup-side-card:first-child{
+  display:none !important;
+}
+.bandeau-info-card,
+#scoreBadge.badge.score,
+#mockupCompetencesCard,
+.competence-header-btn{
+  min-height:74px !important;
+  border-radius:18px !important;
+  border:2px solid #ECEBF3 !important;
+  background:linear-gradient(135deg,#FFFFFF 0%,#F8F7FF 100%) !important;
+  box-shadow:0 6px 18px rgba(108,99,255,.10) !important;
+  padding:10px 13px !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:10px !important;
+  font-family:inherit !important;
+  font-weight:900 !important;
+  line-height:1.08 !important;
+  white-space:normal !important;
+  text-align:left !important;
+}
+#scoreBadge.badge.score{
+  border-color:#FFD76E !important;
+  color:#D88900 !important;
+  font-size:0 !important;
+}
+#scoreBadge.badge.score::before{content:"⭐";font-size:38px;line-height:1;}
+#scoreBadge.badge.score #scoreVal{font-size:24px !important;color:#D88900 !important;font-weight:900 !important;line-height:1;}
+#scoreBadge.badge.score::after{content:"points";font-size:14px;font-weight:900;color:#D88900;margin-left:-5px;margin-top:20px;}
+#bandeauLastCard{
+  border-color:#BDE0FF !important;
+  color:#075EBC !important;
+  background:linear-gradient(135deg,#FFFFFF 0%,#F0F8FF 100%) !important;
+}
+.bandeau-info-icon{font-size:34px;line-height:1;flex-shrink:0;}
+.bandeau-info-text{font-size:13px;color:inherit;font-weight:900;line-height:1.12;min-width:0;}
+.bandeau-info-label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.03em;opacity:.75;margin-bottom:3px;}
+#bandeauLastText{display:block;max-width:210px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:15px;}
+#mockupCompetencesCard{
+  border-color:#D8C6FF !important;
+  color:#6B37E8 !important;
+  background:linear-gradient(135deg,#FFFFFF 0%,#FAF7FF 100%) !important;
+}
+#mockupCompetencesCard .mockup-stat-icon{font-size:36px !important;}
+#mockupCompetencesCard .mockup-stat-text{font-size:16px !important;line-height:1.08 !important;color:#6B37E8 !important;}
+.competence-header-btn{
+  min-height:74px !important;
+  border-color:#7C3AED !important;
+  background:linear-gradient(135deg,#7C3AED 0%,#8E5BFF 100%) !important;
+  color:white !important;
+  font-size:17px !important;
+  text-align:center !important;
+  cursor:pointer !important;
+}
+.competence-header-btn::before{content:"" !important;display:none !important;}
+.competence-header-btn .competence-icon,
+.competence-header-btn > :first-child{font-size:30px !important;line-height:1 !important;}
+.competence-header-btn .competence-label{font-size:17px !important;line-height:1.05 !important;color:white !important;display:inline !important;}
+@media (max-width:1180px){
+  header.mockup-header, header{grid-template-columns:1fr !important;}
+  .header-actions{grid-template-columns:repeat(2,minmax(0,1fr)) auto auto !important;width:100% !important;}
+}
+@media (max-width:620px){
+  .header-actions{grid-template-columns:1fr 1fr !important;}
+  .btn-round{display:none !important;}
+  .bandeau-info-card,#scoreBadge.badge.score,#mockupCompetencesCard,.competence-header-btn{min-height:62px !important;padding:8px !important;}
+  #bandeauLastText{max-width:135px;font-size:13px;}
+  .competence-header-btn .competence-label{font-size:13px !important;}
+}
+</style>
+<script id="patch-bandeau-superieur-v126">
+(function(){
+  if(window.__bandeauSuperieurV126) return;
+  window.__bandeauSuperieurV126 = true;
+
+  function cleanStudentName(name){
+    return String(name || "eleve").trim().toLowerCase()
+      .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+      .replace(/[^a-z0-9_-]/g,"_") || "eleve";
+  }
+  function currentName(){
+    return window.prenomActuel || localStorage.getItem("hibou_prenom") || localStorage.getItem("maitreHibouCurrentStudent") || localStorage.getItem("elevePrenom") || "eleve";
+  }
+  function getSkillCount(){
+    try{
+      const key = "hibou_skills_v51_" + cleanStudentName(currentName());
+      const data = JSON.parse(localStorage.getItem(key) || "{}");
+      return Object.values(data).filter(v => Number(v || 0) > 0).length;
+    }catch(e){ return 0; }
+  }
+  function getLastSuccess(){
+    const name = currentName();
+    try{
+      const direct = localStorage.getItem("hibou_last_success_" + name);
+      if(direct) return direct;
+      const historyKey = "hibou_" + cleanStudentName(name) + "_history";
+      const hist = JSON.parse(localStorage.getItem(historyKey) || "[]");
+      if(hist && hist.length){
+        const h = hist[0];
+        return (h.detail || h.type || "Exercice réussi").toString();
+      }
+    }catch(e){}
+    return "Aucune réussite pour l'instant";
+  }
+  function ensureHeaderCards(){
+    const header = document.querySelector("header");
+    const actions = document.querySelector(".header-actions");
+    if(header) header.classList.add("mockup-header");
+    if(!actions) return;
+
+    document.querySelectorAll(".mockup-challenge-top").forEach(el => el.remove());
+
+    let score = document.getElementById("scoreBadge");
+    let comp = document.getElementById("mockupCompetencesCard");
+    let validate = document.querySelector(".competence-header-btn");
+    let teacher = document.getElementById("teacherBtn");
+    let sound = document.getElementById("soundBtn");
+
+    if(!comp){
+      comp = document.createElement("div");
+      comp.className = "mockup-stat-card";
+      comp.id = "mockupCompetencesCard";
+      comp.innerHTML = '<span class="mockup-stat-icon">🏆</span><span class="mockup-stat-text"><span id="mockupCompetenceCount">0</span><br>compétences<br>validées</span>';
+    }
+    let last = document.getElementById("bandeauLastCard");
+    if(!last){
+      last = document.createElement("div");
+      last.className = "bandeau-info-card";
+      last.id = "bandeauLastCard";
+      last.title = "Dernière réussite ou dernier exercice";
+      last.innerHTML = '<span class="bandeau-info-icon">🌟</span><span class="bandeau-info-text"><span class="bandeau-info-label">Dernière réussite</span><span id="bandeauLastText">Aucune réussite</span></span>';
+    }
+    if(validate){
+      validate.innerHTML = '<span class="competence-icon">⭐</span><span class="competence-label">Valider une compétence</span>';
+    }
+
+    [score,last,comp,validate,teacher,sound].filter(Boolean).forEach(el => actions.appendChild(el));
+  }
+  function hideChallengeEverywhere(){
+    const card = document.getElementById("masterChallengeCard");
+    if(card) card.style.display = "none";
+    document.querySelectorAll(".mockup-challenge-top").forEach(el => el.remove());
+    document.querySelectorAll(".mockup-right-panel .mockup-side-card").forEach(function(card){
+      if((card.textContent || "").toLowerCase().includes("défi du maître")) card.classList.add("defi-maitre-card");
+    });
+  }
+  function refreshHeaderCards(){
+    ensureHeaderCards();
+    hideChallengeEverywhere();
+    const count = document.getElementById("mockupCompetenceCount");
+    if(count) count.textContent = String(getSkillCount());
+    const last = document.getElementById("bandeauLastText");
+    if(last) last.textContent = getLastSuccess();
+  }
+
+  const oldRenderMasterChallengeCard = window.renderMasterChallengeCard;
+  if(typeof oldRenderMasterChallengeCard === "function"){
+    window.renderMasterChallengeCard = function(){
+      const result = oldRenderMasterChallengeCard.apply(this, arguments);
+      setTimeout(hideChallengeEverywhere, 0);
+      return result;
+    };
+  }
+  const oldValidateSkill = window.hibouValidateSkill;
+  if(typeof oldValidateSkill === "function"){
+    window.hibouValidateSkill = function(skillId, options){
+      const result = oldValidateSkill.apply(this, arguments);
+      try{
+        const label = (skillId || "compétence").toString().replace(/_/g," ");
+        localStorage.setItem("hibou_last_success_" + currentName(), "Compétence validée : " + label);
+      }catch(e){}
+      setTimeout(refreshHeaderCards, 0);
+      return result;
+    };
+  }
+  const oldAddScore = window.addScore;
+  if(typeof oldAddScore === "function"){
+    window.addScore = function(points, detail){
+      const result = oldAddScore.apply(this, arguments);
+      if(detail) localStorage.setItem("hibou_last_success_" + currentName(), String(detail));
+      setTimeout(refreshHeaderCards, 0);
+      return result;
+    };
+  }
+
+  document.addEventListener("DOMContentLoaded", function(){
+    setTimeout(refreshHeaderCards, 80);
+    setTimeout(refreshHeaderCards, 500);
+    setInterval(refreshHeaderCards, 1500);
+  });
+  window.addEventListener("load", function(){ setTimeout(refreshHeaderCards, 150); });
+})();
+</script>
+
 </body>
 </html>

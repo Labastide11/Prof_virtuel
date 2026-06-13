@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 Maître Hibou V15.0 - Multi-appareils</title>
+<title>🦉 Maître Hibou V15.1 - Accueil personnalisé</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -3195,7 +3195,7 @@ body.device-desktop.teacher-home-mode .progress-mini-wrap{
   display:none !important;
 }
 
-/* Tablette élève : interface tactile et épurée */
+/*  : interface tactile et épurée */
 body.device-tablet .desktop-teacher-home{display:none !important;}
 body.device-tablet #teacherBtn{
   display:none !important;
@@ -3272,6 +3272,71 @@ body.device-phone .desktop-teacher-home{display:none !important;}
 }
 </style>
 
+
+
+<style id="patch-v151-calme-et-accueil">
+/* V15.1 - Bandeau plus calme : plus de flash/stroboscope */
+.subject-btn,
+.subject-btn:hover,
+.subject-btn.active,
+.quick-questions,
+.quick-questions.submenu-flash,
+.badge.score.bump {
+  animation: none !important;
+  transition: background-color .15s ease, border-color .15s ease, box-shadow .15s ease !important;
+}
+.subject-btn:hover,
+.subject-btn.active {
+  transform: none !important;
+  filter: none !important;
+}
+.quick-questions.submenu-flash {
+  box-shadow: var(--shadow) !important;
+}
+@keyframes submenuFlash {
+  0%, 45%, 100% {
+    transform: none !important;
+    box-shadow: var(--shadow) !important;
+  }
+}
+
+/* Message d'accueil personnalisé à la place de "" */
+.device-mode-badge,
+.v15-device-badge,
+#deviceModeBadge,
+#v15DeviceBadge {
+  display: none !important;
+}
+.v15-welcome-message {
+  background: linear-gradient(135deg,#FFFCEB 0%,#FFFFFF 100%);
+  border: 2px solid var(--accent);
+  color: var(--text);
+  border-radius: 18px;
+  padding: 7px 12px;
+  font-weight: 900;
+  line-height: 1.15;
+  box-shadow: var(--shadow);
+  min-width: 190px;
+}
+.v15-welcome-message .v15-welcome-line1 {
+  font-size: 14px;
+  color: var(--primary);
+}
+.v15-welcome-message .v15-welcome-line2 {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+@media (max-width: 620px) {
+  .v15-welcome-message {
+    min-width: 0;
+    max-width: 170px;
+    padding: 6px 9px;
+  }
+  .v15-welcome-message .v15-welcome-line1 { font-size: 12px; }
+  .v15-welcome-message .v15-welcome-line2 { font-size: 10px; }
+}
+</style>
 
 </head>
 <body>
@@ -11005,7 +11070,7 @@ window.HIBOU_CLASS_STUDENTS = [
 
     const labels = {
       desktop: {icon:'🖥️', text:'PC enseignant', card:'PC'},
-      tablet: {icon:'📱', text:'Tablette élève', card:'Tablette'},
+      tablet: {icon:'📱', text:'', card:'Tablette'},
       phone: {icon:'📞', text:'Petit écran', card:'Téléphone'}
     };
     const label = labels[mode] || labels.desktop;
@@ -11105,6 +11170,72 @@ window.HIBOU_CLASS_STUDENTS = [
   window.addEventListener('resize', function(){
     if (!sessionStorage.getItem(V15_MODE_KEY) && !localStorage.getItem(V15_MODE_KEY)) setMode(detectDeviceMode());
   });
+})();
+</script>
+
+
+<script id="patch-v151-message-bienvenue">
+(function(){
+  function getCurrentStudentName(){
+    try {
+      if (typeof prenomActuel !== "undefined" && prenomActuel) return prenomActuel;
+    } catch(e) {}
+    const eleveNom = document.getElementById("eleveNom");
+    if (eleveNom && eleveNom.textContent.trim()) return eleveNom.textContent.trim();
+    return "";
+  }
+
+  function updateV15WelcomeMessage(){
+    const headerActions = document.querySelector(".header-actions");
+    if (!headerActions) return;
+
+    const name = getCurrentStudentName();
+    if (!name) return;
+
+    let welcome = document.getElementById("v15WelcomeMessage");
+    if (!welcome) {
+      welcome = document.createElement("div");
+      welcome.id = "v15WelcomeMessage";
+      welcome.className = "v15-welcome-message";
+      headerActions.appendChild(welcome);
+    }
+
+    welcome.innerHTML =
+      '<div class="v15-welcome-line1">Bonjour ' + name + ' 🌟</div>' +
+      '<div class="v15-welcome-line2">Que souhaites-tu apprendre aujourd’hui ?</div>';
+
+    // Masque les anciens badges éventuels contenant "".
+    document.querySelectorAll(".badge, .device-mode-badge, .v15-device-badge").forEach(function(el){
+      if ((el.textContent || "").toLowerCase().includes("tablette élève")) {
+        el.style.display = "none";
+      }
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", function(){
+    updateV15WelcomeMessage();
+
+    const oldSavePrenom = window.savePrenom;
+    if (typeof oldSavePrenom === "function") {
+      window.savePrenom = async function(){
+        const result = await oldSavePrenom.apply(this, arguments);
+        setTimeout(updateV15WelcomeMessage, 80);
+        setTimeout(updateV15WelcomeMessage, 350);
+        return result;
+      };
+    }
+
+    const oldRefreshHibouProfile = window.refreshHibouProfile;
+    if (typeof oldRefreshHibouProfile === "function") {
+      window.refreshHibouProfile = function(){
+        const result = oldRefreshHibouProfile.apply(this, arguments);
+        setTimeout(updateV15WelcomeMessage, 50);
+        return result;
+      };
+    }
+  });
+
+  window.updateV15WelcomeMessage = updateV15WelcomeMessage;
 })();
 </script>
 

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 Maître Hibou V16.2 - Connexion élève propre</title>
+<title>🦉 Maître Hibou V16.3 - Google Sheets enseignant</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -3212,6 +3212,90 @@ body.prenom-mode .class-motivation-panel {
   .prenom-box h2 {
     font-size: 28px !important;
   }
+}
+</style>
+
+
+<style id="style-v163-google-sheets-teacher">
+/* V16.3 - Tableau enseignant : élèves Google Sheets */
+.teacher-google-section {
+  background: #F7F6FF;
+  border: 2px solid #EAE8FF;
+  border-radius: 18px;
+  padding: 14px;
+  margin: 14px 0;
+}
+
+.teacher-google-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.teacher-google-header h3 {
+  font-family: 'Baloo 2', sans-serif;
+  color: var(--primary);
+  font-size: 22px;
+  margin: 0;
+}
+
+.teacher-google-status {
+  font-size: 13px;
+  font-weight: 900;
+  color: var(--text-muted);
+}
+
+.teacher-google-table-wrap {
+  overflow-x: auto;
+  background: white;
+  border: 2px solid #ECEBF3;
+  border-radius: 14px;
+}
+
+.teacher-google-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.teacher-google-table th,
+.teacher-google-table td {
+  padding: 9px 10px;
+  border-bottom: 1px solid #ECEBF3;
+  text-align: left;
+  white-space: nowrap;
+  font-weight: 800;
+}
+
+.teacher-google-table th {
+  background: #F7F6FF;
+  color: var(--primary);
+  font-weight: 900;
+}
+
+.teacher-google-table tr:last-child td {
+  border-bottom: none;
+}
+
+.teacher-google-active {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.teacher-google-active.ok {
+  background: #E6F7E9;
+  color: #1E5627;
+}
+
+.teacher-google-active.no {
+  background: #FFEAEA;
+  color: #7A2222;
 }
 </style>
 
@@ -10250,6 +10334,162 @@ header{
   });
 
   window.syncPrenomModeV162 = syncPrenomMode;
+})();
+</script>
+
+
+<script id="script-v163-google-sheets-teacher">
+(function(){
+  if (window.__googleSheetsTeacherV163) return;
+  window.__googleSheetsTeacherV163 = true;
+
+  const GOOGLE_SHEETS_ELEVES_URL = "https://script.google.com/macros/s/AKfycbxz1vYS24sv-c3XVja12geWEXIQl6bQyBoQKBx5kg_fwQaj80_Oc7Y34yeBSRN4lF1f/exec";
+
+  function normalizeGoogleRows(data){
+    if (Array.isArray(data)) return data;
+
+    if (data && Array.isArray(data.eleves)) return data.eleves;
+    if (data && Array.isArray(data.students)) return data.students;
+    if (data && Array.isArray(data.data)) return data.data;
+    if (data && Array.isArray(data.rows)) return data.rows;
+
+    return [];
+  }
+
+  function escapeHtml(value){
+    return String(value ?? "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  function isActive(value){
+    const v = String(value ?? "").trim().toLowerCase();
+    return v === "true" || v === "vrai" || v === "oui" || v === "1" || v === "actif" || v === "x";
+  }
+
+  function renderGoogleStudentsSection(rows, statusText){
+    const host = document.getElementById("teacherGoogleSheetsContent");
+    if (!host) return;
+
+    const safeRows = Array.isArray(rows) ? rows : [];
+    const activeCount = safeRows.filter(r => isActive(r.actif)).length;
+
+    const tableRows = safeRows.map(function(row){
+      const actif = isActive(row.actif);
+      return `
+        <tr>
+          <td>${escapeHtml(row.prenom || row.prénom || "")}</td>
+          <td>${escapeHtml(row.initiale || row.initiales || "")}</td>
+          <td>${escapeHtml(row.naissance || row.date_naissance || "")}</td>
+          <td>${escapeHtml(row.sexe || "")}</td>
+          <td><span class="teacher-google-active ${actif ? "ok" : "no"}">${actif ? "Actif" : "Inactif"}</span></td>
+        </tr>
+      `;
+    }).join("");
+
+    host.innerHTML = `
+      <div class="teacher-google-section">
+        <div class="teacher-google-header">
+          <div>
+            <h3>📄 Élèves Google Sheets</h3>
+            <div class="teacher-google-status">${escapeHtml(statusText || "")} — ${safeRows.length} élève(s), ${activeCount} actif(s)</div>
+          </div>
+          <button class="teacher-btn secondary" onclick="loadGoogleSheetsStudentsV163()">🔄 Recharger</button>
+        </div>
+
+        <div class="teacher-google-table-wrap">
+          <table class="teacher-google-table">
+            <thead>
+              <tr>
+                <th>Prénom</th>
+                <th>Initiale</th>
+                <th>Naissance</th>
+                <th>Sexe</th>
+                <th>Actif</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${tableRows || '<tr><td colspan="5">Aucun élève trouvé dans Google Sheets.</td></tr>'}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    `;
+  }
+
+  async function loadGoogleSheetsStudents(){
+    const host = document.getElementById("teacherGoogleSheetsContent");
+    if (!host) return;
+
+    host.innerHTML = `
+      <div class="teacher-google-section">
+        <div class="teacher-google-header">
+          <h3>📄 Élèves Google Sheets</h3>
+          <div class="teacher-google-status">Chargement…</div>
+        </div>
+      </div>
+    `;
+
+    try {
+      const response = await fetch(GOOGLE_SHEETS_ELEVES_URL, {
+        method: "GET",
+        cache: "no-store"
+      });
+
+      if (!response.ok) throw new Error("HTTP " + response.status);
+
+      const data = await response.json();
+      const rows = normalizeGoogleRows(data);
+      renderGoogleStudentsSection(rows, "Synchronisé avec Google Sheets");
+    } catch(error) {
+      host.innerHTML = `
+        <div class="teacher-google-section">
+          <div class="teacher-google-header">
+            <div>
+              <h3>📄 Élèves Google Sheets</h3>
+              <div class="teacher-google-status">Impossible de charger les données.</div>
+            </div>
+            <button class="teacher-btn secondary" onclick="loadGoogleSheetsStudentsV163()">🔄 Réessayer</button>
+          </div>
+          <div class="teacher-small">
+            Vérifie que le script Google Apps Script est bien publié en accès web et qu'il renvoie du JSON.
+            Erreur : ${escapeHtml(error.message)}
+          </div>
+        </div>
+      `;
+    }
+  }
+
+  function ensureGoogleSheetsHost(){
+    const dashboard = document.getElementById("teacherDashboardContent");
+    if (!dashboard) return null;
+
+    let host = document.getElementById("teacherGoogleSheetsContent");
+    if (!host) {
+      host = document.createElement("div");
+      host.id = "teacherGoogleSheetsContent";
+      dashboard.parentNode.insertBefore(host, dashboard);
+    }
+    return host;
+  }
+
+  const oldRenderTeacherDashboard = window.renderTeacherDashboard;
+  window.renderTeacherDashboard = function(){
+    if (typeof oldRenderTeacherDashboard === "function") {
+      oldRenderTeacherDashboard.apply(this, arguments);
+    }
+    ensureGoogleSheetsHost();
+    loadGoogleSheetsStudents();
+  };
+
+  window.loadGoogleSheetsStudentsV163 = loadGoogleSheetsStudents;
+
+  document.addEventListener("DOMContentLoaded", function(){
+    ensureGoogleSheetsHost();
+  });
 })();
 </script>
 

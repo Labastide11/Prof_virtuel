@@ -9066,5 +9066,142 @@ header{
 })();
 </script>
 
+
+<!-- PATCH V12.9 - Bandeau harmonisé : 4 boutons plus compacts et texte non tronqué -->
+<style id="patch-bandeau-harmonise-v129">
+/* Les 4 éléments principaux du bandeau restent visibles et harmonisés. */
+header.mockup-header,
+header{
+  padding:8px 12px !important;
+}
+.header-actions{
+  display:grid !important;
+  grid-template-columns:minmax(98px,.75fr) minmax(170px,1.25fr) minmax(112px,.85fr) minmax(142px,1fr) auto auto !important;
+  gap:8px !important;
+  align-items:stretch !important;
+  width:100% !important;
+}
+.bandeau-info-card,
+#scoreBadge.badge.score,
+#mockupCompetencesCard,
+.competence-header-btn{
+  min-height:58px !important;
+  height:auto !important;
+  border-radius:15px !important;
+  padding:7px 9px !important;
+  gap:7px !important;
+  line-height:1.08 !important;
+  overflow:visible !important;
+  text-align:center !important;
+}
+#scoreBadge.badge.score::before{
+  font-size:27px !important;
+}
+#scoreBadge.badge.score #scoreVal{
+  font-size:18px !important;
+}
+#scoreBadge.badge.score::after{
+  font-size:11px !important;
+  margin-left:-3px !important;
+  margin-top:15px !important;
+}
+.bandeau-info-icon{
+  font-size:25px !important;
+}
+.bandeau-info-text{
+  font-size:12px !important;
+  line-height:1.08 !important;
+  width:100% !important;
+}
+.bandeau-info-label{
+  font-size:9px !important;
+  margin-bottom:2px !important;
+}
+#bandeauLastText{
+  display:block !important;
+  max-width:none !important;
+  overflow:visible !important;
+  text-overflow:clip !important;
+  white-space:normal !important;
+  font-size:12px !important;
+  line-height:1.08 !important;
+  text-align:center !important;
+}
+#mockupCompetencesCard .mockup-stat-icon{
+  font-size:27px !important;
+}
+#mockupCompetencesCard .mockup-stat-text{
+  font-size:12px !important;
+  line-height:1.05 !important;
+}
+.competence-header-btn{
+  font-size:12px !important;
+  white-space:normal !important;
+  flex-direction:row !important;
+}
+.competence-header-btn .competence-icon,
+.competence-header-btn > :first-child{
+  font-size:24px !important;
+}
+.competence-header-btn .competence-label{
+  font-size:12px !important;
+  line-height:1.05 !important;
+  display:inline !important;
+}
+@media (max-width:1180px){
+  .header-actions{
+    grid-template-columns:repeat(4,minmax(0,1fr)) auto auto !important;
+  }
+}
+@media (max-width:760px){
+  .header-actions{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  }
+  .btn-round{
+    display:none !important;
+  }
+  .bandeau-info-card,
+  #scoreBadge.badge.score,
+  #mockupCompetencesCard,
+  .competence-header-btn{
+    min-height:54px !important;
+    padding:6px 7px !important;
+  }
+}
+</style>
+<script id="patch-bandeau-harmonise-v129">
+(function(){
+  if(window.__bandeauHarmoniseV129) return;
+  window.__bandeauHarmoniseV129 = true;
+
+  const FRIENDLY_EMPTY_SUCCESS = "Prêt pour une première réussite !";
+
+  function normalizeLastSuccessText(){
+    const targets = [
+      document.getElementById("bandeauLastText"),
+      document.getElementById("hibouLastSuccess")
+    ].filter(Boolean);
+
+    targets.forEach(function(el){
+      const txt = (el.textContent || "").trim().toLowerCase();
+      if(!txt || txt.includes("aucune réussite") || txt.includes("pour l'instant") || txt.includes("pour l’instant") || txt.includes("enregistrée pour")){
+        el.textContent = FRIENDLY_EMPTY_SUCCESS;
+      }
+      el.title = el.textContent;
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", function(){
+    normalizeLastSuccessText();
+    setTimeout(normalizeLastSuccessText, 100);
+    setTimeout(normalizeLastSuccessText, 600);
+    setInterval(normalizeLastSuccessText, 900);
+  });
+  window.addEventListener("load", function(){
+    setTimeout(normalizeLastSuccessText, 150);
+  });
+})();
+</script>
+
 </body>
 </html>

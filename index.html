@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 Maître Hibou V16.0 - Accès enseignant caché</title>
+<title>🦉 Maître Hibou V16.1 - Mode enseignant plein écran</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -2913,16 +2913,178 @@ body.fullscreen-active .mockup-right-panel .mockup-full-progress-btn{
 </style>
 
 
-<style id="style-v16-teacher-hidden-access">
-/* V16.0 - Espace enseignant caché et plein écran */
 
-/* L'ancien bouton enseignant n'existe plus dans le HTML.
-   Cette sécurité évite aussi son affichage si une ancienne copie le recrée. */
+<style id="style-v161-teacher-fullscreen-mode">
+/* V16.1 - Mode enseignant plein écran : l'interface élève disparaît complètement */
+
+/* L'ancien bouton enseignant reste supprimé même si un ancien script le recrée. */
 #teacherBtn {
   display: none !important;
 }
 
-/* Le hibou devient l'accès discret enseignant : appui long. */
+/* Quand le mode enseignant est ouvert, le fond ne bouge plus. */
+body.teacher-mode,
+body.teacher-dashboard-open {
+  overflow: hidden !important;
+}
+
+/* On masque toute l'application élève pendant l'ouverture de l'espace enseignant. */
+body.teacher-mode > *:not(#teacherDashboardOverlay) {
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* L'overlay enseignant reste visible au-dessus de tout. */
+body.teacher-mode #teacherDashboardOverlay {
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
+/* Plein écran réel : plus de bandeau visible derrière. */
+#teacherDashboardOverlay.teacher-dashboard-modal {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 99999 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  background: #F7F6FF !important;
+  backdrop-filter: none !important;
+  display: flex !important;
+  align-items: stretch !important;
+  justify-content: stretch !important;
+}
+
+#teacherDashboardOverlay.teacher-dashboard-modal.hidden {
+  display: none !important;
+}
+
+/* Fenêtre principale enseignant */
+.teacher-fullscreen-window {
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: none !important;
+  max-height: none !important;
+  background: var(--card) !important;
+  color: var(--text) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  display: grid !important;
+  grid-template-rows: auto auto minmax(0, 1fr) !important;
+  overflow: hidden !important;
+}
+
+/* En-tête toujours visible */
+.teacher-fullscreen-header {
+  min-height: 82px !important;
+  padding: 14px 20px !important;
+  background: linear-gradient(135deg, #FFFFFF 0%, #F8F7FF 100%) !important;
+  border-bottom: 3px solid var(--primary-light) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 16px !important;
+  flex-shrink: 0 !important;
+}
+
+.teacher-fullscreen-title {
+  display: flex !important;
+  align-items: center !important;
+  gap: 14px !important;
+  min-width: 0 !important;
+}
+
+.teacher-fullscreen-owl {
+  width: 58px !important;
+  height: 58px !important;
+  border-radius: 18px !important;
+  background: linear-gradient(135deg, #FFF9E6 0%, #EAE8FF 100%) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 38px !important;
+  flex-shrink: 0 !important;
+}
+
+.teacher-fullscreen-title h2 {
+  margin: 0 !important;
+  font-family: 'Baloo 2', sans-serif !important;
+  font-size: 32px !important;
+  line-height: 1 !important;
+  color: var(--primary) !important;
+}
+
+.teacher-fullscreen-title p {
+  margin: 4px 0 0 0 !important;
+  color: var(--text-muted) !important;
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  line-height: 1.2 !important;
+}
+
+/* Gros bouton fermer, toujours accessible */
+.teacher-fullscreen-close {
+  width: 56px !important;
+  height: 56px !important;
+  border-radius: 18px !important;
+  border: 3px solid #FFB8B8 !important;
+  background: #FFEAEA !important;
+  color: #7A2222 !important;
+  font-size: 24px !important;
+  font-weight: 900 !important;
+  cursor: pointer !important;
+  flex-shrink: 0 !important;
+}
+
+/* Barre d'actions */
+.teacher-fullscreen-actions {
+  padding: 12px 20px !important;
+  background: #F7F6FF !important;
+  border-bottom: 2px solid #ECEBF3 !important;
+  display: flex !important;
+  gap: 10px !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  flex-shrink: 0 !important;
+}
+
+/* Contenu scrollable uniquement ici */
+.teacher-fullscreen-content {
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  padding: 18px 20px 28px 20px !important;
+  background: #FFFFFF !important;
+}
+
+/* Les anciens styles de modal ne doivent plus limiter la taille. */
+.teacher-dashboard-modal .modal-box,
+.teacher-dashboard-modal .teacher-fullscreen-window {
+  max-width: none !important;
+  max-height: none !important;
+}
+
+/* Tableaux et blocs lisibles en grand format */
+.teacher-fullscreen-content .teacher-section,
+.teacher-fullscreen-content .security-panel {
+  margin: 14px 0 !important;
+}
+
+.teacher-fullscreen-content .teacher-table-wrap,
+.teacher-fullscreen-content .teacher-skills-wrap,
+.teacher-fullscreen-content .blocked-log,
+.teacher-fullscreen-content .history-list {
+  max-width: 100% !important;
+  overflow: auto !important;
+}
+
+.teacher-fullscreen-content .teacher-table,
+.teacher-fullscreen-content .teacher-skills-table {
+  font-size: 13px !important;
+}
+
+/* Accès caché : appui long sur le hibou */
 .logo-icon,
 .hibou-profile-owl {
   user-select: none;
@@ -2935,124 +3097,53 @@ body.fullscreen-active .mockup-right-panel .mockup-full-progress-btn{
   cursor: pointer;
 }
 
-/* Pendant l'appui long, un léger retour visuel discret. */
 .logo-icon.teacher-longpress-active,
 .hibou-profile-owl.teacher-longpress-active {
   outline: 3px solid var(--accent);
   outline-offset: 4px;
 }
 
-/* Quand la fenêtre enseignant est ouverte, on bloque le fond. */
-body.teacher-dashboard-open {
-  overflow: hidden !important;
-}
-
-/* Popup enseignant en grand format, adaptée tablette. */
-.teacher-dashboard-modal {
-  padding: 0 !important;
-  align-items: center !important;
-  justify-content: center !important;
-  background: rgba(45,43,85,0.72) !important;
-  backdrop-filter: blur(8px);
-  z-index: 300 !important;
-}
-
-.teacher-dashboard-modal.hidden {
-  display: none !important;
-}
-
-.teacher-dashboard-modal .teacher-fullscreen-box {
-  width: min(1320px, calc(100vw - 24px)) !important;
-  height: min(900px, calc(100vh - 24px)) !important;
-  max-width: none !important;
-  max-height: none !important;
-  padding: 0 !important;
-  border-radius: 24px !important;
-  overflow: hidden !important;
-  text-align: left !important;
-  display: flex !important;
-  flex-direction: column !important;
-  background: var(--card) !important;
-}
-
-.teacher-fullscreen-top {
-  flex-shrink: 0;
-  padding: 18px 20px 12px 20px;
-  border-bottom: 2px solid #ECEBF3;
-  margin: 0 !important;
-}
-
-.teacher-fullscreen-top h2 {
-  margin: 0 0 4px 0 !important;
-  font-size: 28px !important;
-}
-
-.teacher-fullscreen-top p {
-  margin: 0 !important;
-  font-size: 14px !important;
-  color: var(--text-muted) !important;
-  font-weight: 800 !important;
-}
-
-.teacher-close-btn {
-  width: 46px !important;
-  height: 46px !important;
-  min-width: 46px !important;
-  font-size: 20px !important;
-  background: #FFEAEA !important;
-  border-color: #FFB8B8 !important;
-  color: #7A2222 !important;
-}
-
-.teacher-fullscreen-actions {
-  flex-shrink: 0;
-  padding: 12px 20px;
-  border-bottom: 2px solid #ECEBF3;
-  margin: 0 !important;
-  background: #F7F6FF;
-}
-
-.teacher-dashboard-scroll {
-  flex: 1 1 auto;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  padding: 16px 20px 22px 20px;
-}
-
-/* Les tableaux prennent la place disponible. */
-.teacher-dashboard-modal .teacher-table-wrap,
-.teacher-dashboard-modal .teacher-skills-wrap {
-  max-width: 100%;
-  overflow: auto;
-}
-
-/* Tablette : fenêtre presque plein écran et bouton de fermeture toujours confortable. */
+/* Tablette */
 @media (max-width: 900px) {
-  .teacher-dashboard-modal .teacher-fullscreen-box {
-    width: calc(100vw - 12px) !important;
-    height: calc(100vh - 12px) !important;
-    border-radius: 18px !important;
+  .teacher-fullscreen-header {
+    min-height: 72px !important;
+    padding: 10px 12px !important;
   }
 
-  .teacher-fullscreen-top {
-    padding: 14px 14px 10px 14px;
+  .teacher-fullscreen-owl {
+    width: 48px !important;
+    height: 48px !important;
+    font-size: 32px !important;
+    border-radius: 15px !important;
   }
 
-  .teacher-fullscreen-top h2 {
-    font-size: 24px !important;
+  .teacher-fullscreen-title h2 {
+    font-size: 25px !important;
+  }
+
+  .teacher-fullscreen-title p {
+    font-size: 12px !important;
+  }
+
+  .teacher-fullscreen-close {
+    width: 50px !important;
+    height: 50px !important;
+    border-radius: 16px !important;
+    font-size: 22px !important;
   }
 
   .teacher-fullscreen-actions {
-    padding: 10px 14px;
+    padding: 10px 12px !important;
+    gap: 8px !important;
   }
 
-  .teacher-dashboard-scroll {
-    padding: 12px 14px 18px 14px;
+  .teacher-fullscreen-content {
+    padding: 12px 12px 22px 12px !important;
   }
 
   .teacher-btn {
-    padding: 10px 12px !important;
     font-size: 13px !important;
+    padding: 10px 12px !important;
   }
 }
 </style>
@@ -3180,22 +3271,25 @@ body.teacher-dashboard-open {
 <div class="badge-toast" id="badgeToast"></div>
 
 <div class="modal-overlay hidden teacher-dashboard-modal" id="teacherDashboardOverlay" role="dialog" aria-modal="true" aria-label="Espace enseignant">
-  <div class="modal-box teacher-fullscreen-box">
-    <div class="teacher-top teacher-fullscreen-top">
-      <div>
-        <h2>🦉 Espace enseignant</h2>
-        <p>Suivi local des élèves, scores, niveaux, badges et derniers entraînements.</p>
+  <div class="teacher-fullscreen-window">
+    <div class="teacher-fullscreen-header">
+      <div class="teacher-fullscreen-title">
+        <div class="teacher-fullscreen-owl">🦉</div>
+        <div>
+          <h2>Espace enseignant</h2>
+          <p>Gestion, suivi, sécurité et export des données de Maître Hibou.</p>
+        </div>
       </div>
-      <button class="btn-round teacher-close-btn" onclick="closeTeacherDashboard()" title="Fermer l’espace enseignant" aria-label="Fermer">✖</button>
+      <button class="teacher-fullscreen-close" onclick="closeTeacherDashboard()" aria-label="Fermer l’espace enseignant" title="Fermer">✖</button>
     </div>
 
-    <div class="teacher-actions teacher-fullscreen-actions">
+    <div class="teacher-fullscreen-actions">
       <button class="teacher-btn" onclick="exportTeacherCSV()">⬇️ Export CSV</button>
       <button class="teacher-btn secondary" onclick="renderTeacherDashboard()">🔄 Actualiser</button>
       <button class="teacher-btn danger" onclick="resetAllStudents()">🧹 Tout réinitialiser</button>
     </div>
 
-    <div class="teacher-dashboard-scroll">
+    <div class="teacher-fullscreen-content">
       <div id="teacherChallengeContent"></div>
       <div id="teacherPhase33Content"></div>
       <div id="teacherSafetyContent"></div>
@@ -3570,13 +3664,15 @@ function openTeacherDashboard() {
   const overlay = document.getElementById('teacherDashboardOverlay');
   if (!overlay) return;
   overlay.classList.remove('hidden');
+  document.body.classList.add('teacher-mode');
   document.body.classList.add('teacher-dashboard-open');
-  renderTeacherDashboard();
+  if (typeof renderTeacherDashboard === 'function') renderTeacherDashboard();
 }
 
 function closeTeacherDashboard() {
   const overlay = document.getElementById('teacherDashboardOverlay');
   if (overlay) overlay.classList.add('hidden');
+  document.body.classList.remove('teacher-mode');
   document.body.classList.remove('teacher-dashboard-open');
 }
 
@@ -9971,31 +10067,20 @@ header{
 </script>
 
 
-<script id="script-v16-teacher-hidden-access">
+
+<script id="script-v161-teacher-fullscreen-mode">
 (function(){
-  if (window.__teacherHiddenAccessV16) return;
-  window.__teacherHiddenAccessV16 = true;
+  if (window.__teacherFullscreenModeV161) return;
+  window.__teacherFullscreenModeV161 = true;
 
   const LONG_PRESS_MS = 5000;
-  let longPressTimer = null;
+  let timer = null;
   let activeTarget = null;
 
-  function openTeacherFromHiddenAccess(){
-    clearLongPress();
-
-    if (typeof window.openTeacherDashboard === "function") {
-      window.openTeacherDashboard();
-    } else {
-      const overlay = document.getElementById("teacherDashboardOverlay");
-      if (overlay) overlay.classList.remove("hidden");
-      document.body.classList.add("teacher-dashboard-open");
-    }
-  }
-
   function clearLongPress(){
-    if (longPressTimer) {
-      clearTimeout(longPressTimer);
-      longPressTimer = null;
+    if (timer) {
+      clearTimeout(timer);
+      timer = null;
     }
     if (activeTarget) {
       activeTarget.classList.remove("teacher-longpress-active");
@@ -10007,24 +10092,22 @@ header{
     clearLongPress();
     activeTarget = target;
     target.classList.add("teacher-longpress-active");
-    longPressTimer = setTimeout(openTeacherFromHiddenAccess, LONG_PRESS_MS);
+    timer = setTimeout(function(){
+      clearLongPress();
+      openTeacherDashboard();
+    }, LONG_PRESS_MS);
   }
 
   function installHiddenAccess(){
-    const targets = document.querySelectorAll(".logo-icon, .hibou-profile-owl");
-    targets.forEach(function(target){
-      if (target.dataset.teacherHiddenAccessInstalled === "1") return;
-      target.dataset.teacherHiddenAccessInstalled = "1";
+    document.querySelectorAll(".logo-icon, .hibou-profile-owl").forEach(function(target){
+      if (target.dataset.teacherAccessV161 === "1") return;
+      target.dataset.teacherAccessV161 = "1";
       target.classList.add("teacher-longpress-ready");
       target.title = "Maître Hibou";
 
-      target.addEventListener("touchstart", function(){
-        startLongPress(target);
-      }, {passive:true});
-
+      target.addEventListener("touchstart", function(){ startLongPress(target); }, {passive:true});
       target.addEventListener("mousedown", function(event){
-        if (event.button !== 0) return;
-        startLongPress(target);
+        if (event.button === 0) startLongPress(target);
       });
 
       ["touchend", "touchcancel", "mouseup", "mouseleave", "dragstart"].forEach(function(eventName){
@@ -10033,62 +10116,33 @@ header{
     });
   }
 
-  function installTeacherCloseBehaviors(){
-    const overlay = document.getElementById("teacherDashboardOverlay");
-    if (!overlay || overlay.dataset.closeBehaviorsInstalled === "1") return;
-    overlay.dataset.closeBehaviorsInstalled = "1";
-
-    overlay.addEventListener("click", function(event){
-      if (event.target === overlay && typeof window.closeTeacherDashboard === "function") {
-        window.closeTeacherDashboard();
-      }
-    });
-
-    document.addEventListener("keydown", function(event){
-      if (event.key === "Escape" && !overlay.classList.contains("hidden")) {
-        if (typeof window.closeTeacherDashboard === "function") window.closeTeacherDashboard();
-      }
-    });
-  }
-
-  const previousCloseTeacherDashboard = window.closeTeacherDashboard;
-  window.closeTeacherDashboard = function(){
-    const overlay = document.getElementById("teacherDashboardOverlay");
-    if (overlay) overlay.classList.add("hidden");
-    document.body.classList.remove("teacher-dashboard-open");
-
-    if (typeof previousCloseTeacherDashboard === "function") {
-      try { previousCloseTeacherDashboard(); } catch(e) {}
-    }
-  };
-
-  const previousOpenTeacherDashboard = window.openTeacherDashboard;
   window.openTeacherDashboard = function(){
     const overlay = document.getElementById("teacherDashboardOverlay");
     if (!overlay) return;
 
     overlay.classList.remove("hidden");
+    document.body.classList.add("teacher-mode");
     document.body.classList.add("teacher-dashboard-open");
 
-    if (typeof previousOpenTeacherDashboard === "function") {
-      try { previousOpenTeacherDashboard(); } catch(e) {}
-    } else if (typeof renderTeacherDashboard === "function") {
+    if (typeof renderTeacherDashboard === "function") {
       renderTeacherDashboard();
     }
-
-    overlay.classList.remove("hidden");
-    document.body.classList.add("teacher-dashboard-open");
   };
 
-  document.addEventListener("DOMContentLoaded", function(){
-    installHiddenAccess();
-    installTeacherCloseBehaviors();
+  window.closeTeacherDashboard = function(){
+    const overlay = document.getElementById("teacherDashboardOverlay");
+    if (overlay) overlay.classList.add("hidden");
+
+    document.body.classList.remove("teacher-mode");
+    document.body.classList.remove("teacher-dashboard-open");
+  };
+
+  document.addEventListener("keydown", function(event){
+    if (event.key === "Escape") closeTeacherDashboard();
   });
 
-  window.addEventListener("load", function(){
-    installHiddenAccess();
-    installTeacherCloseBehaviors();
-  });
+  document.addEventListener("DOMContentLoaded", installHiddenAccess);
+  window.addEventListener("load", installHiddenAccess);
 })();
 </script>
 

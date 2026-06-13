@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 Maître Hibou V15.3 - Bandeau stable</title>
+<title>🦉 Maître Hibou V15.4 - Tablette stable</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -8489,7 +8489,7 @@ body.competence-mode #masterChallengeCard.master-challenge-card{
     ensureTopCards();
     buildShell();
     updateMockupStats();
-    setInterval(updateMockupStats, 1200);
+    /* V15.4 tablette stable : rafraîchissement permanent supprimé */
   }
 
   document.addEventListener("DOMContentLoaded", initMockup);
@@ -9659,7 +9659,7 @@ header{
   document.addEventListener("DOMContentLoaded", function(){
     setTimeout(refreshHeaderCards, 80);
     setTimeout(refreshHeaderCards, 500);
-    setInterval(refreshHeaderCards, 1500);
+    /* V15.4 tablette stable : rafraîchissement permanent supprimé */
   });
   window.addEventListener("load", function(){ setTimeout(refreshHeaderCards, 150); });
 })();
@@ -9724,7 +9724,7 @@ header{
     fixHeader();
     setTimeout(fixHeader, 100);
     setTimeout(fixHeader, 700);
-    setInterval(fixHeader, 600);
+    /* V15.4 tablette stable : rafraîchissement permanent supprimé */
   });
   window.addEventListener("load", function(){ setTimeout(fixHeader, 150); });
 })();
@@ -9911,7 +9911,7 @@ header{
     normalizeLastSuccessText();
     setTimeout(normalizeLastSuccessText, 100);
     setTimeout(normalizeLastSuccessText, 600);
-    setInterval(normalizeLastSuccessText, 900);
+    /* V15.4 tablette stable : rafraîchissement permanent supprimé */
   });
   window.addEventListener("load", function(){
     setTimeout(normalizeLastSuccessText, 150);
@@ -11008,7 +11008,10 @@ window.HIBOU_CLASS_STUDENTS = [
     };
     const label = labels[mode] || labels.desktop;
 
-    if (badge) badge.innerHTML = label.icon + ' <span class="mode-label-full">' + label.text + '</span>';
+    
+    if (badge && !badge.dataset.studentWelcomeActive) {
+      badge.innerHTML = label.icon + ' <span class="mode-label-full">' + label.text + '</span>';
+    }
     if (deviceCard) deviceCard.textContent = label.card;
 
     if (mode === 'desktop') {
@@ -11100,155 +11103,177 @@ window.HIBOU_CLASS_STUDENTS = [
   }
 
   window.addEventListener('load', boot);
-  window.addEventListener('resize', function(){
-    if (!sessionStorage.getItem(V15_MODE_KEY) && !localStorage.getItem(V15_MODE_KEY)) setMode(detectDeviceMode());
-  });
+  /* V15.4 tablette stable : pas de recalcul automatique du mode au resize */
 })();
 </script>
 
 
 
 
-<style id="patch-v153-bandeau-stable">
-/* V15.3 - Bandeau supérieur stable : plus de strobo, pas de zoom, pas de flash */
+
+<style id="patch-v154-tablette-stable">
+/* V15.4 - Tablette stable : aucune animation dans le bandeau supérieur */
 header,
 .header-actions,
 .header-actions *,
+.device-mode-badge,
 .badge,
+.mockup-stat-card,
 .competence-header-btn,
-.subject-btn,
-.quick-questions {
+.btn-round {
   animation: none !important;
+  transition: none !important;
+  transform: none !important;
 }
 
+/* Taille fixe : la police ne grossit/rétrécit plus */
+header.mockup-header,
+header {
+  min-height: 84px !important;
+}
+.header-actions {
+  align-items: stretch !important;
+}
+.device-mode-badge,
+#deviceModeBadge,
+.badge,
+.mockup-stat-card,
+.competence-header-btn {
+  min-height: 54px !important;
+  height: 54px !important;
+  box-sizing: border-box !important;
+  line-height: 1.05 !important;
+  flex-shrink: 0 !important;
+}
+
+#deviceModeBadge {
+  width: 150px !important;
+  min-width: 150px !important;
+  max-width: 150px !important;
+  justify-content: center !important;
+  text-align: center !important;
+  overflow: hidden !important;
+  padding: 6px 8px !important;
+}
+
+.v154-welcome-line1 {
+  display: block !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  line-height: 1.05 !important;
+  color: var(--primary) !important;
+  white-space: nowrap !important;
+}
+.v154-welcome-line2 {
+  display: block !important;
+  margin-top: 2px !important;
+  font-size: 9px !important;
+  font-weight: 900 !important;
+  line-height: 1.05 !important;
+  color: var(--text-muted) !important;
+  white-space: normal !important;
+}
+
+/* Matières : pas de zoom actif/survol */
+.subject-btn,
 .subject-btn:hover,
 .subject-btn.active,
-.competence-header-btn:hover,
-.btn-round:hover {
+.subjects-bar .subject-btn:hover,
+.subjects-bar .subject-btn.active {
+  animation: none !important;
+  transition: none !important;
   transform: none !important;
   filter: none !important;
 }
 
-/* Les matières restent alignées : 6 sur PC, puis adaptation tablette */
-.subjects-bar {
-  display: grid !important;
-  grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
-  gap: 10px !important;
-  width: 100% !important;
-  max-width: 1180px !important;
-  margin: 0 auto !important;
-  overflow: visible !important;
-  white-space: normal !important;
+/* Garde un alignement stable en tablette */
+@media (orientation:landscape) and (max-width:1280px) {
+  .subjects-bar {
+    grid-template-columns: repeat(6, minmax(0,1fr)) !important;
+  }
 }
-.subjects-bar .subject-btn {
-  width: 100% !important;
-  min-width: 0 !important;
-}
-@media (max-width: 900px) {
-  .subjects-bar { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
-}
-@media (max-width: 520px) {
-  .subjects-bar { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
-}
-
-/* Message d'accueil dans le bandeau */
-#deviceModeBadge {
-  min-width: 150px;
-  justify-content: center;
-  text-align: center;
-}
-.v153-welcome-line1 {
-  font-size: 13px;
-  font-weight: 900;
-  color: var(--primary);
-  line-height: 1.1;
-}
-.v153-welcome-line2 {
-  display: block;
-  margin-top: 2px;
-  font-size: 10px;
-  font-weight: 900;
-  color: var(--text-muted);
-  line-height: 1.1;
+@media (orientation:portrait) and (max-width:900px) {
+  .subjects-bar {
+    grid-template-columns: repeat(3, minmax(0,1fr)) !important;
+  }
 }
 </style>
 
-<script id="patch-v153-bandeau-stable-js">
+<script id="patch-v154-tablette-stable-js">
 (function(){
-  let isUpdatingWelcome = false;
-
-  function cleanStudentName(raw){
-    const value = (raw || "").trim();
-    if (!value || value === "Élève" || value === "DEV" || value.toLowerCase().includes("bonjour")) return "";
+  function cleanName(value){
+    value = String(value || "").trim();
+    if (!value || value === "Élève" || value === "DEV") return "";
+    if (value.toLowerCase().includes("bonjour")) return "";
     return value;
   }
 
-  function getStudentName(){
+  function getName(){
     try {
       if (typeof prenomActuel !== "undefined") {
-        const n = cleanStudentName(prenomActuel);
-        if (n) return n;
+        var n1 = cleanName(prenomActuel);
+        if (n1) return n1;
       }
     } catch(e) {}
 
-    const eleveNom = document.getElementById("eleveNom");
-    if (eleveNom) {
-      const n = cleanStudentName(eleveNom.textContent);
-      if (n) return n;
+    var el = document.getElementById("eleveNom");
+    if (el) {
+      var n2 = cleanName(el.textContent);
+      if (n2) return n2;
     }
 
     try {
-      const stored = localStorage.getItem("elevePrenom") || localStorage.getItem("prenomActuel") || "";
-      const n = cleanStudentName(stored);
-      if (n) return n;
+      var keys = ["hibou_prenom", "maitreHibouCurrentStudent", "elevePrenom", "prenomActuel"];
+      for (var i=0; i<keys.length; i++) {
+        var n3 = cleanName(localStorage.getItem(keys[i]));
+        if (n3) return n3;
+      }
     } catch(e) {}
 
     return "";
   }
 
-  function applyWelcome(){
-    if (isUpdatingWelcome) return;
-    const badge = document.getElementById("deviceModeBadge");
+  function setWelcome(){
+    var badge = document.getElementById("deviceModeBadge");
     if (!badge) return;
 
-    const name = getStudentName();
-    const firstLine = name ? ("Bonjour " + name + " 🌟") : "Bonjour 🌟";
+    var name = getName();
+    if (!name) return;
 
-    const wanted =
-      '<span class="v153-welcome-line1">' + firstLine + '</span>' +
-      '<span class="v153-welcome-line2">Que souhaites-tu apprendre aujourd’hui ?</span>';
+    var html =
+      '<span class="v154-welcome-line1">Bonjour ' + name + ' 🌟</span>' +
+      '<span class="v154-welcome-line2">Que souhaites-tu apprendre ?</span>';
 
-    if (badge.innerHTML !== wanted) {
-      isUpdatingWelcome = true;
-      badge.innerHTML = wanted;
-      badge.classList.remove("bump");
-      setTimeout(function(){ isUpdatingWelcome = false; }, 0);
+    if (badge.innerHTML !== html) {
+      badge.dataset.studentWelcomeActive = "1";
+      badge.innerHTML = html;
     }
   }
 
   document.addEventListener("DOMContentLoaded", function(){
-    applyWelcome();
-    setTimeout(applyWelcome, 150);
-    setTimeout(applyWelcome, 600);
-    setTimeout(applyWelcome, 1200);
-
-    // Observer ciblé : uniquement le badge qui était réécrit par le mode appareil.
-    const badge = document.getElementById("deviceModeBadge");
-    if (badge) {
-      const observer = new MutationObserver(function(){
-        if (!isUpdatingWelcome) applyWelcome();
-      });
-      observer.observe(badge, { childList:true, characterData:true, subtree:true });
-    }
-
-    // Après la connexion élève et les changements d'interface.
-    document.addEventListener("click", function(){
-      setTimeout(applyWelcome, 100);
-      setTimeout(applyWelcome, 500);
-    });
+    setWelcome();
+    setTimeout(setWelcome, 250);
+    setTimeout(setWelcome, 900);
   });
 
-  window.applyV153Welcome = applyWelcome;
+  window.addEventListener("load", function(){
+    setTimeout(setWelcome, 250);
+  });
+
+  // Après connexion élève uniquement : pas de boucle permanente.
+  var oldSavePrenom = window.savePrenom;
+  if (typeof oldSavePrenom === "function" && !oldSavePrenom.__v154StableWrapped) {
+    var wrapped = async function(){
+      var result = await oldSavePrenom.apply(this, arguments);
+      setTimeout(setWelcome, 120);
+      setTimeout(setWelcome, 600);
+      return result;
+    };
+    wrapped.__v154StableWrapped = true;
+    window.savePrenom = wrapped;
+  }
+
+  window.applyV154Welcome = setWelcome;
 })();
 </script>
 

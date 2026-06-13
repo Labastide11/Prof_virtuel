@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 Maître Hibou V15.0 - Multi-appareils</title>
+<title>🦉 Maître Hibou V15.1 - Multi-appareils + Profil développeur</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -3272,6 +3272,28 @@ body.device-phone .desktop-teacher-home{display:none !important;}
 }
 </style>
 
+
+<style id="patch-profil-developpeur-v151">
+body.developer-profile-active .hibou-profile-panel{
+  border-color:#FFD93D !important;
+  position:relative;
+}
+body.developer-profile-active .hibou-profile-panel::before{
+  content:"🛠️ MODE DÉVELOPPEUR";
+  position:absolute;
+  top:8px;
+  right:12px;
+  background:#FFFCEB;
+  border:2px solid #FFD93D;
+  border-radius:999px;
+  padding:4px 9px;
+  font-size:11px;
+  font-weight:900;
+  color:#7A5C00;
+  z-index:2;
+}
+</style>
+
 </head>
 <body>
 
@@ -3692,6 +3714,60 @@ async function savePrenom() {
   const input = document.getElementById('prenomInput').value.trim();
   const error = document.getElementById('prenomError');
   if (!input) { error.textContent = 'Entre ton prénom !'; return; }
+
+  // === V15.1 : profil développeur local ===
+  // Tape "test", "dev" ou "developpeur" pour entrer sans profil élève Google Sheets.
+  const normalizedInput = normalizeStudentName(input);
+  const isDeveloperProfile = (
+    normalizedInput === 'test' ||
+    normalizedInput === 'dev' ||
+    normalizedInput === 'developpeur'
+  );
+
+  if (isDeveloperProfile) {
+    error.textContent = '';
+    document.body.classList.add('developer-profile-active');
+
+    prenomActuel = 'Profil développeur';
+    score = 150;
+    badges = ['mode-dev', 'test-interface', 'badge-demo'];
+    streak = 3;
+
+    localStorage.setItem(getStudentKey('score'), score);
+    localStorage.setItem(getStudentKey('badges'), JSON.stringify(badges));
+    localStorage.setItem(getStudentKey('streak'), streak);
+    localStorage.setItem('hibou_developer_profile_active', '1');
+
+    document.getElementById('prenomOverlay').classList.add('hidden');
+    document.getElementById('eleveBadge').style.display = 'flex';
+    document.getElementById('eleveNom').textContent = 'DEV';
+
+    if (typeof refreshScoreDisplays === "function") refreshScoreDisplays();
+    if (typeof renderStudentProgressPanel === "function") renderStudentProgressPanel();
+    if (typeof renderMasterChallengeCard === "function") renderMasterChallengeCard();
+    if (typeof refreshHibouProfile === "function") refreshHibouProfile();
+
+    const container = document.getElementById('chatContainer');
+    if (container) {
+      const div = document.createElement('div');
+      div.className = 'message prof';
+      div.innerHTML = `<div class="avatar prof">🛠️</div><div class="bubble"><strong>Mode développeur activé.</strong><br>Tu peux tester l'affichage PC/tablette sans utiliser un vrai profil élève. Points de démo : <strong>${score} ⭐</strong>.</div>`;
+      container.appendChild(div);
+    }
+
+    const savedKey = localStorage.getItem('groq_key');
+    if (savedKey) GROQ_KEY = savedKey;
+    if (typeof loadWelcomeQuiz === "function") loadWelcomeQuiz();
+
+    if (!savedKey && (typeof securityMode === 'undefined' || securityMode !== 'local')) {
+      const modalOverlay = document.getElementById('modalOverlay');
+      const apiKeyInput = document.getElementById('apiKeyInput');
+      if (modalOverlay) modalOverlay.classList.remove('hidden');
+      if (apiKeyInput) apiKeyInput.focus();
+    }
+    return;
+  }
+
   error.textContent = 'Je vérifie ton prénom...';
 
   const officialRoster = await loadStudentsFromSheet();
@@ -3700,26 +3776,30 @@ async function savePrenom() {
     error.textContent = 'Prénom non reconnu. Vérifie l’orthographe ou demande au maître.';
     return;
   }
+
   error.textContent = '';
+  document.body.classList.remove('developer-profile-active');
+  localStorage.removeItem('hibou_developer_profile_active');
+
   prenomActuel = titleCaseStudentName(matchedName);
   addStudentToRoster(prenomActuel);
   document.getElementById('prenomOverlay').classList.add('hidden');
   document.getElementById('eleveBadge').style.display = 'flex';
   document.getElementById('eleveNom').textContent = prenomActuel;
-  
+
   loadStudentProgress();
   refreshScoreDisplays();
   renderStudentProgressPanel();
   renderMasterChallengeCard();
   if (typeof refreshHibouProfile === "function") refreshHibouProfile();
-  
+
   const container = document.getElementById('chatContainer');
   const savedMsg = score > 0 ? ` Tu as déjà <strong>${score} points</strong> ! 🌟` : '';
   const div = document.createElement('div');
   div.className = 'message prof';
   div.innerHTML = `<div class="avatar prof">🦉</div><div class="bubble">Bonjour <strong>${prenomActuel}</strong> ! Ravi de te revoir !${savedMsg} Prêt(e) à travailler ? 😊</div>`;
   container.appendChild(div);
-  
+
   const savedKey = localStorage.getItem('groq_key');
   if (savedKey) GROQ_KEY = savedKey;
   loadWelcomeQuiz();
@@ -11102,37 +11182,6 @@ window.HIBOU_CLASS_STUDENTS = [
   window.addEventListener('resize', function(){
     if (!sessionStorage.getItem(V15_MODE_KEY) && !localStorage.getItem(V15_MODE_KEY)) setMode(detectDeviceMode());
   });
-})();
-</script>
-
-
-<script id="dev-profile-v151">
-window.DEV_PROFILE_ENABLED = true;
-
-(function(){
-const normalizeName = s => (s||"")
- .toLowerCase()
- .normalize("NFD")
- .replace(/[\u0300-\u036f]/g,"")
- .trim();
-
-document.addEventListener("DOMContentLoaded", ()=>{
-  const input = document.querySelector(".prenom-input");
-  const btn = document.querySelector(".prenom-btn");
-  if(!input || !btn) return;
-
-  const oldClick = btn.onclick;
-
-  btn.addEventListener("click", function(){
-    const v = normalizeName(input.value);
-    if(v==="test" || v==="dev"){
-      localStorage.setItem("elevePrenom","DEV TEST");
-      localStorage.setItem("score","150");
-      localStorage.setItem("badges","12");
-      alert("🛠️ Profil développeur activé");
-    }
-  }, true);
-});
 })();
 </script>
 

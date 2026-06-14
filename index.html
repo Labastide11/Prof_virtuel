@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 Maître Hibou V17.1.7 - Changer d’élève toujours visible</title>
+<title>🦉 Maître Hibou V17.1.8 - Ergonomie tablette</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -4047,6 +4047,120 @@ body.prenom-mode .class-motivation-panel {
       padding:9px 12px !important;
       font-size:13px !important;
       max-width:calc(100vw - 20px) !important;
+    }
+  }
+</style>
+
+
+<!-- === PATCH V17.1.8 : ergonomie tablette, moins d'espace vide sous le chat === -->
+<style id="patch-v1718-ergonomie-tablette-chat-compact">
+  /*
+    Objectif : éviter de devoir scroller pour atteindre "Changer d'élève".
+    On réduit surtout la hauteur réservée au chat et l'espace entre les bulles.
+  */
+
+  body:not(.prenom-mode){
+    padding-bottom: 52px !important;
+  }
+
+  .chat-container{
+    gap: 8px !important;
+    padding-top: 8px !important;
+    padding-bottom: 6px !important;
+  }
+
+  .message{
+    gap: 8px !important;
+  }
+
+  .bubble{
+    padding: 9px 13px !important;
+    line-height: 1.38 !important;
+  }
+
+  .avatar{
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 18px !important;
+  }
+
+  .input-area{
+    padding-top: 6px !important;
+    padding-bottom: 6px !important;
+  }
+
+  .input-wrapper{
+    padding: 4px 8px !important;
+  }
+
+  .chat-input{
+    padding: 4px 4px !important;
+    min-height: 32px !important;
+  }
+
+  @media (max-width: 1180px), (max-height: 900px){
+    .chat-container{
+      flex: 0 0 42vh !important;
+      min-height: 210px !important;
+      max-height: 45vh !important;
+      gap: 7px !important;
+      padding: 8px 12px 4px 12px !important;
+    }
+
+    .bubble{
+      padding: 8px 12px !important;
+      font-size: 14px !important;
+      line-height: 1.34 !important;
+      border-radius: 16px !important;
+    }
+
+    .quick-questions{
+      margin-bottom: 6px !important;
+      padding-bottom: 6px !important;
+      gap: 6px !important;
+    }
+
+    .quick-btn{
+      padding: 6px 10px !important;
+      font-size: 12px !important;
+    }
+
+    .input-area{
+      padding: 5px 10px !important;
+    }
+
+    body:not(.prenom-mode) .logout-area{
+      bottom: 6px !important;
+      left: 8px !important;
+    }
+
+    body:not(.prenom-mode) .logout-btn{
+      min-height: 36px !important;
+      padding: 7px 10px !important;
+      font-size: 12px !important;
+    }
+  }
+
+  @media (max-height: 760px){
+    .chat-container{
+      flex-basis: 38vh !important;
+      min-height: 185px !important;
+      max-height: 41vh !important;
+    }
+
+    .bubble{
+      padding: 7px 11px !important;
+      line-height: 1.28 !important;
+    }
+
+    .input-wrapper{
+      min-height: 40px !important;
+    }
+
+    .action-btn{
+      width: 32px !important;
+      height: 32px !important;
+      font-size: 14px !important;
     }
   }
 </style>

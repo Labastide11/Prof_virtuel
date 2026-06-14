@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 Maître Hibou V16.9.7 - Quiz compréhension 3 questions</title>
+<title>🦉 Maître Hibou V17.0 - Journal des questions Google Sheets</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -4032,7 +4032,7 @@ body.prenom-mode .class-motivation-panel {
 <div class="chat-container" id="chatContainer">
   <div class="message prof">
     <div class="avatar prof">🦉</div>
-    <div class="bubble">Coucou ! Je suis Maître Hibou, ton instituteur virtuel. La banque CE2 locale est enrichie, et les réponses IA passent maintenant par Mistral !</div>
+    <div class="bubble">Coucou ! Je suis Maître Hibou, ton instituteur virtuel. Les réponses IA passent par Mistral et tes questions sont enregistrées dans le journal du maître pour valoriser ta curiosité !</div>
   </div>
 </div>
 
@@ -4044,7 +4044,7 @@ body.prenom-mode .class-motivation-panel {
       <button class="action-btn" onclick="sendMessage()">🚀</button>
     </div>
   </div>
-  <div class="security-note">Mode CE2 sécurisé : questions filtrées, réponses contrôlées, journal enseignant disponible.</div>
+  <div class="security-note">🦉 Ta question est enregistrée avec ton prénom. ⭐ Poser des questions est une excellente façon d’apprendre !</div>
   <div class="logout-area">
     <button class="logout-btn" onclick="changerEleve()">👤 Changer d'élève / Donner la tablette</button>
   </div>
@@ -4133,7 +4133,7 @@ let welcomeQuizSubject = 'général';
 const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbzeHY0Vm-O923mZfgQjmvUdtJUIEVUVR99srqocBldvkl7JPWn49K7tqqEthQB4JDQm/exec';
 const MISTRAL_API_URL = 'https://api.mistral.ai/v1/chat/completions';
 const MISTRAL_MODEL = 'mistral-small-latest';
-const HIBOU_QUESTION_LOG_URL = 'https://script.google.com/macros/s/AKfycbzcgMiY7pEKb5M9jKYRfM2OMGB7lISvw-VRZzhdLrnIaQcu3gSAoEobrG7O0M9YuU8n/exec';
+const HIBOU_QUESTION_LOG_URL = 'https://script.google.com/macros/s/AKfycbwGcErZ0he06Dg_bpPDaHtPHa6fAcDQ-31tB7Rlr9w2JZcNaQnP9YIABJYf-CKpFfpF/exec';
 
 // === V3 Phase 3.1 : banque locale CE2 et défis du maître ===
 const MASTER_CHALLENGE_KEY = 'hibou_master_challenge_v31';
@@ -6298,35 +6298,57 @@ function getQuestionJournal(){
 function saveQuestionJournal(logs){
   localStorage.setItem('hibou_question_journal', JSON.stringify(logs.slice(0,120)));
 }
+function getCurrentSubjectLabel(){
+  const labels = {
+    general: 'Général',
+    maths: 'Maths',
+    francais: 'Français',
+    sciences: 'Sciences',
+    geographie: 'Géographie',
+    anglais: 'Anglais',
+    jeux: 'Jeux'
+  };
+  return labels[currentSubject] || currentSubject || 'Général';
+}
+
 function sendQuestionToRemoteLog(entry){
   if (!HIBOU_QUESTION_LOG_URL) return;
   try {
+    const now = new Date();
     fetch(HIBOU_QUESTION_LOG_URL, {
       method: 'POST',
       mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        date: entry.date || new Date().toLocaleString('fr-FR'),
+        date: entry.dateOnly || now.toLocaleDateString('fr-FR'),
+        heure: entry.timeOnly || now.toLocaleTimeString('fr-FR'),
         eleve: entry.student || prenomActuel || 'Élève non identifié',
         prenom: entry.student || prenomActuel || 'Élève non identifié',
+        matiere: entry.subject || getCurrentSubjectLabel(),
         question: entry.question || '',
-        statut: entry.status || entry.category || 'Question posée',
-        decision: entry.reason || '',
-        source: 'Chat Maître Hibou - Mistral'
+        reponse: entry.response || entry.reponse || '',
+        reponseIA: entry.response || entry.reponse || '',
+        pointsCuriosite: entry.pointsCuriosite || 1,
+        statut: entry.status || 'Question IA',
+        source: 'Maître Hibou V17.0 - Mistral'
       })
     }).catch(() => console.log('Journal distant indisponible'));
   } catch(e) {
     console.log('Erreur journal distant');
   }
 }
-function logQuestionToJournal(question, status, category, reason){
+function logQuestionToJournal(question, status, category, response){
+  const now = new Date();
   const entry = {
-    date:new Date().toLocaleString('fr-FR'),
-    student:prenomActuel || 'Élève non identifié',
-    question:String(question).slice(0,280),
-    status:status || 'À vérifier',
-    category:category || '',
-    reason:reason || ''
+    date: now.toLocaleString('fr-FR'),
+    dateOnly: now.toLocaleDateString('fr-FR'),
+    timeOnly: now.toLocaleTimeString('fr-FR'),
+    student: prenomActuel || 'Élève non identifié',
+    subject: category || getCurrentSubjectLabel(),
+    question: String(question || '').slice(0,600),
+    response: String(response || '').replace('[QUIZ_DISPONIBLE]', '').trim().slice(0,2500),
+    status: status || 'Question IA',
+    pointsCuriosite: 1
   };
   const logs = getQuestionJournal();
   logs.unshift(entry);
@@ -6437,9 +6459,6 @@ async function sendMessage() {
   const input = document.getElementById('userInput');
   const text = input.value.trim();
   if (!text) return;
-  // V16.9.7 : chaque question est enregistrée avec le prénom de l'élève
-  // dans le carnet local et envoyée vers le Google Sheet professeur.
-  logQuestionToJournal(text, 'Question posée', 'chat IA', 'Question enregistrée avant envoi à Mistral');
   const security = analyzeQuestionForCE2(text);
   if (!security.allowed) {
     addMessage('user', text);
@@ -6470,7 +6489,11 @@ async function sendMessage() {
   showTyping();
   const reply = await askGemini(text);
   removeTyping();
-  if (reply) { addMessage('prof', reply); speak(reply.replace('[QUIZ_DISPONIBLE]', '')); }
+  if (reply) {
+    addMessage('prof', reply);
+    logQuestionToJournal(text, 'Réponse IA', getCurrentSubjectLabel(), reply);
+    speak(reply.replace('[QUIZ_DISPONIBLE]', ''));
+  }
 }
 
 function sendQuick(text) { document.getElementById('userInput').value = text; sendMessage(); }

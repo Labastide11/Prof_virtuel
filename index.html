@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 Maître Hibou V16.9 - Consolidation stable</title>
+<title>🦉 Maître Hibou V16.9.1 - Ancre ceinture sans scroll</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -13291,6 +13291,98 @@ window.__skillsTeacherV51 = true;
     "non_supprime": "anciens patchs encore utiles ou non vérifiés fonctionnellement"
   }
 }
+</script>
+
+
+<script id="script-v1691-ancre-ceinture-sans-scroll">
+(function(){
+  if(window.__maitreHibouV1691AncreCeinture) return;
+  window.__maitreHibouV1691AncreCeinture = true;
+
+  function findSkillMenuMessage(){
+    const boxes = Array.from(document.querySelectorAll(".skill-check-box"));
+    const box = boxes.find(function(el){
+      const txt = (el.textContent || "").toLowerCase();
+      return txt.includes("passer une ceinture")
+        || txt.includes("vérifier une compétence")
+        || txt.includes("valider une compétence")
+        || txt.includes("choisis une compétence")
+        || el.getAttribute("data-unique-skill-menu") === "true";
+    });
+    return box ? box.closest(".message") : null;
+  }
+
+  function getChat(){
+    return document.getElementById("chatContainer");
+  }
+
+  function keepAtAnchor(chat, anchorTop){
+    if(!chat) return;
+    const target = Math.max(0, anchorTop - 8);
+    chat.scrollTop = target;
+    setTimeout(function(){ chat.scrollTop = target; }, 0);
+    setTimeout(function(){ chat.scrollTop = target; }, 80);
+    setTimeout(function(){ chat.scrollTop = target; }, 250);
+  }
+
+  const oldStartBelt = window.startBeltCheckV168;
+  if(typeof oldStartBelt === "function" && !oldStartBelt.__v1691Wrapped){
+    const wrappedStartBelt = function(skillId){
+      const chat = getChat();
+      const menuMessage = findSkillMenuMessage();
+      const anchorTop = menuMessage ? menuMessage.offsetTop : (chat ? chat.scrollTop : 0);
+
+      const beforeMessages = chat ? Array.from(chat.querySelectorAll(".message")) : [];
+      const result = oldStartBelt.apply(this, arguments);
+
+      setTimeout(function(){
+        const afterMessages = chat ? Array.from(chat.querySelectorAll(".message")) : [];
+        const newBeltMessage = afterMessages
+          .filter(function(m){ return !beforeMessages.includes(m); })
+          .reverse()
+          .find(function(m){
+            return m.classList.contains("active-belt-message") || m.querySelector("#beltBoxV168");
+          }) || (chat ? chat.querySelector(".message.active-belt-message:last-child") : null);
+
+        if(newBeltMessage){
+          newBeltMessage.setAttribute("data-v1691-belt-anchor", "true");
+
+          // Remplace la liste des compétences par l'évaluation choisie :
+          // cela évite d'ajouter la ceinture tout en bas du chat.
+          if(menuMessage && menuMessage.parentNode){
+            menuMessage.parentNode.insertBefore(newBeltMessage, menuMessage);
+            menuMessage.remove();
+          }
+
+          keepAtAnchor(chat, anchorTop);
+        }
+      }, 0);
+
+      setTimeout(function(){ keepAtAnchor(chat, anchorTop); }, 120);
+      return result;
+    };
+    wrappedStartBelt.__v1691Wrapped = true;
+    window.startBeltCheckV168 = wrappedStartBelt;
+    window.startSkillCheck = function(skillId){
+      return window.startBeltCheckV168(skillId);
+    };
+  }
+
+  // Sécurité : si un vieux script force encore le bas du chat juste après le clic,
+  // on revient sur l'ancre de la ceinture.
+  document.addEventListener("click", function(evt){
+    const btn = evt.target && evt.target.closest ? evt.target.closest(".skill-check-btn") : null;
+    if(!btn) return;
+
+    const chat = getChat();
+    const menuMessage = findSkillMenuMessage();
+    const anchorTop = menuMessage ? menuMessage.offsetTop : (chat ? chat.scrollTop : 0);
+
+    setTimeout(function(){ keepAtAnchor(chat, anchorTop); }, 60);
+    setTimeout(function(){ keepAtAnchor(chat, anchorTop); }, 180);
+    setTimeout(function(){ keepAtAnchor(chat, anchorTop); }, 420);
+  }, true);
+})();
 </script>
 
 </body>

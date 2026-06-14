@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 Maître Hibou V17.0.1 - Journal des questions Google Sheets</title>
+<title>🦉 Maître Hibou V17.0.2 - Journal des questions Google Sheets</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -4283,6 +4283,11 @@ function savePrenom() {
   if (!input) { error.textContent = 'Entre ton prénom !'; return; }
   
   prenomActuel = input;
+  window.prenomActuel = input;
+  try {
+    localStorage.setItem('hibou_prenom', input);
+    localStorage.setItem('hibou_last_prenom', input);
+  } catch(e) {}
   addStudentToRoster(prenomActuel);
   document.getElementById('prenomOverlay').classList.add('hidden');
   document.getElementById('eleveBadge').style.display = 'flex';
@@ -6298,6 +6303,34 @@ function safeRefusalMessage(){
 function localOnlyMessage(){
   return "Le mode 'banque locale uniquement' est activé. Je ne contacte pas l'IA. Tu peux utiliser les quiz locaux, les défis, les tables de multiplication, le nom commun et les révisions CE2. 🦉";
 }
+
+function getCurrentStudentNameForLog(){
+  // V17.0.2 : source unique et robuste pour éviter "Élève non identifié" dans Google Sheets.
+  try { if (typeof prenomActuel !== 'undefined' && String(prenomActuel || '').trim()) return String(prenomActuel).trim(); } catch(e) {}
+  try { if (window.prenomActuel && String(window.prenomActuel).trim()) return String(window.prenomActuel).trim(); } catch(e) {}
+  try {
+    const currentStudent = JSON.parse(localStorage.getItem('hibou_current_student') || '{}');
+    if (currentStudent && currentStudent.prenom) return String(currentStudent.prenom).trim();
+  } catch(e) {}
+  try {
+    return String(localStorage.getItem('hibou_last_prenom') || localStorage.getItem('hibou_prenom') || '').trim() || 'Élève non identifié';
+  } catch(e) {}
+  return 'Élève non identifié';
+}
+function cleanStudentKeyForLog(name){
+  return String(name || 'eleve').trim().toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[^a-z0-9_-]/g,'_') || 'eleve';
+}
+function addCuriosityPointForStudent(studentName){
+  const safeName = cleanStudentKeyForLog(studentName);
+  const key = 'hibou_curiosity_points_' + safeName;
+  let total = 0;
+  try { total = Number(localStorage.getItem(key) || 0); } catch(e) { total = 0; }
+  total += 1;
+  try { localStorage.setItem(key, String(total)); } catch(e) {}
+  return total;
+}
 function getQuestionJournal(){
   return JSON.parse(localStorage.getItem('hibou_question_journal') || '[]');
 }
@@ -6328,15 +6361,15 @@ function sendQuestionToRemoteLog(entry){
       body: JSON.stringify({
         date: entry.dateOnly || now.toLocaleDateString('fr-FR'),
         heure: entry.timeOnly || now.toLocaleTimeString('fr-FR'),
-        eleve: entry.student || prenomActuel || 'Élève non identifié',
-        prenom: entry.student || prenomActuel || 'Élève non identifié',
+        eleve: entry.student || getCurrentStudentNameForLog(),
+        prenom: entry.student || getCurrentStudentNameForLog(),
         matiere: entry.subject || getCurrentSubjectLabel(),
         question: entry.question || '',
         reponse: entry.response || entry.reponse || '',
         reponseIA: entry.response || entry.reponse || '',
         pointsCuriosite: entry.pointsCuriosite || 1,
         statut: entry.status || 'Question IA',
-        source: 'Maître Hibou V17.0 - Mistral'
+        source: 'Maître Hibou V17.0.2 - Mistral'
       })
     }).catch(() => console.log('Journal distant indisponible'));
   } catch(e) {
@@ -6349,13 +6382,14 @@ function logQuestionToJournal(question, status, category, response){
     date: now.toLocaleString('fr-FR'),
     dateOnly: now.toLocaleDateString('fr-FR'),
     timeOnly: now.toLocaleTimeString('fr-FR'),
-    student: prenomActuel || 'Élève non identifié',
+    student: getCurrentStudentNameForLog(),
     subject: category || getCurrentSubjectLabel(),
     question: String(question || '').slice(0,600),
     response: String(response || '').replace('[QUIZ_DISPONIBLE]', '').trim().slice(0,2500),
     status: status || 'Question IA',
-    pointsCuriosite: 1
+    pointsCuriosite: 0
   };
+  entry.pointsCuriosite = addCuriosityPointForStudent(entry.student);
   const logs = getQuestionJournal();
   logs.unshift(entry);
   saveQuestionJournal(logs);
@@ -6366,7 +6400,7 @@ function logBlockedQuestion(question, category, reason){
   const logs = JSON.parse(localStorage.getItem('hibou_blocked_log') || '[]');
   const entry = {
     date:new Date().toLocaleString('fr-FR'),
-    student:prenomActuel || 'Élève non identifié',
+    student:getCurrentStudentNameForLog(),
     question:String(question).slice(0,180),
     category:category || 'inconnu',
     reason:reason || ''
@@ -10967,7 +11001,10 @@ window.__skillsTeacherV51 = true;
       }
 
       window.prenomActuel = matched.prenom;
+      // V17.0.2 : synchronise aussi la variable globale historique utilisée par le journal des questions.
+      try { prenomActuel = matched.prenom; } catch(e) {}
       try {
+        localStorage.setItem("hibou_prenom", matched.prenom);
         localStorage.setItem("hibou_last_prenom", matched.prenom);
         localStorage.setItem("hibou_current_student", JSON.stringify(matched));
       } catch(e) {}

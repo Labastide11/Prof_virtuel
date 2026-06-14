@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 Maître Hibou V16.8.6 - Connexion débloquée</title>
+<title>🦉 Maître Hibou V16.8.7 - Bouton synchronisation restauré</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -4055,6 +4055,7 @@ body.prenom-mode .class-motivation-panel {
 
     <div class="teacher-fullscreen-actions">
       <button class="teacher-btn" onclick="exportTeacherCSV()">⬇️ Export CSV</button>
+      <button class="teacher-btn" onclick="syncMaitreHibouToGoogleSheets()">☁️ Synchroniser Google Sheets</button>
       <button class="teacher-btn secondary" onclick="renderTeacherDashboard()">🔄 Actualiser</button>
       <button class="teacher-btn danger" onclick="resetAllStudents()">🧹 Tout réinitialiser</button>
     </div>
@@ -13380,6 +13381,57 @@ window.__skillsTeacherV51 = true;
   });
 
   refreshSoon();
+})();
+</script>
+
+
+<script id="script-v1687-bouton-sync-google-sheets">
+(function(){
+  if(window.__maitreHibouV1687SyncButton) return;
+  window.__maitreHibouV1687SyncButton = true;
+
+  window.syncMaitreHibouToGoogleSheets = async function(){
+    try{
+      if(typeof window.syncCompetencesToGoogleSheetsV168 === "function"){
+        await window.syncCompetencesToGoogleSheetsV168();
+        return;
+      }
+      if(typeof window.syncCompetencesToGoogleSheetsV167 === "function"){
+        await window.syncCompetencesToGoogleSheetsV167();
+        return;
+      }
+      if(typeof window.syncCompetencesToGoogleSheetsV166 === "function"){
+        await window.syncCompetencesToGoogleSheetsV166();
+        return;
+      }
+      alert("Synchronisation indisponible : fonction Google Sheets introuvable dans cette version.");
+    }catch(error){
+      alert("Erreur de synchronisation Google Sheets : " + (error && error.message ? error.message : error));
+    }
+  };
+
+  document.addEventListener("DOMContentLoaded", function(){
+    const actions = document.querySelector(".teacher-fullscreen-actions");
+    if(!actions) return;
+    if(actions.querySelector('[data-v1687-sync="1"]')) return;
+
+    const already = Array.from(actions.querySelectorAll("button")).some(function(btn){
+      return (btn.textContent || "").toLowerCase().includes("synchroniser");
+    });
+    if(already) return;
+
+    const btn = document.createElement("button");
+    btn.className = "teacher-btn";
+    btn.dataset.v1687Sync = "1";
+    btn.textContent = "☁️ Synchroniser Google Sheets";
+    btn.onclick = window.syncMaitreHibouToGoogleSheets;
+
+    const actualiser = Array.from(actions.querySelectorAll("button")).find(function(b){
+      return (b.textContent || "").toLowerCase().includes("actualiser");
+    });
+    if(actualiser) actions.insertBefore(btn, actualiser);
+    else actions.appendChild(btn);
+  });
 })();
 </script>
 

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 Maître Hibou V17.0.9 - Quiz IA relancé + points persistants</title>
+<title>🦉 Maître Hibou V17.1.1 - Points Google Sheets relus</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -14224,6 +14224,149 @@ window.__skillsTeacherV51 = true;
         return '<button type="button" class="quiz-option" onclick="answerQuiz('+i+')">'+String(opt).replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</button>';
       }).join('')+'</div>';
   };
+})();
+</script>
+
+
+<script id="patch-v1711-points-google-sheets-relecture">
+/*
+  V17.1.1 - Points réellement persistants Google Sheets
+  -------------------------------------------------------
+  Ce patch garde la sauvegarde locale, mais ajoute surtout la RELECTURE du score
+  dans l'onglet Google Sheets "Points" quand l'élève se connecte.
+
+  Apps Script attendu :
+  - doGet(e) avec ?prenom=... qui renvoie JSON { success:true, prenom:"...", score:123 }
+  - doPost(e) qui écrit/met à jour { prenom, score }
+*/
+(function(){
+  if (window.__hibouV1711PointsSheets) return;
+  window.__hibouV1711PointsSheets = true;
+
+  function getScoresUrl(){
+    try {
+      if (typeof GOOGLE_SHEET_URL !== 'undefined' && GOOGLE_SHEET_URL) return GOOGLE_SHEET_URL;
+    } catch(e) {}
+    return 'https://script.google.com/macros/s/AKfycbzeHY0Vm-O923mZfgQjmvUdtJUIEVUVR99srqocBldvkl7JPWn49K7tqqEthQB4JDQm/exec';
+  }
+
+  function cleanName(name){
+    return String(name || '').trim();
+  }
+
+  function remoteScoreKey(name){
+    var safe = cleanName(name).toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+      .replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'') || 'eleve';
+    return 'hibou_remote_score_' + safe;
+  }
+
+  function refreshAllScoreViews(){
+    try { if (typeof refreshScoreDisplays === 'function') refreshScoreDisplays(); } catch(e) {}
+    try { if (typeof renderStudentProgressPanel === 'function') renderStudentProgressPanel(); } catch(e) {}
+    try { if (typeof refreshHibouProfile === 'function') refreshHibouProfile(); } catch(e) {}
+    try { if (typeof renderHibouProfile === 'function') renderHibouProfile(); } catch(e) {}
+    try { if (typeof updateStudentHeader === 'function') updateStudentHeader(); } catch(e) {}
+    try { if (typeof refreshHeaderCards === 'function') refreshHeaderCards(); } catch(e) {}
+  }
+
+  async function loadScoreFromGoogleSheetsV1711(name){
+    name = cleanName(name || window.prenomActuel || (typeof prenomActuel !== 'undefined' ? prenomActuel : ''));
+    if (!name) return null;
+
+    var url = getScoresUrl() + '?prenom=' + encodeURIComponent(name) + '&t=' + Date.now();
+
+    try {
+      var response = await fetch(url, { method:'GET', cache:'no-store' });
+      if (!response.ok) throw new Error('HTTP ' + response.status);
+      var data = await response.json();
+      var remoteScore = Number(data && data.score);
+      if (!Number.isFinite(remoteScore) || remoteScore < 0) remoteScore = 0;
+
+      try { localStorage.setItem(remoteScoreKey(name), String(remoteScore)); } catch(e) {}
+
+      var localScore = Number(typeof score !== 'undefined' ? score : 0);
+      if (!Number.isFinite(localScore) || localScore < 0) localScore = 0;
+
+      // Sécurité anti-régression : on ne redescend jamais les points.
+      var mergedScore = Math.max(localScore, remoteScore);
+      if (typeof score !== 'undefined') score = mergedScore;
+      window.score = mergedScore;
+
+      try { if (typeof saveLocalStudentValue === 'function') saveLocalStudentValue('score', String(mergedScore), name); } catch(e) {}
+      refreshAllScoreViews();
+
+      console.log('✅ Score relu depuis Google Sheets pour ' + name + ' :', remoteScore, '→ affiché :', mergedScore);
+      return mergedScore;
+    } catch(error) {
+      console.warn('⚠️ Relecture du score Google Sheets impossible. Score local conservé.', error);
+      return null;
+    }
+  }
+
+  function postScoreToGoogleSheetsV1711(name, value){
+    name = cleanName(name || window.prenomActuel || (typeof prenomActuel !== 'undefined' ? prenomActuel : ''));
+    if (!name) return;
+
+    var valueToSend = Number(value);
+    if (!Number.isFinite(valueToSend) || valueToSend < 0) valueToSend = 0;
+
+    try {
+      fetch(getScoresUrl(), {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prenom: name, score: valueToSend })
+      }).catch(function(){ console.warn('Sauvegarde Google Sheets indisponible.'); });
+      try { localStorage.setItem(remoteScoreKey(name), String(valueToSend)); } catch(e) {}
+    } catch(e) {
+      console.warn('Erreur sauvegarde Google Sheets.', e);
+    }
+  }
+
+  // 1) Quand le profil local est chargé, on va aussi lire le score distant.
+  var oldLoadStudentProgress = window.loadStudentProgress || (typeof loadStudentProgress === 'function' ? loadStudentProgress : null);
+  window.loadStudentProgress = function(){
+    if (oldLoadStudentProgress) oldLoadStudentProgress.apply(this, arguments);
+    var name = cleanName(window.prenomActuel || (typeof prenomActuel !== 'undefined' ? prenomActuel : ''));
+    if (name) setTimeout(function(){ loadScoreFromGoogleSheetsV1711(name); }, 50);
+  };
+  try { loadStudentProgress = window.loadStudentProgress; } catch(e) {}
+
+  // 2) Quand on sauvegarde les points, on relit d'abord Sheets pour éviter d'écraser 500 par 10.
+  window.sauvegarderScore = function(){
+    var name = cleanName(window.prenomActuel || (typeof prenomActuel !== 'undefined' ? prenomActuel : ''));
+    if (!name) return;
+
+    try {
+      if (typeof saveLocalStudentValue === 'function') {
+        saveLocalStudentValue('score', String(typeof score !== 'undefined' ? score : 0), name);
+        saveLocalStudentValue('badges', JSON.stringify(typeof badges !== 'undefined' ? (badges || []) : []), name);
+        saveLocalStudentValue('streak', String(typeof streak !== 'undefined' ? (streak || 1) : 1), name);
+      }
+    } catch(e) {}
+
+    loadScoreFromGoogleSheetsV1711(name).then(function(){
+      postScoreToGoogleSheetsV1711(name, Number(typeof score !== 'undefined' ? score : 0));
+    }).catch(function(){
+      postScoreToGoogleSheetsV1711(name, Number(typeof score !== 'undefined' ? score : 0));
+    });
+  };
+  try { sauvegarderScore = window.sauvegarderScore; } catch(e) {}
+
+  // 3) Fonction de test disponible dans la console : hibouTestScoreSheets()
+  window.hibouTestScoreSheets = function(){
+    var name = cleanName(window.prenomActuel || (typeof prenomActuel !== 'undefined' ? prenomActuel : ''));
+    if (!name) {
+      alert('Connecte d’abord un élève.');
+      return;
+    }
+    loadScoreFromGoogleSheetsV1711(name).then(function(value){
+      alert(value === null ? 'Lecture Google Sheets impossible.' : ('Score Google Sheets relu : ' + value + ' points'));
+    });
+  };
+
+  window.loadScoreFromGoogleSheetsV1711 = loadScoreFromGoogleSheetsV1711;
 })();
 </script>
 

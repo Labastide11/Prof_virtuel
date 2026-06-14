@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 Maître Hibou V16.9.3 - Ceintures avec descente automatique corrigée</title>
+<title>🦉 Maître Hibou V16.9.4 - Ceintures avec descente automatique comme activités</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -13270,20 +13270,25 @@ window.__skillsTeacherV51 = true;
 
 
 
-<script id="script-v1693-competences-ceinture-scroll-fixe">
+<script id="script-v1694-competences-ceinture-scroll-comme-activites">
 /*
-  V16.9.3 - Correctif validation de compétence / ceinture
-  - Le bouton "Valider une compétence" ouvre ou retrouve le menu des compétences.
-  - Le clic sur une compétence lance bien le quiz de ceinture.
-  - Avant de créer un nouveau quiz, les anciens blocs de ceinture sont retirés pour éviter les doublons d'id beltBoxV168.
-  - Après création, le chat descend vers le NOUVEAU quiz, pas vers un ancien bloc.
+  V16.9.4 - Correctif validation de compétence / ceinture
+  Objectif : appliquer aux boutons des compétences la même logique de descente automatique
+  que les blocs d'activités (ex. Sciences -> Les plantes).
+  - On garde le lancement du quiz.
+  - On conserve le menu des compétences.
+  - On descend vers le bloc créé dans le chat ET dans la zone principale hibouScrollZone si elle existe.
 */
 (function(){
-  if(window.__hibouCompetenceAnchorV1693) return;
-  window.__hibouCompetenceAnchorV1693 = true;
+  if(window.__hibouCompetenceAnchorV1694) return;
+  window.__hibouCompetenceAnchorV1694 = true;
 
   function chatContainer(){
     return document.getElementById('chatContainer');
+  }
+
+  function mainScrollContainer(){
+    return document.getElementById('hibouScrollZone');
   }
 
   function getLastElement(selector){
@@ -13293,25 +13298,54 @@ window.__skillsTeacherV51 = true;
     return items.length ? items[items.length - 1] : null;
   }
 
-  function scrollChatToElement(el, block){
-    const chat = chatContainer();
-    if(!chat || !el) return;
+  function scrollInside(container, el, block){
+    if(!container || !el || !container.contains(el)) return false;
 
-    const chatRect = chat.getBoundingClientRect();
-    const elRect = el.getBoundingClientRect();
-    let target = chat.scrollTop + (elRect.top - chatRect.top) - 14;
+    const cRect = container.getBoundingClientRect();
+    const eRect = el.getBoundingClientRect();
+    let target = container.scrollTop + (eRect.top - cRect.top) - 14;
 
     if(block === 'center'){
-      target = chat.scrollTop + (elRect.top - chatRect.top) - Math.max(20, (chat.clientHeight - el.offsetHeight) / 2);
+      target = container.scrollTop + (eRect.top - cRect.top) - Math.max(20, (container.clientHeight - el.offsetHeight) / 2);
     }
 
-    target = Math.max(0, Math.min(target, Math.max(0, chat.scrollHeight - chat.clientHeight)));
+    target = Math.max(0, Math.min(target, Math.max(0, container.scrollHeight - container.clientHeight)));
 
     try{
-      chat.scrollTo({ top: target, behavior: 'smooth' });
+      container.scrollTo({ top: target, behavior: 'smooth' });
     }catch(e){
-      chat.scrollTop = target;
+      container.scrollTop = target;
     }
+    return true;
+  }
+
+  function scrollLikeActivity(el, block){
+    if(!el) return;
+
+    try{ el.classList.add('hibou-activity-flash'); }catch(e){}
+
+    const chat = chatContainer();
+    const main = mainScrollContainer();
+
+    // 1) D'abord, on fait descendre le scroll interne du chat vers le bloc.
+    if(chat && chat.contains(el)){
+      scrollInside(chat, el, block || 'start');
+    }
+
+    // 2) Ensuite, on fait descendre la zone principale, comme les activités Sciences/Géo.
+    setTimeout(function(){
+      if(main && main.contains(el)){
+        scrollInside(main, el, block || 'start');
+      }else{
+        try{
+          el.scrollIntoView({behavior:'smooth', block:block || 'start'});
+        }catch(e){}
+      }
+    }, 80);
+
+    setTimeout(function(){
+      try{ el.classList.remove('hibou-activity-flash'); }catch(e){}
+    }, 900);
   }
 
   function isCompetenceMenuBox(box){
@@ -13345,8 +13379,7 @@ window.__skillsTeacherV51 = true;
     const chat = chatContainer();
     if(!chat || !keepMsg) return;
 
-    const messages = Array.from(chat.querySelectorAll('.message'));
-    messages.forEach(function(msg){
+    Array.from(chat.querySelectorAll('.message')).forEach(function(msg){
       if(msg === keepMsg) return;
       const box = msg.querySelector('.skill-check-box');
       if(box && isCompetenceMenuBox(box)){
@@ -13361,7 +13394,7 @@ window.__skillsTeacherV51 = true;
       const box = existing.querySelector('.skill-check-box');
       if(box) box.setAttribute('data-hibou-competence-menu','true');
       removeDuplicateCompetenceMenus(existing);
-      scrollChatToElement(existing, 'start');
+      scrollLikeActivity(existing, 'start');
       return true;
     }
     return false;
@@ -13389,7 +13422,7 @@ window.__skillsTeacherV51 = true;
 
     if(msg){
       msg.setAttribute('data-hibou-active-belt','true');
-      scrollChatToElement(msg, 'start');
+      scrollLikeActivity(msg, 'start');
     }
   }
 
@@ -13403,7 +13436,7 @@ window.__skillsTeacherV51 = true;
         const box = existing.querySelector('.skill-check-box');
         if(box) box.setAttribute('data-hibou-competence-menu','true');
         removeDuplicateCompetenceMenus(existing);
-        scrollChatToElement(existing, 'start');
+        scrollLikeActivity(existing, 'start');
         return;
       }
 
@@ -13413,7 +13446,7 @@ window.__skillsTeacherV51 = true;
         const menu = markCompetenceMenu();
         if(menu){
           removeDuplicateCompetenceMenus(menu);
-          scrollChatToElement(menu, 'start');
+          scrollLikeActivity(menu, 'start');
         }
       }, 80);
 
@@ -13421,7 +13454,7 @@ window.__skillsTeacherV51 = true;
         const menu = markCompetenceMenu();
         if(menu){
           removeDuplicateCompetenceMenus(menu);
-          scrollChatToElement(menu, 'start');
+          scrollLikeActivity(menu, 'start');
         }
       }, 220);
 
@@ -13440,7 +13473,7 @@ window.__skillsTeacherV51 = true;
         const menu = markCompetenceMenu();
         if(menu){
           removeDuplicateCompetenceMenus(menu);
-          scrollChatToElement(menu, 'start');
+          scrollLikeActivity(menu, 'start');
         }
       }, 80);
 
@@ -13455,8 +13488,8 @@ window.__skillsTeacherV51 = true;
 
       const result = originalStartBeltCheckV168.apply(this, arguments);
 
-      setTimeout(scrollToNewestBeltQuiz, 60);
-      setTimeout(scrollToNewestBeltQuiz, 180);
+      setTimeout(scrollToNewestBeltQuiz, 80);
+      setTimeout(scrollToNewestBeltQuiz, 220);
       return result;
     };
   }
@@ -13469,8 +13502,8 @@ window.__skillsTeacherV51 = true;
       }
 
       const result = originalStartSkillCheck.apply(this, arguments);
-      setTimeout(scrollToNewestBeltQuiz, 60);
-      setTimeout(scrollToNewestBeltQuiz, 180);
+      setTimeout(scrollToNewestBeltQuiz, 80);
+      setTimeout(scrollToNewestBeltQuiz, 220);
       return result;
     };
   }
@@ -13479,7 +13512,7 @@ window.__skillsTeacherV51 = true;
   if(typeof originalRenderBeltQuestionV168 === 'function'){
     window.renderBeltQuestionV168 = function(){
       const result = originalRenderBeltQuestionV168.apply(this, arguments);
-      setTimeout(scrollToNewestBeltQuiz, 40);
+      setTimeout(scrollToNewestBeltQuiz, 60);
       return result;
     };
   }

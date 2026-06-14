@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 Maître Hibou V16.8.8 - Lecture ceintures Google Sheets</title>
+<title>🦉 Maître Hibou V16.8.9 - Lecture ceintures JSONP</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -13436,14 +13436,14 @@ window.__skillsTeacherV51 = true;
 </script>
 
 
-<script id="script-v1688-lecture-ceintures-google-sheets">
+
+<script id="script-v1689-lecture-ceintures-jsonp">
 (function(){
-  if(window.__maitreHibouV1688ReadSheetsBelts) return;
-  window.__maitreHibouV1688ReadSheetsBelts = true;
+  if(window.__maitreHibouV1689ReadSheetsBeltsJSONP) return;
+  window.__maitreHibouV1689ReadSheetsBeltsJSONP = true;
 
   const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxz1vYS24sv-c3XVja12geWEXIQl6bQyBoQKBx5kg_fwQaj80_Oc7Y34yeBSRN4lF1f/exec";
   const SHEETS_BELTS_KEY = "hibou_v168_sheets_belts_cache";
-  const SHEETS_BELTS_LOADED_AT_KEY = "hibou_v168_sheets_belts_loaded_at";
 
   function normName(name){
     return String(name || "").trim().toLowerCase()
@@ -13472,8 +13472,8 @@ window.__skillsTeacherV51 = true;
     return 0;
   }
 
-  function scoreValue(validations){
-    const m = String(validations || "").match(/(\d+)/);
+  function scoreValue(value){
+    const m = String(value || "").match(/(\d+)/);
     return m ? Number(m[1]) : 0;
   }
 
@@ -13489,7 +13489,7 @@ window.__skillsTeacherV51 = true;
       validations: row.validations || (row.score ? (row.score + "/20") : ""),
       medal: row.medaille || row.medal || "🏅",
       medaille: row.medaille || row.medal || "🏅",
-      source: "google_sheets",
+      source: "google_sheets_jsonp",
       valid: true,
       studentKey: normName(row.prenom || row.name),
       skillKey: normName(row.competence || row.title)
@@ -13508,19 +13508,40 @@ window.__skillsTeacherV51 = true;
   function saveCachedSheetsBelts(rows){
     try{
       localStorage.setItem(SHEETS_BELTS_KEY, JSON.stringify(rows || []));
-      localStorage.setItem(SHEETS_BELTS_LOADED_AT_KEY, String(Date.now()));
     }catch(e){}
   }
 
-  async function fetchSheetsBelts(){
-    const url = APPS_SCRIPT_URL + "?action=ceintures&t=" + Date.now();
-    const response = await fetch(url, {method:"GET", cache:"no-store"});
-    if(!response.ok) throw new Error("HTTP " + response.status);
-    const data = await response.json();
-    const rows = Array.isArray(data) ? data : (data && Array.isArray(data.ceintures) ? data.ceintures : []);
-    const normalized = rows.map(normalizeBelt).filter(function(b){ return b.prenom && b.title; });
-    saveCachedSheetsBelts(normalized);
-    return normalized;
+  function fetchSheetsBeltsJSONP(){
+    return new Promise(function(resolve, reject){
+      const callbackName = "__hibouCeinturesCallback_" + Date.now() + "_" + Math.floor(Math.random() * 100000);
+      const script = document.createElement("script");
+      const timeout = setTimeout(function(){
+        cleanup();
+        reject(new Error("Délai dépassé pendant la lecture Google Sheets"));
+      }, 8000);
+
+      function cleanup(){
+        clearTimeout(timeout);
+        try{ delete window[callbackName]; }catch(e){ window[callbackName] = undefined; }
+        if(script && script.parentNode) script.parentNode.removeChild(script);
+      }
+
+      window[callbackName] = function(data){
+        cleanup();
+        const rows = Array.isArray(data) ? data : (data && Array.isArray(data.ceintures) ? data.ceintures : []);
+        const normalized = rows.map(normalizeBelt).filter(function(b){ return b.prenom && b.title; });
+        saveCachedSheetsBelts(normalized);
+        resolve(normalized);
+      };
+
+      script.onerror = function(){
+        cleanup();
+        reject(new Error("Impossible de charger le script JSONP Google Sheets"));
+      };
+
+      script.src = APPS_SCRIPT_URL + "?action=ceintures&callback=" + encodeURIComponent(callbackName) + "&t=" + Date.now();
+      document.head.appendChild(script);
+    });
   }
 
   function bestBeltsForStudent(name){
@@ -13570,16 +13591,14 @@ window.__skillsTeacherV51 = true;
       if(txt.includes("compétences validées") || txt.includes("ceintures validées")){
         const valueEl = row.querySelector(".mockup-side-value") || row.querySelector("strong") || row.querySelector("b") || row.lastElementChild;
         if(valueEl) valueEl.textContent = count;
-        const firstSpan = row.querySelector("span");
-        if(firstSpan && !firstSpan.id) firstSpan.textContent = "Ceintures validées";
       }
     });
 
     if(stats.last){
-      const lastText = (stats.last.medal || "🏅") + " " + (stats.last.title || "Compétence") + " validée (" + (stats.last.validations || (stats.last.score + "/20")) + ")";
+      const shownScore = stats.last.validations || (stats.last.score + "/20");
+      const lastText = (stats.last.medal || "🏅") + " " + (stats.last.title || "Compétence") + " validée (" + shownScore + ")";
       setText("bandeauLastText", lastText);
       setText("hibouLastSuccess", lastText);
-      try{ localStorage.setItem("hibou_last_success_" + name, lastText); }catch(e){}
       const successCard = document.getElementById("hibouSuccessCard");
       if(successCard) successCard.classList.add("visible");
     }
@@ -13587,21 +13606,20 @@ window.__skillsTeacherV51 = true;
 
   async function refreshSheetsBelts(){
     try{
-      await fetchSheetsBelts();
+      await fetchSheetsBeltsJSONP();
       renderSheetsBelts();
       return true;
     }catch(error){
-      console.warn("Lecture ceintures Google Sheets impossible :", error);
-      renderSheetsBelts(); // fallback cache
+      console.warn("Lecture JSONP ceintures Google Sheets impossible :", error);
+      renderSheetsBelts();
       return false;
     }
   }
 
-  window.fetchV168SheetsBelts = fetchSheetsBelts;
+  window.fetchV168SheetsBelts = fetchSheetsBeltsJSONP;
   window.refreshV168SheetsBelts = refreshSheetsBelts;
   window.renderV168SheetsBelts = renderSheetsBelts;
 
-  // On garde l'ancienne fonction, mais on lui ajoute la source Google Sheets.
   const previousRefresh = window.refreshV168BeltCounters;
   window.refreshV168BeltCounters = function(){
     if(typeof previousRefresh === "function"){
@@ -13610,7 +13628,6 @@ window.__skillsTeacherV51 = true;
     renderSheetsBelts();
   };
 
-  // Si getUnifiedV168Data existe déjà, on enrichit avec les ceintures Google Sheets
   const previousUnified = window.getUnifiedV168Data;
   window.getUnifiedV168Data = function(){
     const base = (typeof previousUnified === "function")
@@ -13641,7 +13658,7 @@ window.__skillsTeacherV51 = true;
   function refreshSoon(){
     setTimeout(renderSheetsBelts, 0);
     setTimeout(refreshSheetsBelts, 100);
-    setTimeout(renderSheetsBelts, 900);
+    setTimeout(renderSheetsBelts, 1200);
   }
 
   document.addEventListener("DOMContentLoaded", refreshSoon);
@@ -13653,13 +13670,13 @@ window.__skillsTeacherV51 = true;
 
   ["savePrenom", "loadStudent", "loadStudentProgress", "renderHibouProfile", "refreshHibouProfile", "updateStudentHeader"].forEach(function(fnName){
     const oldFn = window[fnName];
-    if(typeof oldFn === "function" && !oldFn.__v1688Wrapped){
+    if(typeof oldFn === "function" && !oldFn.__v1689Wrapped){
       const wrapped = function(){
         const result = oldFn.apply(this, arguments);
         refreshSoon();
         return result;
       };
-      wrapped.__v1688Wrapped = true;
+      wrapped.__v1689Wrapped = true;
       window[fnName] = wrapped;
     }
   });

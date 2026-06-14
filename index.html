@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 Maître Hibou V16.8.12 - Message accueil unique</title>
+<title>🦉 Maître Hibou V16.9 - Consolidation stable</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -8790,195 +8790,7 @@ setTimeout(removeVieDeClassePanel, 1000);
 
 <!-- PATCH V8.4 - Anglais harmonisé : titre + mini-leçon + quiz
      À coller juste AVANT 
-<!-- PATCH V9.4 - Restauration du cadre Défi du Maître -->
-<style id="patch-v94-restore-defi-maitre">
-/* On conserve le cadre Défi du Maître dans la zone élève.
-   Seul le bouton doublon "Voir mes progrès" du cadre a été supprimé. */
-#masterChallengeCard.master-challenge-card{
-  display:block;
-}
-body.competence-mode #masterChallengeCard.master-challenge-card{
-  display:none !important;
-}
-</style>
-
-<script id="patch-v94-restore-defi-maitre">
-(function(){
-  if(window.__restoreDefiMaitreV94) return;
-  window.__restoreDefiMaitreV94 = true;
-
-  function restoreDefiMaitre(){
-    if(document.body.classList.contains('competence-mode')) return;
-    if(typeof window.renderMasterChallengeCard === 'function'){
-      window.renderMasterChallengeCard();
-    }
-    var card = document.getElementById('masterChallengeCard');
-    if(card && card.innerHTML.trim()){
-      card.style.display = 'block';
-    }
-  }
-
-  document.addEventListener('DOMContentLoaded', function(){
-    setTimeout(restoreDefiMaitre, 150);
-    setTimeout(restoreDefiMaitre, 500);
-  });
-  window.addEventListener('load', function(){
-    setTimeout(restoreDefiMaitre, 150);
-  });
-
-  var oldSelectSubject = window.selectSubject;
-  if(typeof oldSelectSubject === 'function'){
-    window.selectSubject = function(){
-      var result = oldSelectSubject.apply(this, arguments);
-      setTimeout(restoreDefiMaitre, 80);
-      return result;
-    };
-  }
-
-  var oldSavePrenom = window.savePrenom;
-  if(typeof oldSavePrenom === 'function'){
-    window.savePrenom = function(){
-      var result = oldSavePrenom.apply(this, arguments);
-      setTimeout(restoreDefiMaitre, 80);
-      return result;
-    };
-  }
-})();
-</script>
-
-
-<script id="patch-profil-hibou-v101-script">
-(function(){
-  if(window.__profilHibouV101) return;
-  window.__profilHibouV101 = true;
-
-  window.getHibouLevelInfo = function(points){
-    points = Number(points || 0);
-    const levels = [
-      {min:0, max:49, label:'🐣 Apprenti Hibou', next:50},
-      {min:50, max:149, label:'🦉 Petit Hibou', next:150},
-      {min:150, max:299, label:'🎓 Hibou Confirmé', next:300},
-      {min:300, max:499, label:'🚀 Super Hibou', next:500},
-      {min:500, max:799, label:'🌟 Hibou Expert', next:800},
-      {min:800, max:999999, label:'👑 Maître Hibou', next:null}
-    ];
-    const current = levels.find(l => points >= l.min && points <= l.max) || levels[0];
-    const levelNumber = levels.indexOf(current) + 1;
-    const base = current.min;
-    const next = current.next;
-    const progress = next ? Math.max(0, Math.min(100, ((points - base) / (next - base)) * 100)) : 100;
-    return {label:current.label, levelNumber, next, base, progress};
-  };
-
-  window.getHibouAdvice = function(){
-    try{
-      const stats = (typeof getSkillStats === 'function') ? getSkillStats() : {};
-      let weakest = null;
-      Object.keys(stats || {}).forEach(k => {
-        const s = stats[k];
-        if(!s || !s.attempts) return;
-        const pct = s.correct / s.attempts;
-        if(!weakest || pct < weakest.pct) weakest = {subject:k, pct, attempts:s.attempts};
-      });
-      if(weakest && weakest.attempts >= 2 && weakest.pct < .75){
-        const names = {maths:'les maths', francais:'le français', sciences:'les sciences', geographie:'la géographie', anglais:"l'anglais"};
-        return {
-          advice:`Tu progresses bien. Continue à t'entraîner sur <strong>${names[weakest.subject] || weakest.subject}</strong>.`,
-          goal:'Réussir 3 questions dans cette matière.',
-          subject:weakest.subject
-        };
-      }
-    }catch(e){}
-    return {
-      advice:'Bravo ! Continue à gagner des étoiles en validant des compétences.',
-      goal:'Réussir un mini-défi CE2.',
-      subject:'maths'
-    };
-  };
-
-  window.refreshHibouProfile = function(){
-    const panel = document.getElementById('hibouProfilePanel');
-    const adviceCard = document.getElementById('hibouAdviceCard');
-    const successCard = document.getElementById('hibouSuccessCard');
-    if(!panel) return;
-
-    const prenom = (typeof prenomActuel !== 'undefined' && prenomActuel) ? prenomActuel : '';
-    if(!prenom){
-      panel.classList.remove('visible');
-      if(adviceCard) adviceCard.classList.remove('visible');
-      if(successCard) successCard.classList.remove('visible');
-      return;
-    }
-
-    const pts = (typeof score !== 'undefined') ? Number(score || 0) : 0;
-    const bdg = (typeof badges !== 'undefined' && Array.isArray(badges)) ? badges.length : 0;
-    const strk = (typeof streak !== 'undefined') ? streak : 1;
-    const info = window.getHibouLevelInfo(pts);
-
-    document.getElementById('hibouProfileName').textContent = prenom;
-    document.getElementById('hibouProfileLevel').textContent = info.label;
-    document.getElementById('hibouProfileScore').textContent = pts;
-    document.getElementById('hibouProfileBadges').textContent = bdg;
-    document.getElementById('hibouProfileStreak').textContent = strk;
-    document.getElementById('hibouXpFill').style.width = info.progress + '%';
-    document.getElementById('hibouXpText').textContent = info.next ? `${pts} / ${info.next} étoiles` : `${pts} étoiles`;
-    document.getElementById('hibouNextText').textContent = info.next ? `${Math.max(0, info.next - pts)} étoiles pour passer au niveau suivant` : 'Niveau maximum atteint';
-
-    const adv = window.getHibouAdvice();
-    document.getElementById('hibouAdviceText').innerHTML = adv.advice;
-    document.getElementById('hibouGoalText').textContent = adv.goal;
-
-    const last = localStorage.getItem('hibou_last_success_' + prenom);
-    if(last){
-      document.getElementById('hibouLastSuccess').textContent = last;
-      successCard?.classList.add('visible');
-    }
-
-    panel.classList.add('visible');
-    adviceCard?.classList.add('visible');
-  };
-
-  window.startHibouRecommendedTraining = function(){
-    const adv = window.getHibouAdvice ? window.getHibouAdvice() : {subject:'maths'};
-    if(typeof startLocalQuiz === 'function'){
-      startLocalQuiz(adv.subject || 'maths', '🔄 Entraînement conseillé par le Hibou');
-    }else if(typeof addMessage === 'function'){
-      addMessage('prof', 'Choisis une matière puis lance un mini-quiz pour t’entraîner. 🦉');
-    }
-  };
-
-  const oldRefresh = window.refreshScoreDisplays;
-  window.refreshScoreDisplays = function(){
-    if(typeof oldRefresh === 'function') oldRefresh.apply(this, arguments);
-    setTimeout(window.refreshHibouProfile, 0);
-  };
-
-  const oldUnlock = window.unlockBadge;
-  window.unlockBadge = function(id, label){
-    if(typeof oldUnlock === 'function') oldUnlock.apply(this, arguments);
-    try{
-      const prenom = (typeof prenomActuel !== 'undefined' && prenomActuel) ? prenomActuel : '';
-      if(prenom && label) localStorage.setItem('hibou_last_success_' + prenom, `Badge obtenu : ${label}`);
-    }catch(e){}
-    setTimeout(window.refreshHibouProfile, 0);
-  };
-
-  document.addEventListener('DOMContentLoaded', () => setTimeout(window.refreshHibouProfile, 300));
-  window.addEventListener('load', () => setTimeout(window.refreshHibouProfile, 500));
-})();
-</script>
-
-<script id="patch-bandeau-matieres-v101">
-(function(){
-  const themes=["maths","francais","sciences","jeux","geographie","anglais"];
-  function applySubjectTheme(subject){document.body.classList.remove(...themes.map(t=>"theme-"+t));if(themes.includes(subject)){document.body.classList.add("theme-"+subject);}}
-  const oldSelectSubject=window.selectSubject;
-  if(typeof oldSelectSubject==="function"&&!window.__bandeauMatieresV101){window.__bandeauMatieresV101=true;window.selectSubject=function(btn,subject){applySubjectTheme(subject);return oldSelectSubject.apply(this,arguments);};}
-  document.addEventListener("DOMContentLoaded",function(){const active=document.querySelector(".subject-btn.active");applySubjectTheme(active?active.getAttribute("data-subject"):"maths");});
-})();
-</script>
-
-<script id="patch-maquette-accueil-v11-5">
+<!-- PATCH V9.4 - Restauration du cadre Défi du Maître --><script id="patch-maquette-accueil-v11-5">
 (function(){
   function textNum(id, fallback){
     const el = document.getElementById(id);
@@ -13454,6 +13266,31 @@ window.__skillsTeacherV51 = true;
     setTimeout(dedupeWelcomeMessages, 800);
   });
 })();
+</script>
+
+
+<script id="script-v169-note-architecture" type="application/json">
+{
+  "version": "V16.9",
+  "objectif": "Consolidation prudente de la version stable V16.8.12",
+  "architecture": {
+    "eleves": "lecture depuis Google Sheets via Apps Script doGet",
+    "entrainements": "stockage local navigateur, export possible",
+    "ceintures": "stockage local + synchronisation manuelle Google Sheets",
+    "compteur_ceintures": "source stabilisée V16.8.11 avec cache local",
+    "message_accueil": "garde-fou V16.8.12 contre les doublons",
+    "securite_CE2": "conserver les garde-fous existants"
+  },
+  "nettoyage": {
+    "doublons_supprimes": [
+      "style patch-v94-restore-defi-maitre",
+      "script patch-v94-restore-defi-maitre",
+      "script patch-profil-hibou-v101-script",
+      "script patch-bandeau-matieres-v101"
+    ],
+    "non_supprime": "anciens patchs encore utiles ou non vérifiés fonctionnellement"
+  }
+}
 </script>
 
 </body>

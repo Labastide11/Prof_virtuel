@@ -4005,7 +4005,7 @@ body.prenom-mode .class-motivation-panel {
 
 <div class="input-area">
   <div class="input-wrapper">
-    <textarea class="chat-input" id="userInput" rows="1" placeholder="Écris ton message ici..." onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+    <textarea class="chat-input" id="userInput" rows="1" placeholder="Écris ta question ici... elle sera enregistrée pour le maître." onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
     <div style="position:relative; display:flex; gap:6px;">
       <button class="action-btn voice" id="voiceBtn" onclick="toggleVoice()">🎤</button>
       <button class="action-btn" onclick="sendMessage()">🚀</button>
@@ -5914,7 +5914,7 @@ function speak(text) {
   window.speechSynthesis.speak(utterance);
 }
 
-const SYSTEM_PROMPT = `Tu es Maître Hibou 🦉, un professeur virtuel pour élèves de CE2 (8-9 ans). Sécurité prioritaire : tu réponds uniquement à des demandes scolaires adaptées à des enfants de CE2. Domaines autorisés : maths, français, lecture, écriture, sciences simples, géographie, anglais, méthodes de travail, culture générale enfantine non sensible. Tu refuses gentiment toute demande violente, sexuelle, dangereuse, politique, religieuse, médicale, personnelle, adulte, choquante, illégale ou hors école primaire. Tu ne donnes jamais de mode d'emploi dangereux, jamais de contenu choquant, jamais de conseil médical/juridique, jamais de données personnelles. Si la demande est inadaptée, réponds : "Je préfère rester sur des sujets adaptés à l'école primaire. Choisis maths, français, sciences, géographie ou anglais. 🦉". Réponds en français simple, avec bienveillance et tutoiement. Donne des réponses courtes, claires, structurées. Termine impérativement tes réponses explicatives autorisées par [QUIZ_DISPONIBLE]`;
+const SYSTEM_PROMPT = `Tu es Maître Hibou 🦉, un professeur virtuel bienveillant pour des élèves de CE2, âgés d'environ 8 à 9 ans. Tu réponds toujours en français simple, avec le tutoiement, des phrases courtes et un vocabulaire adapté à leur âge. Tu valorises la curiosité : remercie l'élève pour sa question, encourage-le à chercher, à observer, à expliquer son raisonnement et à poser d'autres questions. Tu peux répondre aux questions scolaires et aux questions de culture générale adaptées aux enfants, même si elles dépassent un peu le programme, en les expliquant simplement. Tu ne grondes jamais l'élève. Si la question est floue, aide-le à la reformuler. Si la question touche à un sujet sensible, dangereux, violent, choquant, médical, très personnel ou non adapté à un enfant de CE2, réponds calmement que ce sujet doit être abordé avec un adulte de confiance ou le maître, puis propose une question plus adaptée. Ne donne jamais de mode d'emploi dangereux, jamais de conseil médical ou juridique, jamais de contenu choquant. Garde un ton chaleureux, encourageant et scolaire. Réponses courtes, claires, structurées. Termine les réponses explicatives par [QUIZ_DISPONIBLE] quand un petit quiz de révision serait utile.`;
 
 function normalizeSubject(subject) {
   const aliases = {
@@ -6267,10 +6267,13 @@ function sendQuestionToRemoteLog(entry){
       mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
+        date: entry.date || new Date().toLocaleString('fr-FR'),
         eleve: entry.student || prenomActuel || 'Élève non identifié',
+        prenom: entry.student || prenomActuel || 'Élève non identifié',
         question: entry.question || '',
-        statut: entry.status || entry.category || 'À vérifier',
-        decision: entry.reason || ''
+        statut: entry.status || entry.category || 'Question posée',
+        decision: entry.reason || '',
+        source: 'Chat Maître Hibou - Mistral'
       })
     }).catch(() => console.log('Journal distant indisponible'));
   } catch(e) {
@@ -6395,6 +6398,9 @@ async function sendMessage() {
   const input = document.getElementById('userInput');
   const text = input.value.trim();
   if (!text) return;
+  // V16.9.7 : chaque question est enregistrée avec le prénom de l'élève
+  // dans le carnet local et envoyée vers le Google Sheet professeur.
+  logQuestionToJournal(text, 'Question posée', 'chat IA', 'Question enregistrée avant envoi à Mistral');
   const security = analyzeQuestionForCE2(text);
   if (!security.allowed) {
     addMessage('user', text);
@@ -10880,7 +10886,7 @@ window.__skillsTeacherV51 = true;
       if (typeof renderHibouProfile === "function") renderHibouProfile();
       if (typeof addMessage === "function" && !window.__hibouWelcomeSheetsShown) {
         window.__hibouWelcomeSheetsShown = true;
-        addMessage("prof", "Bonjour " + matched.prenom + " 🌟 Que souhaites-tu apprendre aujourd’hui ?");
+        addMessage("prof", "Bonjour " + matched.prenom + " 🌟 Que souhaites-tu apprendre aujourd’hui ?<br><br>📝 Petit rappel : tes questions sont enregistrées pour le maître. C’est fait pour protéger la classe et valoriser les bonnes questions. Ta curiosité est une force !");
       }
 
       setPrenomButtonLoading(false);

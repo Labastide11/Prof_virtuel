@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 Maître Hibou V16.8.1 - Compteur ceintures corrigé</title>
+<title>🦉 Maître Hibou V16.8.2 - Compteur ceintures stable</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -10277,105 +10277,14 @@ header{
 }
 </style>
 <script id="patch-bandeau-corrections-v127">
-(function(){
-  if(window.__bandeauCorrectionsV127) return;
-  window.__bandeauCorrectionsV127 = true;
-
-  function cleanStudentName(name){
-    return String(name || "eleve").trim().toLowerCase()
-      .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-      .replace(/[^a-z0-9_-]/g, "_") || "eleve";
-  }
-  function currentName(){
-    return (typeof prenomActuel !== "undefined" && prenomActuel) ? prenomActuel : (localStorage.getItem("hibou_prenom") || localStorage.getItem("maitreHibouCurrentStudent") || localStorage.getItem("elevePrenom") || "eleve");
-  }
-  function countValidatedSkills(){
-    const name = currentName();
-    const clean = cleanStudentName(name);
-    try{
-      // Source unique et stable : tableau de compétences V51.
-      // On ne bascule plus sur l'ancien stockage, ce qui provoquait l'alternance 0 / 3.
-      const data = JSON.parse(localStorage.getItem("hibou_skills_v51_" + clean) || localStorage.getItem("hibou_skills_v51_eleve") || "{}");
-      return Object.values(data).filter(v => Number(v || 0) > 0).length;
-    }catch(e){}
-    return 0;
-  }
-  function fixHeader(){
-    // Un seul bouton "Valider une compétence" dans le bandeau.
-    const buttons = Array.from(document.querySelectorAll(".competence-header-btn"));
-    buttons.forEach((btn, index) => {
-      if(index > 0){ btn.remove(); return; }
-      btn.innerHTML = '<span class="competence-icon">⭐</span><span class="competence-label">Valider une compétence</span>';
-      btn.title = "Valider une compétence";
-    });
-
-    // Le compteur n'utilise plus le faux nombre de démonstration 8.
-    const value = String(countValidatedSkills());
-    const top = document.getElementById("mockupCompetenceCount");
-    const side = document.getElementById("mockupSideSkills");
-    if(top) top.textContent = value;
-    if(side) side.textContent = value;
-  }
-  document.addEventListener("DOMContentLoaded", function(){
-    fixHeader();
-    setTimeout(fixHeader, 100);
-    setTimeout(fixHeader, 700);
-    setInterval(fixHeader, 600);
-  });
-  window.addEventListener("load", function(){ setTimeout(fixHeader, 150); });
-})();
+/* V16.8.2 : ancien compteur V51 neutralisé. Le compteur officiel est celui des ceintures V16.8. */
 </script>
 
 
 
 <!-- PATCH V12.8 - Compteur compétences stable : source unique, plus d'alternance 0/3 -->
 <script id="patch-compteur-competences-stable-v128">
-(function(){
-  if(window.__compteurCompetencesStableV128) return;
-  window.__compteurCompetencesStableV128 = true;
-
-  function cleanStudentName(name){
-    return String(name || "eleve").trim().toLowerCase()
-      .normalize("NFD").replace(/[̀-ͯ]/g, "")
-      .replace(/[^a-z0-9_-]/g, "_") || "eleve";
-  }
-  function currentName(){
-    return (typeof prenomActuel !== "undefined" && prenomActuel)
-      ? prenomActuel
-      : (localStorage.getItem("hibou_prenom") || localStorage.getItem("maitreHibouCurrentStudent") || localStorage.getItem("elevePrenom") || "eleve");
-  }
-  function countV51Only(){
-    try{
-      const key = "hibou_skills_v51_" + cleanStudentName(currentName());
-      const raw = localStorage.getItem(key) || localStorage.getItem("hibou_skills_v51_eleve") || "{}";
-      const data = JSON.parse(raw) || {};
-      return Object.values(data).filter(v => Number(v || 0) > 0).length;
-    }catch(e){ return 0; }
-  }
-  function refreshStableSkillCount(){
-    const value = String(countV51Only());
-    ["mockupCompetenceCount", "mockupSideSkills"].forEach(function(id){
-      const el = document.getElementById(id);
-      if(el) el.textContent = value;
-    });
-  }
-
-  const oldValidate = window.hibouValidateSkill;
-  if(typeof oldValidate === "function"){
-    window.hibouValidateSkill = function(){
-      const result = oldValidate.apply(this, arguments);
-      setTimeout(refreshStableSkillCount, 0);
-      setTimeout(refreshStableSkillCount, 100);
-      return result;
-    };
-  }
-  document.addEventListener("DOMContentLoaded", function(){
-    refreshStableSkillCount();
-    setTimeout(refreshStableSkillCount, 250);
-    setTimeout(refreshStableSkillCount, 900);
-  });
-  window.addEventListener("load", function(){ setTimeout(refreshStableSkillCount, 200); });
-})();
+/* V16.8.2 : ancien compteur V51 neutralisé. Le compteur officiel est celui des ceintures V16.8. */
 </script>
 
 
@@ -13074,12 +12983,14 @@ window.__skillsTeacherV51 = true;
 </script>
 
 
-<script id="script-v1681-compteur-ceintures-bandeau">
+
+<script id="script-v1682-compteur-ceintures-stable">
 (function(){
-  if(window.__maitreHibouV1681CompteurCeintures) return;
-  window.__maitreHibouV1681CompteurCeintures = true;
+  if(window.__maitreHibouV1682CompteurStable) return;
+  window.__maitreHibouV1682CompteurStable = true;
 
   const TRAINING_KEY_PREFIX = "hibou_v168_progress_";
+  let lastRenderedKey = "";
 
   function cleanName(name){
     return String(name || "eleve").trim().toLowerCase()
@@ -13088,12 +12999,19 @@ window.__skillsTeacherV51 = true;
   }
 
   function currentName(){
-    return (typeof prenomActuel !== "undefined" && prenomActuel)
-      ? prenomActuel
-      : (localStorage.getItem("hibou_last_prenom") || localStorage.getItem("hibou_prenom") || localStorage.getItem("maitreHibouCurrentStudent") || localStorage.getItem("elevePrenom") || "eleve");
+    if(typeof prenomActuel !== "undefined" && prenomActuel) return prenomActuel;
+    try{
+      const currentStudent = JSON.parse(localStorage.getItem("hibou_current_student") || "{}");
+      if(currentStudent && currentStudent.prenom) return currentStudent.prenom;
+    }catch(e){}
+    return localStorage.getItem("hibou_last_prenom")
+      || localStorage.getItem("hibou_prenom")
+      || localStorage.getItem("maitreHibouCurrentStudent")
+      || localStorage.getItem("elevePrenom")
+      || "eleve";
   }
 
-  function loadV168Progress(name){
+  function loadProgress(name){
     try{
       const key = TRAINING_KEY_PREFIX + cleanName(name);
       const data = JSON.parse(localStorage.getItem(key) || "{}") || {};
@@ -13109,112 +13027,150 @@ window.__skillsTeacherV51 = true;
     return {none:0, bronze:1, argent:2, or:3}[rank] || 0;
   }
 
-  function getValidatedBeltStats(name){
-    const data = loadV168Progress(name);
+  function getBeltStats(name){
+    const data = loadProgress(name);
     const bestBySkill = {};
 
     data.belts.forEach(function(belt){
       if(!belt || !belt.valid || !belt.skillId) return;
-      const current = bestBySkill[belt.skillId];
-      if(!current || rankValue(belt.rank) > rankValue(current.rank) || (rankValue(belt.rank) === rankValue(current.rank) && Number(belt.score || 0) > Number(current.score || 0))){
+      const old = bestBySkill[belt.skillId];
+      if(
+        !old ||
+        rankValue(belt.rank) > rankValue(old.rank) ||
+        (rankValue(belt.rank) === rankValue(old.rank) && Number(belt.score || 0) > Number(old.score || 0))
+      ){
         bestBySkill[belt.skillId] = belt;
       }
     });
 
     const belts = Object.values(bestBySkill);
-    const count = belts.length;
-    const best = belts.slice().sort(function(a,b){
-      return rankValue(b.rank) - rankValue(a.rank) || Number(b.score || 0) - Number(a.score || 0);
-    })[0] || null;
+    const validChrono = data.belts.filter(function(b){ return b && b.valid; });
+    const last = validChrono.length ? validChrono[validChrono.length - 1] : null;
 
-    return {count, best, belts};
+    return {
+      count: belts.length,
+      belts,
+      last,
+      signature: JSON.stringify(belts.map(function(b){
+        return [b.skillId, b.rank, b.score].join(":");
+      }).sort())
+    };
   }
 
-  function getLastBeltSuccess(name){
-    const data = loadV168Progress(name);
-    const valid = data.belts.filter(function(b){ return b && b.valid; });
-    if(!valid.length) return "";
-    const last = valid[valid.length - 1];
-    return `${last.medal || "🏅"} ${last.title || "Compétence"} validée (${last.score || 0}/20)`;
+  function setText(id, value){
+    const el = document.getElementById(id);
+    if(el && el.textContent !== value) el.textContent = value;
   }
 
-  function updateV168BeltCounters(){
+  function renderBeltCounter(force){
     const name = currentName();
-    const stats = getValidatedBeltStats(name);
+    const stats = getBeltStats(name);
     const countText = String(stats.count);
+    const renderKey = cleanName(name) + "|" + countText + "|" + stats.signature;
 
-    [
-      "mockupCompetenceCount",
-      "mockupSideSkills"
-    ].forEach(function(id){
-      const el = document.getElementById(id);
-      if(el) el.textContent = countText;
-    });
+    if(!force && renderKey === lastRenderedKey) return;
+    lastRenderedKey = renderKey;
 
-    const profileBadges = document.getElementById("hibouProfileBadges");
-    if(profileBadges) profileBadges.textContent = countText;
-
-    const lastBelt = getLastBeltSuccess(name);
-    if(lastBelt){
-      try{ localStorage.setItem("hibou_last_success_" + name, lastBelt); }catch(e){}
-      const bandeauLast = document.getElementById("bandeauLastText");
-      if(bandeauLast) bandeauLast.textContent = lastBelt;
-      const hibouLast = document.getElementById("hibouLastSuccess");
-      if(hibouLast) hibouLast.textContent = lastBelt;
-      const successCard = document.getElementById("hibouSuccessCard");
-      if(successCard) successCard.classList.add("visible");
-    }
-
-    document.querySelectorAll(".hibou-stat-pill").forEach(function(pill){
-      if((pill.textContent || "").toLowerCase().includes("badges")){
-        pill.innerHTML = `🏅 <span id="hibouProfileBadges">${countText}</span> ceintures`;
-      }
-    });
+    setText("mockupCompetenceCount", countText);
+    setText("mockupSideSkills", countText);
+    setText("hibouProfileBadges", countText);
 
     const compCard = document.getElementById("mockupCompetencesCard");
     if(compCard){
       const label = compCard.querySelector(".mockup-stat-text");
-      if(label){
-        label.innerHTML = `<span id="mockupCompetenceCount">${countText}</span><br>ceintures<br>validées`;
+      if(label && !label.dataset.v1682Ceintures){
+        label.dataset.v1682Ceintures = "1";
+        label.innerHTML = '<span id="mockupCompetenceCount">' + countText + '</span><br>ceintures<br>validées';
+      }else{
+        setText("mockupCompetenceCount", countText);
       }
+    }
+
+    const sideLabel = Array.from(document.querySelectorAll(".mockup-stat-row")).find(function(row){
+      return (row.textContent || "").toLowerCase().includes("compétences validées");
+    });
+    if(sideLabel){
+      const firstSpan = sideLabel.querySelector("span");
+      if(firstSpan) firstSpan.textContent = "Ceintures validées";
+    }
+
+    document.querySelectorAll(".hibou-stat-pill").forEach(function(pill){
+      if((pill.textContent || "").toLowerCase().includes("badges")){
+        pill.innerHTML = '🏅 <span id="hibouProfileBadges">' + countText + '</span> ceintures';
+      }
+    });
+
+    if(stats.last){
+      const lastText = (stats.last.medal || "🏅") + " " + (stats.last.title || "Compétence") + " validée (" + (stats.last.score || 0) + "/20)";
+      try{ localStorage.setItem("hibou_last_success_" + name, lastText); }catch(e){}
+      setText("bandeauLastText", lastText);
+      setText("hibouLastSuccess", lastText);
+      const successCard = document.getElementById("hibouSuccessCard");
+      if(successCard) successCard.classList.add("visible");
     }
   }
 
-  // Fonction publique : utile après une ceinture, une reconnexion ou un changement d'élève.
-  window.refreshV168BeltCounters = updateV168BeltCounters;
+  window.refreshV168BeltCounters = function(){
+    renderBeltCounter(true);
+  };
 
-  const oldRefreshHibouProfile = window.refreshHibouProfile;
-  if(typeof oldRefreshHibouProfile === "function"){
-    window.refreshHibouProfile = function(){
-      const result = oldRefreshHibouProfile.apply(this, arguments);
-      setTimeout(updateV168BeltCounters, 0);
-      setTimeout(updateV168BeltCounters, 120);
-      return result;
-    };
+  // Neutralisation publique : si de vieux scripts appellent encore ces fonctions,
+  // ils redirigent vers le compteur ceintures au lieu d'écrire l'ancien compteur V51.
+  window.refreshStableSkillCount = window.refreshV168BeltCounters;
+  window.fixHeader = window.refreshV168BeltCounters;
+
+  function afterCurrentTask(){
+    setTimeout(function(){ renderBeltCounter(true); }, 0);
+    setTimeout(function(){ renderBeltCounter(true); }, 120);
   }
+
+  ["load", "focus"].forEach(function(evt){
+    window.addEventListener(evt, afterCurrentTask);
+  });
+
+  document.addEventListener("DOMContentLoaded", afterCurrentTask);
+  document.addEventListener("visibilitychange", function(){
+    if(!document.hidden) afterCurrentTask();
+  });
+
+  // Après connexion élève : plusieurs versions coexistent, donc on enveloppe les points d'entrée utiles.
+  ["savePrenom", "savePrenomWithSheets", "loadStudent", "loadStudentProgress", "refreshHibouProfile", "updateStudentHeader", "refreshHeaderCards"].forEach(function(fnName){
+    const oldFn = window[fnName];
+    if(typeof oldFn === "function" && !oldFn.__v1682Wrapped){
+      const wrapped = function(){
+        const result = oldFn.apply(this, arguments);
+        afterCurrentTask();
+        return result;
+      };
+      wrapped.__v1682Wrapped = true;
+      window[fnName] = wrapped;
+    }
+  });
 
   const oldAddScore = window.addScore;
-  if(typeof oldAddScore === "function" && !oldAddScore.__v1681Wrapped){
-    const wrapped = function(points, detail){
+  if(typeof oldAddScore === "function" && !oldAddScore.__v1682Wrapped){
+    const wrappedAddScore = function(){
       const result = oldAddScore.apply(this, arguments);
-      setTimeout(updateV168BeltCounters, 0);
-      setTimeout(updateV168BeltCounters, 250);
+      afterCurrentTask();
       return result;
     };
-    wrapped.__v1681Wrapped = true;
-    window.addScore = wrapped;
+    wrappedAddScore.__v1682Wrapped = true;
+    window.addScore = wrappedAddScore;
   }
 
-  document.addEventListener("DOMContentLoaded", function(){
-    updateV168BeltCounters();
-    setTimeout(updateV168BeltCounters, 200);
-    setTimeout(updateV168BeltCounters, 900);
-    setInterval(updateV168BeltCounters, 500);
-  });
-  window.addEventListener("load", function(){
-    setTimeout(updateV168BeltCounters, 150);
-    setTimeout(updateV168BeltCounters, 700);
-  });
+  const oldSetItem = localStorage.setItem;
+  if(!localStorage.setItem.__v1682Wrapped){
+    localStorage.setItem = function(key, value){
+      const result = oldSetItem.apply(this, arguments);
+      if(String(key || "").startsWith(TRAINING_KEY_PREFIX)){
+        afterCurrentTask();
+      }
+      return result;
+    };
+    localStorage.setItem.__v1682Wrapped = true;
+  }
+
+  afterCurrentTask();
 })();
 </script>
 

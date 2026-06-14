@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 Maître Hibou V16.9.5 - Bascule Mistral AI</title>
+<title>🦉 Maître Hibou V16.9.6 - Test Mistral sans garde-fou</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -6214,7 +6214,9 @@ const CE2_SECURITY = {
   ]
 };
 
-function getSecurityMode(){ return localStorage.getItem('hibou_security_mode') || 'strict'; }
+// V16.9.6 - TEST MISTRAL : garde-fou CE2 désactivé provisoirement.
+// On force le mode normal pour éviter que le filtre strict bloque les questions pendant les tests.
+function getSecurityMode(){ return 'normal'; }
 function setSecurityMode(mode){ localStorage.setItem('hibou_security_mode', mode); renderTeacherSafetyPanel(); }
 function isAiDisabled(){ return localStorage.getItem('hibou_ai_disabled') === '1'; }
 function setAiDisabled(value){ localStorage.setItem('hibou_ai_disabled', value ? '1' : '0'); renderTeacherSafetyPanel(); }
@@ -6236,13 +6238,10 @@ function hasAllowedSchoolTopic(text){
   return CE2_SECURITY.allowedKeywords.some(word => normalized.includes(normalizeTextCE2(word)));
 }
 function analyzeQuestionForCE2(message){
-  const mode = getSecurityMode();
-  const category = categoryMatch(message);
-  if (category) return {allowed:false, pending:false, status:'Bloquée', category, reason:'mot ou thème sensible détecté'};
-  if (mode === 'strict' && !hasAllowedSchoolTopic(message)) {
-    return {allowed:false, pending:true, status:'À vérifier', category:'question à vérifier', reason:'Maître Hibou n’est pas certain d’avoir bien compris la question'};
-  }
-  return {allowed:true, pending:false, status:'Autorisée', category:'autorisé', reason:'cadre scolaire'};
+  // V16.9.6 - TEST MISTRAL : désactivation provisoire du pré-filtre CE2.
+  // Toutes les questions sont envoyées à Mistral afin de vérifier la connexion et la qualité des réponses.
+  // À réactiver plus tard avec un filtre CE2 plus souple.
+  return {allowed:true, pending:false, status:'Autorisée', category:'test Mistral', reason:'garde-fou CE2 désactivé provisoirement'};
 }
 function isMessageAllowedForCE2(message) { return analyzeQuestionForCE2(message).allowed; }
 function pendingQuestionMessage(){
@@ -6317,7 +6316,8 @@ function clearQuestionJournal(){
   renderTeacherSafetyPanel();
 }
 function isResponseSafeForCE2(response){
-  return !categoryMatch(response);
+  // V16.9.6 - TEST MISTRAL : post-filtre désactivé provisoirement.
+  return true;
 }
 function renderTeacherSafetyPanel(){
   const box = document.getElementById('teacherSafetyContent');

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 Maître Hibou V17.1.2 - Points Sheets synchronisés</title>
+<title>🦉 Maître Hibou V17.1.3 - Points Sheets text/plain</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -5065,7 +5065,7 @@ function sauvegarderScore() {
       fetch(GOOGLE_SHEET_URL, {
         method: 'POST',
         mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({ prenom: prenomActuel, score: score })
       }).catch(err => console.log("Sauvegarde distante indisponible"));
     } catch(e) {
@@ -14297,6 +14297,7 @@ window.__skillsTeacherV51 = true;
       try { if (typeof saveLocalStudentValue === 'function') saveLocalStudentValue('score', String(mergedScore), name); } catch(e) {}
       refreshAllScoreViews();
 
+      // V17.1.3 : envoi des scores en text/plain pour Google Apps Script + no-cors.
       // V17.1.2 : si le score local est plus élevé que Sheets, on remet Sheets à niveau dès la connexion.
       if (mergedScore > remoteScore) {
         postScoreToGoogleSheetsV1711(name, mergedScore);
@@ -14322,7 +14323,7 @@ window.__skillsTeacherV51 = true;
       fetch(getScoresUrl(), {
         method: 'POST',
         mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({ prenom: name, score: valueToSend })
       }).catch(function(){ console.warn('Sauvegarde Google Sheets indisponible.'); });
       try { localStorage.setItem(remoteScoreKey(name), String(valueToSend)); } catch(e) {}

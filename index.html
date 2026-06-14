@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 Maître Hibou V16.9.2 - Ceintures avec descente automatique</title>
+<title>🦉 Maître Hibou V16.9.3 - Ceintures avec descente automatique corrigée</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -13270,19 +13270,27 @@ window.__skillsTeacherV51 = true;
 
 
 
-<script id="script-v1692-ancre-competences-quiz">
+<script id="script-v1693-competences-ceinture-scroll-fixe">
 /*
-  V16.9.2 - Correction validation de compétence
-  Objectif : ne pas remplacer le clic par une ancre HTML.
-  Le menu des compétences s'ouvre normalement, puis le clic sur une compétence
-  lance le quiz et descend automatiquement dans la zone du chat vers le quiz créé.
+  V16.9.3 - Correctif validation de compétence / ceinture
+  - Le bouton "Valider une compétence" ouvre ou retrouve le menu des compétences.
+  - Le clic sur une compétence lance bien le quiz de ceinture.
+  - Avant de créer un nouveau quiz, les anciens blocs de ceinture sont retirés pour éviter les doublons d'id beltBoxV168.
+  - Après création, le chat descend vers le NOUVEAU quiz, pas vers un ancien bloc.
 */
 (function(){
-  if(window.__hibouCompetenceAnchorV1692) return;
-  window.__hibouCompetenceAnchorV1692 = true;
+  if(window.__hibouCompetenceAnchorV1693) return;
+  window.__hibouCompetenceAnchorV1693 = true;
 
   function chatContainer(){
     return document.getElementById('chatContainer');
+  }
+
+  function getLastElement(selector){
+    const chat = chatContainer();
+    if(!chat) return null;
+    const items = chat.querySelectorAll(selector);
+    return items.length ? items[items.length - 1] : null;
   }
 
   function scrollChatToElement(el, block){
@@ -13291,106 +13299,151 @@ window.__skillsTeacherV51 = true;
 
     const chatRect = chat.getBoundingClientRect();
     const elRect = el.getBoundingClientRect();
-    const currentTop = chat.scrollTop;
-    let target = currentTop + (elRect.top - chatRect.top) - 14;
+    let target = chat.scrollTop + (elRect.top - chatRect.top) - 14;
 
     if(block === 'center'){
-      target = currentTop + (elRect.top - chatRect.top) - Math.max(20, (chat.clientHeight - el.offsetHeight) / 2);
+      target = chat.scrollTop + (elRect.top - chatRect.top) - Math.max(20, (chat.clientHeight - el.offsetHeight) / 2);
     }
 
-    target = Math.max(0, Math.min(target, chat.scrollHeight));
+    target = Math.max(0, Math.min(target, Math.max(0, chat.scrollHeight - chat.clientHeight)));
 
     try{
-      chat.scrollTo({top: target, behavior: 'smooth'});
+      chat.scrollTo({ top: target, behavior: 'smooth' });
     }catch(e){
       chat.scrollTop = target;
     }
   }
 
-  function findLast(selector){
-    const chat = chatContainer();
-    if(!chat) return null;
-    const items = chat.querySelectorAll(selector);
-    return items.length ? items[items.length - 1] : null;
+  function isCompetenceMenuBox(box){
+    if(!box) return false;
+    const txt = box.textContent || '';
+    return txt.includes('Passer une ceinture') || txt.includes('Vérifier une compétence');
   }
 
-  function findSkillMenuMessage(){
+  function getCompetenceMenuMessage(){
     const chat = chatContainer();
     if(!chat) return null;
-    const marked = chat.querySelector('[data-v1692-skill-menu="true"]');
+
+    const marked = chat.querySelector('[data-hibou-competence-menu="true"]');
     if(marked) return marked.closest('.message') || marked;
-    const box = findLast('.skill-check-box');
+
+    const boxes = Array.from(chat.querySelectorAll('.skill-check-box')).filter(isCompetenceMenuBox);
+    const box = boxes.length ? boxes[boxes.length - 1] : null;
     return box ? (box.closest('.message') || box) : null;
   }
 
-  function markSkillMenu(){
-    const box = findLast('.skill-check-box');
+  function markCompetenceMenu(){
+    const msg = getCompetenceMenuMessage();
+    const box = msg ? msg.querySelector('.skill-check-box') : null;
     if(box){
-      box.setAttribute('data-v1692-skill-menu','true');
-      box.id = 'competenceMenuV1692';
-      return box.closest('.message') || box;
+      box.setAttribute('data-hibou-competence-menu','true');
     }
-    return null;
+    return msg;
   }
 
-  function removeDuplicateSkillMenus(keep){
+  function removeDuplicateCompetenceMenus(keepMsg){
     const chat = chatContainer();
-    if(!chat || !keep) return;
-    const keepMsg = keep.closest('.message') || keep;
-    chat.querySelectorAll('.skill-check-box').forEach(function(box){
-      const msg = box.closest('.message') || box;
-      if(msg !== keepMsg && box.textContent && box.textContent.includes('Passer une ceinture')){
+    if(!chat || !keepMsg) return;
+
+    const messages = Array.from(chat.querySelectorAll('.message'));
+    messages.forEach(function(msg){
+      if(msg === keepMsg) return;
+      const box = msg.querySelector('.skill-check-box');
+      if(box && isCompetenceMenuBox(box)){
         msg.remove();
       }
     });
   }
 
-  function markAndScrollToMenu(){
-    const menu = markSkillMenu();
-    if(menu){
-      removeDuplicateSkillMenus(menu);
-      scrollChatToElement(menu, 'start');
+  function showCompetenceMenu(){
+    const existing = getCompetenceMenuMessage();
+    if(existing){
+      const box = existing.querySelector('.skill-check-box');
+      if(box) box.setAttribute('data-hibou-competence-menu','true');
+      removeDuplicateCompetenceMenus(existing);
+      scrollChatToElement(existing, 'start');
+      return true;
     }
+    return false;
   }
 
-  function scrollToActiveBelt(){
-    const beltBox = document.getElementById('beltBoxV168') || findLast('.belt-box');
-    const message = beltBox ? (beltBox.closest('.message') || beltBox) : findLast('.active-belt-message');
-    if(message){
-      message.setAttribute('data-v1692-active-belt','true');
-      scrollChatToElement(message, 'start');
+  function cleanupOldBeltQuizzes(){
+    const chat = chatContainer();
+    if(!chat) return;
+
+    chat.querySelectorAll('.active-belt-message').forEach(function(msg){
+      msg.remove();
+    });
+
+    chat.querySelectorAll('.belt-box').forEach(function(box){
+      const msg = box.closest('.message');
+      if(msg) msg.remove();
+    });
+  }
+
+  function scrollToNewestBeltQuiz(){
+    const msg = getLastElement('.active-belt-message') || (function(){
+      const box = getLastElement('.belt-box');
+      return box ? (box.closest('.message') || box) : null;
+    })();
+
+    if(msg){
+      msg.setAttribute('data-hibou-active-belt','true');
+      scrollChatToElement(msg, 'start');
     }
   }
 
   const originalOpenCompetenceValidation = window.openCompetenceValidation;
-  window.openCompetenceValidation = function(){
-    document.body.classList.add('competence-mode');
+  if(typeof originalOpenCompetenceValidation === 'function'){
+    window.openCompetenceValidation = function(){
+      document.body.classList.add('competence-mode');
 
-    // On garde le comportement existant : ouverture du menu des compétences.
-    if(typeof originalOpenCompetenceValidation === 'function'){
+      const existing = getCompetenceMenuMessage();
+      if(existing){
+        const box = existing.querySelector('.skill-check-box');
+        if(box) box.setAttribute('data-hibou-competence-menu','true');
+        removeDuplicateCompetenceMenus(existing);
+        scrollChatToElement(existing, 'start');
+        return;
+      }
+
       const result = originalOpenCompetenceValidation.apply(this, arguments);
-      setTimeout(markAndScrollToMenu, 80);
-      setTimeout(markAndScrollToMenu, 220);
-      return result;
-    }
 
-    if(typeof window.startSkillCheckMenu === 'function'){
-      window.startSkillCheckMenu();
-      setTimeout(markAndScrollToMenu, 80);
-    }
-  };
+      setTimeout(function(){
+        const menu = markCompetenceMenu();
+        if(menu){
+          removeDuplicateCompetenceMenus(menu);
+          scrollChatToElement(menu, 'start');
+        }
+      }, 80);
+
+      setTimeout(function(){
+        const menu = markCompetenceMenu();
+        if(menu){
+          removeDuplicateCompetenceMenus(menu);
+          scrollChatToElement(menu, 'start');
+        }
+      }, 220);
+
+      return result;
+    };
+  }
 
   const originalStartSkillCheckMenu = window.startSkillCheckMenu;
   if(typeof originalStartSkillCheckMenu === 'function'){
     window.startSkillCheckMenu = function(){
-      const existing = findSkillMenuMessage();
-      if(existing){
-        scrollChatToElement(existing, 'start');
-        return;
-      }
+      if(showCompetenceMenu()) return;
+
       const result = originalStartSkillCheckMenu.apply(this, arguments);
-      setTimeout(markAndScrollToMenu, 80);
-      setTimeout(markAndScrollToMenu, 220);
+
+      setTimeout(function(){
+        const menu = markCompetenceMenu();
+        if(menu){
+          removeDuplicateCompetenceMenus(menu);
+          scrollChatToElement(menu, 'start');
+        }
+      }, 80);
+
       return result;
     };
   }
@@ -13398,10 +13451,12 @@ window.__skillsTeacherV51 = true;
   const originalStartBeltCheckV168 = window.startBeltCheckV168;
   if(typeof originalStartBeltCheckV168 === 'function'){
     window.startBeltCheckV168 = function(skillId){
+      cleanupOldBeltQuizzes();
+
       const result = originalStartBeltCheckV168.apply(this, arguments);
-      // Le quiz est créé par la fonction d'origine : on descend ensuite vers lui.
-      setTimeout(scrollToActiveBelt, 80);
-      setTimeout(scrollToActiveBelt, 220);
+
+      setTimeout(scrollToNewestBeltQuiz, 60);
+      setTimeout(scrollToNewestBeltQuiz, 180);
       return result;
     };
   }
@@ -13409,9 +13464,22 @@ window.__skillsTeacherV51 = true;
   const originalStartSkillCheck = window.startSkillCheck;
   if(typeof originalStartSkillCheck === 'function'){
     window.startSkillCheck = function(skillId){
+      if(typeof window.startBeltCheckV168 === 'function'){
+        return window.startBeltCheckV168(skillId);
+      }
+
       const result = originalStartSkillCheck.apply(this, arguments);
-      setTimeout(scrollToActiveBelt, 80);
-      setTimeout(scrollToActiveBelt, 220);
+      setTimeout(scrollToNewestBeltQuiz, 60);
+      setTimeout(scrollToNewestBeltQuiz, 180);
+      return result;
+    };
+  }
+
+  const originalRenderBeltQuestionV168 = window.renderBeltQuestionV168;
+  if(typeof originalRenderBeltQuestionV168 === 'function'){
+    window.renderBeltQuestionV168 = function(){
+      const result = originalRenderBeltQuestionV168.apply(this, arguments);
+      setTimeout(scrollToNewestBeltQuiz, 40);
       return result;
     };
   }

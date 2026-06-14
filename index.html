@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 Maître Hibou V16.9.4 - Ceintures avec descente automatique comme activités</title>
+<title>🦉 Maître Hibou V16.9.5 - Bascule Mistral AI</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -3999,7 +3999,7 @@ body.prenom-mode .class-motivation-panel {
 <div class="chat-container" id="chatContainer">
   <div class="message prof">
     <div class="avatar prof">🦉</div>
-    <div class="bubble">Coucou ! Je suis Maître Hibou, ton instituteur virtuel. La banque CE2 locale est maintenant enrichie : tu peux t’entraîner même sans IA !</div>
+    <div class="bubble">Coucou ! Je suis Maître Hibou, ton instituteur virtuel. La banque CE2 locale est enrichie, et les réponses IA passent maintenant par Mistral !</div>
   </div>
 </div>
 
@@ -4020,8 +4020,8 @@ body.prenom-mode .class-motivation-panel {
 <div class="modal-overlay hidden" id="modalOverlay">
   <div class="modal-box">
     <h2>Clé de sécurité requise 🔑</h2>
-    <p>Pour me permettre de réfléchir et de te répondre, entre ta clé d'activation API Groq ci-dessous :</p>
-    <input class="modal-input" type="password" id="apiKeyInput" placeholder="gsk_..." autocomplete="off">
+    <p>Pour me permettre de réfléchir et de te répondre, entre ta clé API Mistral ci-dessous :</p>
+    <input class="modal-input" type="password" id="apiKeyInput" placeholder="Ta clé API Mistral" autocomplete="off">
     <div class="modal-error" id="modalError"></div>
     <button class="modal-btn" onclick="saveApiKey()">Valider et activer 🚀</button>
   </div>
@@ -4085,7 +4085,7 @@ body.prenom-mode .class-motivation-panel {
 
 
 <script>
-let GROQ_KEY = '';
+let MISTRAL_KEY = '';
 let currentSubject = 'general';
 let score = 0;
 let badges = [];
@@ -4098,6 +4098,8 @@ let prenomActuel = '';
 let welcomeQuizSubject = 'général';
 
 const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbzeHY0Vm-O923mZfgQjmvUdtJUIEVUVR99srqocBldvkl7JPWn49K7tqqEthQB4JDQm/exec';
+const MISTRAL_API_URL = 'https://api.mistral.ai/v1/chat/completions';
+const MISTRAL_MODEL = 'mistral-small-latest';
 const HIBOU_QUESTION_LOG_URL = 'https://script.google.com/macros/s/AKfycbzcgMiY7pEKb5M9jKYRfM2OMGB7lISvw-VRZzhdLrnIaQcu3gSAoEobrG7O0M9YuU8n/exec';
 
 // === V3 Phase 3.1 : banque locale CE2 et défis du maître ===
@@ -4270,8 +4272,8 @@ function savePrenom() {
     container.appendChild(div);
   }
   
-  const savedKey = localStorage.getItem('groq_key');
-  if (savedKey) GROQ_KEY = savedKey;
+  const savedKey = localStorage.getItem('mistral_key') || localStorage.getItem('groq_key');
+  if (savedKey) MISTRAL_KEY = savedKey;
   loadWelcomeQuiz();
   if (!savedKey && (typeof securityMode === 'undefined' || securityMode !== 'local')) {
     document.getElementById('modalOverlay').classList.remove('hidden');
@@ -4283,8 +4285,9 @@ function saveApiKey() {
   const input = document.getElementById('apiKeyInput').value.trim();
   const error = document.getElementById('modalError');
   if (!input) { error.textContent = 'Entre ta clé API !'; return; }
-  GROQ_KEY = input;
-  localStorage.setItem('groq_key', input);
+  MISTRAL_KEY = input;
+  localStorage.setItem('mistral_key', input);
+  localStorage.removeItem('groq_key');
   document.getElementById('modalOverlay').classList.add('hidden');
   loadWelcomeQuiz();
 }
@@ -5098,11 +5101,11 @@ Réponds UNIQUEMENT en JSON valide, sans markdown, sans backticks, exactement co
 - une seule bonne réponse`;
 
   try {
-    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    const response = await fetch(MISTRAL_API_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${GROQ_KEY}` },
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${MISTRAL_KEY}` },
       body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
+        model: MISTRAL_MODEL,
         messages: [{ role: 'user', content: quizPrompt }],
         max_tokens: maxTokens, 
         temperature: 0.5
@@ -6334,7 +6337,7 @@ function renderTeacherSafetyPanel(){
         <div class="security-card"><strong>Questions bloquées</strong><br>${logs.length}</div>
         <div class="security-card"><strong>À vérifier</strong><br>${pendingCount}</div>
         <div class="security-card"><strong>Journal distant</strong><br>Google Sheet niveau 2</div>
-        <div class="security-card"><strong>IA Groq/Grok</strong><br>${aiOff || mode === 'local' ? 'Désactivée' : 'Autorisée avec filtres'}</div>
+        <div class="security-card"><strong>IA Mistral</strong><br>${aiOff || mode === 'local' ? 'Désactivée' : 'Autorisée avec filtres'}</div>
       </div>
       <div class="security-toggle-row">
         <button class="teacher-btn secondary" onclick="setSecurityMode('normal')">Mode normal</button>
@@ -6359,11 +6362,11 @@ function renderTeacherSafetyPanel(){
 async function askGemini(userMessage) {
   conversationHistory.push({ role: 'user', content: userMessage });
   try {
-    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    const response = await fetch(MISTRAL_API_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${GROQ_KEY}` },
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${MISTRAL_KEY}` },
       body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
+        model: MISTRAL_MODEL,
         messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...conversationHistory],
         max_tokens: 400, temperature: 0.7
       })
@@ -6371,7 +6374,7 @@ async function askGemini(userMessage) {
     const data = await response.json();
     if (data.error) {
       if (response.status === 401) {
-        localStorage.removeItem('groq_key'); GROQ_KEY = '';
+        localStorage.removeItem('mistral_key'); MISTRAL_KEY = '';
         document.getElementById('modalOverlay').classList.remove('hidden');
         return null;
       }
@@ -6384,7 +6387,7 @@ async function askGemini(userMessage) {
     conversationHistory.push({ role: 'assistant', content: reply });
     return reply;
   } catch (err) {
-    return "Oups ! Re-vérifie ta clé ou ta connexion ! 🔌";
+    return "Oups ! Re-vérifie ta clé Mistral ou ta connexion ! 🔌";
   }
 }
 
@@ -6414,7 +6417,7 @@ async function sendMessage() {
     input.style.height = 'auto';
     return;
   }
-  if (!GROQ_KEY) { document.getElementById('modalOverlay').classList.remove('hidden'); return; }
+  if (!MISTRAL_KEY) { document.getElementById('modalOverlay').classList.remove('hidden'); return; }
 
   input.value = '';
   input.style.height = 'auto';
@@ -11375,7 +11378,7 @@ window.__skillsTeacherV51 = true;
           <div class="security-card"><strong>Questions bloquées</strong><br>${logs.length}</div>
           <div class="security-card"><strong>À vérifier</strong><br>${pendingCount}</div>
           <div class="security-card"><strong>Journal distant</strong><br>Google Sheet niveau 2</div>
-          <div class="security-card"><strong>IA Groq/Grok</strong><br>${aiOff || mode === "local" ? "Désactivée" : "Autorisée avec filtres"}</div>
+          <div class="security-card"><strong>IA Mistral</strong><br>${aiOff || mode === "local" ? "Désactivée" : "Autorisée avec filtres"}</div>
         </div>
         <div class="security-toggle-row">
           <button class="teacher-btn secondary" onclick="setSecurityMode('normal'); renderTeacherDashboard(); setTeacherTabV167('security');">Mode normal</button>

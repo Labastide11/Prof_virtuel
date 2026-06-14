@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 Maître Hibou V16.8.7 - Bouton synchronisation restauré</title>
+<title>🦉 Maître Hibou V16.8.8 - Lecture ceintures Google Sheets</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -13432,6 +13432,239 @@ window.__skillsTeacherV51 = true;
     if(actualiser) actions.insertBefore(btn, actualiser);
     else actions.appendChild(btn);
   });
+})();
+</script>
+
+
+<script id="script-v1688-lecture-ceintures-google-sheets">
+(function(){
+  if(window.__maitreHibouV1688ReadSheetsBelts) return;
+  window.__maitreHibouV1688ReadSheetsBelts = true;
+
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxz1vYS24sv-c3XVja12geWEXIQl6bQyBoQKBx5kg_fwQaj80_Oc7Y34yeBSRN4lF1f/exec";
+  const SHEETS_BELTS_KEY = "hibou_v168_sheets_belts_cache";
+  const SHEETS_BELTS_LOADED_AT_KEY = "hibou_v168_sheets_belts_loaded_at";
+
+  function normName(name){
+    return String(name || "").trim().toLowerCase()
+      .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+      .replace(/[^a-z0-9]/g,"");
+  }
+
+  function currentName(){
+    if(typeof prenomActuel !== "undefined" && prenomActuel) return prenomActuel;
+    try{
+      const currentStudent = JSON.parse(localStorage.getItem("hibou_current_student") || "{}");
+      if(currentStudent && currentStudent.prenom) return currentStudent.prenom;
+    }catch(e){}
+    return localStorage.getItem("hibou_last_prenom")
+      || localStorage.getItem("hibou_prenom")
+      || localStorage.getItem("maitreHibouCurrentStudent")
+      || localStorage.getItem("elevePrenom")
+      || "";
+  }
+
+  function medalRank(medal){
+    const m = String(medal || "").toLowerCase();
+    if(m.includes("or") || m.includes("🥇")) return 3;
+    if(m.includes("argent") || m.includes("🥈")) return 2;
+    if(m.includes("bronze") || m.includes("🥉")) return 1;
+    return 0;
+  }
+
+  function scoreValue(validations){
+    const m = String(validations || "").match(/(\d+)/);
+    return m ? Number(m[1]) : 0;
+  }
+
+  function normalizeBelt(row){
+    return {
+      date: row.date || "",
+      prenom: row.prenom || row.name || "",
+      title: row.competence || row.title || "Compétence",
+      competence: row.competence || row.title || "Compétence",
+      domain: row.domaine || row.domain || "",
+      domaine: row.domaine || row.domain || "",
+      score: scoreValue(row.validations || row.score),
+      validations: row.validations || (row.score ? (row.score + "/20") : ""),
+      medal: row.medaille || row.medal || "🏅",
+      medaille: row.medaille || row.medal || "🏅",
+      source: "google_sheets",
+      valid: true,
+      studentKey: normName(row.prenom || row.name),
+      skillKey: normName(row.competence || row.title)
+    };
+  }
+
+  function loadCachedSheetsBelts(){
+    try{
+      const rows = JSON.parse(localStorage.getItem(SHEETS_BELTS_KEY) || "[]");
+      return Array.isArray(rows) ? rows.map(normalizeBelt) : [];
+    }catch(e){
+      return [];
+    }
+  }
+
+  function saveCachedSheetsBelts(rows){
+    try{
+      localStorage.setItem(SHEETS_BELTS_KEY, JSON.stringify(rows || []));
+      localStorage.setItem(SHEETS_BELTS_LOADED_AT_KEY, String(Date.now()));
+    }catch(e){}
+  }
+
+  async function fetchSheetsBelts(){
+    const url = APPS_SCRIPT_URL + "?action=ceintures&t=" + Date.now();
+    const response = await fetch(url, {method:"GET", cache:"no-store"});
+    if(!response.ok) throw new Error("HTTP " + response.status);
+    const data = await response.json();
+    const rows = Array.isArray(data) ? data : (data && Array.isArray(data.ceintures) ? data.ceintures : []);
+    const normalized = rows.map(normalizeBelt).filter(function(b){ return b.prenom && b.title; });
+    saveCachedSheetsBelts(normalized);
+    return normalized;
+  }
+
+  function bestBeltsForStudent(name){
+    const key = normName(name);
+    const rows = loadCachedSheetsBelts().filter(function(b){ return b.studentKey === key; });
+    const best = new Map();
+
+    rows.forEach(function(b){
+      const sig = b.skillKey || normName(b.title);
+      const old = best.get(sig);
+      if(!old || medalRank(b.medal) > medalRank(old.medal) || (medalRank(b.medal) === medalRank(old.medal) && Number(b.score || 0) > Number(old.score || 0))){
+        best.set(sig, b);
+      }
+    });
+
+    return {
+      all: rows,
+      best: Array.from(best.values()),
+      last: rows.length ? rows[rows.length - 1] : null
+    };
+  }
+
+  function setText(id, value){
+    const el = document.getElementById(id);
+    if(el) el.textContent = String(value);
+  }
+
+  function renderSheetsBelts(){
+    const name = currentName();
+    if(!name) return;
+
+    const stats = bestBeltsForStudent(name);
+    const count = String(stats.best.length);
+
+    setText("mockupCompetenceCount", count);
+    setText("mockupSideSkills", count);
+    setText("hibouProfileBadges", count);
+
+    const compCard = document.getElementById("mockupCompetencesCard");
+    if(compCard){
+      const label = compCard.querySelector(".mockup-stat-text");
+      if(label) label.innerHTML = '<span id="mockupCompetenceCount">' + count + '</span><br>ceintures<br>validées';
+    }
+
+    document.querySelectorAll(".mockup-stat-row").forEach(function(row){
+      const txt = (row.textContent || "").toLowerCase();
+      if(txt.includes("compétences validées") || txt.includes("ceintures validées")){
+        const valueEl = row.querySelector(".mockup-side-value") || row.querySelector("strong") || row.querySelector("b") || row.lastElementChild;
+        if(valueEl) valueEl.textContent = count;
+        const firstSpan = row.querySelector("span");
+        if(firstSpan && !firstSpan.id) firstSpan.textContent = "Ceintures validées";
+      }
+    });
+
+    if(stats.last){
+      const lastText = (stats.last.medal || "🏅") + " " + (stats.last.title || "Compétence") + " validée (" + (stats.last.validations || (stats.last.score + "/20")) + ")";
+      setText("bandeauLastText", lastText);
+      setText("hibouLastSuccess", lastText);
+      try{ localStorage.setItem("hibou_last_success_" + name, lastText); }catch(e){}
+      const successCard = document.getElementById("hibouSuccessCard");
+      if(successCard) successCard.classList.add("visible");
+    }
+  }
+
+  async function refreshSheetsBelts(){
+    try{
+      await fetchSheetsBelts();
+      renderSheetsBelts();
+      return true;
+    }catch(error){
+      console.warn("Lecture ceintures Google Sheets impossible :", error);
+      renderSheetsBelts(); // fallback cache
+      return false;
+    }
+  }
+
+  window.fetchV168SheetsBelts = fetchSheetsBelts;
+  window.refreshV168SheetsBelts = refreshSheetsBelts;
+  window.renderV168SheetsBelts = renderSheetsBelts;
+
+  // On garde l'ancienne fonction, mais on lui ajoute la source Google Sheets.
+  const previousRefresh = window.refreshV168BeltCounters;
+  window.refreshV168BeltCounters = function(){
+    if(typeof previousRefresh === "function"){
+      try{ previousRefresh(); }catch(e){}
+    }
+    renderSheetsBelts();
+  };
+
+  // Si getUnifiedV168Data existe déjà, on enrichit avec les ceintures Google Sheets
+  const previousUnified = window.getUnifiedV168Data;
+  window.getUnifiedV168Data = function(){
+    const base = (typeof previousUnified === "function")
+      ? previousUnified()
+      : {students:[], trainings:[], belts:[]};
+
+    const seen = new Set((base.belts || []).map(function(b){
+      return [normName(b.prenom || b.name), normName(b.title || b.competence), String(b.score || b.validations || ""), String(b.medal || b.medaille || "")].join("|");
+    }));
+
+    const extraBelts = loadCachedSheetsBelts().filter(function(b){
+      const sig = [b.studentKey, b.skillKey, String(b.score || b.validations || ""), String(b.medal || b.medaille || "")].join("|");
+      if(seen.has(sig)) return false;
+      seen.add(sig);
+      return true;
+    });
+
+    const students = new Set(base.students || []);
+    extraBelts.forEach(function(b){ if(b.prenom) students.add(b.prenom); });
+
+    return {
+      students: Array.from(students),
+      trainings: base.trainings || [],
+      belts: (base.belts || []).concat(extraBelts)
+    };
+  };
+
+  function refreshSoon(){
+    setTimeout(renderSheetsBelts, 0);
+    setTimeout(refreshSheetsBelts, 100);
+    setTimeout(renderSheetsBelts, 900);
+  }
+
+  document.addEventListener("DOMContentLoaded", refreshSoon);
+  window.addEventListener("load", refreshSoon);
+  window.addEventListener("focus", refreshSoon);
+  document.addEventListener("visibilitychange", function(){
+    if(!document.hidden) refreshSoon();
+  });
+
+  ["savePrenom", "loadStudent", "loadStudentProgress", "renderHibouProfile", "refreshHibouProfile", "updateStudentHeader"].forEach(function(fnName){
+    const oldFn = window[fnName];
+    if(typeof oldFn === "function" && !oldFn.__v1688Wrapped){
+      const wrapped = function(){
+        const result = oldFn.apply(this, arguments);
+        refreshSoon();
+        return result;
+      };
+      wrapped.__v1688Wrapped = true;
+      window[fnName] = wrapped;
+    }
+  });
+
+  refreshSoon();
 })();
 </script>
 

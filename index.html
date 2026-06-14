@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 Maître Hibou V17.0 - Journal des questions Google Sheets</title>
+<title>🦉 Maître Hibou V17.0.1 - Journal des questions Google Sheets</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -6222,13 +6222,19 @@ function addMessage(role, text) {
 }
 
 function showTyping() {
+  removeTyping(); // évite les ronds de chargement fantômes si une ancienne réponse est restée en attente
   const container = document.getElementById('chatContainer');
-  const div = document.createElement('div'); div.className = 'message prof'; div.id = 'typingIndicator';
+  const div = document.createElement('div');
+  div.className = 'message prof typing-message';
+  div.id = 'typingIndicator';
   div.innerHTML = `<div class="avatar prof">🦉</div><div class="bubble"><div class="typing-indicator"><span></span><span></span><span></span></div></div>`;
-  container.appendChild(div); container.scrollTop = container.scrollHeight;
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
 }
 
-function removeTyping() { const el = document.getElementById('typingIndicator'); if (el) el.remove(); }
+function removeTyping() {
+  document.querySelectorAll('#typingIndicator, .typing-message').forEach(el => el.remove());
+}
 
 
 // === V3 Phase 3.4 : garde-fous CE2 ===
@@ -6425,33 +6431,57 @@ function renderTeacherSafetyPanel(){
 
 async function askGemini(userMessage) {
   conversationHistory.push({ role: 'user', content: userMessage });
+
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 25000); // évite le rond de chargement infini
+
   try {
     const response = await fetch(MISTRAL_API_URL, {
       method: 'POST',
+      signal: controller.signal,
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${MISTRAL_KEY}` },
       body: JSON.stringify({
         model: MISTRAL_MODEL,
         messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...conversationHistory],
-        max_tokens: 400, temperature: 0.7
+        max_tokens: 400,
+        temperature: 0.7
       })
     });
-    const data = await response.json();
-    if (data.error) {
+
+    const data = await response.json().catch(() => ({}));
+
+    if (!response.ok || data.error) {
       if (response.status === 401) {
-        localStorage.removeItem('mistral_key'); MISTRAL_KEY = '';
+        localStorage.removeItem('mistral_key');
+        MISTRAL_KEY = '';
         document.getElementById('modalOverlay').classList.remove('hidden');
         return null;
       }
+      console.log('Erreur Mistral', data);
+      return "Oups ! Mistral n'a pas pu répondre pour le moment. Essaie de reformuler ta question. 🔌";
     }
-    const reply = data.choices[0].message.content;
+
+    const reply = data?.choices?.[0]?.message?.content;
+    if (!reply) {
+      console.log('Réponse Mistral vide', data);
+      return "Oups ! Je n'ai pas reçu de vraie réponse. Essaie encore avec une question complète. 🦉";
+    }
+
     if (!isResponseSafeForCE2(reply)) {
       logBlockedQuestion(userMessage, 'réponse IA filtrée', 'la réponse contenait un thème sensible');
       return safeRefusalMessage();
     }
+
     conversationHistory.push({ role: 'assistant', content: reply });
     return reply;
   } catch (err) {
+    if (err && err.name === 'AbortError') {
+      return "Oups ! La réponse met trop longtemps à arriver. Tu peux reposer ta question. ⏳";
+    }
+    console.log('Erreur appel Mistral', err);
     return "Oups ! Re-vérifie ta clé Mistral ou ta connexion ! 🔌";
+  } finally {
+    clearTimeout(timeoutId);
   }
 }
 
@@ -6459,6 +6489,7 @@ async function sendMessage() {
   const input = document.getElementById('userInput');
   const text = input.value.trim();
   if (!text) return;
+
   const security = analyzeQuestionForCE2(text);
   if (!security.allowed) {
     addMessage('user', text);
@@ -6473,6 +6504,7 @@ async function sendMessage() {
     input.style.height = 'auto';
     return;
   }
+
   if (isAiDisabled() || getSecurityMode() === 'local') {
     addMessage('user', text);
     addMessage('prof', localOnlyMessage());
@@ -6481,18 +6513,29 @@ async function sendMessage() {
     input.style.height = 'auto';
     return;
   }
-  if (!MISTRAL_KEY) { document.getElementById('modalOverlay').classList.remove('hidden'); return; }
+
+  if (!MISTRAL_KEY) {
+    document.getElementById('modalOverlay').classList.remove('hidden');
+    return;
+  }
 
   input.value = '';
   input.style.height = 'auto';
   addMessage('user', text);
   showTyping();
-  const reply = await askGemini(text);
-  removeTyping();
-  if (reply) {
-    addMessage('prof', reply);
-    logQuestionToJournal(text, 'Réponse IA', getCurrentSubjectLabel(), reply);
-    speak(reply.replace('[QUIZ_DISPONIBLE]', ''));
+
+  try {
+    const reply = await askGemini(text);
+    if (reply) {
+      addMessage('prof', reply);
+      logQuestionToJournal(text, 'Réponse IA', getCurrentSubjectLabel(), reply);
+      speak(reply.replace('[QUIZ_DISPONIBLE]', ''));
+    }
+  } catch (err) {
+    console.log('Erreur sendMessage', err);
+    addMessage('prof', "Oups ! Une erreur a bloqué la réponse. Tu peux poser une nouvelle question. 🦉");
+  } finally {
+    removeTyping(); // garantit la disparition du rond, même en cas d'erreur
   }
 }
 

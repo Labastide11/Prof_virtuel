@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 Maître Hibou V16.8 - Ceintures de compétences</title>
+<title>🦉 Maître Hibou V16.8.1 - Compteur ceintures corrigé</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -13070,6 +13070,151 @@ window.__skillsTeacherV51 = true;
   };
   window.syncCompetencesToGoogleSheetsV168 = window.syncCompetencesToGoogleSheetsV167;
 
+})();
+</script>
+
+
+<script id="script-v1681-compteur-ceintures-bandeau">
+(function(){
+  if(window.__maitreHibouV1681CompteurCeintures) return;
+  window.__maitreHibouV1681CompteurCeintures = true;
+
+  const TRAINING_KEY_PREFIX = "hibou_v168_progress_";
+
+  function cleanName(name){
+    return String(name || "eleve").trim().toLowerCase()
+      .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+      .replace(/[^a-z0-9_-]/g,"_") || "eleve";
+  }
+
+  function currentName(){
+    return (typeof prenomActuel !== "undefined" && prenomActuel)
+      ? prenomActuel
+      : (localStorage.getItem("hibou_last_prenom") || localStorage.getItem("hibou_prenom") || localStorage.getItem("maitreHibouCurrentStudent") || localStorage.getItem("elevePrenom") || "eleve");
+  }
+
+  function loadV168Progress(name){
+    try{
+      const key = TRAINING_KEY_PREFIX + cleanName(name);
+      const data = JSON.parse(localStorage.getItem(key) || "{}") || {};
+      if(!Array.isArray(data.trainings)) data.trainings = [];
+      if(!Array.isArray(data.belts)) data.belts = [];
+      return data;
+    }catch(e){
+      return {trainings:[], belts:[]};
+    }
+  }
+
+  function rankValue(rank){
+    return {none:0, bronze:1, argent:2, or:3}[rank] || 0;
+  }
+
+  function getValidatedBeltStats(name){
+    const data = loadV168Progress(name);
+    const bestBySkill = {};
+
+    data.belts.forEach(function(belt){
+      if(!belt || !belt.valid || !belt.skillId) return;
+      const current = bestBySkill[belt.skillId];
+      if(!current || rankValue(belt.rank) > rankValue(current.rank) || (rankValue(belt.rank) === rankValue(current.rank) && Number(belt.score || 0) > Number(current.score || 0))){
+        bestBySkill[belt.skillId] = belt;
+      }
+    });
+
+    const belts = Object.values(bestBySkill);
+    const count = belts.length;
+    const best = belts.slice().sort(function(a,b){
+      return rankValue(b.rank) - rankValue(a.rank) || Number(b.score || 0) - Number(a.score || 0);
+    })[0] || null;
+
+    return {count, best, belts};
+  }
+
+  function getLastBeltSuccess(name){
+    const data = loadV168Progress(name);
+    const valid = data.belts.filter(function(b){ return b && b.valid; });
+    if(!valid.length) return "";
+    const last = valid[valid.length - 1];
+    return `${last.medal || "🏅"} ${last.title || "Compétence"} validée (${last.score || 0}/20)`;
+  }
+
+  function updateV168BeltCounters(){
+    const name = currentName();
+    const stats = getValidatedBeltStats(name);
+    const countText = String(stats.count);
+
+    [
+      "mockupCompetenceCount",
+      "mockupSideSkills"
+    ].forEach(function(id){
+      const el = document.getElementById(id);
+      if(el) el.textContent = countText;
+    });
+
+    const profileBadges = document.getElementById("hibouProfileBadges");
+    if(profileBadges) profileBadges.textContent = countText;
+
+    const lastBelt = getLastBeltSuccess(name);
+    if(lastBelt){
+      try{ localStorage.setItem("hibou_last_success_" + name, lastBelt); }catch(e){}
+      const bandeauLast = document.getElementById("bandeauLastText");
+      if(bandeauLast) bandeauLast.textContent = lastBelt;
+      const hibouLast = document.getElementById("hibouLastSuccess");
+      if(hibouLast) hibouLast.textContent = lastBelt;
+      const successCard = document.getElementById("hibouSuccessCard");
+      if(successCard) successCard.classList.add("visible");
+    }
+
+    document.querySelectorAll(".hibou-stat-pill").forEach(function(pill){
+      if((pill.textContent || "").toLowerCase().includes("badges")){
+        pill.innerHTML = `🏅 <span id="hibouProfileBadges">${countText}</span> ceintures`;
+      }
+    });
+
+    const compCard = document.getElementById("mockupCompetencesCard");
+    if(compCard){
+      const label = compCard.querySelector(".mockup-stat-text");
+      if(label){
+        label.innerHTML = `<span id="mockupCompetenceCount">${countText}</span><br>ceintures<br>validées`;
+      }
+    }
+  }
+
+  // Fonction publique : utile après une ceinture, une reconnexion ou un changement d'élève.
+  window.refreshV168BeltCounters = updateV168BeltCounters;
+
+  const oldRefreshHibouProfile = window.refreshHibouProfile;
+  if(typeof oldRefreshHibouProfile === "function"){
+    window.refreshHibouProfile = function(){
+      const result = oldRefreshHibouProfile.apply(this, arguments);
+      setTimeout(updateV168BeltCounters, 0);
+      setTimeout(updateV168BeltCounters, 120);
+      return result;
+    };
+  }
+
+  const oldAddScore = window.addScore;
+  if(typeof oldAddScore === "function" && !oldAddScore.__v1681Wrapped){
+    const wrapped = function(points, detail){
+      const result = oldAddScore.apply(this, arguments);
+      setTimeout(updateV168BeltCounters, 0);
+      setTimeout(updateV168BeltCounters, 250);
+      return result;
+    };
+    wrapped.__v1681Wrapped = true;
+    window.addScore = wrapped;
+  }
+
+  document.addEventListener("DOMContentLoaded", function(){
+    updateV168BeltCounters();
+    setTimeout(updateV168BeltCounters, 200);
+    setTimeout(updateV168BeltCounters, 900);
+    setInterval(updateV168BeltCounters, 500);
+  });
+  window.addEventListener("load", function(){
+    setTimeout(updateV168BeltCounters, 150);
+    setTimeout(updateV168BeltCounters, 700);
+  });
 })();
 </script>
 

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 Maître Hibou V16.8.11 - Compteur ceintures source unique</title>
+<title>🦉 Maître Hibou V16.8.12 - Message accueil unique</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -11063,7 +11063,10 @@ window.__skillsTeacherV51 = true;
       if (typeof updateStudentHeader === "function") updateStudentHeader();
       if (typeof refreshHeaderCards === "function") refreshHeaderCards();
       if (typeof renderHibouProfile === "function") renderHibouProfile();
-      if (typeof addMessage === "function") addMessage("prof", "Bonjour " + matched.prenom + " 🌟 Que souhaites-tu apprendre aujourd’hui ?");
+      if (typeof addMessage === "function" && !window.__hibouWelcomeSheetsShown) {
+        window.__hibouWelcomeSheetsShown = true;
+        addMessage("prof", "Bonjour " + matched.prenom + " 🌟 Que souhaites-tu apprendre aujourd’hui ?");
+      }
 
       setPrenomButtonLoading(false);
     } catch(error) {
@@ -13363,6 +13366,93 @@ window.__skillsTeacherV51 = true;
   });
 
   refreshSoon();
+})();
+</script>
+
+
+<script id="script-v16812-message-accueil-unique">
+(function(){
+  if(window.__maitreHibouV16812AccueilUnique) return;
+  window.__maitreHibouV16812AccueilUnique = true;
+
+  function normalizeText(value){
+    return String(value || "")
+      .toLowerCase()
+      .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+      .replace(/\s+/g," ")
+      .trim();
+  }
+
+  function isWelcomeMessage(text){
+    const t = normalizeText(text);
+    return t.includes("bonjour") && (
+      t.includes("que souhaites-tu apprendre aujourd") ||
+      t.includes("ravi de te revoir")
+    );
+  }
+
+  function currentStudentName(){
+    if(typeof prenomActuel !== "undefined" && prenomActuel) return String(prenomActuel).trim().toLowerCase();
+    try{
+      const currentStudent = JSON.parse(localStorage.getItem("hibou_current_student") || "{}");
+      if(currentStudent && currentStudent.prenom) return String(currentStudent.prenom).trim().toLowerCase();
+    }catch(e){}
+    return String(localStorage.getItem("hibou_last_prenom") || localStorage.getItem("hibou_prenom") || "").trim().toLowerCase();
+  }
+
+  function dedupeWelcomeMessages(){
+    const container = document.getElementById("chatContainer");
+    if(!container) return;
+
+    const seen = new Set();
+    Array.from(container.querySelectorAll(".message.prof .bubble")).forEach(function(bubble){
+      const text = bubble.textContent || "";
+      if(!isWelcomeMessage(text)) return;
+      const key = currentStudentName() + "|" + normalizeText(text).replace(/\d+ points/g,"points");
+      const message = bubble.closest(".message");
+      if(seen.has(key) && message){
+        message.remove();
+      }else{
+        seen.add(key);
+      }
+    });
+  }
+
+  const originalAddMessage = window.addMessage;
+  if(typeof originalAddMessage === "function" && !originalAddMessage.__v16812Wrapped){
+    const wrapped = function(sender, text){
+      if(sender === "prof" && isWelcomeMessage(text)){
+        const key = currentStudentName() + "|" + normalizeText(text);
+        const now = Date.now();
+        window.__hibouLastWelcomeMessageKey = window.__hibouLastWelcomeMessageKey || "";
+        window.__hibouLastWelcomeMessageAt = window.__hibouLastWelcomeMessageAt || 0;
+
+        if(window.__hibouLastWelcomeMessageKey === key && now - window.__hibouLastWelcomeMessageAt < 10000){
+          setTimeout(dedupeWelcomeMessages, 0);
+          return;
+        }
+
+        window.__hibouLastWelcomeMessageKey = key;
+        window.__hibouLastWelcomeMessageAt = now;
+      }
+
+      const result = originalAddMessage.apply(this, arguments);
+      setTimeout(dedupeWelcomeMessages, 0);
+      setTimeout(dedupeWelcomeMessages, 200);
+      return result;
+    };
+    wrapped.__v16812Wrapped = true;
+    window.addMessage = wrapped;
+  }
+
+  document.addEventListener("DOMContentLoaded", function(){
+    setTimeout(dedupeWelcomeMessages, 0);
+    setTimeout(dedupeWelcomeMessages, 500);
+  });
+  window.addEventListener("load", function(){
+    setTimeout(dedupeWelcomeMessages, 0);
+    setTimeout(dedupeWelcomeMessages, 800);
+  });
 })();
 </script>
 

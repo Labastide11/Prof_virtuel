@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 Maître Hibou V16.7.2 - Onglets enseignant complets</title>
+<title>🦉 Maître Hibou V16.7.3.1 - Quiz mélangés corrigés</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -4735,7 +4735,7 @@ function startLocalQuiz(subject, title, questions=null, isChallenge=false) {
   }
 
   const data = questions && questions.length ? questions : getLocalQuestions(subject, 10);
-  currentQuizData = data.map(q => ({ ...q, isRetry:false, subject:subject, isChallenge:isChallenge }));
+  currentQuizData = data.map(q => ({ ...melangerQuestionQuiz(q), isRetry:false, subject:subject, isChallenge:isChallenge }));
   currentQuizIndex = 0;
   currentQuizScore = 0;
   totalPointsEarnedThisSession = 0;
@@ -4922,10 +4922,14 @@ Réponds UNIQUEMENT en JSON valide, sans markdown, sans backticks, exactement co
   }
 }
 
-async 
 function melangerQuestionQuiz(question){
-  if(!question.options || !Array.isArray(question.options)) return question;
-  const bonneReponse = question.options[question.correct];
+  if(!question || !question.options || !Array.isArray(question.options)) return question;
+
+  const originalCorrectIndex = Number.isInteger(question.correct)
+    ? question.correct
+    : (Number.isInteger(question.answer) ? question.answer : 0);
+
+  const bonneReponse = question.options[originalCorrectIndex];
   const optionsMelangees = [...question.options];
 
   for(let i = optionsMelangees.length - 1; i > 0; i--){
@@ -4933,14 +4937,17 @@ function melangerQuestionQuiz(question){
     [optionsMelangees[i], optionsMelangees[j]] = [optionsMelangees[j], optionsMelangees[i]];
   }
 
+  const newCorrectIndex = optionsMelangees.indexOf(bonneReponse);
+
   return {
     ...question,
     options: optionsMelangees,
-    correct: optionsMelangees.indexOf(bonneReponse)
+    correct: newCorrectIndex,
+    answer: newCorrectIndex
   };
 }
 
-function startQuiz(topic, btnEl) {
+async function startQuiz(topic, btnEl) {
   btnEl.textContent = '⏳ Préparation du grand quiz...';
   btnEl.disabled = true;
   

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 Maître Hibou V16.7.1 - Onglets corrigés</title>
+<title>🦉 Maître Hibou V16.7.2 - Onglets enseignant complets</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -3629,6 +3629,95 @@ body.prenom-mode .class-motivation-panel {
   .teacher-v167-tabs { gap: 6px; padding: 6px; }
   .teacher-v167-tab { font-size: 12px; padding: 8px 9px; }
   .teacher-v167-metrics { grid-template-columns: 1fr; }
+}
+</style>
+
+
+<style id="style-v1672-teacher-tabs-complete">
+/* V16.7.2 - Onglets complets + tableaux non tronqués */
+.teacher-fullscreen-content {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+}
+
+#teacherChallengeContent,
+#teacherSafetyContent,
+#teacherPhase33Content {
+  display: none !important;
+}
+
+.teacher-v167-tabs {
+  overflow-x: auto !important;
+  flex-wrap: nowrap !important;
+  scrollbar-width: thin;
+}
+
+.teacher-v167-tab {
+  flex: 0 0 auto !important;
+}
+
+.teacher-v167-pane {
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow: visible !important;
+}
+
+.teacher-v167-table-wrap,
+.teacher-v167-section .teacher-table-wrap {
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: auto !important;
+  overflow-y: visible !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+
+.teacher-v167-table,
+.teacher-v167-section .teacher-table {
+  width: 100% !important;
+  min-width: 760px !important;
+  table-layout: auto !important;
+}
+
+.teacher-v167-table th,
+.teacher-v167-table td,
+.teacher-v167-section .teacher-table th,
+.teacher-v167-section .teacher-table td {
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  word-break: normal !important;
+  line-height: 1.32 !important;
+  vertical-align: top !important;
+}
+
+.teacher-v167-section.training .teacher-v167-table,
+.teacher-v167-section.review .teacher-v167-table {
+  min-width: 860px !important;
+}
+
+.teacher-v167-section.skills .teacher-v167-table {
+  min-width: 780px !important;
+}
+
+.teacher-v167-pane .security-panel,
+.teacher-v167-pane .teacher-section {
+  max-width: 100% !important;
+}
+
+@media (max-width: 700px) {
+  .teacher-v167-tabs {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+  }
+  .teacher-v167-tab {
+    font-size: 12px !important;
+    padding: 8px 10px !important;
+  }
+  .teacher-v167-table,
+  .teacher-v167-section .teacher-table {
+    min-width: 820px !important;
+  }
 }
 </style>
 
@@ -11181,7 +11270,7 @@ window.__skillsTeacherV51 = true;
     });
 
     return {
-      source: "maitre_hibou_v16_7",
+      source: "maitre_hibou_v16_7_2",
       generated_at: nowText,
       appareil: deviceName,
       eleves_analyses: names.length,
@@ -11360,7 +11449,7 @@ window.__skillsTeacherV51 = true;
   }
 
   function setTeacherTabV167(tabName){
-    const valid = ["dashboard", "skills", "review", "training", "admin"];
+    const valid = ["dashboard", "challenge", "security", "skills", "review", "training", "admin"];
     const selected = valid.includes(tabName) ? tabName : "dashboard";
 
     document.querySelectorAll(".teacher-v167-tab").forEach(function(btn){
@@ -11377,6 +11466,8 @@ window.__skillsTeacherV51 = true;
     return `
       <div class="teacher-v167-tabs">
         <button class="teacher-v167-tab active" data-tab="dashboard" onclick="setTeacherTabV167('dashboard')">📊 Tableau</button>
+        <button class="teacher-v167-tab" data-tab="challenge" onclick="setTeacherTabV167('challenge')">🏆 Défi</button>
+        <button class="teacher-v167-tab" data-tab="security" onclick="setTeacherTabV167('security')">🛡️ Sécurité</button>
         <button class="teacher-v167-tab" data-tab="skills" onclick="setTeacherTabV167('skills')">🎯 Compétences</button>
         <button class="teacher-v167-tab" data-tab="review" onclick="setTeacherTabV167('review')">🔁 Difficultés</button>
         <button class="teacher-v167-tab" data-tab="training" onclick="setTeacherTabV167('training')">🏋️ Quiz</button>
@@ -11385,11 +11476,97 @@ window.__skillsTeacherV51 = true;
     `;
   }
 
+
+  function renderChallengeTabContentV167(){
+    let active = null;
+    try {
+      if (typeof getActiveChallenge === "function") active = getActiveChallenge();
+    } catch(e) {}
+
+    const activeLabel = active ? h(active.title) + " (+ " + h(active.reward) + " pts)" : "aucun";
+
+    return `
+      <div class="teacher-v167-section">
+        <h3>🏆 Défi du maître</h3>
+        <div class="teacher-v167-legend">
+          Cet onglet sert à choisir le défi proposé aux élèves. Il reste séparé du tableau de suivi pour éviter de mélanger gestion et résultats.
+        </div>
+        <div class="teacher-form-row">
+          <select class="teacher-select" id="challengeSelectV167">
+            <option value="tables2a10">Méga défi : 20 calculs tables 2 à 10</option>
+            <option value="nomCommun">Nom commun</option>
+            <option value="systemeSolaire">Système solaire</option>
+            <option value="france">Géographie : la France</option>
+          </select>
+          <button class="teacher-btn" onclick="setActiveChallenge(document.getElementById('challengeSelectV167').value); renderTeacherDashboard(); setTeacherTabV167('challenge');">Activer</button>
+          <button class="teacher-btn secondary" onclick="clearActiveChallenge(); renderTeacherDashboard(); setTeacherTabV167('challenge');">Désactiver</button>
+        </div>
+        <div class="teacher-v167-small">Défi actif : <strong>${activeLabel}</strong></div>
+      </div>
+    `;
+  }
+
+  function renderSecurityTabContentV167(){
+    let mode = "strict";
+    let aiOff = false;
+    let logs = [];
+    let questionLogs = [];
+    try { if (typeof getSecurityMode === "function") mode = getSecurityMode(); } catch(e) {}
+    try { if (typeof isAiDisabled === "function") aiOff = isAiDisabled(); } catch(e) {}
+    try { logs = JSON.parse(localStorage.getItem("hibou_blocked_log") || "[]") || []; } catch(e) { logs = []; }
+    try { if (typeof getQuestionJournal === "function") questionLogs = getQuestionJournal() || []; } catch(e) { questionLogs = []; }
+
+    const pendingCount = questionLogs.filter(function(l){ return l && l.status === "À vérifier"; }).length;
+    const modeLabel = mode === "local" || aiOff ? "Banque locale uniquement" : (mode === "strict" ? "Strict CE2" : "Normal");
+    const modeClass = mode === "local" || aiOff ? "local" : (mode === "strict" ? "strict" : "normal");
+
+    const questionItems = questionLogs.length ? questionLogs.slice(0,12).map(function(l){
+      return `<div class="blocked-item"><strong>${h(l.date || "")}</strong> — ${h(l.question || l.text || "")}<br><span class="question-log-status pending">${h(l.status || "À vérifier")}</span></div>`;
+    }).join("") : `<div class="blocked-item">Aucune grande question enregistrée.</div>`;
+
+    const blockedItems = logs.length ? logs.slice(0,12).map(function(l){
+      return `<div class="blocked-item"><strong>${h(l.date || "")}</strong> — ${h(l.question || l.text || "")}</div>`;
+    }).join("") : `<div class="blocked-item">Aucune question bloquée.</div>`;
+
+    return `
+      <div class="teacher-v167-section security-panel">
+        <h3>🛡️ Sécurité CE2</h3>
+        <div class="teacher-v167-legend">
+          Les garde-fous CE2 protègent les élèves et gardent Maître Hibou dans un cadre scolaire adapté.
+        </div>
+        <div class="security-grid">
+          <div class="security-card"><strong>Mode actuel</strong><br><span class="security-status ${modeClass}">${modeLabel}</span></div>
+          <div class="security-card"><strong>Questions bloquées</strong><br>${logs.length}</div>
+          <div class="security-card"><strong>À vérifier</strong><br>${pendingCount}</div>
+          <div class="security-card"><strong>Journal distant</strong><br>Google Sheet niveau 2</div>
+          <div class="security-card"><strong>IA Groq/Grok</strong><br>${aiOff || mode === "local" ? "Désactivée" : "Autorisée avec filtres"}</div>
+        </div>
+        <div class="security-toggle-row">
+          <button class="teacher-btn secondary" onclick="setSecurityMode('normal'); renderTeacherDashboard(); setTeacherTabV167('security');">Mode normal</button>
+          <button class="teacher-btn" onclick="setSecurityMode('strict'); renderTeacherDashboard(); setTeacherTabV167('security');">Mode strict CE2</button>
+          <button class="teacher-btn" onclick="setSecurityMode('local'); setAiDisabled(true); renderTeacherDashboard(); setTeacherTabV167('security');">Banque locale uniquement</button>
+          <button class="teacher-btn secondary" onclick="setAiDisabled(false); if(getSecurityMode()==='local') setSecurityMode('strict'); renderTeacherDashboard(); setTeacherTabV167('security');">Réactiver IA filtrée</button>
+          <button class="teacher-btn danger" onclick="clearBlockedLog(); renderTeacherDashboard(); setTeacherTabV167('security');">Effacer bloquées</button>
+          <button class="teacher-btn secondary" onclick="clearQuestionJournal(); renderTeacherDashboard(); setTeacherTabV167('security');">Effacer carnet local</button>
+        </div>
+        <div class="teacher-v167-small">Recommandation classe : <strong>Mode strict CE2</strong>.</div>
+
+        <div class="blocked-log">
+          <strong>📖 Carnet des grandes questions</strong>
+          ${questionItems}
+        </div>
+
+        <div class="blocked-log">
+          <strong>🚫 Questions bloquées</strong>
+          ${blockedItems}
+        </div>
+      </div>
+    `;
+  }
+
+
   window.renderTeacherDashboard = function(){
     try {
-      if (typeof renderTeacherChallenge === "function") renderTeacherChallenge();
-      if (typeof renderTeacherSafetyPanel === "function") renderTeacherSafetyPanel();
-
       const content = document.getElementById("teacherDashboardContent");
       if (!content) return;
 
@@ -11540,6 +11717,14 @@ window.__skillsTeacherV51 = true;
               </div>
             </div>
           </div>
+        </div>
+
+        <div class="teacher-v167-pane" data-pane="challenge">
+          ${renderChallengeTabContentV167()}
+        </div>
+
+        <div class="teacher-v167-pane" data-pane="security">
+          ${renderSecurityTabContentV167()}
         </div>
 
         <div class="teacher-v167-pane" data-pane="skills">

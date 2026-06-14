@@ -4132,17 +4132,21 @@ const HIBOU_API_STORAGE_KEYS = [
 ];
 
 function loadSavedApiKey() {
-  for (const key of HIBOU_API_STORAGE_KEYS) {
-    const value = localStorage.getItem(key);
-    if (value && value.trim()) {
-      MISTRAL_KEY = value.trim();
-      // Migration : on recopie dans les clés stables pour les futures versions.
-      try {
-        localStorage.setItem('maitre_hibou_mistral_api_key', MISTRAL_KEY);
-        localStorage.setItem('hibou_mistral_api_key', MISTRAL_KEY);
-        localStorage.setItem('mistral_key', MISTRAL_KEY);
-      } catch(e) {}
-      return MISTRAL_KEY;
+  // V17.1.4 - Clé API forcée en local.
+  // On cherche la clé dans localStorage ET sessionStorage, puis on la recopie
+  // dans tous les anciens et nouveaux noms pour éviter de la ressaisir.
+  const storages = [];
+  try { storages.push(localStorage); } catch(e) {}
+  try { storages.push(sessionStorage); } catch(e) {}
+
+  for (const storage of storages) {
+    for (const key of HIBOU_API_STORAGE_KEYS) {
+      const value = storage.getItem(key);
+      if (value && value.trim()) {
+        MISTRAL_KEY = value.trim();
+        persistApiKey(MISTRAL_KEY);
+        return MISTRAL_KEY;
+      }
     }
   }
   return '';
@@ -4150,17 +4154,27 @@ function loadSavedApiKey() {
 
 function persistApiKey(value) {
   const clean = (value || '').trim();
-  if (!clean) return;
+  if (!clean) return '';
   MISTRAL_KEY = clean;
-  try {
-    localStorage.setItem('maitre_hibou_mistral_api_key', clean);
-    localStorage.setItem('hibou_mistral_api_key', clean);
-    localStorage.setItem('mistral_key', clean);
-    // On garde aussi l'ancien nom pour compatibilité avec les versions précédentes.
-    localStorage.setItem('groq_key', clean);
-  } catch(e) {
-    console.warn('Impossible de sauvegarder la clé API localement.', e);
-  }
+
+  const storages = [];
+  try { storages.push(localStorage); } catch(e) {}
+  try { storages.push(sessionStorage); } catch(e) {}
+
+  storages.forEach(storage => {
+    HIBOU_API_STORAGE_KEYS.forEach(key => {
+      try { storage.setItem(key, clean); } catch(e) {}
+    });
+  });
+
+  return clean;
+}
+
+function ensureApiKeyLoadedV1714() {
+  const saved = loadSavedApiKey();
+  const overlay = document.getElementById('modalOverlay');
+  if (saved && overlay) overlay.classList.add('hidden');
+  return saved;
 }
 
 let currentSubject = 'general';
@@ -4311,6 +4325,7 @@ challengeCatalog.france.questions = banqueCE2.geographie.filter(q => ['France','
 
 
 window.addEventListener('load', () => {
+  ensureApiKeyLoadedV1714();
   document.getElementById('modalOverlay').classList.add('hidden');
   const pInput = document.getElementById('prenomInput');
   if(pInput) {
@@ -11103,6 +11118,8 @@ window.__skillsTeacherV51 = true;
   }
 
   async function savePrenomWithSheets(){
+    // V17.1.4 : on recharge la clé API locale même avec la connexion élèves via Google Sheets.
+    const savedApiKeyV1714 = (typeof ensureApiKeyLoadedV1714 === "function") ? ensureApiKeyLoadedV1714() : "";
     const input = document.getElementById("prenomInput");
     const typedName = input ? input.value.trim() : "";
     if (!typedName) {
@@ -11149,6 +11166,13 @@ window.__skillsTeacherV51 = true;
       if (typeof updateStudentHeader === "function") updateStudentHeader();
       if (typeof refreshHeaderCards === "function") refreshHeaderCards();
       if (typeof renderHibouProfile === "function") renderHibouProfile();
+      if (!savedApiKeyV1714 && (typeof securityMode === "undefined" || securityMode !== "local")) {
+        const modal = document.getElementById("modalOverlay");
+        if (modal) modal.classList.remove("hidden");
+        const apiInput = document.getElementById("apiKeyInput");
+        if (apiInput) setTimeout(() => apiInput.focus(), 50);
+      }
+
       if (typeof addMessage === "function" && !window.__hibouWelcomeSheetsShown) {
         window.__hibouWelcomeSheetsShown = true;
         addMessage("prof", "Bonjour " + matched.prenom + " 🌟 Que souhaites-tu apprendre aujourd’hui ?<br><br>📝 Petit rappel : tes questions sont enregistrées pour le maître. C’est fait pour protéger la classe et valoriser les bonnes questions. Ta curiosité est une force !");
@@ -14375,6 +14399,57 @@ window.__skillsTeacherV51 = true;
   };
 
   window.loadScoreFromGoogleSheetsV1711 = loadScoreFromGoogleSheetsV1711;
+})();
+</script>
+
+
+<script id="patch-v1714-api-key-local-force">
+/* V17.1.4 - Sécurité clé API locale.
+   Corrige le cas où la connexion Google Sheets remplace savePrenom()
+   et ne rechargeait plus la clé API stockée localement. */
+(function(){
+  if (window.__hibouApiKeyLocalForceV1714) return;
+  window.__hibouApiKeyLocalForceV1714 = true;
+
+  function refreshApiKey(){
+    if (typeof window.ensureApiKeyLoadedV1714 === "function") {
+      return window.ensureApiKeyLoadedV1714();
+    }
+    if (typeof window.loadSavedApiKey === "function") {
+      return window.loadSavedApiKey();
+    }
+    return "";
+  }
+
+  window.addEventListener("load", function(){
+    setTimeout(refreshApiKey, 0);
+    setTimeout(refreshApiKey, 300);
+  });
+
+  document.addEventListener("click", function(event){
+    if (event.target && event.target.closest && event.target.closest(".prenom-btn")) {
+      refreshApiKey();
+    }
+  }, true);
+
+  document.addEventListener("keydown", function(event){
+    if (event.key === "Enter" && event.target && event.target.id === "prenomInput") {
+      refreshApiKey();
+    }
+  }, true);
+
+  const oldSaveApiKey = window.saveApiKey;
+  if (typeof oldSaveApiKey === "function" && !oldSaveApiKey.__v1714Wrapped) {
+    const wrapped = function(){
+      const input = document.getElementById("apiKeyInput");
+      if (input && input.value && typeof window.persistApiKey === "function") {
+        window.persistApiKey(input.value);
+      }
+      return oldSaveApiKey.apply(this, arguments);
+    };
+    wrapped.__v1714Wrapped = true;
+    window.saveApiKey = wrapped;
+  }
 })();
 </script>
 

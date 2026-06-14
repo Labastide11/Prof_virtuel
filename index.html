@@ -4922,7 +4922,25 @@ Réponds UNIQUEMENT en JSON valide, sans markdown, sans backticks, exactement co
   }
 }
 
-async function startQuiz(topic, btnEl) {
+async 
+function melangerQuestionQuiz(question){
+  if(!question.options || !Array.isArray(question.options)) return question;
+  const bonneReponse = question.options[question.correct];
+  const optionsMelangees = [...question.options];
+
+  for(let i = optionsMelangees.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [optionsMelangees[i], optionsMelangees[j]] = [optionsMelangees[j], optionsMelangees[i]];
+  }
+
+  return {
+    ...question,
+    options: optionsMelangees,
+    correct: optionsMelangees.indexOf(bonneReponse)
+  };
+}
+
+function startQuiz(topic, btnEl) {
   btnEl.textContent = '⏳ Préparation du grand quiz...';
   btnEl.disabled = true;
   
@@ -4941,7 +4959,7 @@ async function startQuiz(topic, btnEl) {
     return;
   }
   
-  currentQuizData = quizData.questions.map(q => ({ ...q, isRetry: false }));
+  currentQuizData = quizData.questions.map(q => ({ ...melangerQuestionQuiz(q), isRetry: false }));
   currentQuizIndex = 0;
   currentQuizScore = 0;
   totalPointsEarnedThisSession = 0;

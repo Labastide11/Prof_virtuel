@@ -4261,10 +4261,14 @@ function savePrenom() {
   
   const container = document.getElementById('chatContainer');
   const savedMsg = score > 0 ? ` Tu as déjà <strong>${score} points</strong> ! 🌟` : '';
-  const div = document.createElement('div');
-  div.className = 'message prof';
-  div.innerHTML = `<div class="avatar prof">🦉</div><div class="bubble">Bonjour <strong>${prenomActuel}</strong> ! Ravi de te revoir !${savedMsg} Prêt(e) à travailler ? 😊</div>`;
-  container.appendChild(div);
+
+  if(!window.__hibouWelcomeShown){
+    window.__hibouWelcomeShown = true;
+    const div = document.createElement('div');
+    div.className = 'message prof';
+    div.innerHTML = `<div class="avatar prof">🦉</div><div class="bubble">Bonjour <strong>${prenomActuel}</strong> ! Ravi de te revoir !${savedMsg} Prêt(e) à travailler ? 😊</div>`;
+    container.appendChild(div);
+  }
   
   const savedKey = localStorage.getItem('groq_key');
   if (savedKey) GROQ_KEY = savedKey;

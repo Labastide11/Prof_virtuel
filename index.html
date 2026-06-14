@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 Maître Hibou V17.1.1 - Points Google Sheets relus</title>
+<title>🦉 Maître Hibou V17.1.2 - Points Sheets synchronisés</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -14228,12 +14228,13 @@ window.__skillsTeacherV51 = true;
 </script>
 
 
-<script id="patch-v1711-points-google-sheets-relecture">
+<script id="patch-v1712-points-google-sheets-sync-connexion">
 /*
-  V17.1.1 - Points réellement persistants Google Sheets
+  V17.1.2 - Points réellement persistants Google Sheets
   -------------------------------------------------------
-  Ce patch garde la sauvegarde locale, mais ajoute surtout la RELECTURE du score
-  dans l'onglet Google Sheets "Points" quand l'élève se connecte.
+  Ce patch garde la sauvegarde locale, ajoute la RELECTURE du score
+  dans l'onglet Google Sheets "Points" quand l'élève se connecte,
+  puis renvoie immédiatement le score fusionné vers Sheets.
 
   Apps Script attendu :
   - doGet(e) avec ?prenom=... qui renvoie JSON { success:true, prenom:"...", score:123 }
@@ -14295,6 +14296,12 @@ window.__skillsTeacherV51 = true;
 
       try { if (typeof saveLocalStudentValue === 'function') saveLocalStudentValue('score', String(mergedScore), name); } catch(e) {}
       refreshAllScoreViews();
+
+      // V17.1.2 : si le score local est plus élevé que Sheets, on remet Sheets à niveau dès la connexion.
+      if (mergedScore > remoteScore) {
+        postScoreToGoogleSheetsV1711(name, mergedScore);
+        console.log('🔄 Score Google Sheets remis à niveau pour ' + name + ' :', remoteScore, '→', mergedScore);
+      }
 
       console.log('✅ Score relu depuis Google Sheets pour ' + name + ' :', remoteScore, '→ affiché :', mergedScore);
       return mergedScore;

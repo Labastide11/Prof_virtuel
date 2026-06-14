@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 Maître Hibou V17.0.8 - Quiz cliquable + points persistants</title>
+<title>🦉 Maître Hibou V17.0.9 - Quiz IA relancé + points persistants</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -14093,6 +14093,137 @@ window.__skillsTeacherV51 = true;
     };
     window.loadWelcomeQuiz = loadWelcomeQuiz;
   }
+})();
+</script>
+
+
+<!-- ============================================================
+     PATCH V17.0.9 - Quiz après une question élève
+     Correctif : les patchs précédents écrivaient parfois dans
+     window.currentQuizData, alors que le moteur du quiz lit les
+     variables globales déclarées avec let : currentQuizData,
+     currentQuizIndex, quizContainer, etc.
+     Résultat : le bouton "Je me teste" pouvait ne rien lancer.
+     ============================================================ -->
+<script id="patch-v1709-quiz-question-eleve">
+(function(){
+  if(window.__hibouQuizQuestionEleveV1709) return;
+  window.__hibouQuizQuestionEleveV1709 = true;
+
+  function hibouV1709LocalQuestions(subject, count){
+    subject = subject || (typeof currentSubject !== 'undefined' ? currentSubject : 'maths') || 'maths';
+    try{
+      if(typeof normalizeSubjectForStats === 'function') subject = normalizeSubjectForStats(subject);
+      if(typeof getLocalQuestions === 'function'){
+        var q = getLocalQuestions(subject, count || 3);
+        if(q && q.length) return q.slice(0, count || 3);
+        var subjects = ['maths','francais','sciences','geographie','anglais'];
+        for(var i=0;i<subjects.length;i++){
+          q = getLocalQuestions(subjects[i], count || 3);
+          if(q && q.length) return q.slice(0, count || 3);
+        }
+      }
+    }catch(e){ console.warn('V17.0.9 : banque locale indisponible', e); }
+    return [
+      {q:'Combien font 2 + 2 ?', options:['3','4','5'], correct:1, subject:'maths', skill:'calcul'},
+      {q:'Dans « le chat dort », quel mot est un nom commun ?', options:['le','chat','dort'], correct:1, subject:'francais', skill:'nom commun'},
+      {q:'La Terre tourne autour...', options:['du Soleil','de Mars','de la Lune'], correct:0, subject:'sciences', skill:'système solaire'}
+    ];
+  }
+
+  function hibouV1709CreateQuizBox(){
+    var container = document.getElementById('chatContainer');
+    if(!container) return null;
+    var div = document.createElement('div');
+    div.className = 'message prof';
+    div.innerHTML = '<div class="avatar prof">🦉</div><div class="bubble"><div class="quiz-container active-quiz" id="quizBox"></div></div>';
+    container.appendChild(div);
+    container.scrollTop = container.scrollHeight;
+    quizContainer = document.getElementById('quizBox');
+    return quizContainer;
+  }
+
+  function hibouV1709PrepareQuiz(questions){
+    var prepared = (questions && questions.length ? questions : hibouV1709LocalQuestions(null, 3)).slice(0, 3).map(function(q){
+      try{
+        if(typeof melangerQuestionQuiz === 'function') q = melangerQuestionQuiz(q);
+      }catch(e){}
+      return Object.assign({}, q, {isRetry:false});
+    });
+    currentQuizData = prepared;
+    currentQuizIndex = 0;
+    currentQuizScore = 0;
+    totalPointsEarnedThisSession = 0;
+    originalQuizLength = prepared.length;
+    currentQuizIsChallenge = false;
+    window.hibouQuizInProgress = true;
+  }
+
+  window.startQuiz = async function(topic, btnEl){
+    if(btnEl){
+      btnEl.innerHTML = '⏳ Préparation du quiz...';
+      btnEl.disabled = true;
+    }
+
+    var questions = null;
+    try{
+      if(typeof generateQuiz === 'function'){
+        var quizData = await generateQuiz(topic || 'révision CE2');
+        if(quizData && Array.isArray(quizData.questions) && quizData.questions.length){
+          questions = quizData.questions;
+        }
+      }
+    }catch(e){
+      console.warn('V17.0.9 : quiz IA indisponible, passage au quiz local.', e);
+    }
+
+    if(!questions || !questions.length){
+      questions = hibouV1709LocalQuestions((typeof currentSubject !== 'undefined' ? currentSubject : 'maths'), 3);
+    }
+
+    hibouV1709PrepareQuiz(questions);
+
+    var box = document.getElementById('quizBox');
+    if(!box || !document.body.contains(box)) box = hibouV1709CreateQuizBox();
+    if(!box) return;
+    quizContainer = box;
+    quizContainer.classList.add('active-quiz');
+
+    if(btnEl && btnEl.parentElement) btnEl.parentElement.style.display = 'none';
+
+    quizContainer.innerHTML =
+      '<div class="quiz-progress" style="font-size:15px;margin-bottom:10px;">🧠 As-tu compris ce que Maître Hibou vient d’expliquer ?</div>'+
+      '<div class="rules-explainer comprehension-rules">'+
+      '<div>Teste-toi avec <strong>3 petites questions</strong>.</div>'+
+      '<div>⭐ <strong>Chaque bonne réponse rapporte des points.</strong></div>'+
+      '<div>🏆 <strong>Réussis les 3 questions</strong> pour gagner un bonus !</div>'+
+      '<div>🦉 La curiosité et les efforts sont toujours récompensés.</div>'+
+      '</div>'+
+      '<button type="button" class="quiz-trigger-btn quiz-start-btn comprehension-start-btn" onclick="renderQuizQuestion()">🧠 Je me teste maintenant !</button>';
+  };
+
+  var oldRenderQuizQuestionV1709 = window.renderQuizQuestion || (typeof renderQuizQuestion === 'function' ? renderQuizQuestion : null);
+  window.renderQuizQuestion = function(){
+    if(!quizContainer || !document.body.contains(quizContainer)){
+      quizContainer = document.getElementById('quizBox') || hibouV1709CreateQuizBox();
+    }
+    if(!currentQuizData || !currentQuizData.length){
+      hibouV1709PrepareQuiz(hibouV1709LocalQuestions((typeof currentSubject !== 'undefined' ? currentSubject : 'maths'), 3));
+    }
+    try{
+      if(oldRenderQuizQuestionV1709) return oldRenderQuizQuestionV1709.apply(this, arguments);
+    }catch(e){
+      console.error('V17.0.9 : rendu standard impossible, rendu de secours.', e);
+    }
+    var q = currentQuizData[currentQuizIndex || 0];
+    if(!q || !quizContainer) return;
+    quizContainer.innerHTML =
+      '<div class="quiz-progress">Question '+((currentQuizIndex||0)+1)+' / '+(originalQuizLength||currentQuizData.length)+' 🎯</div>'+
+      '<div class="quiz-question">'+String(q.q || '').replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</div>'+
+      '<div class="quiz-options">'+(q.options || []).map(function(opt,i){
+        return '<button type="button" class="quiz-option" onclick="answerQuiz('+i+')">'+String(opt).replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</button>';
+      }).join('')+'</div>';
+  };
 })();
 </script>
 

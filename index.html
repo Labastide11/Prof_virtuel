@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 Maître Hibou École V18.4.6 - Synchronisation complète compétences</title>
+<title>🦉  V18.4.7</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -15555,6 +15555,129 @@ sheet.appendRow([
     event.stopPropagation();
     envoyerCompetencesGoogleSheets();
   }, true);
+})();
+</script>
+
+
+<script id="patch-v1847-roster-google-sheets-complet">
+(function(){
+  if(window.__maitreHibouV1847RosterSheetsComplet) return;
+  window.__maitreHibouV1847RosterSheetsComplet = true;
+
+  function normalizeNameV1847(value){
+    return String(value || "")
+      .trim()
+      .toLowerCase()
+      .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-z0-9]/g, "");
+  }
+
+  function isActiveV1847(row){
+    if(!row) return false;
+    if(row.active === true) return true;
+    const raw = row.actif !== undefined ? row.actif : row.Actif;
+    const v = String(raw == null ? "" : raw).trim().toLowerCase();
+    return ["oui", "true", "vrai", "yes", "1", "actif", "x"].includes(v);
+  }
+
+  function getNameV1847(row){
+    if(!row) return "";
+    return String(row.prenom || row.prénom || row.Prenom || row["Prénom"] || row.name || row.nom || "").trim();
+  }
+
+  function mergeRosterV1847(sheetNames){
+    const byKey = new Map();
+
+    function add(name){
+      const clean = String(name || "").trim();
+      const key = normalizeNameV1847(clean);
+      if(!key) return;
+      // Les noms Sheets sont prioritaires : ils gardent les accents et la casse officielle.
+      if(!byKey.has(key)) byKey.set(key, clean);
+    }
+
+    (sheetNames || []).forEach(add);
+
+    // On conserve aussi d'éventuels élèves de test locaux, mais sans écraser la liste officielle.
+    try{
+      const oldRoster = JSON.parse(localStorage.getItem("hibou_roster") || "[]") || [];
+      oldRoster.forEach(function(x){
+        if(typeof x === "string") add(x);
+        else add(x && (x.prenom || x.name));
+      });
+    }catch(e){}
+
+    const finalNames = Array.from(byKey.values()).filter(Boolean).sort(function(a,b){
+      return String(a).localeCompare(String(b), "fr");
+    });
+
+    try{
+      localStorage.setItem("hibou_roster", JSON.stringify(finalNames));
+      localStorage.setItem("hibou_sheets_roster_v1847", JSON.stringify(sheetNames || []));
+      localStorage.setItem("hibou_sheets_roster_v1847_date", new Date().toLocaleString("fr-FR"));
+    }catch(e){}
+
+    return finalNames;
+  }
+
+  async function refreshRosterFromSheetsV1847(force){
+    if(typeof window.fetchSheetsStudentsV167 !== "function") return [];
+    const rows = await window.fetchSheetsStudentsV167(force !== false);
+    const officialNames = (Array.isArray(rows) ? rows : [])
+      .filter(isActiveV1847)
+      .map(getNameV1847)
+      .filter(Boolean);
+    const roster = mergeRosterV1847(officialNames);
+    window.MAITRE_HIBOU_LAST_SHEETS_ROSTER = roster;
+    console.log("🦉 V18.4.7 roster Google Sheets chargé :", roster.length, roster);
+    return roster;
+  }
+
+  window.refreshRosterFromSheetsV1847 = refreshRosterFromSheetsV1847;
+
+  const previousCollectV1847 = window.collectCompetencePayloadV167;
+  window.collectCompetencePayloadV167 = function(){
+    const payload = typeof previousCollectV1847 === "function" ? previousCollectV1847() : {};
+    let roster = [];
+    try{ roster = JSON.parse(localStorage.getItem("hibou_roster") || "[]") || []; }catch(e){ roster = []; }
+    const names = roster.map(function(x){ return typeof x === "string" ? x : (x && (x.prenom || x.name)) || ""; }).filter(Boolean);
+    payload.eleves = names;
+    payload.eleves_analyses = Math.max(Number(payload.eleves_analyses || 0), names.length);
+    payload.source = "maitre_hibou_v18_4_7_roster_google_sheets_complet";
+    return payload;
+  };
+  window.collectCompetencePayloadV168 = window.collectCompetencePayloadV167;
+
+  const previousSyncV1847 = window.syncMaitreHibouToGoogleSheets || window.syncCompetencesToGoogleSheetsV168 || window.syncCompetencesToGoogleSheetsV167;
+  async function syncMaitreHibouV1847(){
+    try{
+      await refreshRosterFromSheetsV1847(true);
+      if(typeof window.renderTeacherDashboard === "function") setTimeout(window.renderTeacherDashboard, 80);
+    }catch(e){
+      console.warn("🦉 V18.4.7 : liste élèves Google Sheets non rechargée avant synchro", e);
+    }
+    if(typeof previousSyncV1847 === "function") return previousSyncV1847.apply(this, arguments);
+    alert("Synchronisation indisponible : ancienne fonction introuvable.");
+  }
+
+  window.syncMaitreHibouToGoogleSheets = syncMaitreHibouV1847;
+  window.syncCompetencesToGoogleSheetsV167 = syncMaitreHibouV1847;
+  window.syncCompetencesToGoogleSheetsV168 = syncMaitreHibouV1847;
+
+  const previousOpenTeacherV1847 = window.openTeacherDashboard;
+  window.openTeacherDashboard = function(){
+    const result = typeof previousOpenTeacherV1847 === "function" ? previousOpenTeacherV1847.apply(this, arguments) : undefined;
+    refreshRosterFromSheetsV1847(false).then(function(){
+      if(typeof window.renderTeacherDashboard === "function") window.renderTeacherDashboard();
+    }).catch(function(e){ console.warn("🦉 V18.4.7 : roster Sheets non chargé à l'ouverture enseignant", e); });
+    return result;
+  };
+
+  document.addEventListener("DOMContentLoaded", function(){
+    refreshRosterFromSheetsV1847(false).then(function(){
+      if(typeof window.renderTeacherDashboard === "function") window.renderTeacherDashboard();
+    }).catch(function(e){ console.warn("🦉 V18.4.7 : préchargement élèves impossible", e); });
+  });
 })();
 </script>
 

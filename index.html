@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 Maître Hibou École V18.4.3 - Compétences validées + médailles anti-clignotement</title>
+<title>🦉 Maître Hibou École V18.4.4 - Synchronisation Google Sheets corrigée</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -15231,6 +15231,122 @@ sheet.appendRow([
   }
 
   refreshSoon();
+})();
+</script>
+
+
+<script id="patch-v1844-sync-google-sheets-fiable">
+(function(){
+  if(window.__maitreHibouV1844SyncFiable) return;
+  window.__maitreHibouV1844SyncFiable = true;
+
+  window.MAITRE_HIBOU_COMPETENCES_SHEETS_URL =
+    "https://script.google.com/macros/s/AKfycbxz1vYS24sv-c3XVja12geWEXIQl6bQyBoQKBx5kg_fwQaj80_Oc7Y34yeBSRN4lF1f/exec";
+
+  function getPayload(){
+    if (typeof window.collectCompetencePayloadV167 === "function") {
+      return window.collectCompetencePayloadV167();
+    }
+    if (typeof window.collectCompetencePayloadV168 === "function") {
+      return window.collectCompetencePayloadV168();
+    }
+    return {
+      source: "maitre_hibou_v18_4_4_patch_sync",
+      generated_at: new Date().toLocaleString("fr-FR"),
+      appareil: "inconnu",
+      eleves_analyses: 0,
+      competences_quiz: [],
+      competences_validees: []
+    };
+  }
+
+  function showTeacherSyncStatus(message, type){
+    const box = document.getElementById("teacherSyncStatusV167");
+    if (box) {
+      box.className = "teacher-v167-sync-result " + (type || "");
+      box.innerHTML = message;
+    } else {
+      alert(message.replace(/<[^>]*>/g, " "));
+    }
+  }
+
+  async function envoyerCompetencesGoogleSheets(){
+    const payload = getPayload();
+
+    if (!Array.isArray(payload.competences_quiz)) payload.competences_quiz = [];
+    if (!Array.isArray(payload.competences_validees)) payload.competences_validees = [];
+
+    if (!payload.competences_quiz.length && !payload.competences_validees.length) {
+      showTeacherSyncStatus("Aucune donnée locale à synchroniser pour le moment.", "warn");
+      return;
+    }
+
+    payload.source = payload.source || "maitre_hibou_v18_4_4_patch_sync";
+    payload.generated_at = payload.generated_at || new Date().toLocaleString("fr-FR");
+
+    const btns = Array.from(document.querySelectorAll("button"))
+      .filter(function(b){ return (b.textContent || "").toLowerCase().includes("synchroniser"); });
+
+    btns.forEach(function(b){
+      b.disabled = true;
+      b.dataset.oldText = b.textContent;
+      b.textContent = "Synchronisation…";
+    });
+
+    showTeacherSyncStatus(
+      "Envoi vers Google Sheets en cours…<br>" +
+      "Entraînements : <strong>" + payload.competences_quiz.length + "</strong><br>" +
+      "Compétences validées : <strong>" + payload.competences_validees.length + "</strong>",
+      "warn"
+    );
+
+    try {
+      await fetch(window.MAITRE_HIBOU_COMPETENCES_SHEETS_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(payload)
+      });
+
+      localStorage.setItem("hibou_v1844_last_sync_date", new Date().toLocaleString("fr-FR"));
+
+      showTeacherSyncStatus(
+        "✅ Données envoyées vers Google Sheets.<br>" +
+        "Entraînements envoyés : <strong>" + payload.competences_quiz.length + "</strong><br>" +
+        "Compétences validées envoyées : <strong>" + payload.competences_validees.length + "</strong><br>" +
+        "<span class='teacher-v167-small'>Attends quelques secondes puis vérifie les onglets competences_quiz et competences_validees.</span>",
+        "ok"
+      );
+    } catch (error) {
+      console.error("Erreur synchronisation Google Sheets :", error);
+      showTeacherSyncStatus("❌ Envoi impossible : " + (error && error.message ? error.message : error), "error");
+    } finally {
+      btns.forEach(function(b){
+        b.disabled = false;
+        b.textContent = b.dataset.oldText || "☁️ Synchroniser Google Sheets";
+        delete b.dataset.oldText;
+      });
+    }
+  }
+
+  window.syncCompetencesToGoogleSheetsV167 = envoyerCompetencesGoogleSheets;
+  window.syncCompetencesToGoogleSheetsV168 = envoyerCompetencesGoogleSheets;
+  window.syncMaitreHibouToGoogleSheets = envoyerCompetencesGoogleSheets;
+
+  document.addEventListener("click", function(event){
+    const btn = event.target && event.target.closest ? event.target.closest("button") : null;
+    if (!btn) return;
+    const txt = (btn.textContent || "").toLowerCase();
+    const isSyncButton =
+      btn.id === "teacherSyncBtnV167" ||
+      txt.includes("synchroniser google sheets") ||
+      txt.includes("synchroniser les compétences");
+    if (!isSyncButton) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    envoyerCompetencesGoogleSheets();
+  }, true);
 })();
 </script>
 

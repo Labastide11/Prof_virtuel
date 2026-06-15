@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 Maître Hibou École V18.4.5 - Synchronisation Google Sheets vérifiée</title>
+<title>🦉 Maître Hibou École V18.4.6 - Synchronisation complète compétences</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -11576,25 +11576,65 @@ window.__skillsTeacherV51 = true;
   }
 
   function getKnownStudentNames(){
-    const names = new Set();
+    const byKey = new Map();
+
+    function prettyName(value){
+      const raw = String(value || "").trim();
+      if (!raw) return "";
+      return raw.charAt(0).toUpperCase() + raw.slice(1).toLowerCase();
+    }
+
+    function addName(value){
+      const raw = String(value || "").trim();
+      if (!raw) return;
+      const key = normalizeName(raw);
+      if (!key) return;
+
+      const pretty = prettyName(raw);
+      const existing = byKey.get(key);
+
+      // On évite les doublons Tim/tim et on garde une écriture propre.
+      if (!existing || existing === existing.toLowerCase()) {
+        byKey.set(key, pretty);
+      }
+    }
 
     try {
       const roster = JSON.parse(localStorage.getItem("hibou_roster") || "[]") || [];
       roster.forEach(function(x){
-        if (typeof x === "string") names.add(x);
-        else if (x && x.name) names.add(x.name);
-        else if (x && x.prenom) names.add(x.prenom);
+        if (typeof x === "string") addName(x);
+        else if (x && x.name) addName(x.name);
+        else if (x && x.prenom) addName(x.prenom);
       });
     } catch(e) {}
 
-    if (window.prenomActuel) names.add(window.prenomActuel);
+    if (window.prenomActuel) addName(window.prenomActuel);
 
     try {
       const current = localStorage.getItem("hibou_last_prenom") || localStorage.getItem("hibou_prenom");
-      if (current) names.add(current);
+      if (current) addName(current);
     } catch(e) {}
 
-    return Array.from(names).filter(Boolean).sort(function(a,b){ return String(a).localeCompare(String(b), "fr"); });
+    // V18.4.6 : on ajoute aussi tous les élèves qui ont des compétences locales,
+    // même s'ils ne sont plus l'élève actuellement connecté.
+    try {
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i) || "";
+        if (!key.startsWith(MANUAL_SKILL_PREFIX)) continue;
+        const suffix = key.slice(MANUAL_SKILL_PREFIX.length);
+        if (!suffix || suffix === "eleve") continue;
+
+        const stored = JSON.parse(localStorage.getItem(key) || "{}") || {};
+        const hasSkill = Object.values(stored).some(function(v){ return Number(v || 0) > 0; });
+        if (!hasSkill) continue;
+
+        addName(suffix.replace(/[_-]+/g, " "));
+      }
+    } catch(e) {}
+
+    return Array.from(byKey.values()).filter(Boolean).sort(function(a,b){
+      return String(a).localeCompare(String(b), "fr");
+    });
   }
 
   function getQuizSkillRowsForStudent(student, nowText, deviceName){
@@ -11714,7 +11754,7 @@ window.__skillsTeacherV51 = true;
     });
 
     return {
-      source: "maitre_hibou_v16_7_2",
+      source: "maitre_hibou_v18_4_6_sync_complete",
       generated_at: nowText,
       appareil: deviceName,
       eleves_analyses: names.length,
@@ -11752,7 +11792,7 @@ window.__skillsTeacherV51 = true;
     preview.innerHTML = `
       Données locales détectées : <strong>${payload.eleves_analyses}</strong> élève(s),
       <strong>${payload.competences_quiz.length}</strong> ligne(s) d'entraînement,
-      <strong>${payload.competences_validees.length}</strong> compétence(s) médaillée(s).<br>
+      <strong>${payload.competences_validees.length}</strong> compétence(s) validée(s).<br>
       Dernière synchronisation : <strong>${h(lastDate)}</strong>.
     `;
     return payload;
@@ -11769,10 +11809,8 @@ window.__skillsTeacherV51 = true;
       return;
     }
 
-    if (signature === lastSignature) {
-      renderSyncStatus("Aucune nouvelle donnée depuis la dernière synchronisation. Rien n’a été renvoyé pour éviter les doublons.", "warn");
-      return;
-    }
+    // V18.4.6 : on renvoie toujours le tableau complet.
+    // Le script Google Sheets évite déjà les doublons proprement.
 
     if (btn) {
       btn.disabled = true;
@@ -11796,7 +11834,7 @@ window.__skillsTeacherV51 = true;
         `✅ Synchronisation envoyée vers Google Sheets.<br>
          Élèves analysés : <strong>${payload.eleves_analyses}</strong><br>
          Lignes d'entraînement : <strong>${payload.competences_quiz.length}</strong><br>
-         Compétences médaillées : <strong>${payload.competences_validees.length}</strong><br>
+         Compétences validées : <strong>${payload.competences_validees.length}</strong><br>
          <span class="teacher-v167-small">Google Apps Script reçoit les données en arrière-plan. Vérifie les deux onglets après quelques secondes.</span>`,
         "ok"
       );
@@ -11818,7 +11856,7 @@ window.__skillsTeacherV51 = true;
       <div class="teacher-v167-sync">
         <h3>🔄 Synchronisation Google Sheets</h3>
         <div class="teacher-v167-legend">
-          Les données restent locales tant que tu ne synchronises pas. Le bouton envoie les entraînements et les compétences médaillées vers Google Sheets.
+          Les données restent locales tant que tu ne synchronises pas. Le bouton envoie les entraînements et toutes les compétences validées vers Google Sheets.
         </div>
         <div id="teacherSyncPreviewV167" class="teacher-v167-small">Analyse des données locales…</div>
         <div class="teacher-v167-sync-actions">
@@ -12173,7 +12211,7 @@ window.__skillsTeacherV51 = true;
 
         <div class="teacher-v167-pane" data-pane="skills">
           <div class="teacher-v167-section skills">
-            <h3>🎯 Compétences médaillées</h3>
+            <h3>🎯 Compétences validées</h3>
             <div class="teacher-v167-legend">
               Les médailles représentent l'acquisition progressive d'une compétence : 🥉 Bronze = début de validation · 🥈 Argent = compétence solide · 🥇 Or = compétence maîtrisée.
             </div>

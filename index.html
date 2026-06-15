@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 Maître Hibou École V18.4.2 - Compétences validées + médailles</title>
+<title>🦉 Maître Hibou École V18.4.3 - Compétences validées + médailles anti-clignotement</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -14848,7 +14848,7 @@ sheet.appendRow([
 
 
 
-<!-- PATCH V18.4.2 - Compétences validées + tableau des médailles élève
+<!-- PATCH V18.4.3 - Compétences validées + tableau des médailles élève anti-clignotement
      Base : index(132).html actuellement en ligne.
      Objectif : la coupe compte les compétences locales validées et ouvre le tableau des médailles. -->
 <style id="patch-v1842-competences-medailles">
@@ -15104,12 +15104,26 @@ sheet.appendRow([
     const el = document.getElementById(id);
     if(el && el.textContent !== String(value)) el.textContent = String(value);
   }
+  function setHTMLIfChanged(el, html){
+    if(el && el.innerHTML !== html) el.innerHTML = html;
+  }
+
+  let __lastCompetenceSignatureV1843 = "";
 
   function updateLabelsAndCounts(){
     const name = currentName();
     if(!name) return;
     const rows = bestCompetencesFor(name);
     const count = rows.length;
+    const signature = name + "|" + rows.map(function(r){
+      return [r.skillKey, r.title, r.domain, r.score, r.total, r.medal, r.rank, r.date].join("~");
+    }).join("|");
+
+    /* V18.4.3 : anti-clignotement.
+       On ne réécrit l'affichage que si les données ont vraiment changé. */
+    if(signature === __lastCompetenceSignatureV1843) return;
+    __lastCompetenceSignatureV1843 = signature;
+
     updateOldStableCache(name, count);
 
     setText("mockupCompetenceCount", count);
@@ -15123,7 +15137,7 @@ sheet.appendRow([
       card.setAttribute("title", "Voir mes compétences validées et mes médailles");
       const label = card.querySelector(".mockup-stat-text");
       if(label){
-        label.innerHTML = '<span id="mockupCompetenceCount">' + count + '</span><br>compétences<br>validées';
+        setHTMLIfChanged(label, '<span id="mockupCompetenceCount">' + count + '</span><br>compétences<br>validées');
       }
       if(!card.__v1842Click){
         card.addEventListener("click", openMedalsModalV1842);
@@ -15196,26 +15210,14 @@ sheet.appendRow([
 
   function refreshSoon(){
     updateLabelsAndCounts();
-    setTimeout(updateLabelsAndCounts, 80);
-    setTimeout(updateLabelsAndCounts, 350);
-    setTimeout(updateLabelsAndCounts, 1000);
+    /* Un seul rappel léger suffit après le rendu initial. */
+    setTimeout(updateLabelsAndCounts, 250);
   }
 
   document.addEventListener("DOMContentLoaded", refreshSoon);
   window.addEventListener("load", refreshSoon);
   window.addEventListener("focus", refreshSoon);
   document.addEventListener("visibilitychange", function(){ if(!document.hidden) refreshSoon(); });
-
-  const obs = new MutationObserver(function(){
-    if(window.__v1842Rendering) return;
-    window.__v1842Rendering = true;
-    setTimeout(function(){
-      try{ updateLabelsAndCounts(); }finally{ window.__v1842Rendering = false; }
-    }, 0);
-  });
-  document.addEventListener("DOMContentLoaded", function(){
-    try{ obs.observe(document.body, {childList:true, subtree:true, characterData:true}); }catch(e){}
-  });
 
   const oldValidate = window.hibouValidateSkill;
   if(typeof oldValidate === "function" && !oldValidate.__v1842Wrapped){

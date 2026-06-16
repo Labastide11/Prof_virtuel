@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉  V18.5.0 Podium</title>
+<title>🦉  V18.5.1 Podium corrigé</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -15997,342 +15997,59 @@ sheet.appendRow([
 </script>
 
 
-
-<!-- =========================================================
- V18.5.0 - Podium des ceintures validées
- Ajoute une pop-up "champions" au bouton Voir les ceintures validées.
- Patch non destructif : conserve la synchronisation V18.4.8.
-========================================================= -->
-<style id="patch-v1850-podium-ceintures">
-.podium-v1850-overlay{
-  position:fixed;
-  inset:0;
-  background:rgba(45,43,85,.62);
-  backdrop-filter:blur(7px);
-  z-index:9999;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:20px;
-}
-.podium-v1850-overlay.hidden{display:none!important;}
-.podium-v1850-modal{
-  width:min(1040px,96vw);
-  max-height:92vh;
-  overflow:auto;
-  background:linear-gradient(135deg,#FFFDF7 0%,#FFFFFF 48%,#F7F6FF 100%);
-  border:3px solid rgba(255,255,255,.9);
-  border-radius:30px;
-  box-shadow:0 24px 70px rgba(20,20,60,.28);
-  position:relative;
-  padding:26px 28px 18px 28px;
-  color:var(--text,#2D2B55);
-  animation:podiumPop1850 .28s cubic-bezier(.18,.9,.25,1.18);
-}
-@keyframes podiumPop1850{from{transform:scale(.92);opacity:0}to{transform:scale(1);opacity:1}}
-.podium-v1850-modal::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  border-radius:28px;
-  pointer-events:none;
-  background:
-    radial-gradient(circle at 16% 20%,rgba(255,217,61,.22) 0 5px,transparent 6px),
-    radial-gradient(circle at 86% 28%,rgba(255,107,107,.22) 0 5px,transparent 6px),
-    radial-gradient(circle at 32% 10%,rgba(108,99,255,.20) 0 4px,transparent 5px),
-    radial-gradient(circle at 74% 12%,rgba(107,203,119,.20) 0 4px,transparent 5px),
-    linear-gradient(112deg,rgba(255,217,61,.20) 0 12%,transparent 12% 27%,rgba(255,217,61,.14) 27% 39%,transparent 39% 100%);
-}
-.podium-v1850-close{
-  position:absolute;
-  top:18px;
-  right:18px;
-  width:54px;
-  height:54px;
-  border-radius:18px;
-  border:3px solid #FFC5C5;
-  background:#FFF1F1;
-  color:#A22;
-  font-size:26px;
-  font-weight:900;
-  cursor:pointer;
-  z-index:2;
-}
-.podium-v1850-title{
-  position:relative;
-  z-index:1;
-  text-align:center;
-  font-family:'Baloo 2','Nunito',sans-serif;
-  color:var(--primary,#6C63FF);
-  font-size:44px;
-  font-weight:900;
-  line-height:1;
-  margin:4px 70px 4px 70px;
-  text-transform:uppercase;
-}
-.podium-v1850-subtitle{
-  position:relative;
-  z-index:1;
-  text-align:center;
-  color:#5650b8;
-  font-size:20px;
-  font-weight:900;
-  margin-bottom:18px;
-}
-.podium-v1850-stage{
-  position:relative;
-  z-index:1;
-  display:grid;
-  grid-template-columns:1fr 1.15fr 1fr;
-  gap:0;
-  align-items:end;
-  min-height:360px;
-  margin:8px auto 18px auto;
-  max-width:860px;
-}
-.podium-v1850-card{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:flex-end;
-  min-width:0;
-}
-.podium-v1850-owl{
-  width:118px;
-  height:118px;
-  border-radius:32px;
-  background:linear-gradient(135deg,#FFF9E6,#EAE8FF);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:72px;
-  box-shadow:0 10px 26px rgba(45,43,85,.16);
-  border:4px solid white;
-  margin-bottom:10px;
-}
-.podium-v1850-card.first .podium-v1850-owl{width:138px;height:138px;font-size:84px;}
-.podium-v1850-crown{font-size:42px;margin-bottom:-14px;z-index:2;filter:drop-shadow(0 3px 3px rgba(0,0,0,.12));}
-.podium-v1850-block{
-  width:100%;
-  border-radius:26px 26px 0 0;
-  text-align:center;
-  padding:20px 14px 16px 14px;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.65),0 12px 24px rgba(45,43,85,.14);
-  border:3px solid rgba(255,255,255,.68);
-}
-.podium-v1850-card.first .podium-v1850-block{min-height:202px;background:linear-gradient(180deg,#FFD93D,#FFB800);}
-.podium-v1850-card.second .podium-v1850-block{min-height:160px;background:linear-gradient(180deg,#E9EBF4,#B9BDCC);}
-.podium-v1850-card.third .podium-v1850-block{min-height:132px;background:linear-gradient(180deg,#F1B273,#C87536);}
-.podium-v1850-rank{font-size:52px;font-weight:900;color:white;line-height:1;text-shadow:0 3px 0 rgba(0,0,0,.10);}
-.podium-v1850-name{font-size:24px;font-weight:900;color:#16163e;background:rgba(255,255,255,.84);border-radius:18px;padding:8px 10px;margin:8px 0 6px 0;}
-.podium-v1850-count{font-size:15px;font-weight:900;color:#16163e;}
-.podium-v1850-badge{display:inline-block;margin-top:8px;border-radius:999px;padding:7px 13px;font-weight:900;color:white;background:rgba(45,43,85,.35);}
-.podium-v1850-tablebox{
-  position:relative;
-  z-index:1;
-  background:#fff;
-  border:2px solid #EAE8FF;
-  border-radius:18px;
-  overflow:hidden;
-  box-shadow:0 6px 18px rgba(108,99,255,.10);
-}
-.podium-v1850-table-title{padding:12px 16px;font-weight:900;color:#2D2B55;border-bottom:1px solid #ECEBF3;background:#FAFAFF;}
-.podium-v1850-table{width:100%;border-collapse:collapse;font-size:14px;}
-.podium-v1850-table th,.podium-v1850-table td{padding:11px 12px;border-bottom:1px solid #ECEBF3;text-align:left;}
-.podium-v1850-table th{background:#F7F6FF;color:var(--primary,#6C63FF);font-weight:900;}
-.podium-v1850-table tr:last-child td{border-bottom:none;}
-.podium-v1850-rankpill{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:999px;background:var(--primary,#6C63FF);color:white;font-weight:900;}
-.podium-v1850-footer{
-  position:relative;
-  z-index:1;
-  margin-top:14px;
-  padding:13px;
-  border-radius:16px;
-  text-align:center;
-  background:#F7F6FF;
-  font-weight:900;
-  color:#5650b8;
-}
-.podium-v1850-empty{
-  position:relative;
-  z-index:1;
-  text-align:center;
-  padding:44px 20px;
-  font-weight:900;
-  font-size:20px;
-  background:#F7F6FF;
-  border:2px dashed #EAE8FF;
-  border-radius:20px;
-}
-@media(max-width:760px){
-  .podium-v1850-modal{padding:20px 14px 14px 14px;border-radius:24px;}
-  .podium-v1850-title{font-size:30px;margin:8px 58px 2px 8px;text-align:left;}
-  .podium-v1850-subtitle{text-align:left;font-size:16px;margin-left:8px;}
-  .podium-v1850-stage{grid-template-columns:1fr;gap:12px;min-height:0;align-items:stretch;}
-  .podium-v1850-card{display:grid;grid-template-columns:86px 1fr;align-items:center;gap:10px;background:#fff;border:2px solid #EAE8FF;border-radius:20px;padding:10px;}
-  .podium-v1850-card.first{order:1}.podium-v1850-card.second{order:2}.podium-v1850-card.third{order:3}
-  .podium-v1850-owl,.podium-v1850-card.first .podium-v1850-owl{width:76px;height:76px;font-size:48px;margin:0;border-radius:22px;}
-  .podium-v1850-crown{display:none;}
-  .podium-v1850-block,.podium-v1850-card.first .podium-v1850-block,.podium-v1850-card.second .podium-v1850-block,.podium-v1850-card.third .podium-v1850-block{min-height:0;border-radius:16px;padding:12px;}
-  .podium-v1850-rank{font-size:32px;}.podium-v1850-name{font-size:20px;}
-  .podium-v1850-table{font-size:12px;}
-}
+<style id="patch-v1851-podium-ceintures-fix">
+.podium-v1851-overlay{position:fixed;inset:0;background:rgba(45,43,85,.62);backdrop-filter:blur(8px);z-index:99999;display:flex;align-items:center;justify-content:center;padding:18px;}
+.podium-v1851-modal{position:relative;width:min(1060px,96vw);max-height:92vh;overflow:auto;background:linear-gradient(135deg,#FFFDF7 0%,#FFFFFF 55%,#F8F7FF 100%);border-radius:30px;border:3px solid rgba(255,255,255,.8);box-shadow:0 28px 80px rgba(0,0,0,.26);padding:26px;animation:podiumPop1851 .25s ease-out;}
+@keyframes podiumPop1851{from{transform:scale(.94);opacity:0}to{transform:scale(1);opacity:1}}
+.podium-v1851-close{position:absolute;right:18px;top:18px;width:56px;height:56px;border-radius:20px;border:3px solid #FFC9C9;background:#FFF1F1;color:#A42222;font-size:34px;font-weight:900;cursor:pointer;}
+.podium-v1851-title{font-family:'Baloo 2','Nunito',sans-serif;text-align:center;color:var(--primary,#6C63FF);font-size:48px;font-weight:900;line-height:1;margin:6px 70px 4px 70px;text-transform:uppercase;}
+.podium-v1851-subtitle{text-align:center;color:#5750B9;font-size:22px;font-weight:900;margin-bottom:18px;}
+.podium-v1851-stage{display:grid;grid-template-columns:1fr 1.15fr 1fr;align-items:end;gap:18px;min-height:330px;margin:8px 0 18px 0;background:radial-gradient(circle at 50% 20%,rgba(255,217,61,.34),transparent 34%),linear-gradient(120deg,rgba(255,217,61,.16),transparent 24%,rgba(108,99,255,.09) 60%,transparent);border-radius:28px;padding:18px;overflow:hidden;}
+.podium-v1851-card{text-align:center;position:relative;}
+.podium-v1851-crown{font-size:44px;margin-bottom:-14px;position:relative;z-index:2;}
+.podium-v1851-owl{width:112px;height:112px;border-radius:30px;margin:0 auto -4px auto;background:linear-gradient(135deg,#FFF9E6,#EAE8FF);display:flex;align-items:center;justify-content:center;font-size:70px;box-shadow:0 10px 24px rgba(0,0,0,.14);position:relative;z-index:2;}
+.podium-v1851-card.first .podium-v1851-owl{width:138px;height:138px;font-size:86px;}
+.podium-v1851-block{border-radius:26px 26px 18px 18px;padding:18px 14px 16px 14px;box-shadow:inset 0 2px rgba(255,255,255,.45),0 12px 26px rgba(0,0,0,.14);}
+.podium-v1851-card.first .podium-v1851-block{min-height:206px;background:linear-gradient(180deg,#FFD93D,#FFB800);}
+.podium-v1851-card.second .podium-v1851-block{min-height:164px;background:linear-gradient(180deg,#EEF0F7,#B9BDCC);}
+.podium-v1851-card.third .podium-v1851-block{min-height:138px;background:linear-gradient(180deg,#F5BD82,#C87536);}
+.podium-v1851-rank{font-size:54px;font-weight:900;color:white;text-shadow:0 3px rgba(0,0,0,.12);line-height:1;}
+.podium-v1851-name{font-size:24px;font-weight:900;color:#16163e;background:rgba(255,255,255,.86);border-radius:18px;padding:8px 10px;margin:8px 0 6px 0;}
+.podium-v1851-count{font-size:15px;font-weight:900;color:#16163e;}
+.podium-v1851-badge{display:inline-block;margin-top:8px;border-radius:999px;padding:7px 13px;font-weight:900;color:white;background:rgba(45,43,85,.38);}
+.podium-v1851-tablebox{background:#fff;border:2px solid #EAE8FF;border-radius:20px;overflow:hidden;box-shadow:0 8px 22px rgba(108,99,255,.08);}
+.podium-v1851-table-title{padding:12px 16px;font-weight:900;color:#2D2B55;border-bottom:1px solid #ECEBF3;background:#FAFAFF;}
+.podium-v1851-table{width:100%;border-collapse:collapse;font-size:14px;}.podium-v1851-table th,.podium-v1851-table td{padding:11px 12px;border-bottom:1px solid #ECEBF3;text-align:left;}.podium-v1851-table th{background:#F7F6FF;color:var(--primary,#6C63FF);font-weight:900;}.podium-v1851-rankpill{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:999px;background:var(--primary,#6C63FF);color:white;font-weight:900;}
+.podium-v1851-footer{margin-top:16px;text-align:center;background:linear-gradient(135deg,#F8F7FF,#FFFFFF);border-radius:18px;padding:13px;font-weight:900;color:#5750B9;}.podium-v1851-empty{text-align:center;padding:70px 20px;font-size:24px;font-weight:900;color:var(--primary,#6C63FF);}
+.podium-v1851-open-btn{background:linear-gradient(135deg,#6C63FF,#8E86FF)!important;color:white!important;}
+@media(max-width:760px){.podium-v1851-modal{padding:18px 12px;border-radius:24px}.podium-v1851-title{text-align:left;font-size:30px;margin:8px 62px 2px 8px}.podium-v1851-subtitle{text-align:left;font-size:16px;margin-left:8px}.podium-v1851-stage{grid-template-columns:1fr;gap:10px;min-height:0;padding:10px}.podium-v1851-card{display:grid;grid-template-columns:80px 1fr;gap:10px;align-items:center;background:#fff;border:2px solid #EAE8FF;border-radius:20px;padding:10px}.podium-v1851-card.first{order:1}.podium-v1851-card.second{order:2}.podium-v1851-card.third{order:3}.podium-v1851-owl,.podium-v1851-card.first .podium-v1851-owl{width:72px;height:72px;font-size:46px;margin:0;border-radius:20px}.podium-v1851-crown{display:none}.podium-v1851-block,.podium-v1851-card.first .podium-v1851-block,.podium-v1851-card.second .podium-v1851-block,.podium-v1851-card.third .podium-v1851-block{min-height:0;border-radius:16px;padding:12px}.podium-v1851-rank{font-size:30px}.podium-v1851-name{font-size:20px}.podium-v1851-table{font-size:12px}}
 </style>
-<script id="patch-v1850-podium-ceintures">
+<script id="patch-v1851-podium-ceintures-fix">
 (function(){
-  if(window.__maitreHibouV1850Podium) return;
-  window.__maitreHibouV1850Podium = true;
-
-  const PROGRESS_PREFIX = "hibou_v168_progress_";
-  const BACKUP_KEY = "hibou_v168_belts_global";
-  const medalRank = {"none":0,"bronze":1,"argent":2,"or":3};
-
-  function esc(v){
-    return String(v ?? "").replace(/[&<>'"]/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[ch]));
-  }
-  function normalizeName(v){
-    const s = String(v || "").trim().replace(/\s+/g," ");
-    return s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : "Élève";
-  }
-  function keyName(v){
-    return String(v || "").trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
-  }
-  function readJson(key, fallback){
-    try{ const v = JSON.parse(localStorage.getItem(key) || "null"); return v == null ? fallback : v; }catch(e){ return fallback; }
-  }
-  function rowSignature(row){
-    return [keyName(row.prenom || row.name), row.skillId || row.title || row.competence || "", row.score || "", row.rank || row.medaille || ""].join("|");
-  }
-  function collectBeltsV1850(){
-    const rows = [];
-    const seen = new Set();
-    try{
-      Object.keys(localStorage).forEach(key=>{
-        if(!key.startsWith(PROGRESS_PREFIX)) return;
-        const rawName = key.slice(PROGRESS_PREFIX.length).replaceAll("_"," ");
-        const data = readJson(key, {});
-        const belts = Array.isArray(data.belts) ? data.belts : [];
-        belts.forEach(b=>{
-          if(!b || !b.valid) return;
-          const row = Object.assign({}, b, {prenom: b.prenom || b.name || rawName});
-          const sig = rowSignature(row);
-          if(!seen.has(sig)){ seen.add(sig); rows.push(row); }
-        });
-      });
-    }catch(e){}
-    const backup = readJson(BACKUP_KEY, []);
-    if(Array.isArray(backup)){
-      backup.forEach(b=>{
-        if(!b || !b.valid) return;
-        const row = Object.assign({}, b, {prenom: b.prenom || b.name || "Élève"});
-        const sig = rowSignature(row);
-        if(!seen.has(sig)){ seen.add(sig); rows.push(row); }
-      });
-    }
-    return rows;
-  }
-  function buildRankingV1850(){
-    const by = new Map();
-    collectBeltsV1850().forEach(b=>{
-      const name = normalizeName(b.prenom || b.name);
-      const id = keyName(name);
-      if(!by.has(id)) by.set(id, {name, count:0, bestRank:0, bestMedal:"-", bestScore:0, totalScore:0, rows:[]});
-      const item = by.get(id);
-      const score = Number(b.score || 0);
-      const rank = medalRank[b.rank] || (String(b.medal || b.medaille || "").toLowerCase().includes("or") ? 3 : String(b.medal || b.medaille || "").toLowerCase().includes("argent") ? 2 : String(b.medal || b.medaille || "").toLowerCase().includes("bronze") ? 1 : 0);
-      item.count += 1;
-      item.totalScore += score;
-      item.rows.push(b);
-      if(rank > item.bestRank || (rank === item.bestRank && score > item.bestScore)){
-        item.bestRank = rank;
-        item.bestScore = score;
-        item.bestMedal = b.medal || b.medaille || (rank===3?"🥇 Or":rank===2?"🥈 Argent":rank===1?"🥉 Bronze":"-");
-      }
-    });
-    return Array.from(by.values()).sort((a,b)=> b.count-a.count || b.bestRank-a.bestRank || b.bestScore-a.bestScore || a.name.localeCompare(b.name,"fr"));
-  }
-  function medalLabel(rank){ return rank===3 ? "🏆 Champion Or" : rank===2 ? "⭐ Excellent" : rank===1 ? "💪 Bravo" : "🌱 Continue"; }
-  function podiumCard(student, place){
-    const cls = place===1 ? "first" : place===2 ? "second" : "third";
-    const empty = !student;
-    const name = empty ? "À gagner" : student.name;
-    const count = empty ? "Aucune ceinture" : `${student.count} ceinture${student.count>1?"s":""} validée${student.count>1?"s":""}`;
-    return `<div class="podium-v1850-card ${cls}">
-      ${place===1 ? `<div class="podium-v1850-crown">👑</div>` : `<div style="height:28px"></div>`}
-      <div class="podium-v1850-owl">🦉</div>
-      <div class="podium-v1850-block">
-        <div class="podium-v1850-rank">${place}</div>
-        <div class="podium-v1850-name">${esc(name)}</div>
-        <div class="podium-v1850-count">${esc(count)}</div>
-        <div class="podium-v1850-badge">${empty ? "⭐ Bientôt" : esc(medalLabel(student.bestRank))}</div>
-      </div>
-    </div>`;
-  }
-  function openPodiumV1850(){
-    const ranking = buildRankingV1850();
-    const second = ranking[1] || null, first = ranking[0] || null, third = ranking[2] || null;
-    const tableRows = ranking.slice(3).map((s,i)=>`<tr><td><span class="podium-v1850-rankpill">${i+4}</span></td><td>🦉 <strong>${esc(s.name)}</strong></td><td>${s.count} ceinture${s.count>1?"s":""} validée${s.count>1?"s":""}</td><td><strong>${esc(s.bestMedal)}</strong></td></tr>`).join("");
-    const existing = document.getElementById("podiumV1850Overlay");
-    if(existing) existing.remove();
-    const overlay = document.createElement("div");
-    overlay.id = "podiumV1850Overlay";
-    overlay.className = "podium-v1850-overlay";
-    overlay.innerHTML = `<div class="podium-v1850-modal" role="dialog" aria-modal="true" aria-label="Podium des ceintures validées">
-      <button class="podium-v1850-close" type="button" onclick="window.closePodiumV1850()">×</button>
-      <div class="podium-v1850-title">🏆 Ceintures validées</div>
-      <div class="podium-v1850-subtitle">Podium des champions</div>
-      ${ranking.length ? `<div class="podium-v1850-stage">${podiumCard(second,2)}${podiumCard(first,1)}${podiumCard(third,3)}</div>
-      <div class="podium-v1850-tablebox">
-        <div class="podium-v1850-table-title">📊 Classement complet</div>
-        <table class="podium-v1850-table"><thead><tr><th>Rang</th><th>Élève</th><th>Ceintures validées</th><th>Meilleure médaille</th></tr></thead><tbody>${tableRows || `<tr><td colspan="4">Le podium contient tous les champions pour le moment.</td></tr>`}</tbody></table>
-      </div>
-      <div class="podium-v1850-footer">⭐ Bravo à tous nos champions ! Continuez vos efforts, la prochaine ceinture est peut-être pour vous ! 💪</div>`
-      : `<div class="podium-v1850-empty">🥋 Aucune ceinture validée pour le moment.<br>Le podium va bientôt se remplir !</div>`}
-    </div>`;
-    overlay.addEventListener("click", function(e){ if(e.target === overlay) window.closePodiumV1850(); });
-    document.body.appendChild(overlay);
-  }
-  window.openPodiumCeinturesV1850 = openPodiumV1850;
-  window.closePodiumV1850 = function(){ const el = document.getElementById("podiumV1850Overlay"); if(el) el.remove(); };
-
-  function shouldOpenPodiumFromElement(el){
-    if(!el) return false;
-    const txt = String(el.textContent || "").toLowerCase();
-    return txt.includes("voir les ceintures validées") || txt.includes("ceintures validées") && (el.tagName === "BUTTON" || el.closest("button"));
-  }
-  document.addEventListener("click", function(e){
-    const btn = e.target.closest("button, .mockup-side-row, .v168-metric, .stat-card");
-    if(shouldOpenPodiumFromElement(btn)){
-      e.preventDefault();
-      e.stopPropagation();
-      openPodiumV1850();
-    }
-  }, true);
-
-  // Ajoute aussi un bouton clair dans l'espace enseignant si le bandeau existe déjà.
-  function installPodiumButton(){
-    const bars = Array.from(document.querySelectorAll(".teacher-actions, .mockup-teacher-actions, .v168-teacher-tabs"));
-    bars.forEach(bar=>{
-      if(bar.querySelector(".podium-v1850-open-btn")) return;
-      const b = document.createElement("button");
-      b.type = "button";
-      b.className = "teacher-btn podium-v1850-open-btn";
-      b.textContent = "🏆 Voir les ceintures validées";
-      b.onclick = openPodiumV1850;
-      bar.appendChild(b);
-    });
-  }
-  document.addEventListener("DOMContentLoaded", ()=>setTimeout(installPodiumButton,700));
-  window.addEventListener("load", ()=>setTimeout(installPodiumButton,900));
-  const oldRender = window.renderTeacherDashboard;
-  if(typeof oldRender === "function"){
-    window.renderTeacherDashboard = function(){
-      const result = oldRender.apply(this, arguments);
-      setTimeout(installPodiumButton,80);
-      return result;
-    };
-  }
+  if(window.__maitreHibouV1851PodiumFix) return;
+  window.__maitreHibouV1851PodiumFix = true;
+  var PROGRESS_PREFIX="hibou_v168_progress_", BACKUP_KEY="hibou_v168_belts_global";
+  var medalRank={none:0,bronze:1,argent:2,or:3};
+  function esc(v){return String(v==null?"":v).replace(/[&<>'"]/g,function(ch){return {"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[ch];});}
+  function normName(v){var s=String(v||"").trim().replace(/\s+/g," ");return s?s.charAt(0).toUpperCase()+s.slice(1).toLowerCase():"Élève";}
+  function keyName(v){return String(v||"").trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");}
+  function readJson(k,f){try{var v=JSON.parse(localStorage.getItem(k)||"null");return v==null?f:v;}catch(e){return f;}}
+  function sig(b){return [keyName(b.prenom||b.name), b.skillId||b.title||b.competence||"", b.score||"", b.total||20, b.rank||b.medaille||b.medal||""].join("|");}
+  function collect(){var rows=[], seen={};try{Object.keys(localStorage).forEach(function(k){if(k.indexOf(PROGRESS_PREFIX)!==0)return;var raw=k.slice(PROGRESS_PREFIX.length).replace(/_/g," ");var data=readJson(k,{});(Array.isArray(data.belts)?data.belts:[]).forEach(function(b){if(!b||!b.valid)return;var r=Object.assign({},b,{prenom:b.prenom||b.name||raw});var s=sig(r);if(!seen[s]){seen[s]=1;rows.push(r);}});});}catch(e){}
+    var backup=readJson(BACKUP_KEY,[]);if(Array.isArray(backup)){backup.forEach(function(b){if(!b||!b.valid)return;var r=Object.assign({},b,{prenom:b.prenom||b.name||"Élève"});var s=sig(r);if(!seen[s]){seen[s]=1;rows.push(r);}});}return rows;}
+  function ranking(){var by={};collect().forEach(function(b){var name=normName(b.prenom||b.name), id=keyName(name);if(!by[id])by[id]={name:name,count:0,bestRank:0,bestMedal:"-",bestScore:0};var it=by[id], score=Number(b.score||0), med=String(b.rank||b.medal||b.medaille||"").toLowerCase();var rank=medalRank[b.rank]||(med.indexOf("or")>=0?3:med.indexOf("argent")>=0?2:med.indexOf("bronze")>=0?1:0);it.count++;if(rank>it.bestRank||(rank===it.bestRank&&score>it.bestScore)){it.bestRank=rank;it.bestScore=score;it.bestMedal=b.medal||b.medaille||(rank===3?"🥇 Or":rank===2?"🥈 Argent":rank===1?"🥉 Bronze":"-");}});return Object.keys(by).map(function(k){return by[k];}).sort(function(a,b){return b.count-a.count||b.bestRank-a.bestRank||b.bestScore-a.bestScore||a.name.localeCompare(b.name,"fr");});}
+  function label(rank){return rank===3?"🏆 Champion Or":rank===2?"⭐ Excellent":rank===1?"💪 Bravo":"🌱 Continue";}
+  function card(s,place){var cls=place===1?"first":place===2?"second":"third", empty=!s, name=empty?"À gagner":s.name, count=empty?"Aucune ceinture":(s.count+" ceinture"+(s.count>1?"s":"")+" validée"+(s.count>1?"s":""));return '<div class="podium-v1851-card '+cls+'">'+(place===1?'<div class="podium-v1851-crown">👑</div>':'<div style="height:28px"></div>')+'<div class="podium-v1851-owl">🦉</div><div class="podium-v1851-block"><div class="podium-v1851-rank">'+place+'</div><div class="podium-v1851-name">'+esc(name)+'</div><div class="podium-v1851-count">'+esc(count)+'</div><div class="podium-v1851-badge">'+(empty?'⭐ Bientôt':esc(label(s.bestRank)))+'</div></div></div>';}
+  function openPodium(){var r=ranking(), second=r[1]||null, first=r[0]||null, third=r[2]||null;var rows=r.slice(3).map(function(s,i){return '<tr><td><span class="podium-v1851-rankpill">'+(i+4)+'</span></td><td>🦉 <strong>'+esc(s.name)+'</strong></td><td>'+s.count+' ceinture'+(s.count>1?'s':'')+' validée'+(s.count>1?'s':'')+'</td><td><strong>'+esc(s.bestMedal)+'</strong></td></tr>';}).join('');var old=document.getElementById('podiumV1851Overlay');if(old)old.remove();var ov=document.createElement('div');ov.id='podiumV1851Overlay';ov.className='podium-v1851-overlay';ov.innerHTML='<div class="podium-v1851-modal" role="dialog" aria-modal="true"><button class="podium-v1851-close" type="button">×</button><div class="podium-v1851-title">🏆 Ceintures validées</div><div class="podium-v1851-subtitle">Podium des champions</div>'+(r.length?'<div class="podium-v1851-stage">'+card(second,2)+card(first,1)+card(third,3)+'</div><div class="podium-v1851-tablebox"><div class="podium-v1851-table-title">📊 Classement complet</div><table class="podium-v1851-table"><thead><tr><th>Rang</th><th>Élève</th><th>Ceintures validées</th><th>Meilleure médaille</th></tr></thead><tbody>'+(rows||'<tr><td colspan="4">Le podium contient tous les champions pour le moment.</td></tr>')+'</tbody></table></div><div class="podium-v1851-footer">⭐ Bravo à tous nos champions ! Continuez vos efforts, la prochaine ceinture est peut-être pour vous ! 💪</div>':'<div class="podium-v1851-empty">🥋 Aucune ceinture validée pour le moment.<br>Le podium va bientôt se remplir !</div>')+'</div>';ov.querySelector('.podium-v1851-close').onclick=closePodium;ov.addEventListener('click',function(e){if(e.target===ov)closePodium();});document.body.appendChild(ov);}
+  function closePodium(){var el=document.getElementById('podiumV1851Overlay');if(el)el.remove();}
+  window.openPodiumCeinturesV1851=openPodium;window.openPodiumCeinturesV1850=openPodium;window.closePodiumV1851=closePodium;
+  function textOf(el){return String(el&&el.textContent||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");}
+  function isPodiumTarget(el){var t=textOf(el);return t.indexOf('voir les ceintures validees')>=0 || t.indexOf('ceintures validees')>=0 || t.indexOf('competences validees')>=0;}
+  document.addEventListener('click',function(e){var n=e.target;for(var i=0;n&&i<8;i++,n=n.parentElement){if(isPodiumTarget(n) && (n.tagName==='BUTTON'||n.tagName==='A'||n.getAttribute('role')==='button'||n.className)){e.preventDefault();e.stopImmediatePropagation();openPodium();return;}}},true);
+  function install(){var bars=document.querySelectorAll('.teacher-actions,.mockup-teacher-actions,.v168-teacher-tabs,.v168-metrics');for(var i=0;i<bars.length;i++){var bar=bars[i];if(bar.querySelector('.podium-v1851-open-btn'))continue;var b=document.createElement('button');b.type='button';b.className='teacher-btn v168-teacher-tab podium-v1851-open-btn';b.textContent='🏆 Voir les ceintures validées';b.onclick=function(ev){ev.preventDefault();ev.stopPropagation();openPodium();};bar.appendChild(b);}}
+  setInterval(install,800);document.addEventListener('DOMContentLoaded',install);setTimeout(install,200);
 })();
 </script>
+
 </body>
 </html>

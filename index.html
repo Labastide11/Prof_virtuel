@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 V20.2 </title>
+<title>🦉 V20.2 - Boîte à questions écriture guidée</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -18829,6 +18829,172 @@ sheet.appendRow([
   } else {
     ensureFeedbackBox(); try { renderQuestionBoxList(); } catch(e) {}
   }
+})();
+</script>
+
+
+
+<!-- PATCH V20.2.1 - Correction popup tablette : vraie hauteur visible + bouton fermer fixe -->
+<style id="patch-v2021-popup-tablette-fixes">
+  /* La popup doit tenir dans la zone réellement visible du navigateur/tablette. */
+  #questionBoxOverlay.question-box-overlay{
+    position:fixed!important;
+    inset:0!important;
+    width:100vw!important;
+    height:100vh!important;
+    height:100svh!important;
+    height:100dvh!important;
+    padding:0!important;
+    overflow:hidden!important;
+    align-items:stretch!important;
+    justify-content:stretch!important;
+    z-index:99999!important;
+  }
+  #questionBoxOverlay .qbox-v1983-panel{
+    width:100vw!important;
+    height:100vh!important;
+    height:100svh!important;
+    height:100dvh!important;
+    max-width:100vw!important;
+    max-height:100vh!important;
+    max-height:100svh!important;
+    max-height:100dvh!important;
+    margin:0!important;
+    overflow:hidden!important;
+  }
+  #questionBoxOverlay .qbox-v1983-left{
+    height:100vh!important;
+    height:100svh!important;
+    height:100dvh!important;
+  }
+  #questionBoxOverlay .qbox-v1983-main{
+    height:calc(100vh - 20px)!important;
+    height:calc(100svh - 20px)!important;
+    height:calc(100dvh - 20px)!important;
+    max-height:calc(100vh - 20px)!important;
+    max-height:calc(100svh - 20px)!important;
+    max-height:calc(100dvh - 20px)!important;
+    box-sizing:border-box!important;
+    overflow:hidden!important;
+  }
+
+  /* Le bouton fermer reste toujours visible, même si la largeur/zoom tablette bouge. */
+  #questionBoxOverlay .qbox-v1983-close,
+  #questionBoxOverlay .question-box-close{
+    position:fixed!important;
+    top:12px!important;
+    right:12px!important;
+    z-index:100005!important;
+    width:52px!important;
+    height:52px!important;
+    min-width:52px!important;
+    min-height:52px!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    border-radius:999px!important;
+    border:3px solid #DDE3FF!important;
+    background:#FFFFFF!important;
+    color:#0E1A49!important;
+    font-size:34px!important;
+    font-weight:950!important;
+    line-height:1!important;
+    box-shadow:0 8px 24px rgba(0,0,0,.20)!important;
+    opacity:1!important;
+    visibility:visible!important;
+    cursor:pointer!important;
+  }
+
+  /* En paysage tablette, on réduit légèrement les éléments pour garder la zone de question visible. */
+  @media (orientation: landscape) and (max-height: 760px){
+    #questionBoxOverlay .qbox-v1983-panel{
+      grid-template-columns:minmax(190px,19vw) 1fr!important;
+    }
+    #questionBoxOverlay .qbox-v1983-main{
+      margin:6px 6px 6px 0!important;
+      padding:10px 12px 8px 12px!important;
+      border-radius:22px 0 0 22px!important;
+      height:calc(100dvh - 12px)!important;
+      max-height:calc(100dvh - 12px)!important;
+      gap:6px!important;
+    }
+    #questionBoxOverlay .qbox-v1983-titlebar{
+      padding:0 56px 0 0!important;
+      gap:8px!important;
+    }
+    #questionBoxOverlay .qbox-v1983-title-icon{font-size:42px!important;}
+    #questionBoxOverlay .qbox-v1983-titlebar h2{font-size:32px!important;line-height:.95!important;}
+    #questionBoxOverlay .qbox-v1983-titlebar p{font-size:14px!important;line-height:1.15!important;}
+    #questionBoxOverlay .qbox-v1983-grid{gap:8px!important;min-height:0!important;}
+    #questionBoxOverlay .qbox-v1983-colhead{padding:9px 10px!important;gap:8px!important;}
+    #questionBoxOverlay .qbox-v1983-colicon{font-size:26px!important;}
+    #questionBoxOverlay .qbox-v1983-colhead h3{font-size:19px!important;}
+    #questionBoxOverlay .qbox-v1983-colhead p{font-size:11px!important;}
+    #questionBoxOverlay .qbox-v1983-note{margin:7px!important;padding:7px 9px!important;font-size:11px!important;}
+    #questionBoxOverlay .qbox-v1983-tools{padding:0 7px 6px 7px!important;gap:6px!important;}
+    #questionBoxOverlay .qbox-v1983-tools .question-box-search{padding:6px 8px!important;}
+    #questionBoxOverlay .qbox-v1983-tools #questionBoxMatter{padding:6px 6px!important;max-width:118px!important;font-size:12px!important;}
+    #questionBoxOverlay .qbox-v1983-list{padding:0 7px 6px 7px!important;}
+    #questionBoxOverlay .qbox-v1983-item{padding:7px 0!important;gap:7px!important;grid-template-columns:34px 1fr!important;}
+    #questionBoxOverlay .qbox-v1983-emoji{font-size:25px!important;}
+    #questionBoxOverlay .qbox-v1983-question{font-size:12.5px!important;line-height:1.18!important;}
+    #questionBoxOverlay .qbox-v1983-meta{font-size:10.5px!important;gap:4px!important;}
+    #questionBoxOverlay .qbox-v1983-status{font-size:10.5px!important;padding:5px 7px!important;grid-column:2/3!important;justify-self:start!important;}
+    #questionBoxOverlay .qbox-v1983-count{padding:8px!important;font-size:12px!important;}
+    #questionBoxOverlay .qbox-v1983-compose{grid-template-columns:1fr 170px!important;gap:8px!important;}
+    #questionBoxOverlay .qbox-v1983-compose-input{padding:8px 10px!important;border-radius:15px!important;gap:8px!important;}
+    #questionBoxOverlay .qbox-v1983-pencil{font-size:24px!important;}
+    #questionBoxOverlay .qbox-v1983-compose-input textarea{min-height:34px!important;max-height:70px!important;font-size:15px!important;}
+    #questionBoxOverlay .qbox-v1983-send{font-size:16px!important;border-radius:15px!important;min-height:52px!important;}
+    #questionBoxOverlay .qbox-v1983-footer{font-size:11.5px!important;line-height:1.2!important;}
+    #questionBoxOverlay .qbox-v202-feedback{padding:8px 10px!important;font-size:12px!important;border-radius:14px!important;}
+    #questionBoxOverlay .qbox-v202-feedback .qbox-v202-title{font-size:16px!important;margin-bottom:3px!important;}
+  }
+
+  /* Cas très bas : la colonne de questions scrolle, mais la zone de saisie reste visible. */
+  @media (max-height: 620px){
+    #questionBoxOverlay .qbox-v1983-main{gap:5px!important;}
+    #questionBoxOverlay .qbox-v1983-titlebar p{display:none!important;}
+    #questionBoxOverlay .qbox-v1983-note{display:none!important;}
+  }
+</style>
+<script id="patch-v2021-popup-tablette-js">
+(function(){
+  if(window.__patchV2021PopupTablet) return;
+  window.__patchV2021PopupTablet = true;
+  var oldOpen = window.openQuestionBoxPopup;
+  window.openQuestionBoxPopup = function(){
+    if(typeof oldOpen === 'function') oldOpen();
+    var o = document.getElementById('questionBoxOverlay');
+    if(o){
+      o.classList.remove('hidden');
+      o.setAttribute('aria-hidden','false');
+      document.documentElement.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden';
+    }
+    setTimeout(function(){
+      var close = document.querySelector('#questionBoxOverlay .qbox-v1983-close, #questionBoxOverlay .question-box-close');
+      if(close){
+        close.style.display='flex';
+        close.style.visibility='visible';
+        close.style.opacity='1';
+        close.onclick = window.closeQuestionBoxPopup;
+      }
+    },20);
+  };
+  var oldClose = window.closeQuestionBoxPopup;
+  window.closeQuestionBoxPopup = function(){
+    var o = document.getElementById('questionBoxOverlay');
+    if(o){
+      o.classList.add('hidden');
+      o.setAttribute('aria-hidden','true');
+    }
+    document.documentElement.style.overflow = '';
+    document.body.style.overflow = '';
+    if(typeof oldClose === 'function'){
+      try{ oldClose(); }catch(e){}
+    }
+  };
 })();
 </script>
 

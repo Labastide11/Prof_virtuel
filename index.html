@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 V20.4.2 </title>
+<title>🦉 V20.4.3 - Boîte à questions Sheet forcée</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -19207,6 +19207,45 @@ sheet.appendRow([
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',bind); else bind();
   window.addEventListener('load',function(){ setTimeout(bind,50); setTimeout(bind,500); });
+})();
+</script>
+
+
+
+<!-- PATCH V20.4.3 - Boîte à questions : ouverture forcée Sheet, neutralise tout ancien rendu de démo -->
+<script id="patch-v2043-question-box-sheet-force">
+(function(){
+  window.__patchV2043QuestionBoxSheetForce = true;
+  var SHEET_URL='https://script.google.com/macros/s/AKfycbwGcErZ0he06Dg_bpPDaHtPHa6fAcDQ-31tB7Rlr9w2JZcNaQnP9YIABJYf-CKpFfpF/exec';
+  var rows=[], loading=false, loaded=false, error=false, scriptNode=null, timer=null;
+  function byId(id){return document.getElementById(id);} 
+  function txt(v){return String(v==null?'':v).trim();}
+  function esc(v){return txt(v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function norm(v){return txt(v).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');}
+  function field(r,names){for(var i=0;i<names.length;i++){var k=names[i]; if(r&&r[k]!=null&&txt(r[k])!=='') return r[k];} return '';}
+  function dateFr(d){var s=txt(d); if(!s)return ''; try{ if(/^\d{4}-\d{2}-\d{2}T/.test(s))return new Date(s).toLocaleDateString('fr-FR'); if(/^\d{4}-\d{2}-\d{2}/.test(s))return s.replace(/^(\d{4})-(\d{2})-(\d{2}).*$/,'$3/$2/$1'); return s;}catch(e){return s;}}
+  function visOf(r){var v=norm(field(r,['Visibilité','Visibilite','visibilite','visibility'])); var st=norm(field(r,['Statut','statut','status'])); if(!v&&(st==='classe'||st==='vedette'||st==='privee'))v=st; if(v.indexOf('vedette')>=0)return 'vedette'; if(v.indexOf('classe')>=0)return 'classe'; return 'privée';}
+  function statusOf(r){var s=norm(field(r,['Statut','statut','status'])); if(s==='classe'||s==='vedette'||s==='privee')s=''; if(s.indexOf('expliqu')>=0||s.indexOf('explique')>=0)return 'expliquée'; if(s.indexOf('nouvelle')>=0)return 'nouvelle'; return 'à_expliquer';}
+  function emoji(mat,vis){ if(vis==='vedette')return '⭐'; mat=norm(mat); if(mat.indexOf('science')>=0)return '🔬'; if(mat.indexOf('math')>=0)return '🧮'; if(mat.indexOf('fran')>=0)return '📚'; if(mat.indexOf('geo')>=0)return '🌍'; if(mat.indexOf('anglais')>=0)return '🇬🇧'; return '❓';}
+  function fromRow(r){var mat=txt(field(r,['Matière','Matiere','matiere','subject']))||'Général'; var vis=visOf(r); return {question:txt(field(r,['Question corrigée','Question corrigee','questionCorrigee','question_corrigee','Question corrigée '])||field(r,['Question originale','questionOriginale','question_originale','question','Question'])), matiere:mat, prenom:txt(field(r,['Prénom','Prenom','prenom','eleve','Élève','Eleve']))||'Élève', date:dateFr(field(r,['Date','date'])), dateExplication:dateFr(field(r,['Date explication','dateExplication','DateExplication'])), visibilite:vis, statut:statusOf(r), points:txt(field(r,['Points Curiosité','Points curiosité','pointsCuriosite']))||'1', emoji:emoji(mat,vis)};}
+  function status(q){ if(q.statut==='expliquée')return q.dateExplication?'✅ Expliquée le '+esc(q.dateExplication):'✅ Expliquée en classe'; if(q.statut==='nouvelle')return '🟠 Nouvelle question'; return '⏳ À expliquer en classe';}
+  function card(q,medal){return '<article class="qbox-v1983-item"><div class="qbox-v1983-emoji">'+esc(medal||q.emoji)+'</div><div class="qbox-v1983-item-main"><div class="qbox-v1983-question">'+esc(q.question)+'</div><div class="qbox-v1983-meta"><span class="qbox-v1983-chip">'+esc(q.matiere)+'</span> '+(q.date?'Posée le '+esc(q.date):'Question posée')+' par '+esc(q.prenom)+'</div><div class="qbox-v1983-status '+(q.statut==='expliquée'?'ok':'wait')+'">'+status(q)+'</div></div></article>';}
+  function set(id,html){var e=byId(id); if(e)e.innerHTML=html;}
+  function counts(a,b,c){var e=byId('qboxCountClasse'); if(e)e.textContent='👥 '+a+' question'+(a>1?'s':'')+' partagée'+(a>1?'s':''); e=byId('qboxCountMes'); if(e)e.textContent='🔒 '+b+' question'+(b>1?'s':'')+' personnelle'+(b>1?'s':''); e=byId('qboxCountVedette'); if(e)e.textContent='🏆 '+c+' question'+(c>1?'s':'')+' vedette'+(c>1?'s':'');}
+  function loadingView(){var h='<div class="qbox-v1983-empty">🦉 Chargement des vraies questions du Sheet...</div>'; set('qboxColClasse',h);set('qboxColMes',h);set('qboxColVedette',h);counts(0,0,0);}
+  function errorView(){var h='<div class="qbox-v1983-empty">⚠️ Impossible de charger les vraies questions du Sheet. Aucune question de démonstration n’est affichée.</div>'; set('qboxColClasse',h);set('qboxColMes',h);set('qboxColVedette',h);counts(0,0,0);}
+  function emptyView(){set('qboxColClasse','<div class="qbox-v1983-empty">Aucune question de classe pour le moment.</div>');set('qboxColMes','<div class="qbox-v1983-empty">Tu n’as pas encore posé de question.</div>');set('qboxColVedette','<div class="qbox-v1983-empty">Aucune question vedette pour le moment.</div>');counts(0,0,0);}
+  function render(){ if(loading){loadingView();return;} if(error){errorView();return;} if(!loaded){emptyView();return;} var name=norm(window.prenomActuel||localStorage.getItem('hibou_prenom')||localStorage.getItem('hibou_last_prenom')||''); var search=norm((byId('questionBoxSearch')||{}).value); var matter=txt((byId('questionBoxMatter')||{}).value); function f(q){return (!search||norm(q.question).indexOf(search)>=0)&&(!matter||q.matiere===matter);} var base=rows.slice(); var classe=base.filter(function(q){return (q.visibilite==='classe'||q.visibilite==='vedette')&&f(q);}); var mes=base.filter(function(q){return name&&norm(q.prenom)===name&&f(q);}); var ved=base.filter(function(q){return q.visibilite==='vedette'&&f(q);}); set('qboxColClasse',classe.length?classe.map(function(q){return card(q);}).join(''):'<div class="qbox-v1983-empty">Aucune question de classe pour le moment.</div>'); set('qboxColMes',mes.length?mes.map(function(q){return card(q);}).join(''):'<div class="qbox-v1983-empty">Tu n’as pas encore posé de question.</div>'); set('qboxColVedette',ved.length?ved.map(function(q,i){return card(q,i<3?['🥇','🥈','🥉'][i]:'⭐');}).join(''):'<div class="qbox-v1983-empty">Aucune question vedette pour le moment.</div>'); counts(classe.length,mes.length,ved.length);}
+  function cleanup(){ if(timer){clearTimeout(timer);timer=null;} if(scriptNode&&scriptNode.parentNode){scriptNode.parentNode.removeChild(scriptNode);} scriptNode=null;}
+  window.__hibouQuestionBoxCallbackV2043=function(data){try{var source=(data&&Array.isArray(data.questions))?data.questions:(Array.isArray(data)?data:[]); rows=source.map(fromRow).filter(function(q){return txt(q.question);}).reverse(); loaded=true; error=false; console.log('V20.4.3 Boîte à questions Sheet chargé : '+rows.length, rows.slice(0,3));}catch(e){console.error('V20.4.3 erreur traitement Sheet',e); error=true;} loading=false; cleanup(); render();};
+  function load(force){ if(loading)return; if(loaded&&!force){render();return;} cleanup(); rows=[]; loaded=false; error=false; loading=true; render(); var url=SHEET_URL+(SHEET_URL.indexOf('?')===-1?'?':'&')+'callback=__hibouQuestionBoxCallbackV2043&cache='+Date.now(); scriptNode=document.createElement('script'); scriptNode.src=url; scriptNode.async=true; scriptNode.onerror=function(){console.error('V20.4.3 JSONP bloqué',url); loading=false; error=true; cleanup(); render();}; timer=setTimeout(function(){if(loading){console.error('V20.4.3 JSONP timeout'); loading=false; error=true; cleanup(); render();}},12000); document.head.appendChild(scriptNode);}
+  function open(){var o=byId('questionBoxOverlay'); if(o){o.classList.remove('hidden');o.setAttribute('aria-hidden','false');} document.documentElement.style.overflow='hidden'; document.body.style.overflow='hidden'; load(true);}
+  function close(){var o=byId('questionBoxOverlay'); if(o){o.classList.add('hidden');o.setAttribute('aria-hidden','true');} document.documentElement.style.overflow=''; document.body.style.overflow='';}
+  window.openQuestionBoxPopup=open; window.closeQuestionBoxPopup=close; window.renderQuestionBoxList=render; window.loadQuestionBoxFromSheet=load;
+  function bind(){var b=byId('openQuestionBoxBtn'); if(b){b.onclick=function(ev){if(ev){ev.preventDefault();ev.stopPropagation();} open(); return false;};} var s=byId('questionBoxSearch'); if(s&&!s.__v2043){s.__v2043=true;s.addEventListener('input',render);} var m=byId('questionBoxMatter'); if(m&&!m.__v2043){m.__v2043=true;m.addEventListener('change',render);} emptyView();}
+  document.addEventListener('click',function(ev){var t=ev.target&&ev.target.closest&&ev.target.closest('#openQuestionBoxBtn'); if(t){ev.preventDefault();ev.stopImmediatePropagation();open();}},true);
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind); else bind();
+  window.addEventListener('load',function(){setTimeout(bind,0);setTimeout(bind,300);});
 })();
 </script>
 

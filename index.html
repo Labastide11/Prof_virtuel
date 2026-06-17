@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 V20.3.2 </title>
+<title>🦉 V20.4 - Boîte à questions Sheet JSONP</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -19526,6 +19526,230 @@ sheet.appendRow([
     document.addEventListener('DOMContentLoaded', function(){ initialClear(); setTimeout(function(){ window.loadQuestionBoxFromSheet(false); }, 250); });
   } else {
     initialClear(); setTimeout(function(){ window.loadQuestionBoxFromSheet(false); }, 250);
+  }
+})();
+</script>
+
+
+<!-- PATCH V20.4 - Boîte à questions propre : lecture Sheet en JSONP, sans CORS, sans démo -->
+<script id="patch-v204-question-box-jsonp-clean">
+(function(){
+  window.__patchV204QuestionBoxJsonpClean = true;
+
+  var SHEET_URL = 'https://script.google.com/macros/s/AKfycbwGcErZ0he06Dg_bpPDaHtPHa6fAcDQ-31tB7Rlr9w2JZcNaQnP9YIABJYf-CKpFfpF/exec';
+  var remoteQuestions = [];
+  var remoteLoaded = false;
+  var remoteLoading = false;
+  var remoteError = false;
+  var jsonpScript = null;
+  var jsonpTimer = null;
+
+  function byId(id){ return document.getElementById(id); }
+  function txt(t){ return String(t == null ? '' : t).trim(); }
+  function esc(t){
+    return String(t == null ? '' : t).replace(/[&<>"']/g,function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+  function currentName(){
+    return txt(window.prenomActuel || localStorage.getItem('hibou_prenom') || localStorage.getItem('hibou_last_prenom') || '');
+  }
+  function norm(v){ return txt(v).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''); }
+  function normVis(row){
+    var v = norm(field(row,['Visibilité','visibilite','visibility','Visibilite']));
+    var s = norm(field(row,['Statut','statut','status']));
+    // Compatibilité avec les anciennes lignes : parfois classe/vedette se trouvent dans Statut.
+    if(!v && (s === 'classe' || s === 'vedette' || s === 'privee' || s === 'privée')) v = s;
+    if(v.indexOf('vedette') >= 0) return 'vedette';
+    if(v.indexOf('classe') >= 0) return 'classe';
+    return 'privée';
+  }
+  function normStatus(row){
+    var s = norm(field(row,['Statut','statut','status']));
+    // Si Statut contient en fait la visibilité, on remet un statut neutre.
+    if(s === 'classe' || s === 'vedette' || s === 'privee' || s === 'privée') s = '';
+    if(s.indexOf('expliqu') >= 0 || s.indexOf('explique') >= 0) return 'expliquée';
+    if(s.indexOf('nouvelle') >= 0) return 'nouvelle';
+    return 'à_expliquer';
+  }
+  function field(row,names){
+    for(var i=0;i<names.length;i++){
+      var k = names[i];
+      if(row && row[k] != null && txt(row[k]) !== '') return row[k];
+    }
+    return '';
+  }
+  function dateFr(d){
+    if(!d) return '';
+    try{
+      var s = String(d);
+      if(/^\d{4}-\d{2}-\d{2}T/.test(s)) return new Date(s).toLocaleDateString('fr-FR');
+      if(/^\d{4}-\d{2}-\d{2}/.test(s)) return s.replace(/^(\d{4})-(\d{2})-(\d{2}).*$/,'$3/$2/$1');
+      return s;
+    }catch(e){ return String(d); }
+  }
+  function emoji(m,v){
+    if(v === 'vedette') return '⭐';
+    m = norm(m);
+    if(m.indexOf('science') >= 0) return '🔬';
+    if(m.indexOf('math') >= 0) return '🧮';
+    if(m.indexOf('fran') >= 0) return '📚';
+    if(m.indexOf('geo') >= 0) return '🌍';
+    if(m.indexOf('anglais') >= 0) return '🇬🇧';
+    return '❓';
+  }
+  function fromRow(row){
+    var qc = field(row,['Question corrigée','questionCorrigee','question_corrigee','Question corrigée ']);
+    var qo = field(row,['Question originale','questionOriginale','question_originale','question','Question']);
+    var q = txt(qc || qo);
+    var mat = txt(field(row,['Matière','matiere','Matiere','subject'])) || 'Général';
+    var vis = normVis(row);
+    return {
+      question:q,
+      matiere:mat,
+      prenom:txt(field(row,['Prénom','prenom','Prenom','eleve','Élève','Eleve'])) || 'Élève',
+      date:dateFr(field(row,['Date','date'])),
+      dateExplication:dateFr(field(row,['Date explication','dateExplication','DateExplication'])),
+      visibilite:vis,
+      statut:normStatus(row),
+      points:txt(field(row,['Points Curiosité','pointsCuriosite','Points curiosité'])) || '1',
+      emoji:emoji(mat,vis)
+    };
+  }
+  function statusLabel(q){
+    if(q.statut === 'expliquée') return q.dateExplication ? '✅ Expliquée le '+esc(q.dateExplication) : '✅ Expliquée en classe';
+    if(q.statut === 'nouvelle') return '🟠 Nouvelle question';
+    return '⏳ À expliquer en classe';
+  }
+  function card(q, medal){
+    var prefix = medal || q.emoji || '❓';
+    var date = q.date ? 'Posée le '+esc(q.date) : 'Question posée';
+    return '<div class="qbox-v1983-item">'
+      + '<div class="qbox-v1983-emoji">'+esc(prefix)+'</div>'
+      + '<div class="qbox-v1983-item-main">'
+      + '<div class="qbox-v1983-q">'+esc(q.question)+'</div>'
+      + '<div class="qbox-v1983-meta"><span class="qbox-v1983-tag">'+esc(q.matiere)+'</span> '+date+' par '+esc(q.prenom)+'</div>'
+      + '<div class="qbox-v1983-status">'+statusLabel(q)+'</div>'
+      + '</div></div>';
+  }
+  function setContent(id, html){ var el=byId(id); if(el) el.innerHTML=html; }
+  function setCounts(classe, mes, vedette){
+    var cc=byId('qboxCountClasse'), cm=byId('qboxCountMes'), cv=byId('qboxCountVedette');
+    if(cc) cc.textContent='👥 '+classe+' question'+(classe>1?'s':'')+' partagée'+(classe>1?'s':'');
+    if(cm) cm.textContent='🔒 '+mes+' question'+(mes>1?'s':'')+' personnelle'+(mes>1?'s':'');
+    if(cv) cv.textContent='🏆 '+vedette+' question'+(vedette>1?'s':'')+' vedette'+(vedette>1?'s':'');
+  }
+  function showLoading(){
+    var h='<div class="qbox-v1983-empty">🦉 Chargement des vraies questions du Sheet...</div>';
+    setContent('qboxColClasse',h); setContent('qboxColMes',h); setContent('qboxColVedette',h); setCounts(0,0,0);
+  }
+  function showError(){
+    var h='<div class="qbox-v1983-empty">⚠️ Impossible de lire le Sheet. Vérifie que le doGet JSONP est bien déployé.</div>';
+    setContent('qboxColClasse',h); setContent('qboxColMes',h); setContent('qboxColVedette',h); setCounts(0,0,0);
+  }
+
+  window.renderQuestionBoxList = function(){
+    if(remoteLoading && !remoteLoaded){ showLoading(); return; }
+    if(remoteError && !remoteQuestions.length){ showError(); return; }
+    var name = norm(currentName());
+    var search = norm((byId('questionBoxSearch')||{}).value);
+    var matter = txt((byId('questionBoxMatter')||{}).value);
+    function filt(items){
+      return items.filter(function(q){
+        return (!search || norm(q.question).indexOf(search) >= 0) && (!matter || q.matiere === matter);
+      });
+    }
+    var base = remoteQuestions.slice();
+    var classe = filt(base.filter(function(q){ return q.visibilite === 'classe' || q.visibilite === 'vedette'; }));
+    var mes = filt(base.filter(function(q){ return name && norm(q.prenom) === name; }));
+    var vedette = filt(base.filter(function(q){ return q.visibilite === 'vedette'; }));
+
+    setContent('qboxColClasse', classe.length ? classe.map(function(q){return card(q);}).join('') : '<div class="qbox-v1983-empty">Aucune question de classe pour le moment.</div>');
+    setContent('qboxColMes', mes.length ? mes.map(function(q){return card(q);}).join('') : '<div class="qbox-v1983-empty">Tu n’as pas encore posé de question.</div>');
+    setContent('qboxColVedette', vedette.length ? vedette.map(function(q,i){return card(q, i<3 ? ['🥇','🥈','🥉'][i] : '⭐');}).join('') : '<div class="qbox-v1983-empty">Aucune question vedette pour le moment.</div>');
+    setCounts(classe.length, mes.length, vedette.length);
+  };
+
+  function cleanupJsonp(){
+    if(jsonpTimer){ clearTimeout(jsonpTimer); jsonpTimer=null; }
+    if(jsonpScript && jsonpScript.parentNode){ jsonpScript.parentNode.removeChild(jsonpScript); }
+    jsonpScript=null;
+  }
+
+  window.loadQuestionBoxFromSheet = function(force){
+    if(remoteLoading) return;
+    if(remoteLoaded && !force) return;
+    cleanupJsonp();
+    remoteLoading = true;
+    remoteError = false;
+    remoteQuestions = [];
+    window.renderQuestionBoxList();
+
+    var cb = '__hibouQuestionBoxCallbackV204_' + Date.now();
+    window[cb] = function(data){
+      try{
+        var rows = data && Array.isArray(data.questions) ? data.questions : (Array.isArray(data) ? data : []);
+        remoteQuestions = rows.map(fromRow).filter(function(q){ return txt(q.question); }).reverse();
+        remoteLoaded = true;
+        remoteError = false;
+      }catch(e){
+        console.log('Erreur lecture JSONP Boîte à questions', e);
+        remoteError = true;
+      }
+      remoteLoading = false;
+      cleanupJsonp();
+      try{ delete window[cb]; }catch(e){ window[cb]=undefined; }
+      window.renderQuestionBoxList();
+    };
+
+    var sep = SHEET_URL.indexOf('?') === -1 ? '?' : '&';
+    var url = SHEET_URL + sep + 'callback=' + encodeURIComponent(cb) + '&t=' + Date.now();
+    jsonpScript = document.createElement('script');
+    jsonpScript.src = url;
+    jsonpScript.async = true;
+    jsonpScript.onerror = function(){
+      remoteLoading = false;
+      remoteError = true;
+      cleanupJsonp();
+      try{ delete window[cb]; }catch(e){ window[cb]=undefined; }
+      window.renderQuestionBoxList();
+    };
+    jsonpTimer = setTimeout(function(){
+      if(remoteLoading){
+        remoteLoading = false;
+        remoteError = true;
+        cleanupJsonp();
+        try{ delete window[cb]; }catch(e){ window[cb]=undefined; }
+        window.renderQuestionBoxList();
+      }
+    }, 10000);
+    document.head.appendChild(jsonpScript);
+  };
+
+  window.openQuestionBoxPopup = function(){
+    var o = byId('questionBoxOverlay');
+    if(o){ o.classList.remove('hidden'); o.setAttribute('aria-hidden','false'); }
+    document.documentElement.style.overflow='hidden';
+    document.body.style.overflow='hidden';
+    window.loadQuestionBoxFromSheet(true);
+  };
+  window.closeQuestionBoxPopup = function(){
+    var o = byId('questionBoxOverlay');
+    if(o){ o.classList.add('hidden'); o.setAttribute('aria-hidden','true'); }
+    document.documentElement.style.overflow='';
+    document.body.style.overflow='';
+  };
+
+  function initialClear(){
+    setContent('qboxColClasse','<div class="qbox-v1983-empty">Ouvre la boîte pour charger les questions du Sheet.</div>');
+    setContent('qboxColMes','<div class="qbox-v1983-empty">Ouvre la boîte pour charger tes questions.</div>');
+    setContent('qboxColVedette','<div class="qbox-v1983-empty">Ouvre la boîte pour charger les questions vedettes.</div>');
+    setCounts(0,0,0);
+  }
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', initialClear);
+  } else {
+    initialClear();
   }
 })();
 </script>

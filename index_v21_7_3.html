@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 V21.7.3 - Titres matières + activités visibles</title>
+<title>🦉 V21.7.3 - Matières titrées + activités directes</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -4236,7 +4236,7 @@ body.v21-final .subject-btn .subject-label{font-size:18px !important;line-height
 @media (max-width:899px){body.v21-final .v21-center{width:calc(100% - 24px) !important;margin:0 auto 8px !important;grid-template-columns:1fr !important;}body.v21-final .v21-side-owl,body.v21-final .v21-deco-window,body.v21-final .v21-deco-globe,body.v21-final .v21-deco-books{display:none !important;}body.v21-final .subjects-bar{grid-template-columns:repeat(2,minmax(0,1fr)) !important;}}
 </style>
 <script id="patch-v21-4-home-text-and-title">
-(function(){function applyV214(){try{document.title='🦉 V21.4 - Accueil centré sur les matières';var p=document.querySelector('.v21-hero p');if(p) p.textContent='🌟 Que souhaites-tu apprendre aujourd’hui ?';var h2=document.querySelector('.v21-hero h2');if(h2) h2.setAttribute('aria-hidden','true');}catch(e){}}document.addEventListener('DOMContentLoaded',applyV214);setTimeout(applyV214,100);setTimeout(applyV214,500);setTimeout(applyV214,1200);})();
+(function(){function applyV214(){try{document.title='🦉 V21.7.3 - Matières titrées + activités directes';var p=document.querySelector('.v21-hero p');if(p) p.textContent='🌟 Que souhaites-tu apprendre aujourd’hui ?';var h2=document.querySelector('.v21-hero h2');if(h2) h2.setAttribute('aria-hidden','true');}catch(e){}}document.addEventListener('DOMContentLoaded',applyV214);setTimeout(applyV214,100);setTimeout(applyV214,500);setTimeout(applyV214,1200);})();
 </script>
 
 
@@ -4472,7 +4472,7 @@ body.v21-final .subject-btn{
 (function(){
   function applyV215(){
     try{
-      document.title='🦉 V21.5 - Profil compact & matières prioritaires';
+      document.title='🦉 V21.7.3 - Matières titrées + activités directes';
       var p=document.querySelector('.v21-hero p');
       if(p) p.textContent='🌟 Que souhaites-tu apprendre aujourd’hui ?';
       var h2=document.querySelector('.v21-hero h2');
@@ -4717,7 +4717,7 @@ body.v21-final .v21-sublist{
 (function(){
   function cleanV216(){
     try{
-      document.title='🦉 V21.6 - Accueil épuré & matières visibles';
+      document.title='🦉 V21.7.3 - Matières titrées + activités directes';
       document.body.classList.add('v21-final');
       var heroP=document.querySelector('.v21-hero p');
       if(heroP) heroP.textContent='🌟 Que souhaites-tu apprendre aujourd’hui ?';
@@ -22297,279 +22297,24 @@ body.v21-final .subject-btn span:last-child{
 
 
 <!-- PATCH V21.7.2 - Menu déroulant sous les matières, sans accordéon interne -->
-<style id="patch-v21-7-2-menu-deroulant">
-/* V21.7.2 : les matières restent en ligne. Au clic, un menu déroulant séparé apparaît dessous. */
-body.v21-final #quickQuestions{display:none !important;}
-body.v21-final .subjects-bar{
-  display:grid !important;
-  grid-template-columns:repeat(6,minmax(92px,1fr)) !important;
-  align-items:stretch !important;
-  gap:7px !important;
-  width:calc(100% - 18px) !important;
-  max-width:1480px !important;
-  margin:4px auto 0 !important;
-  padding:6px 8px !important;
-  background:transparent !important;
-  border:0 !important;
-  box-shadow:none !important;
-  overflow:visible !important;
-  white-space:normal !important;
-}
-body.v21-final .subject-btn.v21-dropdown-subject{
-  appearance:none !important;
-  border:3px solid rgba(255,255,255,.82) !important;
-  border-radius:16px !important;
-  min-height:50px !important;
-  padding:7px 8px !important;
-  color:white !important;
-  background:linear-gradient(135deg,var(--mat,#6C63FF) 0%,var(--mat2,#8E86FF) 100%) !important;
-  box-shadow:0 6px 14px var(--mat-shadow,rgba(108,99,255,.22)), inset 0 1px 0 rgba(255,255,255,.35) !important;
-  display:flex !important;
-  flex-direction:row !important;
-  justify-content:center !important;
-  align-items:center !important;
-  gap:6px !important;
-  cursor:pointer !important;
-  text-align:center !important;
-  transition:transform .18s ease, box-shadow .18s ease, outline .18s ease !important;
-}
-body.v21-final .subject-btn.v21-dropdown-subject:hover{transform:translateY(-1px) !important;}
-body.v21-final .subject-btn.v21-dropdown-subject.active{outline:4px solid rgba(255,217,61,.40) !important;}
-body.v21-final .subject-btn.v21-dropdown-subject .subject-icon{font-size:18px !important;line-height:1 !important;flex-shrink:0 !important;}
-body.v21-final .subject-btn.v21-dropdown-subject .subject-label{font-size:12px !important;font-weight:950 !important;line-height:1 !important;overflow:hidden !important;text-overflow:ellipsis !important;}
-body.v21-final .v21-dropdown-chevron{font-size:13px !important;font-weight:950 !important;line-height:1 !important;opacity:.92 !important;flex-shrink:0 !important;}
-body.v21-final .v21-subject-dropdown{
-  width:calc(100% - 18px) !important;
-  max-width:1480px !important;
-  margin:6px auto 10px !important;
-  padding:8px !important;
-  border-radius:18px !important;
-  background:rgba(255,255,255,.96) !important;
-  border:3px solid var(--dropdown-border,#EAE8FF) !important;
-  box-shadow:0 8px 18px rgba(108,99,255,.12) !important;
-  display:none;
-}
-body.v21-final .v21-subject-dropdown.open{display:block !important;animation:fadeIn .18s ease-out;}
-body.v21-final .v21-dropdown-title{
-  display:flex !important;
-  align-items:center !important;
-  gap:8px !important;
-  color:var(--dropdown-color,#6C63FF) !important;
-  font-weight:950 !important;
-  font-size:13px !important;
-  margin:0 0 7px 2px !important;
-}
-body.v21-final .v21-dropdown-items{
-  display:grid !important;
-  grid-template-columns:repeat(4,minmax(0,1fr)) !important;
-  gap:7px !important;
-}
-body.v21-final .v21-subitem{
-  display:flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-  min-height:36px !important;
-  width:100% !important;
-  border:2px solid var(--dropdown-border,#EAE8FF) !important;
-  border-radius:12px !important;
-  background:#fff !important;
-  color:var(--dropdown-color,#2D2B55) !important;
-  padding:7px 8px !important;
-  font-family:inherit !important;
-  font-size:12px !important;
-  font-weight:950 !important;
-  line-height:1.1 !important;
-  text-align:center !important;
-  cursor:pointer !important;
-  box-shadow:0 2px 7px rgba(45,43,85,.08) !important;
-}
-body.v21-final .v21-subitem:hover,body.v21-final .v21-subitem:focus{background:var(--dropdown-soft,#F7F6FF) !important;transform:translateY(-1px) !important;}
-body.v21-final .v21-subitem.disabled{opacity:.78 !important;cursor:default !important;}
-body.v21-final .v21-subject-arrow{display:none !important;}
-@media (orientation:landscape) and (max-width:1280px){
-  body.v21-final .subjects-bar{grid-template-columns:repeat(6,minmax(82px,1fr)) !important;gap:6px !important;width:calc(100% - 14px) !important;}
-  body.v21-final .subject-btn.v21-dropdown-subject{min-height:46px !important;padding:6px 7px !important;}
-  body.v21-final .subject-btn.v21-dropdown-subject .subject-icon{font-size:16px !important;}
-  body.v21-final .subject-btn.v21-dropdown-subject .subject-label{font-size:11px !important;}
-  body.v21-final .v21-subject-dropdown{width:calc(100% - 14px) !important;margin-top:5px !important;padding:7px !important;}
-  body.v21-final .v21-subitem{min-height:32px !important;font-size:11px !important;padding:6px !important;}
-}
-@media (max-width:760px){
-  body.v21-final .subjects-bar{grid-template-columns:repeat(2,minmax(0,1fr)) !important;width:calc(100% - 12px) !important;}
-  body.v21-final .v21-subject-dropdown{width:calc(100% - 12px) !important;}
-  body.v21-final .v21-dropdown-items{grid-template-columns:repeat(2,minmax(0,1fr)) !important;}
-}
-</style>
-
-<script id="script-v21-7-2-menu-deroulant">
-(function(){
-  window.__maitreHibouV2172DropdownMenu = true;
-
-  const SUBJECTS = {
-    francais:{label:'Français', icon:'📖', color:'#FF3B57', soft:'#FFECEF', border:'#FFD3DA', items:[
-      {label:'Nom commun', action:function(){ callFirst(['showNomCommunLesson','startNomCommun']); }},
-      {label:'Verbe', action:function(){ callFirst(['startVerbe']); }},
-      {label:'Idées pour écrire', action:function(){ callFirst(['startIdeesPourEcrire']); }},
-      {label:'Plus tard : déterminant, adjectif, groupe nominal', soon:true, action:function(){ saySoon('Ces entraînements de français arriveront plus tard.'); }}
-    ]},
-    maths:{label:'Maths', icon:'🧮', color:'#1683F7', soft:'#E8F4FF', border:'#CFE8FF', items:[
-      {label:'Calcul mental', action:function(){ callFirst(['startCalculMentalCE2']); }},
-      {label:'Multiplication posée', action:function(){ callFirst(['startMultiplicationPosee']); }},
-      {label:'Nombres', action:function(){ startLocalOrPrompt('maths','🧮 Nombres - entraînement CE2','Entraîne-moi sur les nombres en CE2'); }},
-      {label:'Problèmes', action:function(){ startLocalOrPrompt('maths','🧮 Problèmes - entraînement CE2','Entraîne-moi avec des problèmes CE2'); }}
-    ]},
-    anglais:{label:'Anglais', icon:'🇬🇧', color:'#9C4DFF', soft:'#F3E9FF', border:'#E0C7FF', items:[
-      {label:'Se présenter', action:function(){ callFirst(['startEnglishPresentation']); }},
-      {label:'Nombres', action:function(){ if(typeof window.sendQuick==='function') window.sendQuick('Apprends-moi les nombres en anglais de 1 à 20 pour un CE2'); else callFirst(['startEnglishMiniLesson']); }},
-      {label:'Vocabulaire', action:function(){ callFirst(['startEnglishMiniLesson','startEnglishColors']); }},
-      {label:'Compréhension', action:function(){ startLocalOrPrompt('anglais','🇬🇧 Quiz local Anglais CE2','Fais-moi une compréhension en anglais niveau CE2'); }}
-    ]},
-    sciences:{label:'Sciences', icon:'🧪', color:'#24A84A', soft:'#E9F9EE', border:'#C8F0D1', items:[
-      {label:'Squelette', action:function(){ callFirst(['startSquelette']); }},
-      {label:'Plantes', action:function(){ callFirst(['startPlantes']); }},
-      {label:'Système solaire', action:function(){ callFirst(['startSystemeSolaire']); }},
-      {label:'Autres leçons', soon:true, action:function(){ saySoon('D’autres leçons de sciences seront ajoutées plus tard.'); }}
-    ]},
-    geographie:{label:'Géographie', icon:'🌍', color:'#FF8A00', soft:'#FFF2E0', border:'#FFE0B3', items:[
-      {label:'France', action:function(){ callFirst(['startGeoFrance'], function(){ if(typeof window.sendQuick==='function') window.sendQuick('Explique-moi la France en géographie pour un CE2'); }); }},
-      {label:'Europe', action:function(){ if(typeof window.sendQuick==='function') window.sendQuick('Explique-moi l’Europe en géographie pour un CE2'); else startLocalOrPrompt('geographie','🌍 Quiz local Géographie CE2','Explique-moi l’Europe en CE2'); }},
-      {label:'Cartes', action:function(){ startLocalOrPrompt('geographie','🌍 Cartes - entraînement CE2','Entraîne-moi à lire une carte en CE2'); }},
-      {label:'Paysages', action:function(){ if(typeof window.sendQuick==='function') window.sendQuick('Explique-moi les paysages en géographie pour un CE2'); else startLocalOrPrompt('geographie','🌍 Paysages - entraînement CE2','Explique-moi les paysages en CE2'); }}
-    ]},
-    histoire:{label:'Histoire', icon:'🏛️', color:'#8B5A2B', soft:'#FFF4E8', border:'#F1D2B7', items:[
-      {label:'À venir', soon:true, action:function(){ saySoon('Les activités d’histoire seront ajoutées plus tard.'); }}
-    ]}
-  };
-  const ORDER = ['francais','maths','anglais','sciences','geographie','histoire'];
-
-  function hideOldQuickMenu(){
-    const q = document.getElementById('quickQuestions');
-    if(q){ q.style.display = 'none'; q.innerHTML = ''; }
-  }
-  function callFirst(names, fallback){
-    hideOldQuickMenu();
-    for(const name of names){
-      if(typeof window[name] === 'function'){
-        try{return window[name]();}catch(e){console.warn('V21.7.2 action error', name, e);}
-      }
-    }
-    if(typeof fallback === 'function') return fallback();
-  }
-  function startLocalOrPrompt(subject, title, prompt){
-    hideOldQuickMenu();
-    if(typeof window.startLocalQuiz === 'function') return window.startLocalQuiz(subject, title);
-    if(typeof window.sendQuick === 'function') return window.sendQuick(prompt);
-  }
-  function saySoon(text){
-    hideOldQuickMenu();
-    if(typeof window.addMessage === 'function') window.addMessage('prof', '🦉 ' + text);
-  }
-
-  function ensureDropdownAfterBar(bar){
-    let drop = document.getElementById('v21SubjectDropdown');
-    if(!drop){
-      drop = document.createElement('div');
-      drop.id = 'v21SubjectDropdown';
-      drop.className = 'v21-subject-dropdown';
-      bar.insertAdjacentElement('afterend', drop);
-    }else if(drop.previousElementSibling !== bar){
-      bar.insertAdjacentElement('afterend', drop);
-    }
-    return drop;
-  }
-  function createSubjectButton(key){
-    const data = SUBJECTS[key];
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'subject-btn v21-dropdown-subject';
-    btn.dataset.subject = key;
-    btn.setAttribute('aria-expanded','false');
-    btn.innerHTML = '<span class="subject-icon">'+data.icon+'</span><span class="subject-label">'+data.label+'</span><span class="v21-dropdown-chevron" aria-hidden="true">▼</span>';
-    btn.addEventListener('click', function(ev){
-      ev.preventDefault(); ev.stopPropagation();
-      toggleDropdown(key, btn);
-    }, true);
-    return btn;
-  }
-  function closeDropdown(){
-    const drop = document.getElementById('v21SubjectDropdown');
-    if(drop){ drop.classList.remove('open'); drop.innerHTML=''; drop.dataset.subject=''; }
-    document.querySelectorAll('.subject-btn.v21-dropdown-subject').forEach(function(b){
-      b.classList.remove('active');
-      b.setAttribute('aria-expanded','false');
-      const c=b.querySelector('.v21-dropdown-chevron'); if(c) c.textContent='▼';
-    });
-  }
-  function toggleDropdown(key, btn){
-    const bar = document.querySelector('.subjects-bar');
-    if(!bar) return;
-    const drop = ensureDropdownAfterBar(bar);
-    const already = drop.classList.contains('open') && drop.dataset.subject === key;
-    closeDropdown();
-    if(already) return;
-    const data = SUBJECTS[key];
-    btn.classList.add('active');
-    btn.setAttribute('aria-expanded','true');
-    const ch=btn.querySelector('.v21-dropdown-chevron'); if(ch) ch.textContent='▲';
-    drop.dataset.subject = key;
-    drop.style.setProperty('--dropdown-color', data.color);
-    drop.style.setProperty('--dropdown-soft', data.soft);
-    drop.style.setProperty('--dropdown-border', data.border);
-    drop.innerHTML = '<div class="v21-dropdown-title"><span>'+data.icon+'</span><span>'+data.label+' : choisis ce que tu veux travailler</span></div><div class="v21-dropdown-items"></div>';
-    const items = drop.querySelector('.v21-dropdown-items');
-    data.items.forEach(function(item){
-      const sub = document.createElement('button');
-      sub.type = 'button';
-      sub.className = 'v21-subitem' + (item.soon ? ' disabled' : '');
-      sub.textContent = item.label;
-      sub.addEventListener('click', function(ev){
-        ev.preventDefault(); ev.stopPropagation();
-        try{ if(typeof window.selectSubject === 'function') window.selectSubject(btn, key); }catch(e){}
-        hideOldQuickMenu();
-        if(typeof item.action === 'function') item.action();
-        setTimeout(hideOldQuickMenu,100);
-      });
-      items.appendChild(sub);
-    });
-    drop.classList.add('open');
-    try{ if(typeof window.selectSubject === 'function') window.selectSubject(btn, key); }catch(e){}
-    setTimeout(hideOldQuickMenu,0); setTimeout(hideOldQuickMenu,100);
-  }
-  function isReady(bar){
-    return bar && bar.dataset.v2172Dropdown === '1' && bar.querySelectorAll('.v21-dropdown-subject').length === ORDER.length && document.getElementById('v21SubjectDropdown');
-  }
-  function rebuildSubjects(force){
-    document.body.classList.add('v21-final','v21-7-dropdown-ready');
-    const bar = document.querySelector('.subjects-bar');
-    if(!bar) return;
-    if(!force && isReady(bar)) return;
-    bar.dataset.v2172Dropdown = '1';
-    bar.innerHTML = '';
-    ORDER.forEach(function(key){ bar.appendChild(createSubjectButton(key)); });
-    ensureDropdownAfterBar(bar);
-    hideOldQuickMenu();
-  }
-  let timer=null;
-  function schedule(force){ clearTimeout(timer); timer=setTimeout(function(){rebuildSubjects(!!force);},30); }
-  function init(){ rebuildSubjects(false); hideOldQuickMenu(); }
-
-  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
-  window.addEventListener('load', function(){ schedule(true); setTimeout(function(){schedule(true);},400); });
-  [100,300,800,1500,2500].forEach(function(ms){ setTimeout(function(){schedule(false);},ms); });
-
-  const observer = new MutationObserver(function(){
-    const bar = document.querySelector('.subjects-bar');
-    if(bar && !isReady(bar)) schedule(true);
-  });
-  observer.observe(document.documentElement, {childList:true, subtree:true});
-})();
-</script>
 
 
-<style id="patch-v21-7-3-matieres-simples">
-/* V21.7.3 : suppression du niveau intermédiaire.
-   Les cartes de matières affichent seulement la matière.
-   Le menu dessous affiche directement les activités réellement disponibles. */
+
+
+
+
+
+
+
+
+
+<!-- PATCH FINAL V21.7.3 - titres visibles + activités directement sous la matière -->
+
+
+
+
+<!-- PATCH V21.7.3 VERROUILLÉ - titres matières visibles + activités directes -->
+<style id="patch-v21-7-3-titres-verrouilles">
 body.v21-final #quickQuestions,
 body.v21-final .quick-questions{
   display:none !important;
@@ -22581,301 +22326,6 @@ body.v21-final .quick-questions{
   border:0 !important;
   overflow:hidden !important;
 }
-body.v21-final .subjects-bar{
-  display:grid !important;
-  grid-template-columns:repeat(6,minmax(92px,1fr)) !important;
-  align-items:stretch !important;
-  gap:7px !important;
-  width:calc(100% - 18px) !important;
-  max-width:1480px !important;
-  margin:4px auto 0 !important;
-  padding:6px 8px !important;
-  background:transparent !important;
-  border:0 !important;
-  box-shadow:none !important;
-  overflow:visible !important;
-  white-space:normal !important;
-}
-body.v21-final .subject-btn.v2173-clean-subject{
-  appearance:none !important;
-  border:3px solid rgba(255,255,255,.82) !important;
-  border-radius:16px !important;
-  min-height:50px !important;
-  padding:7px 8px !important;
-  color:white !important;
-  background:linear-gradient(135deg,var(--mat,#6C63FF) 0%,var(--mat2,#8E86FF) 100%) !important;
-  box-shadow:0 6px 14px var(--mat-shadow,rgba(108,99,255,.22)), inset 0 1px 0 rgba(255,255,255,.35) !important;
-  display:flex !important;
-  flex-direction:row !important;
-  justify-content:center !important;
-  align-items:center !important;
-  gap:7px !important;
-  cursor:pointer !important;
-  text-align:center !important;
-  transition:transform .18s ease, box-shadow .18s ease, outline .18s ease !important;
-  overflow:hidden !important;
-}
-body.v21-final .subject-btn.v2173-clean-subject:hover{transform:translateY(-1px) !important;}
-body.v21-final .subject-btn.v2173-clean-subject.active{outline:4px solid rgba(255,217,61,.40) !important;}
-body.v21-final .subject-btn.v2173-clean-subject .subject-icon{font-size:18px !important;line-height:1 !important;flex-shrink:0 !important;}
-body.v21-final .subject-btn.v2173-clean-subject .subject-label{font-size:13px !important;font-weight:950 !important;line-height:1 !important;overflow:hidden !important;text-overflow:ellipsis !important;white-space:nowrap !important;}
-body.v21-final .subject-btn.v2173-clean-subject .v21-dropdown-chevron{font-size:13px !important;font-weight:950 !important;line-height:1 !important;opacity:.92 !important;flex-shrink:0 !important;}
-/* Sécurité : si un ancien script remet des sous-matières dans les cartes, on les cache. */
-body.v21-final .subject-btn.v2173-clean-subject .subject-title-line,
-body.v21-final .subject-btn.v2173-clean-subject .subject-mini-list,
-body.v21-final .subject-btn.v2173-clean-subject .subject-item,
-body.v21-final .subject-btn.v2173-clean-subject .subject-subitem,
-body.v21-final .subject-btn.v2173-clean-subject .v21-subject-arrow{
-  display:none !important;
-}
-body.v21-final .v21-subject-dropdown{
-  width:calc(100% - 18px) !important;
-  max-width:1480px !important;
-  margin:6px auto 10px !important;
-  padding:8px !important;
-  border-radius:18px !important;
-  background:rgba(255,255,255,.96) !important;
-  border:3px solid var(--dropdown-border,#EAE8FF) !important;
-  box-shadow:0 8px 18px rgba(108,99,255,.12) !important;
-  display:none;
-}
-body.v21-final .v21-subject-dropdown.open{display:block !important;animation:fadeIn .18s ease-out;}
-body.v21-final .v21-dropdown-title{
-  display:flex !important;
-  align-items:center !important;
-  gap:8px !important;
-  color:var(--dropdown-color,#6C63FF) !important;
-  font-weight:950 !important;
-  font-size:13px !important;
-  margin:0 0 7px 2px !important;
-}
-body.v21-final .v21-dropdown-items{
-  display:grid !important;
-  grid-template-columns:repeat(4,minmax(0,1fr)) !important;
-  gap:7px !important;
-}
-body.v21-final .v21-subitem{
-  display:flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-  min-height:36px !important;
-  width:100% !important;
-  border:2px solid var(--dropdown-border,#EAE8FF) !important;
-  border-radius:12px !important;
-  background:#fff !important;
-  color:var(--dropdown-color,#2D2B55) !important;
-  padding:7px 8px !important;
-  font-family:inherit !important;
-  font-size:12px !important;
-  font-weight:950 !important;
-  line-height:1.1 !important;
-  text-align:center !important;
-  cursor:pointer !important;
-  box-shadow:0 2px 7px rgba(45,43,85,.08) !important;
-}
-body.v21-final .v21-subitem:hover,body.v21-final .v21-subitem:focus{background:var(--dropdown-soft,#F7F6FF) !important;transform:translateY(-1px) !important;}
-body.v21-final .v21-subitem.disabled{opacity:.78 !important;cursor:default !important;}
-@media (orientation:landscape) and (max-width:1280px){
-  body.v21-final .subjects-bar{grid-template-columns:repeat(6,minmax(82px,1fr)) !important;gap:6px !important;width:calc(100% - 14px) !important;}
-  body.v21-final .subject-btn.v2173-clean-subject{min-height:46px !important;padding:6px 7px !important;}
-  body.v21-final .subject-btn.v2173-clean-subject .subject-icon{font-size:16px !important;}
-  body.v21-final .subject-btn.v2173-clean-subject .subject-label{font-size:12px !important;}
-  body.v21-final .v21-subject-dropdown{width:calc(100% - 14px) !important;margin-top:5px !important;padding:7px !important;}
-  body.v21-final .v21-subitem{min-height:32px !important;font-size:11px !important;padding:6px !important;}
-}
-@media (max-width:760px){
-  body.v21-final .subjects-bar{grid-template-columns:repeat(2,minmax(0,1fr)) !important;width:calc(100% - 12px) !important;}
-  body.v21-final .v21-subject-dropdown{width:calc(100% - 12px) !important;}
-  body.v21-final .v21-dropdown-items{grid-template-columns:repeat(2,minmax(0,1fr)) !important;}
-}
-</style>
-
-<script id="script-v21-7-3-matieres-simples">
-(function(){
-  window.__maitreHibouV2173MatieresSimples = true;
-
-  const SUBJECTS = {
-    francais:{label:'Français', icon:'📖', color:'#FF3B57', soft:'#FFECEF', border:'#FFD3DA', items:[
-      {label:'Nom commun', action:function(){ callFirst(['showNomCommunLesson','startNomCommun']); }},
-      {label:'Verbe', action:function(){ callFirst(['startVerbe','showVerbeLesson']); }},
-      {label:'Idées pour écrire', action:function(){ callFirst(['startIdeesPourEcrire','showWritingIdeas']); }},
-      {label:'Plus tard : déterminant, adjectif, groupe nominal', soon:true, action:function(){ saySoon('Ces entraînements de français arriveront plus tard.'); }}
-    ]},
-    maths:{label:'Maths', icon:'🧮', color:'#1683F7', soft:'#E8F4FF', border:'#CFE7FF', items:[
-      {label:'Calcul mental', action:function(){ callFirst(['startMentalMath','startCalculMental']); }},
-      {label:'Multiplication posée', action:function(){ callFirst(['showMultiplicationMenu','startMultiplicationPosee']); }},
-      {label:'Nombres', action:function(){ startLocalOrPrompt('maths','Nombres','Je veux travailler les nombres.'); }},
-      {label:'Problèmes', action:function(){ startLocalOrPrompt('maths','Problèmes','Je veux travailler les problèmes.'); }}
-    ]},
-    anglais:{label:'Anglais', icon:'🇬🇧', color:'#9C4DFF', soft:'#F3E9FF', border:'#DFC7FF', items:[
-      {label:'Se présenter', action:function(){ callFirst(['showEnglishPresentation','startEnglishPresentation','startSePresenter']); }},
-      {label:'Nombres', action:function(){ startLocalOrPrompt('anglais','Nombres','Je veux travailler les nombres en anglais.'); }}
-    ]},
-    sciences:{label:'Sciences', icon:'🧪', color:'#24A84A', soft:'#E9F9EE', border:'#CFF1D8', items:[
-      {label:'Squelette', action:function(){ callFirst(['showSqueletteLesson','startSquelette']); }},
-      {label:'Plantes', action:function(){ callFirst(['showPlantesLesson','startPlantes']); }},
-      {label:'Système solaire', action:function(){ callFirst(['showSystemeSolaireLesson','startSystemeSolaire']); }}
-    ]},
-    geographie:{label:'Géographie', icon:'🌍', color:'#FF8A00', soft:'#FFF2E0', border:'#FFDDAE', items:[
-      {label:'France', action:function(){ startLocalOrPrompt('geographie','France','Je veux travailler la géographie de la France.'); }},
-      {label:'Europe', action:function(){ startLocalOrPrompt('geographie','Europe','Je veux travailler l’Europe.'); }}
-    ]},
-    histoire:{label:'Histoire', icon:'🏛️', color:'#EF4444', soft:'#FFECEC', border:'#FFCACA', items:[
-      {label:'À venir', soon:true, action:function(){ saySoon('Les activités d’histoire seront ajoutées plus tard.'); }}
-    ]}
-  };
-  const ORDER = ['francais','maths','anglais','sciences','geographie','histoire'];
-
-  function hideOldQuickMenu(){
-    const q = document.getElementById('quickQuestions');
-    if(q){ q.style.display='none'; q.style.visibility='hidden'; q.innerHTML=''; q.setAttribute('aria-hidden','true'); }
-    document.querySelectorAll('.quick-questions').forEach(function(el){
-      if(el.id !== 'v21SubjectDropdown'){
-        el.style.display='none'; el.style.visibility='hidden'; el.innerHTML='';
-      }
-    });
-  }
-  function callFirst(names, fallback){
-    hideOldQuickMenu();
-    for(const name of names){
-      if(typeof window[name] === 'function'){
-        try{return window[name]();}catch(e){console.warn('V21.7.3 action error', name, e);}
-      }
-    }
-    if(typeof fallback === 'function') return fallback();
-  }
-  function startLocalOrPrompt(subject, title, prompt){
-    hideOldQuickMenu();
-    if(typeof window.startLocalQuiz === 'function') return window.startLocalQuiz(subject, title);
-    if(typeof window.sendQuick === 'function') return window.sendQuick(prompt);
-  }
-  function saySoon(text){
-    hideOldQuickMenu();
-    if(typeof window.addMessage === 'function') window.addMessage('prof', '🦉 ' + text);
-  }
-  function ensureDropdownAfterBar(bar){
-    let drop = document.getElementById('v21SubjectDropdown');
-    if(!drop){
-      drop = document.createElement('div');
-      drop.id = 'v21SubjectDropdown';
-      drop.className = 'v21-subject-dropdown';
-      bar.insertAdjacentElement('afterend', drop);
-    }else if(drop.previousElementSibling !== bar){
-      bar.insertAdjacentElement('afterend', drop);
-    }
-    return drop;
-  }
-  function subjectHTML(data){
-    return '<span class="subject-icon">'+data.icon+'</span><span class="subject-label">'+data.label+'</span><span class="v21-dropdown-chevron" aria-hidden="true">▼</span>';
-  }
-  function createSubjectButton(key){
-    const data = SUBJECTS[key];
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'subject-btn v2173-clean-subject';
-    btn.dataset.subject = key;
-    btn.setAttribute('aria-expanded','false');
-    btn.innerHTML = subjectHTML(data);
-    btn.addEventListener('click', function(ev){
-      ev.preventDefault(); ev.stopPropagation();
-      toggleDropdown(key, btn);
-    }, true);
-    return btn;
-  }
-  function closeDropdown(){
-    const drop = document.getElementById('v21SubjectDropdown');
-    if(drop){ drop.classList.remove('open'); drop.innerHTML=''; drop.dataset.subject=''; }
-    document.querySelectorAll('.subject-btn.v2173-clean-subject').forEach(function(b){
-      b.classList.remove('active');
-      b.setAttribute('aria-expanded','false');
-      const c=b.querySelector('.v21-dropdown-chevron'); if(c) c.textContent='▼';
-    });
-  }
-  function toggleDropdown(key, btn){
-    const bar = document.querySelector('.subjects-bar');
-    if(!bar) return;
-    const drop = ensureDropdownAfterBar(bar);
-    const already = drop.classList.contains('open') && drop.dataset.subject === key;
-    closeDropdown();
-    if(already) return;
-    const data = SUBJECTS[key];
-    btn.classList.add('active');
-    btn.setAttribute('aria-expanded','true');
-    const ch=btn.querySelector('.v21-dropdown-chevron'); if(ch) ch.textContent='▲';
-    drop.dataset.subject = key;
-    drop.style.setProperty('--dropdown-color', data.color);
-    drop.style.setProperty('--dropdown-soft', data.soft);
-    drop.style.setProperty('--dropdown-border', data.border);
-    drop.innerHTML = '<div class="v21-dropdown-title"><span>'+data.icon+'</span><span>'+data.label+' : choisis une activité</span></div><div class="v21-dropdown-items"></div>';
-    const items = drop.querySelector('.v21-dropdown-items');
-    data.items.forEach(function(item){
-      const sub = document.createElement('button');
-      sub.type = 'button';
-      sub.className = 'v21-subitem' + (item.soon ? ' disabled' : '');
-      sub.textContent = item.label;
-      sub.addEventListener('click', function(ev){
-        ev.preventDefault(); ev.stopPropagation();
-        try{ if(typeof window.selectSubject === 'function') window.selectSubject(btn, key); }catch(e){}
-        hideOldQuickMenu();
-        if(typeof item.action === 'function') item.action();
-        setTimeout(hideOldQuickMenu,100);
-      });
-      items.appendChild(sub);
-    });
-    drop.classList.add('open');
-    try{ if(typeof window.selectSubject === 'function') window.selectSubject(btn, key); }catch(e){}
-    setTimeout(hideOldQuickMenu,0);
-    setTimeout(hideOldQuickMenu,100);
-  }
-  function buttonIsClean(btn, key){
-    if(!btn || !btn.classList.contains('v2173-clean-subject')) return false;
-    const data = SUBJECTS[key];
-    if(!data) return false;
-    const txt = (btn.querySelector('.subject-label')||{}).textContent || '';
-    return txt.trim() === data.label && !btn.textContent.match(/Grammaire|Conjugaison|Orthographe|Vocabulaire|Nombres|Calcul|Géométrie|Préhistoire|Le vivant|Le monde/);
-  }
-  function isReady(bar){
-    if(!bar || bar.dataset.v2173Clean !== '1') return false;
-    if(!document.getElementById('v21SubjectDropdown')) return false;
-    return ORDER.every(function(key){
-      return buttonIsClean(bar.querySelector('.subject-btn[data-subject="'+key+'"]'), key);
-    });
-  }
-  function rebuildSubjects(force){
-    document.body.classList.add('v21-final','v21-7-dropdown-ready','v21-7-3-clean');
-    const bar = document.querySelector('.subjects-bar');
-    if(!bar) return;
-    if(!force && isReady(bar)) return;
-    bar.dataset.v2173Clean = '1';
-    bar.dataset.v2172Dropdown = '0';
-    bar.innerHTML = '';
-    ORDER.forEach(function(key){ bar.appendChild(createSubjectButton(key)); });
-    ensureDropdownAfterBar(bar);
-    hideOldQuickMenu();
-  }
-  let timer=null;
-  function schedule(force){ clearTimeout(timer); timer=setTimeout(function(){rebuildSubjects(!!force);},25); }
-  function init(){ rebuildSubjects(true); hideOldQuickMenu(); }
-
-  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
-  window.addEventListener('load', function(){
-    schedule(true);
-    [100,300,700,1200,2200,4000].forEach(function(ms){ setTimeout(function(){schedule(true);},ms); });
-  });
-
-  const observer = new MutationObserver(function(){
-    const bar = document.querySelector('.subjects-bar');
-    if(bar && !isReady(bar)) schedule(true);
-  });
-  observer.observe(document.documentElement, {childList:true, subtree:true, characterData:true});
-})();
-</script>
-
-
-
-<!-- PATCH FINAL V21.7.3 - titres visibles + activités directement sous la matière -->
-<style id="patch-final-v21-7-3-titres-contenus">
-/* Correction finale : aucun bouton matière ne doit rester sans titre visible. */
 body.v21-final .subjects-bar{
   display:grid !important;
   grid-template-columns:repeat(6,minmax(96px,1fr)) !important;
@@ -22890,16 +22340,17 @@ body.v21-final .subjects-bar{
   overflow:visible !important;
   white-space:normal !important;
 }
-body.v21-final .subject-btn.v2173-final-subject{
+body.v21-final .subject-btn.v2173-title-locked{
   appearance:none !important;
   min-height:74px !important;
   padding:9px 10px !important;
   border:3px solid rgba(255,255,255,.88) !important;
   border-radius:18px !important;
   background:linear-gradient(135deg,var(--v2173-color,#6C63FF),var(--v2173-color2,#8E86FF)) !important;
-  color:#FFFFFF !important;
+  color:#fff !important;
   box-shadow:0 8px 18px var(--v2173-shadow,rgba(108,99,255,.24)), inset 0 1px 0 rgba(255,255,255,.35) !important;
   display:flex !important;
+  flex-direction:row !important;
   align-items:center !important;
   justify-content:center !important;
   gap:8px !important;
@@ -22914,18 +22365,16 @@ body.v21-final .subject-btn.v2173-final-subject{
   font-weight:1000 !important;
   text-shadow:0 2px 0 rgba(0,0,0,.16) !important;
 }
-body.v21-final .subject-btn.v2173-final-subject:hover{
+body.v21-final .subject-btn.v2173-title-locked:hover{
   transform:translateY(-2px) !important;
 }
-body.v21-final .subject-btn.v2173-final-subject.active{
+body.v21-final .subject-btn.v2173-title-locked.active{
   outline:4px solid rgba(255,217,61,.48) !important;
 }
-body.v21-final .subject-btn.v2173-final-subject .subject-icon,
-body.v21-final .subject-btn.v2173-final-subject .v2173-final-icon{
+body.v21-final .subject-btn.v2173-title-locked .v2173-subject-icon{
   display:inline-flex !important;
   align-items:center !important;
   justify-content:center !important;
-  width:auto !important;
   min-width:24px !important;
   font-size:24px !important;
   line-height:1 !important;
@@ -22935,8 +22384,7 @@ body.v21-final .subject-btn.v2173-final-subject .v2173-final-icon{
   text-indent:0 !important;
   flex-shrink:0 !important;
 }
-body.v21-final .subject-btn.v2173-final-subject .subject-label,
-body.v21-final .subject-btn.v2173-final-subject .v2173-final-label{
+body.v21-final .subject-btn.v2173-title-locked .v2173-subject-label{
   display:inline-block !important;
   color:#fff !important;
   font-size:18px !important;
@@ -22950,7 +22398,7 @@ body.v21-final .subject-btn.v2173-final-subject .v2173-final-label{
   text-overflow:clip !important;
   max-width:none !important;
 }
-body.v21-final .subject-btn.v2173-final-subject .v2173-final-chevron{
+body.v21-final .subject-btn.v2173-title-locked .v2173-chevron{
   display:inline-flex !important;
   color:#fff !important;
   font-size:13px !important;
@@ -23020,11 +22468,9 @@ body.v21-final .v2173-activity-btn.soon{
 }
 @media (orientation:landscape) and (max-width:1280px){
   body.v21-final .subjects-bar{grid-template-columns:repeat(6,minmax(82px,1fr)) !important;gap:6px !important;width:calc(100% - 14px) !important;}
-  body.v21-final .subject-btn.v2173-final-subject{min-height:58px !important;padding:7px 8px !important;gap:5px !important;}
-  body.v21-final .subject-btn.v2173-final-subject .subject-icon,
-  body.v21-final .subject-btn.v2173-final-subject .v2173-final-icon{font-size:20px !important;min-width:20px !important;}
-  body.v21-final .subject-btn.v2173-final-subject .subject-label,
-  body.v21-final .subject-btn.v2173-final-subject .v2173-final-label{font-size:15px !important;}
+  body.v21-final .subject-btn.v2173-title-locked{min-height:58px !important;padding:7px 8px !important;gap:5px !important;}
+  body.v21-final .subject-btn.v2173-title-locked .v2173-subject-icon{font-size:20px !important;min-width:20px !important;}
+  body.v21-final .subject-btn.v2173-title-locked .v2173-subject-label{font-size:15px !important;}
   body.v21-final .v2173-activities-panel{width:calc(100% - 14px) !important;margin-top:5px !important;padding:8px !important;}
   body.v21-final .v2173-activity-btn{min-height:34px !important;font-size:12px !important;padding:7px !important;}
 }
@@ -23034,11 +22480,11 @@ body.v21-final .v2173-activity-btn.soon{
   body.v21-final .v2173-panel-grid{grid-template-columns:repeat(2,minmax(0,1fr)) !important;}
 }
 </style>
-<script id="script-final-v21-7-3-titres-contenus">
+<script id="script-v21-7-3-titres-verrouilles">
 (function(){
-  if(window.__maitreHibouV2173TitresContenusFinal) return;
-  window.__maitreHibouV2173TitresContenusFinal = true;
-
+  if(window.__maitreHibouV2173TitresVerrouilles) return;
+  window.__maitreHibouV2173TitresVerrouilles = true;
+  const VERSION_TITLE = '🦉 V21.7.3 - Matières titrées + activités directes';
   const SUBJECTS = {
     francais:{label:'Français', icon:'📖', color:'#FF3B57', color2:'#FF6E82', soft:'#FFECEF', border:'#FFD3DA', shadow:'rgba(255,59,87,.24)', items:[
       {label:'Nom commun', names:['startNomCommun','showNomCommunLesson']},
@@ -23048,18 +22494,16 @@ body.v21-final .v2173-activity-btn.soon{
     ]},
     maths:{label:'Maths', icon:'🧮', color:'#1683F7', color2:'#4DB0FF', soft:'#E8F4FF', border:'#CFE7FF', shadow:'rgba(22,131,247,.24)', items:[
       {label:'Calcul mental', names:['startCalculMentalCE2','startMentalMath','startCalculMental']},
-      {label:'Multiplication posée', names:['startMultiplicationPosee','showMultiplicationMenu']}
+      {label:'Multiplication posée', names:['showMultiplicationMenu','startMultiplicationPosee']}
     ]},
-    anglais:{label:'Anglais', icon:'🇬🇧', color:'#9C4DFF', color2:'#C084FF', soft:'#F3E9FF', border:'#DFC7FF', shadow:'rgba(156,77,255,.24)', items:[
-      {label:'Se présenter', names:['startEnglishPresentation','showEnglishPresentation','startSePresenter']},
-      {label:'Nombres', prompt:'Apprends-moi les nombres en anglais de 1 à 20 pour un CE2'},
-      {label:'Futurs contenus', soon:true, message:'D’autres contenus d’anglais arriveront plus tard.'}
+    anglais:{label:'Anglais', icon:'🇬🇧', color:'#9C4DFF', color2:'#B978FF', soft:'#F3E9FF', border:'#DFC7FF', shadow:'rgba(156,77,255,.24)', items:[
+      {label:'Se présenter', names:['showEnglishPresentation','startEnglishPresentation','startSePresenter']},
+      {label:'Nombres', prompt:'Je veux travailler les nombres en anglais.'}
     ]},
     sciences:{label:'Sciences', icon:'🧪', color:'#24A84A', color2:'#63D878', soft:'#E9F9EE', border:'#CFF1D8', shadow:'rgba(36,168,74,.24)', items:[
-      {label:'Squelette', names:['startSquelette','showSqueletteLesson']},
-      {label:'Plantes', names:['startPlantes','showPlantesLesson']},
-      {label:'Système solaire', names:['startSystemeSolaire','showSystemeSolaireLesson']},
-      {label:'Futures leçons', soon:true, message:'D’autres leçons de sciences arriveront plus tard.'}
+      {label:'Squelette', names:['showSqueletteLesson','startSquelette']},
+      {label:'Plantes', names:['showPlantesLesson','startPlantes']},
+      {label:'Système solaire', names:['showSystemeSolaireLesson','startSystemeSolaire']}
     ]},
     geographie:{label:'Géographie', icon:'🌍', color:'#FF8A00', color2:'#FFB23F', soft:'#FFF2E0', border:'#FFDDAE', shadow:'rgba(255,138,0,.24)', items:[
       {label:'France', names:['startGeoFrance'], prompt:'Explique-moi la France en géographie pour un CE2'},
@@ -23070,21 +22514,28 @@ body.v21-final .v2173-activity-btn.soon{
     ]}
   };
   const ORDER = ['francais','maths','anglais','sciences','geographie','histoire'];
-
   function escapeHTML(v){
     return String(v == null ? '' : v).replace(/[&<>"']/g, function(c){
       return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
     });
   }
-  function setVars(el, data){
+  function applyVars(el, data){
+    if(!el || !data) return;
     el.style.setProperty('--v2173-color', data.color);
     el.style.setProperty('--v2173-color2', data.color2 || data.color);
     el.style.setProperty('--v2173-shadow', data.shadow || 'rgba(108,99,255,.24)');
+    el.style.setProperty('--v2173-panel-color', data.color);
+    el.style.setProperty('--v2173-panel-soft', data.soft);
+    el.style.setProperty('--v2173-panel-border', data.border);
   }
-  function labelHTML(data){
-    return '<span class="subject-icon v2173-final-icon" aria-hidden="true">'+data.icon+'</span>'+
-           '<span class="subject-label v2173-final-label">'+escapeHTML(data.label)+'</span>'+
-           '<span class="v2173-final-chevron" aria-hidden="true">▼</span>';
+  function setTitle(){
+    if(document.title !== VERSION_TITLE) document.title = VERSION_TITLE;
+  }
+  function hideOldMenus(){
+    const q = document.getElementById('quickQuestions');
+    if(q){ q.style.display='none'; q.style.visibility='hidden'; q.innerHTML=''; q.setAttribute('aria-hidden','true'); }
+    const oldDrop = document.getElementById('v21SubjectDropdown');
+    if(oldDrop){ oldDrop.classList.remove('open'); oldDrop.style.display='none'; oldDrop.style.visibility='hidden'; oldDrop.innerHTML=''; }
   }
   function ensurePanel(bar){
     let panel = document.getElementById('v2173ActivitiesPanel');
@@ -23099,19 +22550,13 @@ body.v21-final .v2173-activity-btn.soon{
     }
     return panel;
   }
-  function hideOldMenus(){
-    const q = document.getElementById('quickQuestions');
-    if(q){ q.style.display='none'; q.style.visibility='hidden'; q.innerHTML=''; q.setAttribute('aria-hidden','true'); }
-    const oldDrop = document.getElementById('v21SubjectDropdown');
-    if(oldDrop){ oldDrop.classList.remove('open'); oldDrop.style.display='none'; oldDrop.innerHTML=''; }
-  }
   function closePanel(){
     const panel = document.getElementById('v2173ActivitiesPanel');
     if(panel){ panel.classList.remove('open'); panel.innerHTML=''; panel.dataset.subject=''; }
-    document.querySelectorAll('.subject-btn.v2173-final-subject').forEach(function(btn){
+    document.querySelectorAll('.subject-btn.v2173-title-locked').forEach(function(btn){
       btn.classList.remove('active');
       btn.setAttribute('aria-expanded','false');
-      const ch = btn.querySelector('.v2173-final-chevron');
+      const ch = btn.querySelector('.v2173-chevron');
       if(ch) ch.textContent = '▼';
     });
   }
@@ -23120,16 +22565,11 @@ body.v21-final .v2173-activity-btn.soon{
     document.body.classList.remove('competence-mode');
     try{
       window.currentSubject = subjectKey;
-      const btn = document.querySelector('.subject-btn.v2173-final-subject[data-subject="'+subjectKey+'"]');
+      const btn = document.querySelector('.subject-btn.v2173-title-locked[data-subject="'+subjectKey+'"]');
       if(typeof window.selectSubject === 'function') window.selectSubject(btn, subjectKey);
     }catch(e){}
     setTimeout(hideOldMenus, 0);
     setTimeout(hideOldMenus, 120);
-  }
-  function showMessage(text){
-    openLearning('francais');
-    if(typeof window.addMessage === 'function') window.addMessage('prof', '🦉 ' + text);
-    else alert(text);
   }
   function callFirst(names){
     for(const name of (names || [])){
@@ -23139,35 +22579,30 @@ body.v21-final .v2173-activity-btn.soon{
     }
     return false;
   }
+  function showMessage(text){
+    if(typeof window.addMessage === 'function') window.addMessage('prof', '🦉 ' + text);
+    else alert(text);
+  }
   function launchItem(subjectKey, item){
     openLearning(subjectKey);
     const panel = document.getElementById('v2173ActivitiesPanel');
     if(panel) panel.classList.remove('open');
-    if(item.soon){
-      showMessage(item.message || 'Cette activité sera ajoutée plus tard.');
-      return;
-    }
+    if(item.soon){ showMessage(item.message || 'Cette activité sera ajoutée plus tard.'); return; }
     if(item.names && callFirst(item.names)) return;
-    if(item.prompt && typeof window.sendQuick === 'function'){
-      window.sendQuick(item.prompt);
-      return;
-    }
-    showMessage('Cette activité existe dans le menu, mais son lancement doit être relié au bon module.');
+    if(item.prompt && typeof window.sendQuick === 'function'){ window.sendQuick(item.prompt); return; }
+    showMessage('Cette activité est prête dans le menu, mais son module doit encore être relié.');
   }
   function openPanel(subjectKey, btn){
     const bar = document.querySelector('.subjects-bar');
     if(!bar) return;
-    const panel = ensurePanel(bar);
     const data = SUBJECTS[subjectKey];
     if(!data) return;
+    const panel = ensurePanel(bar);
     const alreadyOpen = panel.classList.contains('open') && panel.dataset.subject === subjectKey;
     closePanel();
     hideOldMenus();
     if(alreadyOpen) return;
-    setVars(panel, data);
-    panel.style.setProperty('--v2173-panel-color', data.color);
-    panel.style.setProperty('--v2173-panel-soft', data.soft);
-    panel.style.setProperty('--v2173-panel-border', data.border);
+    applyVars(panel, data);
     panel.dataset.subject = subjectKey;
     panel.innerHTML = '<div class="v2173-panel-title"><span aria-hidden="true">'+data.icon+'</span><span>'+escapeHTML(data.label)+' : choisis une activité</span></div><div class="v2173-panel-grid"></div>';
     const grid = panel.querySelector('.v2173-panel-grid');
@@ -23177,10 +22612,9 @@ body.v21-final .v2173-activity-btn.soon{
       b.className = 'v2173-activity-btn' + (item.soon ? ' soon' : '');
       b.textContent = item.label;
       b.title = item.label;
+      b.setAttribute('aria-label', item.label);
       b.addEventListener('click', function(ev){
-        ev.preventDefault();
-        ev.stopPropagation();
-        ev.stopImmediatePropagation();
+        ev.preventDefault(); ev.stopPropagation(); ev.stopImmediatePropagation();
         launchItem(subjectKey, item);
       }, true);
       grid.appendChild(b);
@@ -23188,48 +22622,49 @@ body.v21-final .v2173-activity-btn.soon{
     panel.classList.add('open');
     btn.classList.add('active');
     btn.setAttribute('aria-expanded','true');
-    const ch = btn.querySelector('.v2173-final-chevron');
+    const ch = btn.querySelector('.v2173-chevron');
     if(ch) ch.textContent = '▲';
   }
   function createButton(subjectKey){
     const data = SUBJECTS[subjectKey];
     const btn = document.createElement('button');
     btn.type = 'button';
-    btn.className = 'subject-btn v2173-clean-subject v2173-final-subject';
+    btn.className = 'subject-btn v2173-title-locked';
     btn.dataset.subject = subjectKey;
     btn.setAttribute('aria-expanded','false');
     btn.setAttribute('aria-label', data.label + ' : afficher les activités');
     btn.title = data.label;
-    setVars(btn, data);
-    btn.innerHTML = labelHTML(data);
+    applyVars(btn, data);
+    btn.innerHTML = '<span class="v2173-subject-icon" aria-hidden="true">'+data.icon+'</span><span class="v2173-subject-label">'+escapeHTML(data.label)+'</span><span class="v2173-chevron" aria-hidden="true">▼</span>';
     btn.addEventListener('click', function(ev){
-      ev.preventDefault();
-      ev.stopPropagation();
-      ev.stopImmediatePropagation();
+      ev.preventDefault(); ev.stopPropagation(); ev.stopImmediatePropagation();
       openPanel(subjectKey, btn);
     }, true);
     return btn;
   }
+  function buttonIsLocked(btn, key){
+    if(!btn || !btn.classList.contains('v2173-title-locked')) return false;
+    const label = btn.querySelector('.v2173-subject-label');
+    return !!label && label.textContent.trim() === SUBJECTS[key].label;
+  }
   function rebuildSubjects(){
-    document.title = '🦉 V21.7.3 - Titres matières + activités visibles';
-    document.body.classList.add('v21-final','v21-7-3-titres-contenus');
+    setTitle();
+    document.body.classList.add('v21-final','v21-7-3-titres-verrouilles');
     const bar = document.querySelector('.subjects-bar');
     if(!bar) return;
-    const alreadyOk = ORDER.every(function(key){
-      const btn = bar.querySelector('.subject-btn.v2173-final-subject[data-subject="'+key+'"]');
-      const label = btn && btn.querySelector('.subject-label');
-      return label && label.textContent.trim() === SUBJECTS[key].label;
-    });
-    if(!alreadyOk){
+    const needsRebuild = ORDER.some(function(key){ return !buttonIsLocked(bar.querySelector('.subject-btn[data-subject="'+key+'"]'), key); }) || bar.querySelectorAll('.subject-btn').length !== ORDER.length;
+    if(needsRebuild){
       bar.innerHTML = '';
       ORDER.forEach(function(key){ bar.appendChild(createButton(key)); });
     }else{
       ORDER.forEach(function(key){
-        const btn = bar.querySelector('.subject-btn.v2173-final-subject[data-subject="'+key+'"]');
+        const btn = bar.querySelector('.subject-btn[data-subject="'+key+'"]');
         if(btn){
           btn.title = SUBJECTS[key].label;
           btn.setAttribute('aria-label', SUBJECTS[key].label + ' : afficher les activités');
-          setVars(btn, SUBJECTS[key]);
+          applyVars(btn, SUBJECTS[key]);
+          const label = btn.querySelector('.v2173-subject-label');
+          if(label) label.textContent = SUBJECTS[key].label;
         }
       });
     }
@@ -23237,27 +22672,25 @@ body.v21-final .v2173-activity-btn.soon{
     hideOldMenus();
   }
   function schedule(){
-    clearTimeout(window.__v2173FinalTitlesTimer);
-    window.__v2173FinalTitlesTimer = setTimeout(rebuildSubjects, 30);
+    clearTimeout(window.__v2173TitleLockTimer);
+    window.__v2173TitleLockTimer = setTimeout(rebuildSubjects, 20);
   }
   if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', rebuildSubjects);
   else rebuildSubjects();
   window.addEventListener('load', function(){
     rebuildSubjects();
-    [100,300,700,1200,2200,4000,6500].forEach(function(ms){ setTimeout(rebuildSubjects, ms); });
+    [80,150,350,700,1200,2200,4000,6500].forEach(function(ms){ setTimeout(rebuildSubjects, ms); });
   });
   new MutationObserver(function(){
     const bar = document.querySelector('.subjects-bar');
     if(!bar) return;
-    const missing = ORDER.some(function(key){
-      const btn = bar.querySelector('.subject-btn.v2173-final-subject[data-subject="'+key+'"]');
-      const label = btn && btn.querySelector('.subject-label');
-      return !label || !label.textContent.trim();
-    });
+    const missing = ORDER.some(function(key){ return !buttonIsLocked(bar.querySelector('.subject-btn[data-subject="'+key+'"]'), key); });
     if(missing) schedule();
   }).observe(document.documentElement,{childList:true,subtree:true,characterData:true});
+  // Le fichier contient encore d'anciens scripts V21.6 qui remettaient le titre à V21.6.
+  // Ce verrou maintient le titre exact de la version générée.
+  setInterval(setTitle, 500);
 })();
 </script>
-
 </body>
 </html>

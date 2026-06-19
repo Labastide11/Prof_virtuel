@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 V21.8 - Mes récompenses</title>
+<title>🦉 V21.8.1 - Récompenses lisibles</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -4751,6 +4751,177 @@ body.v21-final .v21-sublist{
   setTimeout(cleanV216,500);
   setTimeout(cleanV216,1200);
   setInterval(cleanV216,1200);
+})();
+</script>
+
+
+<style id="patch-v21-8-1-recompenses-lisibles">
+/* V21.8.1 - Lisibilité du bloc Mes récompenses dans le bandeau supérieur */
+.header-rewards-card,
+.rewards-header-card,
+.rewards-card,
+.medals-card,
+.podium-card,
+#headerRewardsCard,
+#medalsHeaderCard,
+#podiumHeaderCard,
+#topMedalsCard,
+[class*="reward"],
+[class*="Reward"],
+[class*="medal"],
+[class*="Medal"],
+[class*="podium"],
+[class*="Podium"]{
+  color:#ffffff !important;
+}
+
+.header-rewards-card *,
+.rewards-header-card *,
+.rewards-card *,
+.medals-card *,
+.podium-card *,
+#headerRewardsCard *,
+#medalsHeaderCard *,
+#podiumHeaderCard *,
+#topMedalsCard *,
+[class*="reward"] *,
+[class*="Reward"] *,
+[class*="medal"] *,
+[class*="Medal"] *,
+[class*="podium"] *,
+[class*="Podium"] *{
+  color:#ffffff !important;
+  opacity:1 !important;
+}
+
+.header-rewards-card .title,
+.rewards-header-card .title,
+.rewards-card .title,
+.medals-card .title,
+.podium-card .title,
+#headerRewardsCard .title,
+#medalsHeaderCard .title,
+#podiumHeaderCard .title,
+#topMedalsCard .title,
+[class*="reward"] .title,
+[class*="Reward"] .title,
+[class*="medal"] .title,
+[class*="Medal"] .title,
+[class*="podium"] .title,
+[class*="Podium"] .title{
+  color:#ffffff !important;
+  font-weight:900 !important;
+}
+
+.header-rewards-card .medals,
+.rewards-header-card .medals,
+.rewards-card .medals,
+.medals-card .medals,
+.podium-card .medals,
+#headerRewardsCard .medals,
+#medalsHeaderCard .medals,
+#podiumHeaderCard .medals,
+#topMedalsCard .medals,
+[class*="reward"] .medals,
+[class*="Reward"] .medals,
+[class*="medal"] .medals,
+[class*="Medal"] .medals,
+[class*="podium"] .medals,
+[class*="Podium"] .medals{
+  font-size:18px !important;
+  line-height:1.1 !important;
+  letter-spacing:.04em !important;
+  font-weight:900 !important;
+}
+
+.header-rewards-card .belt-count,
+.rewards-header-card .belt-count,
+.rewards-card .belt-count,
+.medals-card .belt-count,
+.podium-card .belt-count,
+#headerRewardsCard .belt-count,
+#medalsHeaderCard .belt-count,
+#podiumHeaderCard .belt-count,
+#topMedalsCard .belt-count,
+[class*="reward"] .belt-count,
+[class*="Reward"] .belt-count,
+[class*="medal"] .belt-count,
+[class*="Medal"] .belt-count,
+[class*="podium"] .belt-count,
+[class*="Podium"] .belt-count{
+  color:#FFD93D !important;
+  font-weight:900 !important;
+}
+
+/* Supprime les anciens liens gris VOIR / VOIR PODIUM dans le bloc récompenses */
+.header-rewards-card .see,
+.rewards-header-card .see,
+.rewards-card .see,
+.medals-card .see,
+.podium-card .see,
+#headerRewardsCard .see,
+#medalsHeaderCard .see,
+#podiumHeaderCard .see,
+#topMedalsCard .see,
+[class*="reward"] .see,
+[class*="Reward"] .see,
+[class*="medal"] .see,
+[class*="Medal"] .see,
+[class*="podium"] .see,
+[class*="Podium"] .see,
+.header-rewards-card .view,
+.rewards-header-card .view,
+.rewards-card .view,
+.medals-card .view,
+.podium-card .view,
+#headerRewardsCard .view,
+#medalsHeaderCard .view,
+#podiumHeaderCard .view,
+#topMedalsCard .view,
+[class*="reward"] .view,
+[class*="Reward"] .view,
+[class*="medal"] .view,
+[class*="Medal"] .view,
+[class*="podium"] .view,
+[class*="Podium"] .view{
+  display:none !important;
+}
+</style>
+
+<script id="patch-v21-8-1-recompenses-lisibles-js">
+/* V21.8.1 - Nettoyage du texte VOIR et renforcement visuel du bloc Mes récompenses */
+(function(){
+  function patchRewardsCard(){
+    var candidates = Array.from(document.querySelectorAll('div,button,section,article'));
+    candidates.forEach(function(el){
+      var txt = (el.textContent || '').trim();
+      if(/Mes récompenses|Mes recompenses|Mes médailles|Mes medailles/i.test(txt)){
+        el.classList.add('header-rewards-card');
+        el.style.cursor = 'pointer';
+
+        Array.from(el.querySelectorAll('*')).forEach(function(child){
+          var t = (child.textContent || '').trim().toUpperCase();
+          if(t === 'VOIR' || t === 'VOIR PODIUM'){
+            child.style.display = 'none';
+          }
+        });
+
+        var all = Array.from(el.querySelectorAll('*'));
+        all.forEach(function(child){
+          var t = (child.textContent || '').trim();
+          if(/ceinture/i.test(t)){
+            child.classList.add('belt-count');
+          }
+          if(/[🥇🥈🥉🏅]/.test(t)){
+            child.classList.add('medals');
+          }
+        });
+      }
+    });
+  }
+  document.addEventListener('DOMContentLoaded', patchRewardsCard);
+  setTimeout(patchRewardsCard, 200);
+  setTimeout(patchRewardsCard, 1000);
 })();
 </script>
 

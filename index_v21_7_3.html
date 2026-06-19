@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 V21.7.3 - Matières simples + menu d’activités</title>
+<title>🦉 V21.7.3 - Titres matières + activités visibles</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -22868,6 +22868,394 @@ body.v21-final .v21-subitem.disabled{opacity:.78 !important;cursor:default !impo
     if(bar && !isReady(bar)) schedule(true);
   });
   observer.observe(document.documentElement, {childList:true, subtree:true, characterData:true});
+})();
+</script>
+
+
+
+<!-- PATCH FINAL V21.7.3 - titres visibles + activités directement sous la matière -->
+<style id="patch-final-v21-7-3-titres-contenus">
+/* Correction finale : aucun bouton matière ne doit rester sans titre visible. */
+body.v21-final .subjects-bar{
+  display:grid !important;
+  grid-template-columns:repeat(6,minmax(96px,1fr)) !important;
+  gap:10px !important;
+  width:calc(100% - 22px) !important;
+  max-width:1480px !important;
+  margin:5px auto 0 !important;
+  padding:6px 8px !important;
+  background:transparent !important;
+  border:0 !important;
+  box-shadow:none !important;
+  overflow:visible !important;
+  white-space:normal !important;
+}
+body.v21-final .subject-btn.v2173-final-subject{
+  appearance:none !important;
+  min-height:74px !important;
+  padding:9px 10px !important;
+  border:3px solid rgba(255,255,255,.88) !important;
+  border-radius:18px !important;
+  background:linear-gradient(135deg,var(--v2173-color,#6C63FF),var(--v2173-color2,#8E86FF)) !important;
+  color:#FFFFFF !important;
+  box-shadow:0 8px 18px var(--v2173-shadow,rgba(108,99,255,.24)), inset 0 1px 0 rgba(255,255,255,.35) !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:8px !important;
+  text-align:center !important;
+  cursor:pointer !important;
+  overflow:visible !important;
+  text-indent:0 !important;
+  opacity:1 !important;
+  visibility:visible !important;
+  line-height:1.05 !important;
+  font-family:'Nunito',sans-serif !important;
+  font-weight:1000 !important;
+  text-shadow:0 2px 0 rgba(0,0,0,.16) !important;
+}
+body.v21-final .subject-btn.v2173-final-subject:hover{
+  transform:translateY(-2px) !important;
+}
+body.v21-final .subject-btn.v2173-final-subject.active{
+  outline:4px solid rgba(255,217,61,.48) !important;
+}
+body.v21-final .subject-btn.v2173-final-subject .subject-icon,
+body.v21-final .subject-btn.v2173-final-subject .v2173-final-icon{
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  width:auto !important;
+  min-width:24px !important;
+  font-size:24px !important;
+  line-height:1 !important;
+  color:#fff !important;
+  opacity:1 !important;
+  visibility:visible !important;
+  text-indent:0 !important;
+  flex-shrink:0 !important;
+}
+body.v21-final .subject-btn.v2173-final-subject .subject-label,
+body.v21-final .subject-btn.v2173-final-subject .v2173-final-label{
+  display:inline-block !important;
+  color:#fff !important;
+  font-size:18px !important;
+  line-height:1.05 !important;
+  font-weight:1000 !important;
+  opacity:1 !important;
+  visibility:visible !important;
+  text-indent:0 !important;
+  white-space:normal !important;
+  overflow:visible !important;
+  text-overflow:clip !important;
+  max-width:none !important;
+}
+body.v21-final .subject-btn.v2173-final-subject .v2173-final-chevron{
+  display:inline-flex !important;
+  color:#fff !important;
+  font-size:13px !important;
+  line-height:1 !important;
+  opacity:.95 !important;
+  visibility:visible !important;
+  flex-shrink:0 !important;
+}
+body.v21-final #v21SubjectDropdown{
+  display:none !important;
+  visibility:hidden !important;
+}
+body.v21-final .v2173-activities-panel{
+  width:calc(100% - 22px) !important;
+  max-width:1480px !important;
+  margin:7px auto 10px !important;
+  padding:10px !important;
+  border-radius:20px !important;
+  background:rgba(255,255,255,.97) !important;
+  border:3px solid var(--v2173-panel-border,#EAE8FF) !important;
+  box-shadow:0 8px 20px rgba(6,19,54,.13) !important;
+  display:none !important;
+}
+body.v21-final .v2173-activities-panel.open{
+  display:block !important;
+  visibility:visible !important;
+  height:auto !important;
+}
+body.v21-final .v2173-panel-title{
+  display:flex !important;
+  align-items:center !important;
+  gap:8px !important;
+  margin:0 0 8px 2px !important;
+  color:var(--v2173-panel-color,#6C63FF) !important;
+  font-size:15px !important;
+  line-height:1.15 !important;
+  font-weight:1000 !important;
+}
+body.v21-final .v2173-panel-grid{
+  display:grid !important;
+  grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+  gap:8px !important;
+}
+body.v21-final .v2173-activity-btn{
+  appearance:none !important;
+  min-height:42px !important;
+  padding:9px 10px !important;
+  border:2px solid var(--v2173-panel-border,#EAE8FF) !important;
+  border-radius:14px !important;
+  background:#fff !important;
+  color:var(--v2173-panel-color,#2D2B55) !important;
+  box-shadow:0 3px 8px rgba(45,43,85,.08) !important;
+  font-family:'Nunito',sans-serif !important;
+  font-size:14px !important;
+  line-height:1.15 !important;
+  font-weight:1000 !important;
+  text-align:center !important;
+  cursor:pointer !important;
+}
+body.v21-final .v2173-activity-btn:hover,
+body.v21-final .v2173-activity-btn:focus{
+  background:var(--v2173-panel-soft,#F7F6FF) !important;
+  transform:translateY(-1px) !important;
+}
+body.v21-final .v2173-activity-btn.soon{
+  opacity:.78 !important;
+}
+@media (orientation:landscape) and (max-width:1280px){
+  body.v21-final .subjects-bar{grid-template-columns:repeat(6,minmax(82px,1fr)) !important;gap:6px !important;width:calc(100% - 14px) !important;}
+  body.v21-final .subject-btn.v2173-final-subject{min-height:58px !important;padding:7px 8px !important;gap:5px !important;}
+  body.v21-final .subject-btn.v2173-final-subject .subject-icon,
+  body.v21-final .subject-btn.v2173-final-subject .v2173-final-icon{font-size:20px !important;min-width:20px !important;}
+  body.v21-final .subject-btn.v2173-final-subject .subject-label,
+  body.v21-final .subject-btn.v2173-final-subject .v2173-final-label{font-size:15px !important;}
+  body.v21-final .v2173-activities-panel{width:calc(100% - 14px) !important;margin-top:5px !important;padding:8px !important;}
+  body.v21-final .v2173-activity-btn{min-height:34px !important;font-size:12px !important;padding:7px !important;}
+}
+@media (max-width:760px){
+  body.v21-final .subjects-bar{grid-template-columns:repeat(2,minmax(0,1fr)) !important;width:calc(100% - 12px) !important;}
+  body.v21-final .v2173-activities-panel{width:calc(100% - 12px) !important;}
+  body.v21-final .v2173-panel-grid{grid-template-columns:repeat(2,minmax(0,1fr)) !important;}
+}
+</style>
+<script id="script-final-v21-7-3-titres-contenus">
+(function(){
+  if(window.__maitreHibouV2173TitresContenusFinal) return;
+  window.__maitreHibouV2173TitresContenusFinal = true;
+
+  const SUBJECTS = {
+    francais:{label:'Français', icon:'📖', color:'#FF3B57', color2:'#FF6E82', soft:'#FFECEF', border:'#FFD3DA', shadow:'rgba(255,59,87,.24)', items:[
+      {label:'Nom commun', names:['startNomCommun','showNomCommunLesson']},
+      {label:'Verbe', names:['startVerbe','showVerbeLesson']},
+      {label:'Idées pour écrire', names:['startIdeesPourEcrire','showWritingIdeas']},
+      {label:'Futurs ajouts : déterminant, adjectif, groupe nominal', soon:true, message:'Ces entraînements de français arriveront plus tard.'}
+    ]},
+    maths:{label:'Maths', icon:'🧮', color:'#1683F7', color2:'#4DB0FF', soft:'#E8F4FF', border:'#CFE7FF', shadow:'rgba(22,131,247,.24)', items:[
+      {label:'Calcul mental', names:['startCalculMentalCE2','startMentalMath','startCalculMental']},
+      {label:'Multiplication posée', names:['startMultiplicationPosee','showMultiplicationMenu']}
+    ]},
+    anglais:{label:'Anglais', icon:'🇬🇧', color:'#9C4DFF', color2:'#C084FF', soft:'#F3E9FF', border:'#DFC7FF', shadow:'rgba(156,77,255,.24)', items:[
+      {label:'Se présenter', names:['startEnglishPresentation','showEnglishPresentation','startSePresenter']},
+      {label:'Nombres', prompt:'Apprends-moi les nombres en anglais de 1 à 20 pour un CE2'},
+      {label:'Futurs contenus', soon:true, message:'D’autres contenus d’anglais arriveront plus tard.'}
+    ]},
+    sciences:{label:'Sciences', icon:'🧪', color:'#24A84A', color2:'#63D878', soft:'#E9F9EE', border:'#CFF1D8', shadow:'rgba(36,168,74,.24)', items:[
+      {label:'Squelette', names:['startSquelette','showSqueletteLesson']},
+      {label:'Plantes', names:['startPlantes','showPlantesLesson']},
+      {label:'Système solaire', names:['startSystemeSolaire','showSystemeSolaireLesson']},
+      {label:'Futures leçons', soon:true, message:'D’autres leçons de sciences arriveront plus tard.'}
+    ]},
+    geographie:{label:'Géographie', icon:'🌍', color:'#FF8A00', color2:'#FFB23F', soft:'#FFF2E0', border:'#FFDDAE', shadow:'rgba(255,138,0,.24)', items:[
+      {label:'France', names:['startGeoFrance'], prompt:'Explique-moi la France en géographie pour un CE2'},
+      {label:'Europe', prompt:'Explique-moi l’Europe en géographie pour un CE2'}
+    ]},
+    histoire:{label:'Histoire', icon:'🏛️', color:'#6C63FF', color2:'#8E86FF', soft:'#EAE8FF', border:'#D8D4FF', shadow:'rgba(108,99,255,.24)', items:[
+      {label:'À venir', soon:true, message:'Les activités d’histoire seront ajoutées plus tard.'}
+    ]}
+  };
+  const ORDER = ['francais','maths','anglais','sciences','geographie','histoire'];
+
+  function escapeHTML(v){
+    return String(v == null ? '' : v).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+  function setVars(el, data){
+    el.style.setProperty('--v2173-color', data.color);
+    el.style.setProperty('--v2173-color2', data.color2 || data.color);
+    el.style.setProperty('--v2173-shadow', data.shadow || 'rgba(108,99,255,.24)');
+  }
+  function labelHTML(data){
+    return '<span class="subject-icon v2173-final-icon" aria-hidden="true">'+data.icon+'</span>'+
+           '<span class="subject-label v2173-final-label">'+escapeHTML(data.label)+'</span>'+
+           '<span class="v2173-final-chevron" aria-hidden="true">▼</span>';
+  }
+  function ensurePanel(bar){
+    let panel = document.getElementById('v2173ActivitiesPanel');
+    if(!panel){
+      panel = document.createElement('section');
+      panel.id = 'v2173ActivitiesPanel';
+      panel.className = 'v2173-activities-panel';
+      panel.setAttribute('aria-live','polite');
+      bar.insertAdjacentElement('afterend', panel);
+    }else if(panel.previousElementSibling !== bar){
+      bar.insertAdjacentElement('afterend', panel);
+    }
+    return panel;
+  }
+  function hideOldMenus(){
+    const q = document.getElementById('quickQuestions');
+    if(q){ q.style.display='none'; q.style.visibility='hidden'; q.innerHTML=''; q.setAttribute('aria-hidden','true'); }
+    const oldDrop = document.getElementById('v21SubjectDropdown');
+    if(oldDrop){ oldDrop.classList.remove('open'); oldDrop.style.display='none'; oldDrop.innerHTML=''; }
+  }
+  function closePanel(){
+    const panel = document.getElementById('v2173ActivitiesPanel');
+    if(panel){ panel.classList.remove('open'); panel.innerHTML=''; panel.dataset.subject=''; }
+    document.querySelectorAll('.subject-btn.v2173-final-subject').forEach(function(btn){
+      btn.classList.remove('active');
+      btn.setAttribute('aria-expanded','false');
+      const ch = btn.querySelector('.v2173-final-chevron');
+      if(ch) ch.textContent = '▼';
+    });
+  }
+  function openLearning(subjectKey){
+    document.body.classList.add('v21-final','v21-learning-open');
+    document.body.classList.remove('competence-mode');
+    try{
+      window.currentSubject = subjectKey;
+      const btn = document.querySelector('.subject-btn.v2173-final-subject[data-subject="'+subjectKey+'"]');
+      if(typeof window.selectSubject === 'function') window.selectSubject(btn, subjectKey);
+    }catch(e){}
+    setTimeout(hideOldMenus, 0);
+    setTimeout(hideOldMenus, 120);
+  }
+  function showMessage(text){
+    openLearning('francais');
+    if(typeof window.addMessage === 'function') window.addMessage('prof', '🦉 ' + text);
+    else alert(text);
+  }
+  function callFirst(names){
+    for(const name of (names || [])){
+      if(typeof window[name] === 'function'){
+        try{ window[name](); return true; }catch(e){ console.warn('Action Maître Hibou impossible :', name, e); }
+      }
+    }
+    return false;
+  }
+  function launchItem(subjectKey, item){
+    openLearning(subjectKey);
+    const panel = document.getElementById('v2173ActivitiesPanel');
+    if(panel) panel.classList.remove('open');
+    if(item.soon){
+      showMessage(item.message || 'Cette activité sera ajoutée plus tard.');
+      return;
+    }
+    if(item.names && callFirst(item.names)) return;
+    if(item.prompt && typeof window.sendQuick === 'function'){
+      window.sendQuick(item.prompt);
+      return;
+    }
+    showMessage('Cette activité existe dans le menu, mais son lancement doit être relié au bon module.');
+  }
+  function openPanel(subjectKey, btn){
+    const bar = document.querySelector('.subjects-bar');
+    if(!bar) return;
+    const panel = ensurePanel(bar);
+    const data = SUBJECTS[subjectKey];
+    if(!data) return;
+    const alreadyOpen = panel.classList.contains('open') && panel.dataset.subject === subjectKey;
+    closePanel();
+    hideOldMenus();
+    if(alreadyOpen) return;
+    setVars(panel, data);
+    panel.style.setProperty('--v2173-panel-color', data.color);
+    panel.style.setProperty('--v2173-panel-soft', data.soft);
+    panel.style.setProperty('--v2173-panel-border', data.border);
+    panel.dataset.subject = subjectKey;
+    panel.innerHTML = '<div class="v2173-panel-title"><span aria-hidden="true">'+data.icon+'</span><span>'+escapeHTML(data.label)+' : choisis une activité</span></div><div class="v2173-panel-grid"></div>';
+    const grid = panel.querySelector('.v2173-panel-grid');
+    data.items.forEach(function(item){
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'v2173-activity-btn' + (item.soon ? ' soon' : '');
+      b.textContent = item.label;
+      b.title = item.label;
+      b.addEventListener('click', function(ev){
+        ev.preventDefault();
+        ev.stopPropagation();
+        ev.stopImmediatePropagation();
+        launchItem(subjectKey, item);
+      }, true);
+      grid.appendChild(b);
+    });
+    panel.classList.add('open');
+    btn.classList.add('active');
+    btn.setAttribute('aria-expanded','true');
+    const ch = btn.querySelector('.v2173-final-chevron');
+    if(ch) ch.textContent = '▲';
+  }
+  function createButton(subjectKey){
+    const data = SUBJECTS[subjectKey];
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'subject-btn v2173-clean-subject v2173-final-subject';
+    btn.dataset.subject = subjectKey;
+    btn.setAttribute('aria-expanded','false');
+    btn.setAttribute('aria-label', data.label + ' : afficher les activités');
+    btn.title = data.label;
+    setVars(btn, data);
+    btn.innerHTML = labelHTML(data);
+    btn.addEventListener('click', function(ev){
+      ev.preventDefault();
+      ev.stopPropagation();
+      ev.stopImmediatePropagation();
+      openPanel(subjectKey, btn);
+    }, true);
+    return btn;
+  }
+  function rebuildSubjects(){
+    document.title = '🦉 V21.7.3 - Titres matières + activités visibles';
+    document.body.classList.add('v21-final','v21-7-3-titres-contenus');
+    const bar = document.querySelector('.subjects-bar');
+    if(!bar) return;
+    const alreadyOk = ORDER.every(function(key){
+      const btn = bar.querySelector('.subject-btn.v2173-final-subject[data-subject="'+key+'"]');
+      const label = btn && btn.querySelector('.subject-label');
+      return label && label.textContent.trim() === SUBJECTS[key].label;
+    });
+    if(!alreadyOk){
+      bar.innerHTML = '';
+      ORDER.forEach(function(key){ bar.appendChild(createButton(key)); });
+    }else{
+      ORDER.forEach(function(key){
+        const btn = bar.querySelector('.subject-btn.v2173-final-subject[data-subject="'+key+'"]');
+        if(btn){
+          btn.title = SUBJECTS[key].label;
+          btn.setAttribute('aria-label', SUBJECTS[key].label + ' : afficher les activités');
+          setVars(btn, SUBJECTS[key]);
+        }
+      });
+    }
+    ensurePanel(bar);
+    hideOldMenus();
+  }
+  function schedule(){
+    clearTimeout(window.__v2173FinalTitlesTimer);
+    window.__v2173FinalTitlesTimer = setTimeout(rebuildSubjects, 30);
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', rebuildSubjects);
+  else rebuildSubjects();
+  window.addEventListener('load', function(){
+    rebuildSubjects();
+    [100,300,700,1200,2200,4000,6500].forEach(function(ms){ setTimeout(rebuildSubjects, ms); });
+  });
+  new MutationObserver(function(){
+    const bar = document.querySelector('.subjects-bar');
+    if(!bar) return;
+    const missing = ORDER.some(function(key){
+      const btn = bar.querySelector('.subject-btn.v2173-final-subject[data-subject="'+key+'"]');
+      const label = btn && btn.querySelector('.subject-label');
+      return !label || !label.textContent.trim();
+    });
+    if(missing) schedule();
+  }).observe(document.documentElement,{childList:true,subtree:true,characterData:true});
 })();
 </script>
 

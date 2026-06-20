@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 V23.4.6 - Refonte Maths + clé API accessible</title>
+<title>🦉 V23.4.10 - Français Sheet grammaire</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -25411,6 +25411,1576 @@ body.v21-final .v2173-activity-btn.soon{
 <script id="patch-v2347-title-js">
 (function(){
   try{ document.title = '🦉 V23.4.7 - Maths scroll corrigé'; }catch(e){}
+})();
+</script>
+
+
+
+<!-- PATCH V23.4.8 - Français en grande popup, même logique que Maths -->
+<style id="patch-v2348-francais-popup-css">
+#frenchTrainingOverlayV2348{
+  position:fixed;
+  inset:0;
+  z-index:300200;
+  background:rgba(45,43,85,.62);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:16px;
+  touch-action:none;
+}
+#frenchTrainingOverlayV2348.hidden{display:none!important;}
+#frenchTrainingOverlayV2348 .fr-v2348-popup{
+  width:min(1180px,96vw);
+  height:min(90vh,820px);
+  max-height:92vh;
+  min-height:0;
+  background:linear-gradient(135deg,#FFFFFF 0%,#FFF5F7 100%);
+  border:4px solid #FFECEF;
+  border-radius:30px;
+  box-shadow:0 24px 70px rgba(9,20,50,.26);
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  position:relative;
+}
+.fr-v2348-topbar{
+  flex:0 0 auto;
+  min-height:58px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:12px 16px;
+  background:linear-gradient(135deg,#FF3B57 0%,#FF7A8C 100%);
+  color:white;
+}
+.fr-v2348-chip{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 12px;
+  border-radius:999px;
+  background:rgba(255,255,255,.22);
+  font-weight:1000;
+  font-size:15px;
+}
+.fr-v2348-close{
+  width:44px;
+  height:44px;
+  border:0;
+  border-radius:50%;
+  background:white;
+  color:#FF3B57;
+  font-size:30px;
+  font-weight:1000;
+  line-height:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  box-shadow:0 8px 22px rgba(45,43,85,.18);
+}
+.fr-v2348-close:hover{transform:translateY(-1px);}
+#frenchPopupInnerV2348{
+  flex:1 1 auto;
+  min-height:0;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+.fr-v2348-header{
+  flex:0 0 auto;
+  display:grid;
+  grid-template-columns:auto 1fr;
+  gap:16px;
+  align-items:center;
+  padding:18px 22px 10px;
+}
+.fr-v2348-owl{
+  width:94px;
+  height:94px;
+  border-radius:26px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:62px;
+  background:linear-gradient(135deg,#FFFCEB 0%,#FFECEF 100%);
+  border:3px solid #FFECEF;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.78),0 8px 24px rgba(255,59,87,.12);
+}
+.fr-v2348-title h2{
+  margin:0;
+  font-family:'Baloo 2','Nunito',sans-serif;
+  font-size:34px;
+  line-height:1.05;
+  color:#2D2B55;
+  font-weight:1000;
+}
+.fr-v2348-title p{
+  margin:4px 0 0;
+  font-weight:900;
+  color:#6F6A92;
+}
+.fr-v2348-note{
+  margin-top:8px;
+  display:inline-flex;
+  max-width:100%;
+  padding:8px 11px;
+  border-radius:14px;
+  background:#FFFCEB;
+  border:2px solid #FFD93D;
+  color:#7A5C00;
+  font-size:13px;
+  font-weight:900;
+}
+.fr-v2348-content{
+  flex:1 1 auto;
+  min-height:0;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  padding:10px 22px 22px;
+}
+.fr-v2348-panel{
+  flex:1 1 auto;
+  min-height:0;
+  background:#FFFFFF;
+  border:3px solid #FFECEF;
+  border-radius:24px;
+  box-shadow:0 8px 22px rgba(255,59,87,.10);
+  padding:14px;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+.fr-v2348-panel-title{
+  flex:0 0 auto;
+  margin:0 0 10px;
+  font-family:'Baloo 2','Nunito',sans-serif;
+  font-size:24px;
+  color:#FF3B57;
+  font-weight:1000;
+}
+.fr-v2348-list{
+  flex:1 1 auto;
+  min-height:0;
+  overflow-y:auto;
+  overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior:contain;
+  touch-action:pan-y;
+  display:grid;
+  grid-template-columns:1fr;
+  gap:10px;
+  padding:2px 2px 16px;
+}
+.fr-v2348-card{
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  gap:12px;
+  align-items:center;
+  padding:14px;
+  border:2px solid #ECEBF3;
+  border-radius:20px;
+  background:linear-gradient(135deg,#FFFFFF 0%,#FFF7F8 100%);
+  box-shadow:0 6px 16px rgba(45,43,85,.06);
+}
+.fr-v2348-icon{
+  width:58px;
+  height:58px;
+  border-radius:18px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#FFECEF;
+  color:#FF3B57;
+  font-size:30px;
+  border:3px solid #FFD6DD;
+}
+.fr-v2348-card-main strong{
+  display:block;
+  font-size:19px;
+  font-weight:1000;
+  color:#2D2B55;
+}
+.fr-v2348-card-main span{
+  display:block;
+  margin-top:3px;
+  font-size:14px;
+  font-weight:800;
+  color:#8B89A8;
+}
+.fr-v2348-btn,
+.fr-v2348-action,
+.fr-v2348-back{
+  border:0;
+  border-radius:16px;
+  background:linear-gradient(135deg,#FF3B57 0%,#FF7A8C 100%);
+  color:white;
+  font-family:'Nunito',sans-serif;
+  font-weight:1000;
+  font-size:15px;
+  padding:12px 15px;
+  cursor:pointer;
+  box-shadow:0 7px 18px rgba(255,59,87,.20);
+  min-height:46px;
+}
+.fr-v2348-action.secondary,
+.fr-v2348-back{
+  background:#FFFFFF;
+  color:#FF3B57;
+  border:2px solid #FFECEF;
+  box-shadow:none;
+}
+.fr-v2348-training-head{
+  flex:0 0 auto;
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  gap:10px;
+  align-items:center;
+  margin-bottom:12px;
+}
+.fr-v2348-training-title{
+  text-align:center;
+  font-size:18px;
+  font-weight:1000;
+  color:#2D2B55;
+}
+.fr-v2348-progress{
+  font-size:13px;
+  color:#8B89A8;
+  font-weight:1000;
+  text-transform:uppercase;
+  margin-bottom:8px;
+}
+.fr-v2348-question{
+  background:#FFFCEB;
+  border:3px solid #FFD93D;
+  border-radius:20px;
+  padding:16px;
+  text-align:center;
+  font-size:22px;
+  font-weight:1000;
+  color:#2D2B55;
+  margin-bottom:12px;
+  line-height:1.35;
+}
+.fr-v2348-options{
+  display:grid;
+  gap:9px;
+  margin-bottom:10px;
+}
+.fr-v2348-option{
+  background:white;
+  border:2px solid #ECEBF3;
+  border-radius:16px;
+  padding:13px 15px;
+  font-family:'Nunito',sans-serif;
+  color:#2D2B55;
+  font-weight:1000;
+  font-size:16px;
+  text-align:left;
+  cursor:pointer;
+}
+.fr-v2348-option:not(:disabled):hover{border-color:#FF3B57;background:#FFF7F8;}
+.fr-v2348-option.correct{background:#E6F7E9!important;border-color:#6BCB77!important;color:#1E5627!important;}
+.fr-v2348-option.wrong{background:#FFEAEA!important;border-color:#FF6B6B!important;color:#7A2222!important;}
+.fr-v2348-feedback{
+  min-height:24px;
+  text-align:center;
+  font-weight:1000;
+  color:#FF3B57;
+}
+.fr-v2348-result h3{
+  font-family:'Baloo 2','Nunito',sans-serif;
+  font-size:28px;
+  color:#FF3B57;
+  text-align:center;
+  margin:8px 0 12px;
+}
+.fr-v2348-score-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+  margin:12px 0;
+}
+.fr-v2348-score-card{
+  background:#F7F6FF;
+  border:2px solid #ECEBF3;
+  border-radius:18px;
+  padding:14px;
+  text-align:center;
+  font-weight:900;
+}
+.fr-v2348-score-card b{display:block;font-size:28px;color:#FF3B57;margin-top:4px;}
+.fr-v2348-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:12px;}
+.fr-v2348-idea-box{
+  flex:1 1 auto;
+  min-height:0;
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior:contain;
+  touch-action:pan-y;
+}
+.fr-v2348-idea-card{
+  background:#FFFCEB;
+  border:3px solid #FFD93D;
+  border-radius:22px;
+  padding:18px;
+  margin:10px 0;
+  font-size:22px;
+  font-weight:1000;
+  color:#2D2B55;
+  line-height:1.35;
+}
+.fr-v2348-example{
+  background:white;
+  border:2px solid #ECEBF3;
+  border-radius:18px;
+  padding:14px;
+  font-weight:900;
+  line-height:1.45;
+  color:#2D2B55;
+  margin-bottom:12px;
+}
+.fr-v2348-textarea{
+  width:100%;
+  min-height:110px;
+  resize:vertical;
+  border:3px solid #FFECEF;
+  border-radius:18px;
+  padding:12px;
+  font-family:'Nunito',sans-serif;
+  font-size:16px;
+  font-weight:800;
+  color:#2D2B55;
+  outline:none;
+  margin-bottom:12px;
+}
+.fr-v2348-textarea:focus{box-shadow:0 0 0 4px #FFECEF;}
+@media (max-width:760px){
+  #frenchTrainingOverlayV2348{padding:10px;}
+  #frenchTrainingOverlayV2348 .fr-v2348-popup{width:calc(100vw - 20px);height:calc(100vh - 20px);max-height:calc(100vh - 20px);}
+  .fr-v2348-header{grid-template-columns:1fr;padding:12px 14px 6px;text-align:center;}
+  .fr-v2348-owl{width:70px;height:70px;font-size:48px;margin:0 auto;}
+  .fr-v2348-title h2{font-size:26px;}
+  .fr-v2348-content{padding:8px 12px 14px;}
+  .fr-v2348-card{grid-template-columns:auto 1fr;}
+  .fr-v2348-card .fr-v2348-btn{grid-column:1/-1;width:100%;}
+  .fr-v2348-training-head{grid-template-columns:1fr;}
+  .fr-v2348-question{font-size:19px;}
+  .fr-v2348-score-grid{grid-template-columns:1fr;}
+}
+@media (orientation:landscape) and (max-height:760px){
+  #frenchTrainingOverlayV2348{align-items:stretch;padding:10px;}
+  #frenchTrainingOverlayV2348 .fr-v2348-popup{height:calc(100vh - 20px);max-height:calc(100vh - 20px);}
+  .fr-v2348-header{grid-template-columns:auto 1fr;padding:10px 16px 6px;}
+  .fr-v2348-owl{width:66px;height:66px;font-size:46px;border-radius:20px;}
+  .fr-v2348-title h2{font-size:26px;}
+  .fr-v2348-content{padding:8px 14px 14px;}
+  .fr-v2348-list{gap:8px;}
+}
+</style>
+<script id="patch-v2348-francais-popup-js">
+(function(){
+  if(window.__maitreHibouFrancaisPopupV2348) return;
+  window.__maitreHibouFrancaisPopupV2348 = true;
+  try{ document.title = '🦉 V23.4.8 - Français en popup'; }catch(e){}
+
+  const TRAINING_COUNT = 10;
+  let frState = {activity:null, questions:[], index:0, score:0, answered:false};
+
+  const ACTIVITIES = [
+    {id:'nomCommun', icon:'✍️', title:'Nom commun', desc:'Reconnaître les noms communs dans une phrase.', button:'✍️ S’entraîner'},
+    {id:'verbe', icon:'🏃', title:'Le verbe', desc:'Trouver le verbe conjugué dans une phrase.', button:'🏃 S’entraîner'},
+    {id:'idees', icon:'✏️', title:'Idées pour écrire', desc:'Tirer une idée et écrire une phrase ou un début d’histoire.', button:'✏️ S’entraîner'}
+  ];
+  const BANK = {
+    nomCommun:[
+      {q:'Dans « Le chat dort sur le canapé. », quel mot est un nom commun ?', options:['Le','chat','dort','sur'], correct:1},
+      {q:'Dans « La maîtresse écrit au tableau. », quel mot est un nom commun ?', options:['maîtresse','écrit','au','La'], correct:0},
+      {q:'Dans « Les enfants jouent dans la cour. », quel mot est un nom commun ?', options:['Les','jouent','cour','dans'], correct:2},
+      {q:'Dans « Mon stylo bleu est cassé. », quel mot est un nom commun ?', options:['Mon','stylo','bleu','est'], correct:1},
+      {q:'Dans « Une voiture passe devant l’école. », quel mot est un nom commun ?', options:['voiture','passe','devant','Une'], correct:0},
+      {q:'Quel mot est un nom commun ?', options:['courir','jardin','rapide','il'], correct:1},
+      {q:'Quel mot est un nom commun ?', options:['chanter','petit','livre','nous'], correct:2},
+      {q:'Dans « Le chien aboie fort. », quel mot est un nom commun ?', options:['Le','chien','aboie','fort'], correct:1},
+      {q:'Dans « La montagne est haute. », quel mot est un nom commun ?', options:['La','montagne','est','haute'], correct:1},
+      {q:'Quel mot est un nom commun ?', options:['table','manger','beau','elles'], correct:0},
+      {q:'Dans « Le ballon roule vite. », quel mot est un nom commun ?', options:['ballon','roule','vite','Le'], correct:0},
+      {q:'Dans « Une fleur pousse dans le jardin. », quel mot est un nom commun ?', options:['Une','fleur','pousse','dans'], correct:1}
+    ],
+    verbe:[
+      {q:'Dans « Les enfants jouent dans la cour. », quel mot est le verbe ?', options:['enfants','jouent','cour'], correct:1},
+      {q:'Dans « Le chat dort sur le canapé. », quel mot est le verbe ?', options:['chat','dort','canapé'], correct:1},
+      {q:'Dans « La maîtresse écrit au tableau. », quel mot est le verbe ?', options:['maîtresse','écrit','tableau'], correct:1},
+      {q:'Dans « Nous chantons une chanson. », quel mot est le verbe ?', options:['Nous','chantons','chanson'], correct:1},
+      {q:'Dans « Tu regardes un livre. », quel mot est le verbe ?', options:['Tu','regardes','livre'], correct:1},
+      {q:'Dans « Le chien aboie fort. », quel mot est le verbe ?', options:['chien','aboie','fort'], correct:1},
+      {q:'Dans « Les élèves lisent en silence. », quel mot est le verbe ?', options:['élèves','lisent','silence'], correct:1},
+      {q:'Dans « Je prépare mon cartable. », quel mot est le verbe ?', options:['Je','prépare','cartable'], correct:1},
+      {q:'Dans « La voiture roule doucement. », quel mot est le verbe ?', options:['voiture','roule','doucement'], correct:1},
+      {q:'Dans « Vous dessinez un hibou. », quel mot est le verbe ?', options:['Vous','dessinez','hibou'], correct:1},
+      {q:'Quel mot est un verbe ?', options:['maison','courir','bleu'], correct:1},
+      {q:'Quel mot est un verbe ?', options:['chanter','jardin','petit'], correct:0}
+    ]
+  };
+  const IDEAS = [
+    {prompt:'Imagine qu’un hibou trouve une clé brillante dans la cour de l’école.', example:'Exemple : Ce matin, Maître Hibou découvre une petite clé dorée sous le banc.'},
+    {prompt:'Un cartable se met soudain à parler pendant la classe.', example:'Exemple : Au moment de sortir le cahier, une voix sort du cartable de Lina.'},
+    {prompt:'Tu ouvres un livre et la première page devient une porte.', example:'Exemple : La page tremble, puis elle s’ouvre comme l’entrée d’un château.'},
+    {prompt:'Une pluie d’étoiles tombe doucement sur la ville.', example:'Exemple : Les élèves regardent le ciel, émerveillés par les étoiles qui brillent.'},
+    {prompt:'Dans la cour, une marelle magique apparaît.', example:'Exemple : À chaque case, les enfants voyagent dans un lieu différent.'},
+    {prompt:'Un animal minuscule demande de l’aide à la classe.', example:'Exemple : Une petite souris avec un sac à dos monte sur le bureau.'},
+    {prompt:'Le tableau de la classe dessine tout seul.', example:'Exemple : Sans craie et sans main, un plan mystérieux apparaît.'},
+    {prompt:'Ton crayon invente une histoire à ta place.', example:'Exemple : Le crayon glisse sur la feuille et écrit une phrase incroyable.'}
+  ];
+
+  function byId(id){ return document.getElementById(id); }
+  function esc(v){ return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c];}); }
+  function norm(v){ return String(v==null?'':v).trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,''); }
+  function shuffle(a){ const arr=(a||[]).slice(); for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=arr[i]; arr[i]=arr[j]; arr[j]=t; } return arr; }
+  function overlay(){
+    let ov = byId('frenchTrainingOverlayV2348');
+    if(ov) return ov;
+    ov = document.createElement('div');
+    ov.id = 'frenchTrainingOverlayV2348';
+    ov.className = 'hidden';
+    ov.setAttribute('role','dialog');
+    ov.setAttribute('aria-modal','true');
+    ov.setAttribute('aria-label','Français - entraînements');
+    ov.innerHTML = '<div class="fr-v2348-popup">'
+      + '<div class="fr-v2348-topbar">'
+      + '<div class="fr-v2348-chip">📖 Français</div>'
+      + '<button class="fr-v2348-close" type="button" onclick="closeFrenchTrainingPopupV2348()" aria-label="Fermer la popup Français">×</button>'
+      + '</div>'
+      + '<div id="frenchPopupInnerV2348"></div>'
+      + '</div>';
+    document.body.appendChild(ov);
+    ov.addEventListener('click', function(ev){ if(ev.target === ov) closeFrenchTrainingPopupV2348(); });
+    return ov;
+  }
+  function setInner(html){ const inner = byId('frenchPopupInnerV2348'); if(inner) inner.innerHTML = html; }
+  function lockPage(lock){ document.documentElement.style.overflow = lock ? 'hidden' : ''; document.body.style.overflow = lock ? 'hidden' : ''; }
+  function hideOldFrenchUI(){
+    const panel = byId('v2173ActivitiesPanel');
+    if(panel){ panel.classList.remove('open'); panel.innerHTML = ''; panel.dataset.subject = ''; }
+    const q = byId('quickQuestions');
+    if(q){ q.style.display = 'none'; q.style.visibility = 'hidden'; q.innerHTML = ''; }
+    document.querySelectorAll('.subject-btn').forEach(function(b){ b.classList.remove('active'); b.setAttribute('aria-expanded','false'); });
+    document.querySelectorAll('.subject-btn[data-subject="francais"]').forEach(function(b){ b.classList.add('active'); b.setAttribute('aria-expanded','true'); });
+  }
+  function headerHTML(){
+    return '<div class="fr-v2348-header">'
+      + '<div class="fr-v2348-owl">🦉</div>'
+      + '<div class="fr-v2348-title">'
+      + '<h2>📖 Entraînements de français</h2>'
+      + '<p>Choisis une activité pour t’entraîner.</p>'
+      + '<div class="fr-v2348-note">Les activités restent dans cette fenêtre : pas de troisième popup, pas de bascule dans le chat.</div>'
+      + '</div></div>';
+  }
+  function activityById(id){ return ACTIVITIES.find(function(a){ return a.id === id; }) || ACTIVITIES[0]; }
+  function renderList(){
+    const rows = ACTIVITIES.map(function(a){
+      return '<article class="fr-v2348-card">'
+        + '<div class="fr-v2348-icon">'+esc(a.icon)+'</div>'
+        + '<div class="fr-v2348-card-main"><strong>'+esc(a.title)+'</strong><span>'+esc(a.desc)+'</span></div>'
+        + '<button type="button" class="fr-v2348-btn" onclick="startFrenchTrainingV2348(\''+esc(a.id)+'\')">'+esc(a.button)+'</button>'
+        + '</article>';
+    }).join('');
+    setInner(headerHTML() + '<div class="fr-v2348-content"><section class="fr-v2348-panel">'
+      + '<h3 class="fr-v2348-panel-title">Français</h3>'
+      + '<div class="fr-v2348-list">'+rows+'</div>'
+      + '</section></div>');
+  }
+  window.renderFrenchTrainingListV2348 = renderList;
+  window.openFrenchTrainingPopupV2348 = function(){
+    hideOldFrenchUI();
+    const ov = overlay();
+    ov.classList.remove('hidden');
+    lockPage(true);
+    renderList();
+  };
+  window.closeFrenchTrainingPopupV2348 = function(){
+    const ov = overlay();
+    ov.classList.add('hidden');
+    lockPage(false);
+  };
+  window.startFrenchTrainingV2348 = function(activityId){
+    const a = activityById(activityId);
+    frState.activity = a;
+    frState.index = 0;
+    frState.score = 0;
+    frState.answered = false;
+    if(activityId === 'idees') return renderIdea();
+    const bank = BANK[activityId] || BANK.nomCommun;
+    frState.questions = shuffle(bank).slice(0, TRAINING_COUNT);
+    renderQuestion();
+  };
+  function renderQuestion(){
+    const q = frState.questions[frState.index];
+    if(!q) return renderResult();
+    frState.answered = false;
+    const opts = q.options.map(function(opt,i){ return '<button type="button" class="fr-v2348-option" data-index="'+i+'" onclick="answerFrenchTrainingV2348('+i+')">'+esc(opt)+'</button>'; }).join('');
+    setInner(headerHTML() + '<div class="fr-v2348-content"><section class="fr-v2348-panel">'
+      + '<div class="fr-v2348-training-head">'
+      + '<button type="button" class="fr-v2348-back" onclick="renderFrenchTrainingListV2348()">← Retour aux entraînements</button>'
+      + '<div class="fr-v2348-training-title">'+esc(frState.activity.icon)+' '+esc(frState.activity.title)+'</div>'
+      + '<div></div>'
+      + '</div>'
+      + '<div class="fr-v2348-progress">Question '+(frState.index+1)+' / '+frState.questions.length+'</div>'
+      + '<div class="fr-v2348-question">'+esc(q.q)+'</div>'
+      + '<div class="fr-v2348-options">'+opts+'</div>'
+      + '<div id="frenchFeedbackV2348" class="fr-v2348-feedback"></div>'
+      + '</section></div>');
+  }
+  window.answerFrenchTrainingV2348 = function(i){
+    if(frState.answered) return;
+    frState.answered = true;
+    const q = frState.questions[frState.index];
+    const buttons = document.querySelectorAll('.fr-v2348-option');
+    buttons.forEach(function(btn){ btn.disabled = true; });
+    const good = Number(i) === Number(q.correct);
+    if(good) frState.score++;
+    buttons.forEach(function(btn){
+      const idx = Number(btn.getAttribute('data-index'));
+      if(idx === Number(q.correct)) btn.classList.add('correct');
+      else if(idx === Number(i)) btn.classList.add('wrong');
+    });
+    const fb = byId('frenchFeedbackV2348');
+    if(fb) fb.textContent = good ? '✅ Très bien !' : '🦉 Regarde la bonne réponse.';
+    setTimeout(function(){ frState.index++; if(frState.index >= frState.questions.length) renderResult(); else renderQuestion(); }, good ? 450 : 850);
+  };
+  function renderResult(){
+    const total = frState.questions.length || TRAINING_COUNT;
+    setInner(headerHTML() + '<div class="fr-v2348-content"><section class="fr-v2348-panel">'
+      + '<div class="fr-v2348-result">'
+      + '<h3>Bravo, entraînement terminé !</h3>'
+      + '<div class="fr-v2348-score-grid">'
+      + '<div class="fr-v2348-score-card">Score<b>'+frState.score+' / '+total+'</b></div>'
+      + '<div class="fr-v2348-score-card">Activité<b>'+esc(frState.activity.title)+'</b></div>'
+      + '</div>'
+      + '<div class="fr-v2348-note">C’est un entraînement : les validations officielles restent dans « Valider une compétence ».</div>'
+      + '<div class="fr-v2348-actions">'
+      + '<button type="button" class="fr-v2348-action" onclick="startFrenchTrainingV2348(\''+esc(frState.activity.id)+'\')">🔁 Refaire l’entraînement</button>'
+      + '<button type="button" class="fr-v2348-action secondary" onclick="renderFrenchTrainingListV2348()">← Retour aux entraînements</button>'
+      + '<button type="button" class="fr-v2348-action secondary" onclick="closeFrenchTrainingPopupV2348()">Fermer</button>'
+      + '</div></div></section></div>');
+  }
+  function renderIdea(){
+    const item = IDEAS[Math.floor(Math.random()*IDEAS.length)];
+    setInner(headerHTML() + '<div class="fr-v2348-content"><section class="fr-v2348-panel">'
+      + '<div class="fr-v2348-training-head">'
+      + '<button type="button" class="fr-v2348-back" onclick="renderFrenchTrainingListV2348()">← Retour aux entraînements</button>'
+      + '<div class="fr-v2348-training-title">✏️ Idées pour écrire</div>'
+      + '<div></div>'
+      + '</div>'
+      + '<div class="fr-v2348-idea-box">'
+      + '<div class="fr-v2348-progress">Idée d’écriture</div>'
+      + '<div class="fr-v2348-idea-card">'+esc(item.prompt)+'</div>'
+      + '<div class="fr-v2348-example"><strong>Pour t’aider :</strong><br>'+esc(item.example)+'</div>'
+      + '<textarea class="fr-v2348-textarea" placeholder="Écris ici ta phrase ou ton début d’histoire..."></textarea>'
+      + '<div class="fr-v2348-actions">'
+      + '<button type="button" class="fr-v2348-action" onclick="startFrenchTrainingV2348(\'idees\')">🎲 Nouvelle idée</button>'
+      + '<button type="button" class="fr-v2348-action secondary" onclick="renderFrenchTrainingListV2348()">← Retour aux entraînements</button>'
+      + '</div>'
+      + '</div></section></div>');
+  }
+  function interceptFrenchClick(ev){
+    const target = ev.target && ev.target.closest && ev.target.closest('.subject-btn[data-subject="francais"], button[data-subject="francais"]');
+    if(!target) return;
+    if(target.closest && target.closest('#frenchTrainingOverlayV2348')) return;
+    ev.preventDefault();
+    ev.stopPropagation();
+    if(ev.stopImmediatePropagation) ev.stopImmediatePropagation();
+    window.openFrenchTrainingPopupV2348();
+  }
+  document.addEventListener('click', interceptFrenchClick, true);
+  document.addEventListener('keydown', function(ev){
+    if(ev.key === 'Escape'){
+      const ov = byId('frenchTrainingOverlayV2348');
+      if(ov && !ov.classList.contains('hidden')) window.closeFrenchTrainingPopupV2348();
+    }
+  }, true);
+  const previousSelectSubjectV2348 = window.selectSubject;
+  if(typeof previousSelectSubjectV2348 === 'function'){
+    window.selectSubject = function(btn, subject){
+      if(norm(subject) === 'francais'){
+        window.openFrenchTrainingPopupV2348();
+        return false;
+      }
+      return previousSelectSubjectV2348.apply(this, arguments);
+    };
+  }
+  function patchFrenchButtons(){
+    document.querySelectorAll('.subject-btn[data-subject="francais"]').forEach(function(btn){
+      btn.setAttribute('aria-label','Français : ouvrir les entraînements');
+      btn.setAttribute('title','Français : ouvrir les entraînements');
+    });
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', patchFrenchButtons);
+  else patchFrenchButtons();
+  window.addEventListener('load', function(){ [0,100,350,900,1800,3500].forEach(function(ms){ setTimeout(patchFrenchButtons, ms); }); });
+})();
+</script>
+
+<script id="patch-v23410-francais-sheet-grammaire">
+(function(){
+  if(window.__maitreHibouFrancaisSheetGrammaireV23410) return;
+  window.__maitreHibouFrancaisSheetGrammaireV23410 = true;
+  try{ document.title = '🦉 V23.4.10 - Français Sheet grammaire'; }catch(e){}
+
+  const BASE_URL = 'https://script.google.com/macros/s/AKfycbyzfRPrUV7xKgeXUM0LjbOsOne5DieRjDYxmuVbBBUIGL-F9ahMmJZSfpUDYmBaZIOpvQ/exec';
+  const SHEET_NAME = 'grammaire';
+  const CACHE_KEY = 'hibou_v23410_francais_grammaire_rows';
+  const TRAINING_COUNT = 10;
+
+  const URLS_TO_TRY = [
+    BASE_URL + '?onglet=' + encodeURIComponent(SHEET_NAME),
+    BASE_URL + '?sheet=' + encodeURIComponent(SHEET_NAME),
+    BASE_URL + '?tab=' + encodeURIComponent(SHEET_NAME),
+    BASE_URL + '?matiere=Grammaire',
+    BASE_URL + '?matiere=grammaire',
+    BASE_URL + '?action=questions&onglet=' + encodeURIComponent(SHEET_NAME),
+    BASE_URL + '?action=read&onglet=' + encodeURIComponent(SHEET_NAME),
+    BASE_URL
+  ];
+
+  let state = {
+    activity:null,
+    questions:[],
+    index:0,
+    score:0,
+    answered:false,
+    source:'banque locale'
+  };
+
+  const ACTIVITIES = [
+    {id:'nomCommun', icon:'✍️', title:'Nom commun', desc:'Reconnaître les noms communs dans une phrase.', button:'✍️ S’entraîner'},
+    {id:'verbe', icon:'🏃', title:'Le verbe', desc:'Trouver le verbe conjugué dans une phrase.', button:'🏃 S’entraîner'},
+    {id:'idees', icon:'✏️', title:'Idées pour écrire', desc:'Tirer une idée et écrire une phrase ou un début d’histoire.', button:'✏️ S’entraîner'}
+  ];
+
+  const LOCAL_BANK = {
+    nomCommun:[
+      {q:'Dans « Le chat dort sur le canapé. », quel mot est un nom commun ?', options:['Le','chat','dort','sur'], correct:1},
+      {q:'Dans « La maîtresse écrit au tableau. », quel mot est un nom commun ?', options:['maîtresse','écrit','au','La'], correct:0},
+      {q:'Dans « Les enfants jouent dans la cour. », quel mot est un nom commun ?', options:['Les','jouent','cour','dans'], correct:2},
+      {q:'Dans « Mon stylo bleu est cassé. », quel mot est un nom commun ?', options:['Mon','stylo','bleu','est'], correct:1},
+      {q:'Dans « Une voiture passe devant l’école. », quel mot est un nom commun ?', options:['voiture','passe','devant','Une'], correct:0},
+      {q:'Quel mot est un nom commun ?', options:['courir','jardin','rapide','il'], correct:1},
+      {q:'Quel mot est un nom commun ?', options:['chanter','petit','livre','nous'], correct:2},
+      {q:'Dans « Le chien aboie fort. », quel mot est un nom commun ?', options:['Le','chien','aboie','fort'], correct:1},
+      {q:'Dans « La montagne est haute. », quel mot est un nom commun ?', options:['La','montagne','est','haute'], correct:1},
+      {q:'Quel mot est un nom commun ?', options:['table','manger','beau','elles'], correct:0}
+    ],
+    verbe:[
+      {q:'Dans « Les enfants jouent dans la cour. », quel mot est le verbe ?', options:['enfants','jouent','cour'], correct:1},
+      {q:'Dans « Le chat dort sur le canapé. », quel mot est le verbe ?', options:['chat','dort','canapé'], correct:1},
+      {q:'Dans « La maîtresse écrit au tableau. », quel mot est le verbe ?', options:['maîtresse','écrit','tableau'], correct:1},
+      {q:'Dans « Nous chantons une chanson. », quel mot est le verbe ?', options:['Nous','chantons','chanson'], correct:1},
+      {q:'Dans « Tu regardes un livre. », quel mot est le verbe ?', options:['Tu','regardes','livre'], correct:1},
+      {q:'Dans « Le chien aboie fort. », quel mot est le verbe ?', options:['chien','aboie','fort'], correct:1},
+      {q:'Dans « Les élèves lisent en silence. », quel mot est le verbe ?', options:['élèves','lisent','silence'], correct:1},
+      {q:'Dans « Je prépare mon cartable. », quel mot est le verbe ?', options:['Je','prépare','cartable'], correct:1},
+      {q:'Quel mot est un verbe ?', options:['maison','courir','bleu'], correct:1},
+      {q:'Quel mot est un verbe ?', options:['chanter','jardin','petit'], correct:0}
+    ]
+  };
+
+  const LOCAL_IDEAS = [
+    {prompt:'Imagine qu’un hibou trouve une clé brillante dans la cour de l’école.', example:'Exemple : Ce matin, Maître Hibou découvre une petite clé dorée sous le banc.'},
+    {prompt:'Un cartable se met soudain à parler pendant la classe.', example:'Exemple : Au moment de sortir le cahier, une voix sort du cartable de Lina.'},
+    {prompt:'Tu ouvres un livre et la première page devient une porte.', example:'Exemple : La page tremble, puis elle s’ouvre comme l’entrée d’un château.'},
+    {prompt:'Une pluie d’étoiles tombe doucement sur la ville.', example:'Exemple : Les élèves regardent le ciel, émerveillés par les étoiles qui brillent.'},
+    {prompt:'Dans la cour, une marelle magique apparaît.', example:'Exemple : À chaque case, les enfants voyagent dans un lieu différent.'},
+    {prompt:'Le tableau de la classe dessine tout seul.', example:'Exemple : Sans craie et sans main, un plan mystérieux apparaît.'}
+  ];
+
+  function byId(id){ return document.getElementById(id); }
+  function esc(v){ return String(v == null ? '' : v).replace(/[&<>"']/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]; }); }
+  function norm(v){ return String(v == null ? '' : v).trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[’']/g,'').replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,''); }
+  function shuffle(a){ const arr=(a||[]).slice(); for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=arr[i]; arr[i]=arr[j]; arr[j]=t; } return arr; }
+  function unique(arr){ const seen={}; return (arr||[]).filter(function(v){ const k=norm(v); if(!k || seen[k]) return false; seen[k]=true; return true; }); }
+  function addParam(url,k,v){ return url + (url.indexOf('?') === -1 ? '?' : '&') + encodeURIComponent(k) + '=' + encodeURIComponent(v); }
+
+  function readCell(row, names, index){
+    if(Array.isArray(row)) return row[index] == null ? '' : row[index];
+    for(let i=0;i<names.length;i++){
+      const n = names[i];
+      if(row && row[n] !== undefined && row[n] !== null && String(row[n]).trim() !== '') return row[n];
+    }
+    return '';
+  }
+
+  function responseRows(data){
+    let rows = [];
+    if(Array.isArray(data)) rows = data;
+    else if(data && Array.isArray(data.rows)) rows = data.rows;
+    else if(data && Array.isArray(data.data)) rows = data.data;
+    else if(data && Array.isArray(data.questions)) rows = data.questions;
+    else if(data && data.result && Array.isArray(data.result)) rows = data.result;
+    if(rows.length && Array.isArray(rows[0])){
+      const header = rows[0].map(function(h){ return norm(h); });
+      if(header.indexOf('question') !== -1 || header.indexOf('ceinture') !== -1){
+        const originalHeader = rows[0].map(function(h){ return String(h || '').trim(); });
+        return rows.slice(1).map(function(r){
+          const obj = {};
+          originalHeader.forEach(function(h,i){ if(h) obj[h] = r[i]; });
+          return obj;
+        });
+      }
+    }
+    return rows;
+  }
+
+  async function fetchJson(url){
+    const res = await fetch(addParam(url,'t',Date.now()), {cache:'no-store'});
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    return responseRows(await res.json());
+  }
+
+  function fetchJsonp(url){
+    return new Promise(function(resolve,reject){
+      const callbackName = '__hibouFrenchGrammaireV23410_' + Date.now() + '_' + Math.floor(Math.random()*100000);
+      let done = false;
+      const script = document.createElement('script');
+      const cleanup = function(){
+        try{ delete window[callbackName]; }catch(e){ window[callbackName] = undefined; }
+        if(script && script.parentNode) script.parentNode.removeChild(script);
+      };
+      const timer = setTimeout(function(){
+        if(done) return;
+        done = true;
+        cleanup();
+        reject(new Error('Timeout JSONP'));
+      }, 12000);
+      window[callbackName] = function(data){
+        if(done) return;
+        done = true;
+        clearTimeout(timer);
+        cleanup();
+        resolve(responseRows(data));
+      };
+      script.onerror = function(){
+        if(done) return;
+        done = true;
+        clearTimeout(timer);
+        cleanup();
+        reject(new Error('Erreur JSONP'));
+      };
+      script.src = addParam(addParam(url,'callback',callbackName),'t',Date.now());
+      document.head.appendChild(script);
+    });
+  }
+
+  async function fetchRowsFromUrl(url){
+    try{ return await fetchJson(url); }
+    catch(fetchError){
+      console.warn('Fetch Google Sheets échoué, essai JSONP :', url, fetchError);
+      return await fetchJsonp(url);
+    }
+  }
+
+  async function loadSheetRows(force){
+    if(!force){
+      try{
+        const cached = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null');
+        if(cached && Array.isArray(cached.rows) && cached.rows.length) return cached.rows;
+      }catch(e){}
+    }
+    let lastError = null;
+    for(let i=0;i<URLS_TO_TRY.length;i++){
+      const url = URLS_TO_TRY[i];
+      try{
+        const rows = await fetchRowsFromUrl(url);
+        if(rows && rows.length){
+          window.__HIBOU_DEBUG_FRENCH_GRAMMAIRE_ROWS = rows;
+          window.__HIBOU_DEBUG_FRENCH_GRAMMAIRE_URL = url;
+          try{ localStorage.setItem(CACHE_KEY, JSON.stringify({date:Date.now(), url:url, rows:rows})); }catch(e){}
+          return rows;
+        }
+      }catch(e){
+        lastError = e;
+        console.warn('URL Google Sheets Français non utilisable :', url, e);
+      }
+    }
+    try{
+      const cached = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null');
+      if(cached && Array.isArray(cached.rows) && cached.rows.length) return cached.rows;
+    }catch(e){}
+    throw lastError || new Error('Aucune donnée Google Sheets');
+  }
+  window.refreshFrenchGrammarSheetV23410 = function(){ return loadSheetRows(true); };
+
+  function activityFromRow(row){
+    const ceinture = norm(readCell(row,['ceinture','Ceinture'],0));
+    const comp = norm(readCell(row,['competence','compétence','Competence','Compétence'],2));
+    const question = norm(readCell(row,['question','Question'],5));
+    const text = [ceinture, comp, question].join('_');
+    if(comp === 'verbe' || ceinture === 'jaune' || text.indexOf('verbe') !== -1) return 'verbe';
+    if(comp === 'nom' || comp === 'nom_commun' || ceinture === 'verte' || text.indexOf('nom_commun') !== -1) return 'nomCommun';
+    if(text.indexOf('idee') !== -1 || text.indexOf('ecrire') !== -1 || text.indexOf('production') !== -1) return 'idees';
+    return '';
+  }
+
+  function rowToQuestion(row){
+    const q = String(readCell(row,['question','Question'],5)).trim();
+    if(!q) return null;
+    const rawOptions = unique([
+      readCell(row,['A','a'],6),
+      readCell(row,['B','b'],7),
+      readCell(row,['C','c'],8),
+      readCell(row,['D','d'],9)
+    ].map(function(v){ return String(v == null ? '' : v).trim(); }));
+    const answerRaw = String(readCell(row,['reponse','réponse','Reponse','Réponse','answer','Answer'],10)).trim();
+    if(!answerRaw) return null;
+    let correctValue = '';
+    if(/^[ABCD]$/i.test(answerRaw)){
+      correctValue = String(readCell(row,[answerRaw.toUpperCase(), answerRaw.toLowerCase()], 6 + 'ABCD'.indexOf(answerRaw.toUpperCase()))).trim();
+    }else{
+      const match = rawOptions.find(function(o){ return norm(o) === norm(answerRaw); });
+      correctValue = match || answerRaw;
+    }
+    if(!correctValue) return null;
+    const distractors = rawOptions.filter(function(o){ return norm(o) !== norm(correctValue); });
+    const options = shuffle([correctValue].concat(shuffle(distractors).slice(0,3)));
+    const correct = options.findIndex(function(o){ return norm(o) === norm(correctValue); });
+    if(options.length < 2 || correct < 0) return null;
+    return {q:q, options:options, correct:correct};
+  }
+
+  function rowToIdea(row){
+    const prompt = String(readCell(row,['question','Question','idee','Idée','idée','prompt'],5)).trim();
+    const example = String(readCell(row,['A','a','exemple','Exemple','reponse','Réponse','reponse'],6)).trim();
+    if(!prompt) return null;
+    return {prompt:prompt, example:example || 'Écris une phrase complète avec une majuscule et un point.'};
+  }
+
+  async function questionsForActivity(activityId){
+    let rows = [];
+    let usedSheet = false;
+    try{ rows = await loadSheetRows(true); }catch(e){ rows = []; }
+    const matching = (rows || []).filter(function(row){ return activityFromRow(row) === activityId; });
+    let bank = shuffle(matching.map(rowToQuestion).filter(Boolean));
+    if(bank.length) usedSheet = true;
+    const local = LOCAL_BANK[activityId] || LOCAL_BANK.nomCommun;
+    while(bank.length < TRAINING_COUNT){
+      const more = shuffle(local).slice(0, TRAINING_COUNT - bank.length);
+      if(!more.length) break;
+      bank = bank.concat(more);
+    }
+    state.source = usedSheet ? 'Google Sheets · onglet grammaire' : 'banque locale';
+    return shuffle(bank).slice(0, TRAINING_COUNT);
+  }
+
+  async function ideasForSheet(){
+    let rows = [];
+    try{ rows = await loadSheetRows(false); }catch(e){ rows = []; }
+    const ideas = shuffle((rows || []).filter(function(row){ return activityFromRow(row) === 'idees'; }).map(rowToIdea).filter(Boolean));
+    state.source = ideas.length ? 'Google Sheets · onglet grammaire' : 'banque locale';
+    return ideas.length ? ideas : LOCAL_IDEAS;
+  }
+
+  function overlay(){
+    let ov = byId('frenchTrainingOverlayV2348');
+    if(ov) return ov;
+    ov = document.createElement('div');
+    ov.id = 'frenchTrainingOverlayV2348';
+    ov.className = 'hidden';
+    ov.setAttribute('role','dialog');
+    ov.setAttribute('aria-modal','true');
+    ov.setAttribute('aria-label','Français - entraînements');
+    ov.innerHTML = '<div class="fr-v2348-popup">'
+      + '<div class="fr-v2348-topbar">'
+      + '<div class="fr-v2348-chip">📖 Français</div>'
+      + '<button class="fr-v2348-close" type="button" onclick="closeFrenchTrainingPopupV2348()" aria-label="Fermer la popup Français">×</button>'
+      + '</div><div id="frenchPopupInnerV2348"></div></div>';
+    document.body.appendChild(ov);
+    ov.addEventListener('click', function(ev){ if(ev.target === ov) window.closeFrenchTrainingPopupV2348(); });
+    return ov;
+  }
+
+  function setInner(html){ const inner = byId('frenchPopupInnerV2348'); if(inner) inner.innerHTML = html; }
+  function lockPage(lock){ document.documentElement.style.overflow = lock ? 'hidden' : ''; document.body.style.overflow = lock ? 'hidden' : ''; }
+  function hideOldFrenchUI(){
+    const panel = byId('v2173ActivitiesPanel');
+    if(panel){ panel.classList.remove('open'); panel.innerHTML = ''; panel.dataset.subject = ''; }
+    const q = byId('quickQuestions');
+    if(q){ q.style.display = 'none'; q.style.visibility = 'hidden'; q.innerHTML = ''; }
+    document.querySelectorAll('.subject-btn').forEach(function(b){ b.classList.remove('active'); b.setAttribute('aria-expanded','false'); });
+    document.querySelectorAll('.subject-btn[data-subject="francais"]').forEach(function(b){ b.classList.add('active'); b.setAttribute('aria-expanded','true'); });
+  }
+  function headerHTML(){
+    return '<div class="fr-v2348-header">'
+      + '<div class="fr-v2348-owl">🦉</div>'
+      + '<div class="fr-v2348-title">'
+      + '<h2>📖 Entraînements de français</h2>'
+      + '<p>Choisis une activité pour t’entraîner.</p>'
+      + '<div class="fr-v2348-note">Source principale : Google Sheets « Maître Hibou - Banque de Questions », onglet « grammaire ». Secours local si la connexion échoue.</div>'
+      + '</div></div>';
+  }
+  function activityById(id){ return ACTIVITIES.find(function(a){ return a.id === id; }) || ACTIVITIES[0]; }
+
+  function renderList(){
+    const rows = ACTIVITIES.map(function(a){
+      return '<article class="fr-v2348-card">'
+        + '<div class="fr-v2348-icon">'+esc(a.icon)+'</div>'
+        + '<div class="fr-v2348-card-main"><strong>'+esc(a.title)+'</strong><span>'+esc(a.desc)+'</span></div>'
+        + '<button type="button" class="fr-v2348-btn" onclick="startFrenchTrainingV2348(\''+esc(a.id)+'\')">'+esc(a.button)+'</button>'
+        + '</article>';
+    }).join('');
+    setInner(headerHTML() + '<div class="fr-v2348-content"><section class="fr-v2348-panel">'
+      + '<h3 class="fr-v2348-panel-title">Français</h3>'
+      + '<div class="fr-v2348-note">Les boutons <strong>Nom commun</strong> et <strong>Le verbe</strong> lisent maintenant les colonnes : ceinture, niveau, competence, type, mode, question, A, B, C, D, reponse, difficulte.</div>'
+      + '<div class="fr-v2348-list">'+rows+'</div>'
+      + '</section></div>');
+  }
+
+  window.renderFrenchTrainingListV2348 = renderList;
+  window.openFrenchTrainingPopupV2348 = function(){
+    hideOldFrenchUI();
+    const ov = overlay();
+    ov.classList.remove('hidden');
+    lockPage(true);
+    renderList();
+  };
+  window.closeFrenchTrainingPopupV2348 = function(){
+    const ov = overlay();
+    ov.classList.add('hidden');
+    lockPage(false);
+  };
+
+  window.startFrenchTrainingV2348 = async function(activityId){
+    const a = activityById(activityId);
+    state.activity = a;
+    state.index = 0;
+    state.score = 0;
+    state.answered = false;
+    if(activityId === 'idees') return renderIdeaLoading();
+    setInner(headerHTML() + '<div class="fr-v2348-content"><section class="fr-v2348-panel"><div class="fr-v2348-feedback" style="padding:30px">🦉 Chargement depuis Google Sheets, onglet grammaire...</div></section></div>');
+    try{ state.questions = await questionsForActivity(activityId); }
+    catch(e){
+      console.warn('Français Google Sheets : banque locale utilisée', e);
+      state.source = 'banque locale';
+      state.questions = shuffle(LOCAL_BANK[activityId] || LOCAL_BANK.nomCommun).slice(0, TRAINING_COUNT);
+    }
+    renderQuestion();
+  };
+
+  function renderQuestion(){
+    const q = state.questions[state.index];
+    if(!q) return renderResult();
+    state.answered = false;
+    const opts = q.options.map(function(opt,i){ return '<button type="button" class="fr-v2348-option" data-index="'+i+'" onclick="answerFrenchTrainingV2348('+i+')">'+esc(opt)+'</button>'; }).join('');
+    setInner(headerHTML() + '<div class="fr-v2348-content"><section class="fr-v2348-panel">'
+      + '<div class="fr-v2348-training-head">'
+      + '<button type="button" class="fr-v2348-back" onclick="renderFrenchTrainingListV2348()">← Retour aux entraînements</button>'
+      + '<div class="fr-v2348-training-title">'+esc(state.activity.icon)+' '+esc(state.activity.title)+'</div>'
+      + '<div></div></div>'
+      + '<div class="fr-v2348-progress">Question '+(state.index+1)+' / '+state.questions.length+' · Source : '+esc(state.source)+'</div>'
+      + '<div class="fr-v2348-question">'+esc(q.q)+'</div>'
+      + '<div class="fr-v2348-options">'+opts+'</div>'
+      + '<div id="frenchFeedbackV2348" class="fr-v2348-feedback"></div>'
+      + '</section></div>');
+  }
+
+  window.answerFrenchTrainingV2348 = function(i){
+    if(state.answered) return;
+    state.answered = true;
+    const q = state.questions[state.index];
+    const buttons = document.querySelectorAll('.fr-v2348-option');
+    buttons.forEach(function(btn){ btn.disabled = true; });
+    const good = Number(i) === Number(q.correct);
+    if(good) state.score++;
+    buttons.forEach(function(btn){
+      const idx = Number(btn.getAttribute('data-index'));
+      if(idx === Number(q.correct)) btn.classList.add('correct');
+      else if(idx === Number(i)) btn.classList.add('wrong');
+    });
+    const fb = byId('frenchFeedbackV2348');
+    if(fb) fb.textContent = good ? '✅ Très bien !' : '🦉 Regarde la bonne réponse.';
+    setTimeout(function(){ state.index++; if(state.index >= state.questions.length) renderResult(); else renderQuestion(); }, good ? 450 : 850);
+  };
+
+  function renderResult(){
+    const total = state.questions.length || TRAINING_COUNT;
+    setInner(headerHTML() + '<div class="fr-v2348-content"><section class="fr-v2348-panel">'
+      + '<div class="fr-v2348-result"><h3>Bravo, entraînement terminé !</h3>'
+      + '<div class="fr-v2348-score-grid">'
+      + '<div class="fr-v2348-score-card">Score<b>'+state.score+' / '+total+'</b></div>'
+      + '<div class="fr-v2348-score-card">Source<b>'+esc(state.source)+'</b></div>'
+      + '</div>'
+      + '<div class="fr-v2348-note">C’est un entraînement : les validations officielles restent dans « Valider une compétence ».</div>'
+      + '<div class="fr-v2348-actions">'
+      + '<button type="button" class="fr-v2348-action" onclick="startFrenchTrainingV2348(\''+esc(state.activity.id)+'\')">🔁 Refaire l’entraînement</button>'
+      + '<button type="button" class="fr-v2348-action secondary" onclick="renderFrenchTrainingListV2348()">← Retour aux entraînements</button>'
+      + '<button type="button" class="fr-v2348-action secondary" onclick="closeFrenchTrainingPopupV2348()">Fermer</button>'
+      + '</div></div></section></div>');
+  }
+
+  async function renderIdeaLoading(){
+    setInner(headerHTML() + '<div class="fr-v2348-content"><section class="fr-v2348-panel"><div class="fr-v2348-feedback" style="padding:30px">🦉 Chargement des idées...</div></section></div>');
+    try{ renderIdeaFromList(await ideasForSheet()); }
+    catch(e){ state.source = 'banque locale'; renderIdeaFromList(LOCAL_IDEAS); }
+  }
+
+  function renderIdeaFromList(ideas){
+    const item = ideas[Math.floor(Math.random()*ideas.length)] || LOCAL_IDEAS[0];
+    setInner(headerHTML() + '<div class="fr-v2348-content"><section class="fr-v2348-panel">'
+      + '<div class="fr-v2348-training-head">'
+      + '<button type="button" class="fr-v2348-back" onclick="renderFrenchTrainingListV2348()">← Retour aux entraînements</button>'
+      + '<div class="fr-v2348-training-title">✏️ Idées pour écrire</div>'
+      + '<div></div></div>'
+      + '<div class="fr-v2348-idea-box">'
+      + '<div class="fr-v2348-progress">Idée d’écriture · Source : '+esc(state.source)+'</div>'
+      + '<div class="fr-v2348-idea-card">'+esc(item.prompt)+'</div>'
+      + '<div class="fr-v2348-example"><strong>Pour t’aider :</strong><br>'+esc(item.example)+'</div>'
+      + '<textarea class="fr-v2348-textarea" placeholder="Écris ici ta phrase ou ton début d’histoire..."></textarea>'
+      + '<div class="fr-v2348-actions">'
+      + '<button type="button" class="fr-v2348-action" onclick="startFrenchTrainingV2348(\'idees\')">🎲 Nouvelle idée</button>'
+      + '<button type="button" class="fr-v2348-action secondary" onclick="renderFrenchTrainingListV2348()">← Retour aux entraînements</button>'
+      + '</div></div></section></div>');
+  }
+})();
+</script>
+
+
+
+<!-- PATCH V23.4.11 - Français : grammaire en ceintures colorées reliées au Sheet -->
+<style id="patch-v23411-francais-ceintures-css">
+#frenchTrainingOverlayV2348 .fr-v23411-grammar-note{
+  margin:8px auto 0;
+  display:inline-flex;
+  justify-content:center;
+  align-items:center;
+  max-width:100%;
+  padding:8px 12px;
+  border-radius:14px;
+  background:#FFFCEB;
+  border:2px solid #FFD93D;
+  color:#7A5C00;
+  font-size:13px;
+  font-weight:1000;
+  text-align:center;
+}
+#frenchTrainingOverlayV2348 .fr-v23411-section-title{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:14px;
+  margin:0 0 12px 0;
+  color:#FF3B57;
+  font-family:'Baloo 2','Nunito',sans-serif;
+  font-size:28px;
+  font-weight:1000;
+}
+#frenchTrainingOverlayV2348 .fr-v23411-section-title:before,
+#frenchTrainingOverlayV2348 .fr-v23411-section-title:after{
+  content:'';
+  height:2px;
+  flex:1;
+  background:#FFECEF;
+}
+#frenchTrainingOverlayV2348 .fr-v23411-list{
+  flex:1 1 auto;
+  min-height:0;
+  overflow-y:auto;
+  overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior:contain;
+  touch-action:pan-y;
+  display:grid;
+  grid-template-columns:1fr;
+  gap:8px;
+  padding:2px 4px 18px;
+}
+#frenchTrainingOverlayV2348 .fr-v23411-row{
+  display:grid;
+  grid-template-columns:auto 1fr minmax(220px,285px);
+  gap:14px;
+  align-items:center;
+  background:linear-gradient(135deg,#FFFFFF 0%,#FFF9FA 100%);
+  border:2px solid #ECEBF3;
+  border-radius:18px;
+  padding:10px 12px;
+  box-shadow:0 5px 14px rgba(45,43,85,.05);
+}
+#frenchTrainingOverlayV2348 .fr-v23411-dot{
+  width:34px;
+  height:34px;
+  border-radius:50%;
+  border:2px solid rgba(45,43,85,.13);
+  box-shadow:inset 0 2px 4px rgba(255,255,255,.75),0 4px 10px rgba(45,43,85,.12);
+}
+#frenchTrainingOverlayV2348 .fr-v23411-main strong{
+  display:block;
+  font-size:19px;
+  line-height:1.08;
+  font-weight:1000;
+  color:#2D2B55;
+}
+#frenchTrainingOverlayV2348 .fr-v23411-main span{
+  display:block;
+  margin-top:3px;
+  color:#8B89A8;
+  font-size:13px;
+  font-weight:1000;
+}
+#frenchTrainingOverlayV2348 .fr-v23411-mode{
+  margin-top:5px;
+  display:inline-flex;
+  padding:4px 8px;
+  border-radius:999px;
+  background:#FFFCEB;
+  color:#7A5C00;
+  border:1px solid #FFD93D;
+  font-size:12px;
+  font-weight:1000;
+}
+#frenchTrainingOverlayV2348 .fr-v23411-train-btn{
+  width:100%;
+  min-height:40px;
+  border:2px solid #BFDFFF;
+  border-radius:12px;
+  background:linear-gradient(135deg,#F2F9FF 0%,#E7F3FF 100%);
+  color:#0D63D8;
+  font-family:'Nunito',sans-serif;
+  font-size:15px;
+  font-weight:1000;
+  cursor:pointer;
+  box-shadow:0 3px 10px rgba(13,99,216,.08);
+}
+#frenchTrainingOverlayV2348 .fr-v23411-train-btn:hover{
+  transform:translateY(-1px);
+  border-color:#6CB6FF;
+}
+#frenchTrainingOverlayV2348 .fr-v23411-ideas-row{
+  border-color:#FFD93D;
+  background:linear-gradient(135deg,#FFFCEB 0%,#FFFFFF 100%);
+}
+#frenchTrainingOverlayV2348 .fr-v23411-question-meta{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  align-items:center;
+  margin-bottom:8px;
+}
+#frenchTrainingOverlayV2348 .fr-v23411-pill{
+  display:inline-flex;
+  align-items:center;
+  border-radius:999px;
+  padding:5px 9px;
+  font-size:12px;
+  font-weight:1000;
+  background:#FFECEF;
+  color:#FF3B57;
+}
+@media (max-width:760px){
+  #frenchTrainingOverlayV2348 .fr-v23411-row{
+    grid-template-columns:auto 1fr;
+  }
+  #frenchTrainingOverlayV2348 .fr-v23411-row .fr-v23411-train-btn{
+    grid-column:1 / -1;
+  }
+  #frenchTrainingOverlayV2348 .fr-v23411-section-title{font-size:23px;}
+}
+@media (orientation:landscape) and (max-height:760px){
+  #frenchTrainingOverlayV2348 .fr-v23411-row{
+    padding:8px 10px;
+  }
+  #frenchTrainingOverlayV2348 .fr-v23411-main strong{font-size:17px;}
+  #frenchTrainingOverlayV2348 .fr-v23411-dot{width:30px;height:30px;}
+}
+</style>
+<script id="patch-v23411-francais-ceintures-js">
+(function(){
+  if(window.__maitreHibouFrancaisCeinturesV23411) return;
+  window.__maitreHibouFrancaisCeinturesV23411 = true;
+  try{ document.title = '🦉 V23.4.11 - Français grammaire ceintures'; }catch(e){}
+
+  const BASE_URL = 'https://script.google.com/macros/s/AKfycbyzfRPrUV7xKgeXUM0LjbOsOne5DieRjDYxmuVbBBUIGL-F9ahMmJZSfpUDYmBaZIOpvQ/exec';
+  const SHEET_NAME = 'grammaire';
+  const TRAINING_COUNT = 10;
+  const CACHE_KEY = 'hibou_v23411_grammaire_rows_cache';
+
+  const GRAMMAR_BELTS = [
+    {id:'blanche', ceinture:'blanche', title:'Phrase affirmative / négative', label:'Ceinture blanche', desc:'Reconnaître et transformer les phrases.', color:'radial-gradient(circle at 35% 25%,#FFFFFF,#EDE7FF 68%,#C8B8F2)', skills:['phrase','affirmative','negative','negation']},
+    {id:'jaune', ceinture:'jaune', title:'Le verbe', label:'Ceinture jaune', desc:'Trouver le verbe conjugué.', color:'radial-gradient(circle at 35% 25%,#FFF7B0,#FFD93D 62%,#D9A900)', skills:['verbe']},
+    {id:'orange', ceinture:'orange', title:'Le sujet', label:'Ceinture orange', desc:'Identifier le sujet du verbe.', color:'radial-gradient(circle at 35% 25%,#FFD9BF,#FF8A5B 62%,#E75F2B)', skills:['sujet']},
+    {id:'verte', ceinture:'verte', title:'Le nom commun', label:'Ceinture verte', desc:'Reconnaître les noms communs.', color:'radial-gradient(circle at 35% 25%,#BDF6C8,#4FD46C 62%,#229B43)', skills:['nom','nom_commun','nomcommun']},
+    {id:'bleue', ceinture:'bleue', title:'Le déterminant', label:'Ceinture bleue', desc:'Associer et repérer les déterminants.', color:'radial-gradient(circle at 35% 25%,#CDEAFF,#5AA9FF 62%,#2169CF)', skills:['determinant','determiner']},
+    {id:'marron', ceinture:'marron', title:'L’infinitif', label:'Ceinture marron', desc:'Retrouver l’infinitif d’un verbe.', color:'radial-gradient(circle at 35% 25%,#F0D1A7,#C08143 62%,#8B5526)', skills:['infinitif']},
+    {id:'noire', ceinture:'noire', title:'L’adjectif', label:'Ceinture noire', desc:'Reconnaître les adjectifs.', color:'radial-gradient(circle at 35% 25%,#777,#222 66%,#050505)', skills:['adjectif']},
+    {id:'rouge', ceinture:'rouge', title:'Le groupe nominal', label:'Ceinture rouge', desc:'Repérer et enrichir le groupe nominal.', color:'radial-gradient(circle at 35% 25%,#FF9FA8,#E52837 64%,#A90F1D)', skills:['groupe_nominal','gn']}
+  ];
+  const IDEAS_CARD = {id:'idees', title:'Idées pour écrire', label:'Entraînement d’écriture', desc:'Tirer une idée et écrire une phrase ou un début d’histoire.', color:'radial-gradient(circle at 35% 25%,#FFF6A8,#FFD93D 62%,#E0A900)'};
+
+  const LOCAL_BANK = {
+    jaune:[
+      {q:'Dans « Les enfants jouent dans la cour. », quel mot est le verbe ?', options:['enfants','jouent','cour'], correct:1},
+      {q:'Dans « Le chat dort sur le canapé. », quel mot est le verbe ?', options:['chat','dort','canapé'], correct:1},
+      {q:'Dans « Tu regardes un livre. », quel mot est le verbe ?', options:['Tu','regardes','livre'], correct:1},
+      {q:'Quel mot est un verbe ?', options:['maison','courir','bleu'], correct:1}
+    ],
+    verte:[
+      {q:'Dans « Le chat dort sur le canapé. », quel mot est un nom commun ?', options:['Le','chat','dort','sur'], correct:1},
+      {q:'Dans « Les enfants jouent dans la cour. », quel mot est un nom commun ?', options:['Les','jouent','cour','dans'], correct:2},
+      {q:'Quel mot est un nom commun ?', options:['courir','jardin','rapide','il'], correct:1}
+    ]
+  };
+  const LOCAL_IDEAS = [
+    {prompt:'Imagine qu’un hibou trouve une clé brillante dans la cour de l’école.', example:'Exemple : Ce matin, Maître Hibou découvre une petite clé dorée sous le banc.'},
+    {prompt:'Un cartable se met soudain à parler pendant la classe.', example:'Exemple : Au moment de sortir le cahier, une voix sort du cartable de Lina.'},
+    {prompt:'Tu ouvres un livre et la première page devient une porte.', example:'Exemple : La page tremble, puis elle s’ouvre comme l’entrée d’un château.'},
+    {prompt:'Dans la cour, une marelle magique apparaît.', example:'Exemple : À chaque case, les enfants voyagent dans un lieu différent.'},
+    {prompt:'Ton crayon invente une histoire à ta place.', example:'Exemple : Le crayon glisse sur la feuille et écrit une phrase incroyable.'}
+  ];
+
+  let rowsCache = null;
+  let state = {belt:null, questions:[], index:0, score:0, answered:false, source:'banque locale'};
+
+  function byId(id){ return document.getElementById(id); }
+  function esc(v){ return String(v==null?'':v).replace(/[&<>"']/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]; }); }
+  function norm(v){ return String(v==null?'':v).trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[’']/g,'').replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,''); }
+  function shuffle(a){ const arr=(a||[]).slice(); for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=arr[i]; arr[i]=arr[j]; arr[j]=t; } return arr; }
+  function addParam(url,k,v){ return url + (url.indexOf('?')===-1 ? '?' : '&') + encodeURIComponent(k) + '=' + encodeURIComponent(v); }
+  function readCell(row,names,index){
+    if(Array.isArray(row)) return row[index] == null ? '' : row[index];
+    for(let i=0;i<names.length;i++){
+      const wanted = names[i];
+      if(row && Object.prototype.hasOwnProperty.call(row,wanted) && String(row[wanted]||'').trim() !== '') return row[wanted];
+      const keys = Object.keys(row||{});
+      for(let k=0;k<keys.length;k++) if(norm(keys[k])===norm(wanted) && String(row[keys[k]]||'').trim() !== '') return row[keys[k]];
+    }
+    return '';
+  }
+  function responseRows(data){
+    let rows=[];
+    if(Array.isArray(data)) rows=data;
+    else if(data && Array.isArray(data.rows)) rows=data.rows;
+    else if(data && Array.isArray(data.data)) rows=data.data;
+    else if(data && Array.isArray(data.questions)) rows=data.questions;
+    else if(data && data.result && Array.isArray(data.result)) rows=data.result;
+    if(rows.length && Array.isArray(rows[0])){
+      const headerNorm = rows[0].map(norm);
+      if(headerNorm.indexOf('question') !== -1 || headerNorm.indexOf('ceinture') !== -1){
+        const header = rows[0].map(function(h){ return String(h||'').trim(); });
+        return rows.slice(1).map(function(r){ const obj={}; header.forEach(function(h,i){ if(h) obj[h]=r[i]; }); return obj; });
+      }
+    }
+    return rows;
+  }
+  function baseUrls(){
+    return [
+      BASE_URL + '?onglet=' + encodeURIComponent(SHEET_NAME),
+      BASE_URL + '?sheet=' + encodeURIComponent(SHEET_NAME),
+      BASE_URL + '?tab=' + encodeURIComponent(SHEET_NAME),
+      BASE_URL + '?matiere=Grammaire',
+      BASE_URL + '?matiere=grammaire',
+      BASE_URL + '?action=questions&onglet=' + encodeURIComponent(SHEET_NAME),
+      BASE_URL
+    ];
+  }
+  async function fetchJson(url){
+    const res = await fetch(addParam(url,'t',Date.now()), {cache:'no-store'});
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    return responseRows(await res.json());
+  }
+  function fetchJsonp(url){
+    return new Promise(function(resolve,reject){
+      const cb='__hibouFrV23411_'+Date.now()+'_'+Math.floor(Math.random()*10000);
+      let done=false;
+      const script=document.createElement('script');
+      const timer=setTimeout(function(){ if(!done){ cleanup(); reject(new Error('JSONP timeout')); } },6500);
+      function cleanup(){ done=true; clearTimeout(timer); try{ delete window[cb]; }catch(e){ window[cb]=undefined; } if(script.parentNode) script.parentNode.removeChild(script); }
+      window[cb]=function(data){ if(done) return; cleanup(); resolve(responseRows(data)); };
+      script.onerror=function(){ if(done) return; cleanup(); reject(new Error('JSONP error')); };
+      script.src=addParam(addParam(url,'callback',cb),'t',Date.now());
+      document.body.appendChild(script);
+    });
+  }
+  async function loadRows(force){
+    if(!force && rowsCache) return rowsCache;
+    if(!force){
+      try{ const cached=JSON.parse(localStorage.getItem(CACHE_KEY)||'null'); if(cached && Array.isArray(cached.rows) && Date.now()-cached.time<1000*60*20){ rowsCache=cached.rows; return rowsCache; } }catch(e){}
+    }
+    for(const url of baseUrls()){
+      try{ const rows = await fetchJson(url); if(rows && rows.length){ rowsCache=rows; try{ localStorage.setItem(CACHE_KEY, JSON.stringify({time:Date.now(),rows:rows})); }catch(e){} return rows; } }catch(e){}
+      try{ const rows = await fetchJsonp(url); if(rows && rows.length){ rowsCache=rows; try{ localStorage.setItem(CACHE_KEY, JSON.stringify({time:Date.now(),rows:rows})); }catch(e){} return rows; } }catch(e){}
+    }
+    throw new Error('Aucune donnée Sheet trouvée');
+  }
+  window.refreshFrenchGrammarSheetV23411 = function(){ rowsCache=null; try{ localStorage.removeItem(CACHE_KEY); }catch(e){} return loadRows(true); };
+
+  function rowToQuestion(row){
+    const q = String(readCell(row,['question','Question'],5) || '').trim();
+    const rawOptions = [
+      readCell(row,['A','a'],6), readCell(row,['B','b'],7), readCell(row,['C','c'],8), readCell(row,['D','d'],9)
+    ].map(function(v){ return String(v==null?'':v).trim(); }).filter(Boolean);
+    const rep = String(readCell(row,['reponse','réponse','Reponse','Réponse'],10) || '').trim();
+    if(!q || rawOptions.length < 2 || !rep) return null;
+    let correct = rawOptions.findIndex(function(o){ return norm(o) === norm(rep); });
+    if(correct < 0 && /^[ABCD]$/i.test(rep)) correct = 'ABCD'.indexOf(rep.toUpperCase());
+    if(correct < 0) correct = rawOptions.findIndex(function(o){ return String(o).trim() === rep; });
+    if(correct < 0 || correct >= rawOptions.length) return null;
+    return {
+      q:q,
+      options:rawOptions,
+      correct:correct,
+      mode:String(readCell(row,['mode','Mode'],4)||''),
+      difficulte:String(readCell(row,['difficulte','difficulté','Difficulte','Difficulté'],11)||''),
+      ceinture:String(readCell(row,['ceinture','Ceinture'],0)||''),
+      competence:String(readCell(row,['competence','compétence','Competence','Compétence'],2)||'')
+    };
+  }
+  function matchBelt(row,belt){
+    const ceinture = norm(readCell(row,['ceinture','Ceinture'],0));
+    const comp = norm(readCell(row,['competence','compétence','Competence','Compétence'],2));
+    const text = norm([ceinture,comp,readCell(row,['question','Question'],5),readCell(row,['mode','Mode'],4)].join(' '));
+    if(ceinture === norm(belt.ceinture) || ceinture === norm(belt.id)) return true;
+    return (belt.skills||[]).some(function(s){ return text.indexOf(norm(s)) !== -1; });
+  }
+  async function questionsForBelt(belt){
+    let source = 'banque locale';
+    let questions = [];
+    try{
+      const rows = await loadRows(false);
+      questions = (rows||[]).filter(function(r){ return matchBelt(r,belt); }).map(rowToQuestion).filter(Boolean);
+      if(questions.length) source = 'Google Sheets · onglet grammaire';
+    }catch(e){ console.warn('Français ceintures : Sheet indisponible', e); }
+    if(!questions.length && LOCAL_BANK[belt.id]) questions = LOCAL_BANK[belt.id].slice();
+    return {questions:questions, source:source};
+  }
+
+  function overlay(){
+    let ov = byId('frenchTrainingOverlayV2348');
+    if(ov) return ov;
+    ov = document.createElement('div');
+    ov.id='frenchTrainingOverlayV2348';
+    ov.className='hidden';
+    ov.setAttribute('role','dialog'); ov.setAttribute('aria-modal','true'); ov.setAttribute('aria-label','Français - entraînements');
+    ov.innerHTML='<div class="fr-v2348-popup"><div class="fr-v2348-topbar"><div class="fr-v2348-chip">📖 Français</div><button class="fr-v2348-close" type="button" onclick="closeFrenchTrainingPopupV2348()" aria-label="Fermer la popup Français">×</button></div><div id="frenchPopupInnerV2348"></div></div>';
+    document.body.appendChild(ov);
+    ov.addEventListener('click',function(ev){ if(ev.target===ov) window.closeFrenchTrainingPopupV2348(); });
+    return ov;
+  }
+  function setInner(html){ const inner=byId('frenchPopupInnerV2348'); if(inner) inner.innerHTML=html; }
+  function lockPage(lock){ document.documentElement.style.overflow=lock?'hidden':''; document.body.style.overflow=lock?'hidden':''; }
+  function hideOldFrenchUI(){
+    const panel=byId('v2173ActivitiesPanel'); if(panel){ panel.classList.remove('open'); panel.innerHTML=''; panel.dataset.subject=''; }
+    const quick=byId('quickQuestions'); if(quick){ quick.innerHTML=''; quick.style.display='none'; }
+    document.querySelectorAll('.subject-btn[data-subject="francais"]').forEach(function(b){ b.classList.add('active'); b.setAttribute('aria-expanded','true'); });
+  }
+  function headerHTML(){
+    return '<div class="fr-v2348-header">'
+      + '<div class="fr-v2348-owl">🦉</div>'
+      + '<div class="fr-v2348-title"><h2>📖 Entraînements de grammaire</h2><p>Choisis une ceinture pour t’entraîner.</p><div class="fr-v23411-grammar-note">Les questions viennent de Google Sheets « Maître Hibou - Banque de Questions », onglet « grammaire ».</div></div>'
+      + '</div>';
+  }
+  function rowHTML(belt){
+    const isIdeas = belt.id === 'idees';
+    return '<div class="fr-v23411-row '+(isIdeas?'fr-v23411-ideas-row':'')+'">'
+      + '<div class="fr-v23411-dot" style="background:'+esc(belt.color)+'"></div>'
+      + '<div class="fr-v23411-main"><strong>'+esc(belt.title)+'</strong><span>'+esc(belt.label)+'</span><div class="fr-v23411-mode">'+esc(belt.desc)+'</div></div>'
+      + '<button type="button" class="fr-v23411-train-btn" onclick="startFrenchTrainingV2348(\''+esc(belt.id)+'\')">'+(isIdeas?'✏️ S’entraîner':'📖 S’entraîner — 10 questions')+'</button>'
+      + '</div>';
+  }
+  function renderList(){
+    const cards = GRAMMAR_BELTS.map(rowHTML).join('') + rowHTML(IDEAS_CARD);
+    setInner(headerHTML() + '<div class="fr-v2348-content"><section class="fr-v2348-panel"><h3 class="fr-v23411-section-title">Grammaire</h3><div class="fr-v23411-list">'+cards+'</div></section></div>');
+  }
+  window.renderFrenchTrainingListV2348 = renderList;
+  window.openFrenchTrainingPopupV2348 = function(){
+    hideOldFrenchUI();
+    const ov = overlay();
+    renderList();
+    ov.classList.remove('hidden');
+    lockPage(true);
+  };
+  window.closeFrenchTrainingPopupV2348 = function(){
+    const ov=byId('frenchTrainingOverlayV2348'); if(ov) ov.classList.add('hidden');
+    lockPage(false);
+  };
+
+  window.startFrenchTrainingV2348 = async function(activityId){
+    if(activityId === 'idees') return renderIdea();
+    const belt = GRAMMAR_BELTS.find(function(b){ return b.id === activityId; }) || GRAMMAR_BELTS[0];
+    state = {belt:belt, questions:[], index:0, score:0, answered:false, source:'banque locale'};
+    setInner(headerHTML() + '<div class="fr-v2348-content"><section class="fr-v2348-panel"><button type="button" class="fr-v2348-back" onclick="renderFrenchTrainingListV2348()">← Retour aux entraînements</button><div class="fr-v2348-feedback" style="padding:28px">🦉 Chargement des questions de '+esc(belt.label)+' depuis Google Sheets...</div></section></div>');
+    const loaded = await questionsForBelt(belt);
+    state.questions = shuffle(loaded.questions).slice(0,TRAINING_COUNT);
+    state.source = loaded.source;
+    if(!state.questions.length){
+      setInner(headerHTML() + '<div class="fr-v2348-content"><section class="fr-v2348-panel"><button type="button" class="fr-v2348-back" onclick="renderFrenchTrainingListV2348()">← Retour aux entraînements</button><div class="fr-v2348-feedback" style="padding:24px;color:#7A2222">Je n’ai trouvé aucune question pour <strong>'+esc(belt.label)+'</strong> dans le Sheet.<br>Vérifie les colonnes <strong>ceinture</strong> et <strong>competence</strong>.</div></section></div>');
+      return;
+    }
+    renderQuestion();
+  };
+  function renderQuestion(){
+    const q=state.questions[state.index]; if(!q){ return renderResult(); }
+    const opts=q.options.map(function(opt,i){ return '<button type="button" class="fr-v2348-option" data-index="'+i+'" onclick="answerFrenchTrainingV2348('+i+')">'+esc(opt)+'</button>'; }).join('');
+    const meta = '<div class="fr-v23411-question-meta"><span class="fr-v23411-pill">'+esc(state.belt.label)+'</span><span class="fr-v23411-pill">Source : '+esc(state.source)+'</span>'+(q.mode?'<span class="fr-v23411-pill">Mode : '+esc(q.mode)+'</span>':'')+'</div>';
+    setInner(headerHTML() + '<div class="fr-v2348-content"><section class="fr-v2348-panel">'
+      + '<div class="fr-v2348-training-head"><button type="button" class="fr-v2348-back" onclick="renderFrenchTrainingListV2348()">← Retour aux entraînements</button><div class="fr-v2348-training-title">'+esc(state.belt.title)+'</div><div></div></div>'
+      + meta
+      + '<div class="fr-v2348-progress">Question '+(state.index+1)+' / '+state.questions.length+'</div>'
+      + '<div class="fr-v2348-question">'+esc(q.q)+'</div><div class="fr-v2348-options">'+opts+'</div><div id="frFeedbackV2348" class="fr-v2348-feedback"></div>'
+      + '</section></div>');
+    state.answered=false;
+  }
+  window.answerFrenchTrainingV2348 = function(i){
+    if(state.answered) return;
+    state.answered=true;
+    const q=state.questions[state.index];
+    const buttons=[].slice.call(document.querySelectorAll('#frenchTrainingOverlayV2348 .fr-v2348-option'));
+    buttons.forEach(function(btn){ btn.disabled=true; });
+    const ok = i === q.correct;
+    if(ok) state.score++;
+    buttons.forEach(function(btn,idx){ if(idx===q.correct) btn.classList.add('correct'); if(idx===i && !ok) btn.classList.add('wrong'); });
+    const fb=byId('frFeedbackV2348'); if(fb) fb.innerHTML = ok ? '✅ Bravo !' : '💡 La bonne réponse était : <strong>'+esc(q.options[q.correct])+'</strong>';
+    setTimeout(function(){ state.index++; if(state.index >= state.questions.length) renderResult(); else renderQuestion(); }, ok ? 720 : 1250);
+  };
+  function renderResult(){
+    const total=state.questions.length || TRAINING_COUNT;
+    const pct=Math.round((state.score/total)*100);
+    setInner(headerHTML() + '<div class="fr-v2348-content"><section class="fr-v2348-panel"><div class="fr-v2348-result"><h3>Bravo, entraînement terminé !</h3><div class="fr-v2348-score-grid"><div class="fr-v2348-score-card">Score<b>'+state.score+' / '+total+'</b></div><div class="fr-v2348-score-card">Réussite<b>'+pct+'%</b></div></div><div class="fr-v2348-feedback">'+esc(state.belt.label)+' · Source : '+esc(state.source)+'</div><div class="fr-v2348-actions"><button type="button" class="fr-v2348-action" onclick="startFrenchTrainingV2348(\''+esc(state.belt.id)+'\')">🔁 Refaire l’entraînement</button><button type="button" class="fr-v2348-action secondary" onclick="renderFrenchTrainingListV2348()">← Retour aux entraînements</button><button type="button" class="fr-v2348-action secondary" onclick="closeFrenchTrainingPopupV2348()">Fermer</button></div></div></section></div>');
+  }
+  function renderIdea(){
+    const item = shuffle(LOCAL_IDEAS)[0];
+    setInner(headerHTML() + '<div class="fr-v2348-content"><section class="fr-v2348-panel"><div class="fr-v2348-training-head"><button type="button" class="fr-v2348-back" onclick="renderFrenchTrainingListV2348()">← Retour aux entraînements</button><div class="fr-v2348-training-title">✏️ Idées pour écrire</div><div></div></div><div class="fr-v2348-idea-box"><div class="fr-v2348-progress">Idée d’écriture</div><div class="fr-v2348-idea-card">'+esc(item.prompt)+'</div><div class="fr-v2348-example"><strong>Pour t’aider :</strong><br>'+esc(item.example)+'</div><textarea class="fr-v2348-textarea" placeholder="Écris ici ta phrase ou ton début d’histoire..."></textarea><div class="fr-v2348-actions"><button type="button" class="fr-v2348-action" onclick="startFrenchTrainingV2348(\'idees\')">🎲 Nouvelle idée</button><button type="button" class="fr-v2348-action secondary" onclick="renderFrenchTrainingListV2348()">← Retour aux entraînements</button></div></div></section></div>');
+  }
+
+  function interceptFrenchClickV23411(ev){
+    const target = ev.target && ev.target.closest && ev.target.closest('.subject-btn[data-subject="francais"], button[data-subject="francais"]');
+    if(!target) return;
+    if(target.closest && target.closest('#frenchTrainingOverlayV2348')) return;
+    ev.preventDefault(); ev.stopPropagation(); if(ev.stopImmediatePropagation) ev.stopImmediatePropagation();
+    window.openFrenchTrainingPopupV2348();
+  }
+  document.addEventListener('click', interceptFrenchClickV23411, true);
+  const previousSelectSubjectV23411 = window.selectSubject;
+  if(typeof previousSelectSubjectV23411 === 'function'){
+    window.selectSubject = function(btn,subject){ if(norm(subject)==='francais'){ window.openFrenchTrainingPopupV2348(); return false; } return previousSelectSubjectV23411.apply(this,arguments); };
+  }
+})();
+</script>
+
+
+
+<!-- PATCH V23.4.12 - Français : sections Grammaire + Production d'écrits -->
+<style id="patch-v23412-francais-sections-css">
+#frenchTrainingOverlayV2348 .fr-v23412-scroll{
+  flex:1 1 auto;
+  min-height:0;
+  overflow-y:auto;
+  overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior:contain;
+  touch-action:pan-y;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  padding:2px 4px 18px;
+}
+#frenchTrainingOverlayV2348 .fr-v23412-block{
+  flex:0 0 auto;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+#frenchTrainingOverlayV2348 .fr-v23412-writing-title{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:14px;
+  margin:8px 0 6px 0;
+  color:#7A5C00;
+  font-family:'Baloo 2','Nunito',sans-serif;
+  font-size:28px;
+  font-weight:1000;
+}
+#frenchTrainingOverlayV2348 .fr-v23412-writing-title:before,
+#frenchTrainingOverlayV2348 .fr-v23412-writing-title:after{
+  content:'';
+  height:2px;
+  flex:1;
+  background:#FFEFA3;
+}
+#frenchTrainingOverlayV2348 .fr-v23412-writing-note{
+  margin:-2px 0 6px 0;
+  text-align:center;
+  color:#7A5C00;
+  font-size:13px;
+  font-weight:900;
+}
+#frenchTrainingOverlayV2348 .fr-v23412-production-row{
+  border-color:#FFD93D!important;
+  background:linear-gradient(135deg,#FFFCEB 0%,#FFFFFF 100%)!important;
+}
+#frenchTrainingOverlayV2348 .fr-v23412-production-row .fr-v23411-train-btn{
+  border-color:#FFD93D;
+  background:linear-gradient(135deg,#FFF8C7 0%,#FFFCEB 100%);
+  color:#7A5C00;
+}
+@media (max-width:760px){
+  #frenchTrainingOverlayV2348 .fr-v23412-writing-title{font-size:23px;}
+}
+</style>
+<script id="patch-v23412-francais-sections-js">
+(function(){
+  if(window.__maitreHibouFrancaisSectionsV23412) return;
+  window.__maitreHibouFrancaisSectionsV23412 = true;
+  try{ document.title = '🦉 V23.4.12 - Français sections'; }catch(e){}
+
+  const GRAMMAR_BELTS = [
+    {id:'blanche', title:'Phrase affirmative / négative', label:'Ceinture blanche', desc:'Reconnaître et transformer les phrases.', color:'radial-gradient(circle at 35% 25%,#FFFFFF,#EDE7FF 68%,#C8B8F2)'},
+    {id:'jaune', title:'Le verbe', label:'Ceinture jaune', desc:'Trouver le verbe conjugué.', color:'radial-gradient(circle at 35% 25%,#FFF7B0,#FFD93D 62%,#D9A900)'},
+    {id:'orange', title:'Le sujet', label:'Ceinture orange', desc:'Identifier le sujet du verbe.', color:'radial-gradient(circle at 35% 25%,#FFD9BF,#FF8A5B 62%,#E75F2B)'},
+    {id:'verte', title:'Le nom commun', label:'Ceinture verte', desc:'Reconnaître les noms communs.', color:'radial-gradient(circle at 35% 25%,#BDF6C8,#4FD46C 62%,#229B43)'},
+    {id:'bleue', title:'Le déterminant', label:'Ceinture bleue', desc:'Associer et repérer les déterminants.', color:'radial-gradient(circle at 35% 25%,#CDEAFF,#5AA9FF 62%,#2169CF)'},
+    {id:'marron', title:'L’infinitif', label:'Ceinture marron', desc:'Retrouver l’infinitif d’un verbe.', color:'radial-gradient(circle at 35% 25%,#F0D1A7,#C08143 62%,#8B5526)'},
+    {id:'noire', title:'L’adjectif', label:'Ceinture noire', desc:'Reconnaître les adjectifs.', color:'radial-gradient(circle at 35% 25%,#777,#222 66%,#050505)'},
+    {id:'rouge', title:'Le groupe nominal', label:'Ceinture rouge', desc:'Repérer et enrichir le groupe nominal.', color:'radial-gradient(circle at 35% 25%,#FF9FA8,#E52837 64%,#A90F1D)'}
+  ];
+  const IDEAS_CARD = {id:'idees', title:'Idées pour écrire', label:'Entraînement d’écriture', desc:'Tirer une idée et écrire une phrase ou un début d’histoire.', color:'radial-gradient(circle at 35% 25%,#FFF6A8,#FFD93D 62%,#E0A900)'};
+
+  function byId(id){ return document.getElementById(id); }
+  function esc(v){ return String(v==null?'':v).replace(/[&<>"']/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]; }); }
+  function setInner(html){ const inner=byId('frenchPopupInnerV2348'); if(inner) inner.innerHTML=html; }
+  function headerHTML(){
+    return '<div class="fr-v2348-header">'
+      + '<div class="fr-v2348-owl">🦉</div>'
+      + '<div class="fr-v2348-title"><h2>📖 Entraînements de français</h2><p>Choisis une activité pour t’entraîner.</p><div class="fr-v23411-grammar-note">Grammaire : questions reliées au Google Sheet « Maître Hibou - Banque de Questions », onglet « grammaire ».</div></div>'
+      + '</div>';
+  }
+  function rowHTML(belt, extraClass){
+    return '<div class="fr-v23411-row '+(extraClass||'')+'">'
+      + '<div class="fr-v23411-dot" style="background:'+esc(belt.color)+'"></div>'
+      + '<div class="fr-v23411-main"><strong>'+esc(belt.title)+'</strong><span>'+esc(belt.label)+'</span><div class="fr-v23411-mode">'+esc(belt.desc)+'</div></div>'
+      + '<button type="button" class="fr-v23411-train-btn" onclick="startFrenchTrainingV2348(\''+esc(belt.id)+'\')">'+(belt.id==='idees'?'✍️ S’entraîner':'📖 S’entraîner — 10 questions')+'</button>'
+      + '</div>';
+  }
+  function renderListV23412(){
+    const grammarRows = GRAMMAR_BELTS.map(function(b){ return rowHTML(b,''); }).join('');
+    const writingRow = rowHTML(IDEAS_CARD,'fr-v23412-production-row');
+    setInner(headerHTML()
+      + '<div class="fr-v2348-content"><section class="fr-v2348-panel">'
+      + '<div class="fr-v23412-scroll">'
+      + '<div class="fr-v23412-block"><h3 class="fr-v23411-section-title">📘 Grammaire</h3><div class="fr-v23411-list" style="overflow:visible;display:flex;flex-direction:column;gap:8px;padding-bottom:4px">'+grammarRows+'</div></div>'
+      + '<div class="fr-v23412-block"><h3 class="fr-v23412-writing-title">✍️ Production d’écrits</h3><div class="fr-v23412-writing-note">Un entraînement pour trouver des idées et écrire plus facilement.</div><div class="fr-v23411-list" style="overflow:visible;display:flex;flex-direction:column;gap:8px;padding-bottom:4px">'+writingRow+'</div></div>'
+      + '</div></section></div>');
+  }
+  window.renderFrenchTrainingListV2348 = renderListV23412;
+
+  const previousOpen = window.openFrenchTrainingPopupV2348;
+  window.openFrenchTrainingPopupV2348 = function(){
+    if(typeof previousOpen === 'function') previousOpen.apply(this, arguments);
+    try{ renderListV23412(); }catch(e){ console.warn('V23.4.12 Français sections : affichage impossible', e); }
+  };
 })();
 </script>
 

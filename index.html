@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 V23.4.16 - Globe popup fixée</title>
+<title>🦉 V23.4.19 - Questions Sheet corrigées</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -21354,7 +21354,7 @@ body.v21-final .quick-btn{
           <div class="v21-profile-head">
             <div class="v21-student">
               <div class="v21-avatar" aria-hidden="true">👦</div>
-              <h3>Ton profil</h3>
+              <h3>Mon profil / vie de classe</h3>
             </div>
             <div class="v21-level">CE2</div>
           </div>
@@ -27588,6 +27588,1650 @@ body.v23-shortcuts-open{
   setTimeout(function(){ forcePopupLayout(); bindGlobeStrong(); }, 900);
   setTimeout(function(){ forcePopupLayout(); bindGlobeStrong(); }, 1800);
 })();
+</script>
+
+
+<!-- PATCH V23.4.17 - Mon profil / vie de classe : zone profil cliquable -->
+<style id="patch-v23417-profile-life-css">
+#studentProfileLifeOverlayV23417{
+  position:fixed;
+  inset:0;
+  z-index:410000;
+  background:rgba(8,26,61,.66);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+}
+#studentProfileLifeOverlayV23417.hidden{display:none!important;}
+.profile-life-v23417-popup{
+  width:min(1080px,96vw);
+  max-height:92vh;
+  overflow:auto;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior:contain;
+  background:linear-gradient(135deg,#FFFFFF 0%,#F8F7FF 100%);
+  border:4px solid #D8D4FF;
+  border-radius:30px;
+  box-shadow:0 26px 80px rgba(3,12,38,.35);
+  color:var(--text,#2D2B55);
+  font-family:'Nunito',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+}
+.profile-life-v23417-topbar{
+  position:sticky;
+  top:0;
+  z-index:2;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:16px 18px 8px;
+  background:linear-gradient(135deg,#FFFFFF 0%,#F8F7FF 100%);
+}
+.profile-life-v23417-chip{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 13px;
+  border-radius:999px;
+  background:#EAE8FF;
+  border:2px solid #D8D4FF;
+  color:#5750B9;
+  font-weight:1000;
+}
+.profile-life-v23417-close{
+  width:48px;
+  height:48px;
+  border:0;
+  border-radius:50%;
+  background:#FFEAEA;
+  color:#A02727;
+  font-size:31px;
+  line-height:1;
+  font-weight:1000;
+  cursor:pointer;
+  box-shadow:0 6px 16px rgba(255,107,107,.20);
+}
+.profile-life-v23417-close:hover{transform:scale(1.04);}
+.profile-life-v23417-header{
+  display:grid;
+  grid-template-columns:auto 1fr;
+  gap:16px;
+  align-items:center;
+  padding:2px 24px 18px;
+  border-bottom:2px solid #EAE8FF;
+}
+.profile-life-v23417-owl{
+  width:92px;
+  height:92px;
+  border-radius:26px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:62px;
+  background:linear-gradient(135deg,#FFF9E6 0%,#EAE8FF 100%);
+  border:3px solid #FFFFFF;
+  box-shadow:0 8px 22px rgba(108,99,255,.14);
+}
+.profile-life-v23417-title h2{
+  margin:0;
+  font-family:'Baloo 2','Nunito',sans-serif;
+  font-size:clamp(28px,4vw,44px);
+  line-height:1;
+  color:#2D2B55;
+  font-weight:1000;
+}
+.profile-life-v23417-title p{
+  margin:6px 0 0;
+  color:#6C63FF;
+  font-size:17px;
+  line-height:1.25;
+  font-weight:900;
+}
+.profile-life-v23417-body{
+  padding:18px 24px 24px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+}
+.profile-life-v23417-card{
+  background:#FFFFFF;
+  border:2px solid #ECEBF3;
+  border-radius:22px;
+  padding:15px;
+  box-shadow:0 6px 18px rgba(45,43,85,.07);
+}
+.profile-life-v23417-card.wide{grid-column:1 / -1;}
+.profile-life-v23417-card h3{
+  margin:0 0 10px;
+  font-family:'Baloo 2','Nunito',sans-serif;
+  color:#6C63FF;
+  font-size:23px;
+  line-height:1.1;
+  font-weight:1000;
+}
+.profile-life-v23417-big{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+}
+.profile-life-v23417-name{
+  font-family:'Baloo 2','Nunito',sans-serif;
+  font-size:34px;
+  line-height:1;
+  font-weight:1000;
+  color:#2D2B55;
+}
+.profile-life-v23417-pill{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  border-radius:999px;
+  background:#FFFCEB;
+  border:2px solid #FFD93D;
+  color:#7A5C00;
+  padding:7px 10px;
+  font-weight:1000;
+}
+.profile-life-v23417-progress-row{margin:12px 0;}
+.profile-life-v23417-progress-head{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  font-weight:1000;
+  margin-bottom:6px;
+  color:#2D2B55;
+}
+.profile-life-v23417-bar{
+  height:18px;
+  border-radius:999px;
+  overflow:hidden;
+  background:#ECEBF3;
+  border:2px solid #E1DFF1;
+}
+.profile-life-v23417-fill{
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,#6C63FF,#9B95FF);
+  border-radius:999px;
+  transition:width .35s ease;
+}
+.profile-life-v23417-fill.maths{background:linear-gradient(90deg,#1683F7,#4DB0FF);}
+.profile-life-v23417-fill.francais{background:linear-gradient(90deg,#FF3B57,#FF7A8C);}
+.profile-life-v23417-objectives{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+.profile-life-v23417-objective{
+  border-radius:18px;
+  background:#F8F7FF;
+  border:2px solid #EAE8FF;
+  padding:12px;
+  font-weight:900;
+  line-height:1.35;
+}
+.profile-life-v23417-objective b{display:block;margin-bottom:4px;color:#2D2B55;}
+.profile-life-v23417-list{
+  display:grid;
+  gap:8px;
+}
+.profile-life-v23417-item{
+  display:grid;
+  grid-template-columns:auto 1fr;
+  gap:9px;
+  align-items:start;
+  background:#F8F7FF;
+  border:2px solid #ECEBF3;
+  border-radius:16px;
+  padding:10px;
+  font-weight:900;
+  line-height:1.32;
+}
+.profile-life-v23417-item small{
+  display:block;
+  margin-top:2px;
+  color:#8B89A8;
+  font-weight:900;
+}
+.profile-life-v23417-empty{
+  background:#F8F7FF;
+  border:2px dashed #D8D4FF;
+  border-radius:16px;
+  padding:12px;
+  color:#8B89A8;
+  font-weight:900;
+  line-height:1.35;
+}
+.profile-life-v23417-note{
+  margin-top:10px;
+  color:#8B89A8;
+  font-size:12px;
+  font-weight:900;
+  line-height:1.35;
+}
+body.v21-final .v21-profile-card.profile-life-v23417-clickable{
+  cursor:pointer!important;
+  position:relative!important;
+  transition:transform .16s ease, box-shadow .16s ease, border-color .16s ease!important;
+}
+body.v21-final .v21-profile-card.profile-life-v23417-clickable:hover{
+  transform:translateY(-2px)!important;
+  border-color:#FFD93D!important;
+  box-shadow:0 12px 28px rgba(108,99,255,.18)!important;
+}
+body.v21-final .v21-profile-card.profile-life-v23417-clickable:focus-visible{
+  outline:4px solid #FFD93D!important;
+  outline-offset:4px!important;
+}
+body.v21-final .v21-profile-card .profile-life-v23417-open-hint{
+  margin-top:5px;
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  padding:4px 8px;
+  border-radius:999px;
+  background:#FFFCEB;
+  border:1px solid #FFD93D;
+  color:#7A5C00;
+  font-size:11px;
+  font-weight:1000;
+}
+@media(max-width:860px){
+  .profile-life-v23417-body{grid-template-columns:1fr;padding:14px;}
+  .profile-life-v23417-card.wide{grid-column:auto;}
+  .profile-life-v23417-header{grid-template-columns:1fr;text-align:center;padding:2px 16px 14px;}
+  .profile-life-v23417-owl{margin:0 auto;width:78px;height:78px;font-size:52px;}
+  .profile-life-v23417-objectives{grid-template-columns:1fr;}
+}
+@media(max-height:650px){
+  #studentProfileLifeOverlayV23417{align-items:flex-start;padding:10px;}
+  .profile-life-v23417-popup{max-height:96vh;}
+  .profile-life-v23417-header{padding-bottom:10px;}
+  .profile-life-v23417-body{gap:10px;}
+}
+</style>
+
+<script id="patch-v23417-profile-life-js">
+(function(){
+  if(window.__maitreHibouProfileLifeV23417) return;
+  window.__maitreHibouProfileLifeV23417 = true;
+  try{ document.title = '🦉 V23.4.17 - Mon profil / vie de classe'; }catch(e){}
+
+  var STUDENTS_URL = 'https://script.google.com/macros/s/AKfycbxz1vYS24sv-c3XVja12geWEXIQl6bQyBoQKBx5kg_fwQaj80_Oc7Y34yeBSRN4lF1f/exec';
+  var QUESTIONS_URL = 'https://script.google.com/macros/s/AKfycbwGcErZ0he06Dg_bpPDaHtPHa6fAcDQ-31tB7Rlr9w2JZcNaQnP9YIABJYf-CKpFfpF/exec';
+  var MATH_TOTAL = 14;
+  var FRENCH_TOTAL = 8;
+
+  var MATH_BELTS = [
+    {id:'blanche', label:'Ceinture blanche — Petits nombres'},
+    {id:'jaune', label:'Ceinture jaune — Dizaines'},
+    {id:'orange', label:'Ceinture orange — Calculs plus grands'},
+    {id:'vert_clair', label:'Ceinture vert clair — Additions et soustractions'},
+    {id:'vert_fonce', label:'Ceinture vert foncé — Compléments'},
+    {id:'bleu_clair', label:'Ceinture bleu clair — Ajouter ou retirer 9'},
+    {id:'bleu_fonce', label:'Ceinture bleu foncé — Ajouter ou retirer 11'},
+    {id:'rose', label:'Ceinture rose — Centaines'},
+    {id:'beige', label:'Ceinture beige — Complément à la centaine'},
+    {id:'violet', label:'Ceinture violette — Tables 1, 2 et 10'},
+    {id:'marron', label:'Ceinture marron — Tables 3, 4 et 5'},
+    {id:'rouge', label:'Ceinture rouge — Tables 6 et 7'},
+    {id:'gris', label:'Ceinture grise — Tables 8 et 9'},
+    {id:'noir', label:'Ceinture noire — Synthèse'}
+  ];
+  var FRENCH_BELTS = [
+    {id:'blanche', label:'Phrase affirmative / négative'},
+    {id:'jaune', label:'Trouver le verbe'},
+    {id:'orange', label:'Trouver le sujet'},
+    {id:'verte', label:'Reconnaître un nom commun'},
+    {id:'bleue', label:'Reconnaître un déterminant'},
+    {id:'marron', label:'Trouver l’infinitif'},
+    {id:'noire', label:'Reconnaître l’adjectif'},
+    {id:'rouge', label:'Reconnaître le groupe nominal'}
+  ];
+
+  function byId(id){ return document.getElementById(id); }
+  function esc(v){
+    return String(v == null ? '' : v).replace(/[&<>"']/g,function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c];
+    });
+  }
+  function txt(v){ return String(v == null ? '' : v).trim(); }
+  function norm(v){
+    return txt(v).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[’']/g,'').replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'');
+  }
+  function currentName(){
+    try{
+      if(txt(window.prenomActuel)) return txt(window.prenomActuel);
+      var current = JSON.parse(localStorage.getItem('hibou_current_student') || '{}');
+      if(current && txt(current.prenom)) return txt(current.prenom);
+    }catch(e){}
+    try{
+      return txt(localStorage.getItem('hibou_prenom') || localStorage.getItem('hibou_last_prenom') || localStorage.getItem('maitreHibouCurrentStudent') || localStorage.getItem('elevePrenom') || 'élève');
+    }catch(e){ return 'élève'; }
+  }
+  function studentKey(name){ return norm(name || currentName() || 'eleve') || 'eleve'; }
+  function cleanNameForV168(name){
+    return String(name || 'eleve').trim().toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+      .replace(/[^a-z0-9_-]/g,'_') || 'eleve';
+  }
+  function readJSON(key, fallback){
+    try{
+      var value = JSON.parse(localStorage.getItem(key) || 'null');
+      return value == null ? fallback : value;
+    }catch(e){ return fallback; }
+  }
+  function v168Progress(name){
+    var data = readJSON('hibou_v168_progress_' + cleanNameForV168(name), {});
+    if(!Array.isArray(data.trainings)) data.trainings = [];
+    if(!Array.isArray(data.belts)) data.belts = [];
+    return data;
+  }
+  function skillDomain(skillId){
+    var id = norm(skillId);
+    var french = ['nom_commun','verbe','genre_nombre','phrase_ecrite','phrase_negative','sujet','determinant','infinitif','adjectif','groupe_nominal'];
+    var maths = ['calc_mental','tables','maths','calcul','multiplication','addition','soustraction'];
+    if(french.some(function(x){ return id.indexOf(x) >= 0; })) return 'francais';
+    if(maths.some(function(x){ return id.indexOf(x) >= 0; })) return 'maths';
+    return '';
+  }
+  function domainOfBelt(b){
+    var d = norm(b && (b.domain || b.domaine || b.matiere || b.subject));
+    var text = norm([b && b.title, b && b.competence, b && b.label, b && b.skillId].join(' '));
+    if(d.indexOf('math') >= 0 || skillDomain(text) === 'maths') return 'maths';
+    if(d.indexOf('fran') >= 0 || skillDomain(text) === 'francais') return 'francais';
+    return '';
+  }
+  function validatedCounts(name){
+    var data = v168Progress(name);
+    var maths = new Set();
+    var french = new Set();
+    (data.belts || []).forEach(function(b){
+      if(!b || !b.valid) return;
+      var key = norm(b.skillId || b.title || b.competence || b.label || b.date);
+      var d = domainOfBelt(b);
+      if(d === 'maths') maths.add(key || ('maths_' + maths.size));
+      if(d === 'francais') french.add(key || ('francais_' + french.size));
+    });
+    return {maths:maths.size, francais:french.size};
+  }
+  function mathRecords(name){
+    var key = studentKey(name);
+    var prefix = 'hibou_v2343_maths_training_record_' + key + '_';
+    var out = [];
+    try{
+      for(var i=0;i<localStorage.length;i++){
+        var k = localStorage.key(i);
+        if(k && k.indexOf(prefix) === 0){
+          var beltId = k.slice(prefix.length);
+          var data = readJSON(k, null);
+          if(data){
+            var belt = MATH_BELTS.find(function(b){ return norm(b.id) === norm(beltId); }) || {id:beltId, label:'Ceinture ' + beltId.replace(/_/g,' ')};
+            out.push({
+              id:belt.id,
+              label:belt.label,
+              score:Number(data.score || 0),
+              total:Number(data.total || 10),
+              time:Number(data.time || 0),
+              date:data.date || ''
+            });
+          }
+        }
+      }
+    }catch(e){}
+    out.sort(function(a,b){
+      return (b.score-a.score) || (a.time-b.time) || a.label.localeCompare(b.label,'fr');
+    });
+    return out;
+  }
+  function fmtTime(ms){
+    ms = Math.max(0, Number(ms || 0));
+    if(!ms) return '—';
+    var total = Math.floor(ms / 1000);
+    var m = Math.floor(total / 60);
+    var s = total % 60;
+    return String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+  }
+  function trainingProgressFromRecords(records){
+    var set = new Set();
+    records.forEach(function(r){ if(r && r.id) set.add(norm(r.id)); });
+    return set.size;
+  }
+  function progressData(name){
+    var val = validatedCounts(name);
+    var recs = mathRecords(name);
+    var maths = Math.min(MATH_TOTAL, Math.max(val.maths, trainingProgressFromRecords(recs)));
+    var francais = Math.min(FRENCH_TOTAL, val.francais);
+    return {maths:maths, francais:francais, records:recs};
+  }
+  function nextMathObjective(count){
+    return (MATH_BELTS[Math.min(count, MATH_BELTS.length-1)] || MATH_BELTS[0]).label;
+  }
+  function nextFrenchObjective(count){
+    return (FRENCH_BELTS[Math.min(count, FRENCH_BELTS.length-1)] || FRENCH_BELTS[0]).label;
+  }
+  function percent(v,total){ return Math.max(0, Math.min(100, Math.round((Number(v||0)/Number(total||1))*100))); }
+
+  function field(row,names){
+    if(Array.isArray(row)){
+      var arrayMap = {'Date':0,'Heure':1,'Prénom':2,'Prenom':2,'prenom':2,'Matière':3,'Matiere':3,'matiere':3,'Question originale':4,'questionOriginale':4,'Question corrigée':5,'Question corrigee':5,'questionCorrigee':5,'Réponse IA':6,'reponseIA':6,'Visibilité':7,'visibilite':7,'Statut':8,'statut':8,'Points Curiosité':9,'pointsCuriosite':9};
+      for(var a=0;a<names.length;a++){
+        var idx = arrayMap[names[a]];
+        if(idx != null && row[idx] != null && txt(row[idx]) !== '') return row[idx];
+      }
+      return '';
+    }
+    for(var i=0;i<names.length;i++){
+      var k = names[i];
+      if(row && row[k] != null && txt(row[k]) !== '') return row[k];
+    }
+    return '';
+  }
+  function rowsFrom(data){
+    if(Array.isArray(data)) return data;
+    if(data && Array.isArray(data.questions)) return data.questions;
+    if(data && Array.isArray(data.rows)) return data.rows;
+    if(data && Array.isArray(data.data)) return data.data;
+    if(data && Array.isArray(data.eleves)) return data.eleves;
+    if(data && Array.isArray(data['élèves'])) return data['élèves'];
+    if(data && Array.isArray(data.students)) return data.students;
+    return [];
+  }
+  function localQuestions(name){
+    var n = norm(name);
+    var logs = readJSON('hibou_question_journal', []);
+    if(!Array.isArray(logs)) logs = [];
+    return logs.filter(function(q){ return norm(q.student || q.prenom || q.eleve || q['Prénom']) === n; })
+      .map(function(q){
+        return {
+          question:txt(q.questionCorrigee || q.correctedQuestion || q['Question corrigée'] || q.questionOriginale || q.question || q['Question originale']),
+          date:txt(q.dateOnly || q.date || q.Date || '')
+        };
+      })
+      .filter(function(q){ return q.question; });
+  }
+  function mapRemoteQuestion(row){
+    return {
+      prenom:txt(field(row,['Prénom','Prenom','prenom','eleve','Élève','Eleve'])),
+      question:txt(field(row,['Question corrigée','Question corrigee','questionCorrigee','question_corrigee','Question corrigée ']) || field(row,['Question originale','questionOriginale','question_originale','question','Question'])),
+      date:txt(field(row,['Date','date'])),
+      points:Number(field(row,['Points Curiosité','Points curiosité','pointsCuriosite']) || 1)
+    };
+  }
+  function fetchQuestionsSheet(){
+    return new Promise(function(resolve,reject){
+      var done = false;
+      var cb = '__profileLifeQuestionsV23417_' + Date.now() + '_' + Math.floor(Math.random()*100000);
+      var script = null;
+      var timer = null;
+      function cleanup(){
+        if(timer) clearTimeout(timer);
+        try{ delete window[cb]; }catch(e){ window[cb] = undefined; }
+        if(script && script.parentNode) script.parentNode.removeChild(script);
+      }
+      window[cb] = function(data){
+        if(done) return;
+        done = true;
+        cleanup();
+        resolve(rowsFrom(data).map(mapRemoteQuestion).filter(function(q){ return q.question; }));
+      };
+      script = document.createElement('script');
+      script.src = QUESTIONS_URL + (QUESTIONS_URL.indexOf('?') === -1 ? '?' : '&') + 'callback=' + cb + '&cache=' + Date.now();
+      script.async = true;
+      script.onerror = function(){ if(done) return; done = true; cleanup(); reject(new Error('JSONP questions impossible')); };
+      timer = setTimeout(function(){ if(done) return; done = true; cleanup(); reject(new Error('timeout questions')); }, 9000);
+      document.head.appendChild(script);
+    });
+  }
+  function renderQuestionsLoading(){
+    var list = byId('profileLifeQuestionsListV23417');
+    var count = byId('profileLifeCuriosityCountV23417');
+    if(list) list.innerHTML = '<div class="profile-life-v23417-empty">Chargement des questions corrigées…</div>';
+    if(count) count.textContent = '…';
+  }
+  function renderQuestionsList(questions){
+    var list = byId('profileLifeQuestionsListV23417');
+    var count = byId('profileLifeCuriosityCountV23417');
+    var unique = [];
+    var seen = new Set();
+    (questions || []).forEach(function(q){
+      var key = norm(q.question);
+      if(q.question && !seen.has(key)){ seen.add(key); unique.push(q); }
+    });
+    if(count) count.textContent = String(unique.length);
+    if(!list) return;
+    if(!unique.length){
+      list.innerHTML = '<div class="profile-life-v23417-empty">Tu n’as pas encore de question corrigée dans ton aide-mémoire.</div>';
+      return;
+    }
+    list.innerHTML = unique.slice(0,5).map(function(q){
+      return '<div class="profile-life-v23417-item"><span>💬</span><div>'+esc(q.question)+(q.date ? '<small>Question posée le '+esc(q.date)+'</small>' : '')+'</div></div>';
+    }).join('');
+  }
+  async function loadAndRenderQuestions(){
+    var name = currentName();
+    renderQuestionsLoading();
+    var local = localQuestions(name);
+    renderQuestionsList(local);
+    try{
+      var remote = await fetchQuestionsSheet();
+      var filtered = remote.filter(function(q){ return norm(q.prenom) === norm(name); });
+      renderQuestionsList(filtered.concat(local));
+    }catch(e){
+      renderQuestionsList(local);
+      var note = byId('profileLifeQuestionsNoteV23417');
+      if(note) note.textContent = 'Source locale affichée. Le Sheet des questions n’a pas répondu pour le moment.';
+    }
+  }
+
+  function cleanStudentRow(row){
+    var prenom = txt(field(row,['prenom','prénom','Prenom','Prénom','eleve','Élève','name']));
+    return {
+      prenom:prenom,
+      naissance:txt(field(row,['naissance','Naissance','date_naissance','Date naissance','Date de naissance','anniversaire','Anniversaire'])),
+      actif:field(row,['actif','Actif','active','Active'])
+    };
+  }
+  function isActive(v){
+    var s = norm(v);
+    return !s || s === 'true' || s === 'vrai' || s === 'oui' || s === 'yes' || s === '1' || s === 'actif' || s === 'x';
+  }
+  function parseBirthday(value){
+    var s = txt(value);
+    if(!s) return null;
+    var d = null, m = null, y = null;
+    var match = s.match(/^(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2,4})$/);
+    if(match){
+      d = Number(match[1]); m = Number(match[2]); y = Number(match[3]);
+      if(y < 100) y += 2000;
+    }else{
+      match = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+      if(match){ y = Number(match[1]); m = Number(match[2]); d = Number(match[3]); }
+    }
+    if(!d || !m || !y || m < 1 || m > 12 || d < 1 || d > 31) return null;
+    return {day:d, month:m, year:y};
+  }
+  function monthName(m){
+    return ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'][m-1] || '';
+  }
+  function upcomingBirthdayInfo(student){
+    var b = parseBirthday(student.naissance);
+    if(!b) return null;
+    var today = new Date();
+    var y = today.getFullYear();
+    var next = new Date(y, b.month-1, b.day);
+    next.setHours(12,0,0,0);
+    var base = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    if(next < base) next = new Date(y+1, b.month-1, b.day, 12, 0, 0);
+    var age = next.getFullYear() - b.year;
+    return {
+      prenom:student.prenom,
+      dateLabel:b.day + ' ' + monthName(b.month),
+      age:age,
+      days:Math.round((next - base) / 86400000)
+    };
+  }
+  async function fetchStudents(){
+    var response = await fetch(STUDENTS_URL + '?t=' + Date.now(), {cache:'no-store'});
+    if(!response.ok) throw new Error('HTTP ' + response.status);
+    var data = await response.json();
+    return rowsFrom(data).map(cleanStudentRow).filter(function(s){ return s.prenom && isActive(s.actif) && !['test','dev'].includes(norm(s.prenom)); });
+  }
+  function renderBirthdaysLoading(){
+    var el = byId('profileLifeBirthdaysListV23417');
+    if(el) el.innerHTML = '<div class="profile-life-v23417-empty">Chargement des anniversaires à venir…</div>';
+  }
+  function renderBirthdays(list){
+    var el = byId('profileLifeBirthdaysListV23417');
+    if(!el) return;
+    if(!list || !list.length){
+      el.innerHTML = '<div class="profile-life-v23417-empty">Aucun anniversaire à afficher pour le moment.</div>';
+      return;
+    }
+    el.innerHTML = list.slice(0,5).map(function(b){
+      var soon = b.days === 0 ? 'aujourd’hui' : (b.days === 1 ? 'demain' : 'dans ' + b.days + ' jours');
+      return '<div class="profile-life-v23417-item"><span>🎂</span><div><b>'+esc(b.prenom)+'</b> — '+esc(b.dateLabel)+' — '+esc(b.age)+' ans<small>'+esc(soon)+'</small></div></div>';
+    }).join('');
+  }
+  async function loadAndRenderBirthdays(){
+    renderBirthdaysLoading();
+    try{
+      var students = await fetchStudents();
+      var birthdays = students.map(upcomingBirthdayInfo).filter(Boolean).sort(function(a,b){ return a.days - b.days || a.prenom.localeCompare(b.prenom,'fr'); });
+      renderBirthdays(birthdays);
+    }catch(e){
+      renderBirthdays([]);
+      var note = byId('profileLifeBirthdaysNoteV23417');
+      if(note) note.textContent = 'Les anniversaires se chargeront quand le Sheet Élèves répondra.';
+    }
+  }
+
+  function overlay(){
+    var ov = byId('studentProfileLifeOverlayV23417');
+    if(ov) return ov;
+    ov = document.createElement('div');
+    ov.id = 'studentProfileLifeOverlayV23417';
+    ov.className = 'hidden';
+    ov.setAttribute('role','dialog');
+    ov.setAttribute('aria-modal','true');
+    ov.setAttribute('aria-label','Mon profil / vie de classe');
+    ov.innerHTML =
+      '<div class="profile-life-v23417-popup">'
+      + '<div class="profile-life-v23417-topbar">'
+      + '<div class="profile-life-v23417-chip">👤 Mon profil / vie de classe</div>'
+      + '<button class="profile-life-v23417-close" type="button" onclick="closeStudentProfileLifeV23417()" aria-label="Fermer la popup Mon profil">×</button>'
+      + '</div>'
+      + '<div id="studentProfileLifeInnerV23417"></div>'
+      + '</div>';
+    document.body.appendChild(ov);
+    ov.addEventListener('click', function(ev){
+      if(ev.target === ov) window.closeStudentProfileLifeV23417();
+    });
+    return ov;
+  }
+  function lockPage(lock){
+    document.documentElement.style.overflow = lock ? 'hidden' : '';
+    document.body.style.overflow = lock ? 'hidden' : '';
+  }
+  function recordsHTML(records){
+    if(!records || !records.length){
+      return '<div class="profile-life-v23417-empty">Aucun record de calcul pour le moment. Va dans Maths pour faire un entraînement de 10 calculs.</div>';
+    }
+    return '<div class="profile-life-v23417-list">' + records.slice(0,3).map(function(r){
+      return '<div class="profile-life-v23417-item"><span>⏱️</span><div><b>'+esc(r.label)+'</b>'+esc(r.score)+' / '+esc(r.total)+' en '+esc(fmtTime(r.time))+'<small>Record d’entraînement</small></div></div>';
+    }).join('') + '</div>';
+  }
+  function renderPopup(){
+    var name = currentName();
+    var data = progressData(name);
+    var mathsPct = percent(data.maths, MATH_TOTAL);
+    var frenchPct = percent(data.francais, FRENCH_TOTAL);
+    var inner = byId('studentProfileLifeInnerV23417');
+    if(!inner) return;
+    inner.innerHTML =
+      '<div class="profile-life-v23417-header">'
+      + '<div class="profile-life-v23417-owl">🦉</div>'
+      + '<div class="profile-life-v23417-title"><h2>Mon profil / vie de classe</h2><p>Un espace pour suivre tes progrès, tes questions et les moments importants de la classe.</p></div>'
+      + '</div>'
+      + '<div class="profile-life-v23417-body">'
+      + '<section class="profile-life-v23417-card"><h3>👋 Mon prénom</h3><div class="profile-life-v23417-big"><div class="profile-life-v23417-name">'+esc(name)+'</div><span class="profile-life-v23417-pill">CE2</span></div></section>'
+      + '<section class="profile-life-v23417-card"><h3>📦 Ma curiosité</h3><div class="profile-life-v23417-big"><span class="profile-life-v23417-pill">Questions posées : <b id="profileLifeCuriosityCountV23417">…</b></span></div><div class="profile-life-v23417-note">On compte les questions corrigées / reformulées, jamais les réponses IA.</div></section>'
+      + '<section class="profile-life-v23417-card wide"><h3>📊 Ma progression</h3>'
+      + '<div class="profile-life-v23417-progress-row"><div class="profile-life-v23417-progress-head"><span>🧮 Maths</span><span>'+data.maths+' / '+MATH_TOTAL+'</span></div><div class="profile-life-v23417-bar"><div class="profile-life-v23417-fill maths" style="width:'+mathsPct+'%"></div></div></div>'
+      + '<div class="profile-life-v23417-progress-row"><div class="profile-life-v23417-progress-head"><span>📘 Français</span><span>'+data.francais+' / '+FRENCH_TOTAL+'</span></div><div class="profile-life-v23417-bar"><div class="profile-life-v23417-fill francais" style="width:'+frenchPct+'%"></div></div></div>'
+      + '<div class="profile-life-v23417-note">Cette zone montre une vue rapide de progression, sans afficher le podium ni les médailles.</div></section>'
+      + '<section class="profile-life-v23417-card wide"><h3>🎯 Mes prochains objectifs</h3><div class="profile-life-v23417-objectives">'
+      + '<div class="profile-life-v23417-objective"><b>🧮 En Maths</b>'+esc(nextMathObjective(data.maths))+'</div>'
+      + '<div class="profile-life-v23417-objective"><b>📘 En Français</b>'+esc(nextFrenchObjective(data.francais))+'</div>'
+      + '</div></section>'
+      + '<section class="profile-life-v23417-card"><h3>🧮 Mes records de calcul</h3>'+recordsHTML(data.records)+'</section>'
+      + '<section class="profile-life-v23417-card"><h3>📝 Mes questions de curiosité</h3><div id="profileLifeQuestionsListV23417" class="profile-life-v23417-list"><div class="profile-life-v23417-empty">Chargement…</div></div><div id="profileLifeQuestionsNoteV23417" class="profile-life-v23417-note">Aide-mémoire : seules les questions corrigées sont affichées.</div></section>'
+      + '<section class="profile-life-v23417-card wide"><h3>🎂 Anniversaires à venir</h3><div id="profileLifeBirthdaysListV23417" class="profile-life-v23417-list"><div class="profile-life-v23417-empty">Chargement…</div></div><div id="profileLifeBirthdaysNoteV23417" class="profile-life-v23417-note">Vie de classe : prénom, date proche et âge à venir.</div></section>'
+      + '</div>';
+  }
+  window.openStudentProfileLifeV23417 = function(ev){
+    if(ev){ ev.preventDefault(); ev.stopPropagation(); }
+    var ov = overlay();
+    ov.classList.remove('hidden');
+    lockPage(true);
+    renderPopup();
+    loadAndRenderQuestions();
+    loadAndRenderBirthdays();
+  };
+  window.closeStudentProfileLifeV23417 = function(){
+    var ov = byId('studentProfileLifeOverlayV23417');
+    if(ov) ov.classList.add('hidden');
+    lockPage(false);
+  };
+
+  function patchProfileCard(){
+    var card = document.querySelector('.v21-profile-card');
+    if(!card) return;
+    card.classList.add('profile-life-v23417-clickable');
+    card.setAttribute('role','button');
+    card.setAttribute('tabindex','0');
+    card.setAttribute('aria-label','Ouvrir Mon profil / vie de classe');
+    card.setAttribute('title','Ouvrir Mon profil / vie de classe');
+    var h3 = card.querySelector('.v21-profile-head h3, h3');
+    if(h3) h3.textContent = 'Mon profil / vie de classe';
+
+    var oldHint = card.querySelector('.profile-life-v23417-open-hint');
+    if(!oldHint){
+      var head = card.querySelector('.v21-profile-head');
+      if(head){
+        var hint = document.createElement('div');
+        hint.className = 'profile-life-v23417-open-hint';
+        hint.textContent = '👆 Ouvrir mon parcours';
+        head.appendChild(hint);
+      }
+    }
+
+    if(!card.__profileLifeV23417Bound){
+      card.__profileLifeV23417Bound = true;
+      card.addEventListener('click', function(ev){
+        if(ev.target && ev.target.closest && ev.target.closest('button,a,input,select,textarea')) return;
+        window.openStudentProfileLifeV23417(ev);
+      }, true);
+      card.addEventListener('keydown', function(ev){
+        if(ev.key === 'Enter' || ev.key === ' '){
+          ev.preventDefault();
+          window.openStudentProfileLifeV23417(ev);
+        }
+      }, true);
+    }
+  }
+
+  document.addEventListener('keydown', function(ev){
+    if(ev.key === 'Escape'){
+      var ov = byId('studentProfileLifeOverlayV23417');
+      if(ov && !ov.classList.contains('hidden')) window.closeStudentProfileLifeV23417();
+    }
+  });
+
+  function install(){
+    patchProfileCard();
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', install); else install();
+  window.addEventListener('load', function(){
+    [0,100,350,900,1800,3500].forEach(function(ms){ setTimeout(install, ms); });
+  });
+  setTimeout(install, 250);
+  setTimeout(install, 900);
+})();
+</script>
+
+
+
+
+<!-- PATCH V23.4.18 - Espace enseignant : gestion des questions Privée / Classe / Vedette + Statut -->
+<style id="patch-v23418-teacher-question-management-css">
+.v23418-question-tools{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  align-items:center;
+  justify-content:space-between;
+  margin:0 0 12px 0;
+  padding:12px;
+  border:2px solid #EAE8FF;
+  border-radius:18px;
+  background:#F7F6FF;
+}
+.v23418-question-tools-title{
+  font-family:'Baloo 2','Nunito',sans-serif;
+  font-weight:1000;
+  color:var(--primary);
+  font-size:22px;
+  line-height:1.1;
+}
+.v23418-question-tools-subtitle{
+  color:#6C63A8;
+  font-size:13px;
+  font-weight:900;
+  margin-top:3px;
+}
+.v23418-refresh-btn{
+  border:0;
+  border-radius:14px;
+  padding:10px 12px;
+  background:var(--primary);
+  color:white;
+  font-family:inherit;
+  font-weight:1000;
+  cursor:pointer;
+  box-shadow:0 6px 16px rgba(108,99,255,.18);
+}
+.v23418-summary-grid{
+  display:grid;
+  grid-template-columns:repeat(6,minmax(100px,1fr));
+  gap:8px;
+  margin:10px 0 12px 0;
+}
+.v23418-summary-card{
+  background:#fff;
+  border:2px solid #ECEBF3;
+  border-radius:16px;
+  padding:10px;
+  text-align:center;
+  font-weight:1000;
+  font-size:13px;
+}
+.v23418-summary-card strong{
+  display:block;
+  font-size:24px;
+  line-height:1;
+  color:var(--primary);
+  margin-bottom:4px;
+}
+.v23418-question-message{
+  background:#FFFCEB;
+  border:2px solid var(--accent);
+  border-radius:16px;
+  padding:10px 12px;
+  color:#7A5C00;
+  font-weight:900;
+  line-height:1.35;
+  margin:10px 0;
+}
+.v23418-question-message.ok{background:#E6F7E9;border-color:var(--green);color:#1E5627;}
+.v23418-question-message.warn{background:#FFFCEB;border-color:var(--accent);color:#7A5C00;}
+.v23418-question-message.error{background:#FFEAEA;border-color:var(--secondary);color:#7A2222;}
+.v23418-question-table-wrap{
+  overflow:auto;
+  border:2px solid #ECEBF3;
+  border-radius:18px;
+  background:white;
+  max-height:58vh;
+}
+.v23418-question-table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:13px;
+}
+.v23418-question-table th,
+.v23418-question-table td{
+  padding:10px;
+  border-bottom:1px solid #ECEBF3;
+  vertical-align:top;
+}
+.v23418-question-table th{
+  position:sticky;
+  top:0;
+  z-index:2;
+  background:#F7F6FF;
+  color:var(--primary);
+  font-weight:1000;
+  text-align:left;
+}
+.v23418-question-table tr:last-child td{border-bottom:0;}
+.v23418-question-text{
+  min-width:260px;
+  max-width:520px;
+  white-space:normal;
+  line-height:1.35;
+  font-weight:900;
+}
+.v23418-question-meta{
+  color:#8B89A8;
+  font-size:12px;
+  font-weight:900;
+  margin-top:4px;
+}
+.v23418-btn-group{
+  display:flex;
+  gap:5px;
+  flex-wrap:wrap;
+  min-width:220px;
+}
+.v23418-choice-btn{
+  border:2px solid #ECEBF3;
+  border-radius:999px;
+  background:white;
+  color:var(--text);
+  padding:7px 9px;
+  font-family:inherit;
+  font-size:12px;
+  font-weight:1000;
+  cursor:pointer;
+  white-space:nowrap;
+}
+.v23418-choice-btn:hover{
+  border-color:var(--primary);
+  background:#F8F7FF;
+}
+.v23418-choice-btn.active{
+  border-color:var(--primary);
+  background:var(--primary);
+  color:white;
+  box-shadow:0 4px 10px rgba(108,99,255,.16);
+}
+.v23418-choice-btn.visibility-vedette.active{background:#D4A300;border-color:#D4A300;color:white;}
+.v23418-choice-btn.visibility-classe.active{background:#1683F7;border-color:#1683F7;color:white;}
+.v23418-choice-btn.visibility-privee.active{background:#6C63FF;border-color:#6C63FF;color:white;}
+.v23418-choice-btn.status-expliquee.active{background:#1E8F3B;border-color:#1E8F3B;color:white;}
+.v23418-choice-btn.status-a_expliquer.active{background:#D4A300;border-color:#D4A300;color:white;}
+.v23418-choice-btn.status-nouvelle.active{background:#FF8A00;border-color:#FF8A00;color:white;}
+.v23418-source-pill{
+  display:inline-flex;
+  align-items:center;
+  border-radius:999px;
+  padding:4px 8px;
+  background:#ECEBF3;
+  color:#6C63A8;
+  font-size:12px;
+  font-weight:1000;
+}
+.v23418-empty{
+  padding:18px;
+  text-align:center;
+  color:var(--text-muted);
+  font-weight:1000;
+}
+@media(max-width:900px){
+  .v23418-summary-grid{grid-template-columns:repeat(2,1fr);}
+  .v23418-question-table th,.v23418-question-table td{white-space:normal;}
+  .v23418-btn-group{min-width:0;}
+}
+</style>
+
+<script id="patch-v23418-teacher-question-management">
+/* V23.4.18 - Gestion enseignant des questions : visibilité + statut */
+(function(){
+  if(window.__hibouV23418TeacherQuestionManagement) return;
+  window.__hibouV23418TeacherQuestionManagement = true;
+
+  var SHEET_URL = 'https://script.google.com/macros/s/AKfycbwGcErZ0he06Dg_bpPDaHtPHa6fAcDQ-31tB7Rlr9w2JZcNaQnP9YIABJYf-CKpFfpF/exec';
+  var OVERLAY_KEY = 'hibou_v23418_question_teacher_updates';
+  var state = {
+    initialized:false,
+    loading:false,
+    loadedRemote:false,
+    remoteError:false,
+    message:'',
+    messageType:'warn',
+    items:[]
+  };
+
+  function byId(id){ return document.getElementById(id); }
+  function txt(v){ return String(v == null ? '' : v).trim(); }
+  function esc(v){
+    return txt(v).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; });
+  }
+  function norm(v){
+    return txt(v).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[’']/g,"'");
+  }
+  function keyNorm(v){
+    return norm(v).replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'') || 'question';
+  }
+  function jsArg(v){ return JSON.stringify(txt(v)); }
+  function todayFr(){
+    try{ return new Date().toLocaleDateString('fr-FR'); }catch(e){ return ''; }
+  }
+  function field(row, names, arrayIndex){
+    if(Array.isArray(row)) return row[arrayIndex] == null ? '' : row[arrayIndex];
+    for(var i=0;i<names.length;i++){
+      var k = names[i];
+      if(row && row[k] != null && txt(row[k]) !== '') return row[k];
+    }
+    return '';
+  }
+  function dateFr(v){
+    var s = txt(v);
+    if(!s) return '';
+    try{
+      if(/^\d{4}-\d{2}-\d{2}T/.test(s)) return new Date(s).toLocaleDateString('fr-FR');
+      if(/^\d{4}-\d{2}-\d{2}/.test(s)) return s.replace(/^(\d{4})-(\d{2})-(\d{2}).*$/,'$3/$2/$1');
+      return s;
+    }catch(e){ return s; }
+  }
+  function visibilityOf(value){
+    var v = norm(value);
+    if(v.indexOf('vedette') >= 0) return 'vedette';
+    if(v.indexOf('classe') >= 0) return 'classe';
+    return 'privée';
+  }
+  function statusOf(value){
+    var s = norm(value);
+    if(s.indexOf('expliqu') >= 0 || s.indexOf('explique') >= 0) return 'expliquée';
+    if(s.indexOf('nouvelle') >= 0) return 'nouvelle';
+    if(s.indexOf('a_expliquer') >= 0 || s.indexOf('à_expliquer') >= 0 || s.indexOf('relire') >= 0) return 'à_expliquer';
+    return 'nouvelle';
+  }
+  function sourceFromData(data){
+    if(data && Array.isArray(data.questions)) return data.questions;
+    if(data && Array.isArray(data.rows)) return data.rows;
+    if(data && Array.isArray(data.data)) return data.data;
+    if(Array.isArray(data)) return data;
+    return [];
+  }
+  function readLocalJournal(){
+    try{ if(typeof getQuestionJournal === 'function') return getQuestionJournal() || []; }catch(e){}
+    try{ return JSON.parse(localStorage.getItem('hibou_question_journal') || '[]') || []; }catch(e){ return []; }
+  }
+  function saveLocalJournal(logs){
+    try{ if(typeof saveQuestionJournal === 'function') return saveQuestionJournal(logs || []); }catch(e){}
+    try{ localStorage.setItem('hibou_question_journal', JSON.stringify((logs || []).slice(0,120))); }catch(e){}
+  }
+  function getOverlays(){
+    try{ return JSON.parse(localStorage.getItem(OVERLAY_KEY) || '{}') || {}; }catch(e){ return {}; }
+  }
+  function saveOverlays(data){
+    try{ localStorage.setItem(OVERLAY_KEY, JSON.stringify(data || {})); }catch(e){}
+  }
+  function signature(item){
+    return [item.date || '', item.heure || '', item.prenom || '', item.questionCorrigee || item.questionOriginale || item.question || ''].map(keyNorm).join('|');
+  }
+  function stableId(prefix, item, index){
+    return prefix + '_' + keyNorm(signature(item)) + '_' + String(index || 0);
+  }
+  function localToItem(log, index){
+    var item = {
+      id:'',
+      source:'local',
+      localIndex:index,
+      rowIndex:'',
+      date:dateFr(log.dateOnly || log.date || ''),
+      heure:txt(log.timeOnly || log.heure || ''),
+      prenom:txt(log.student || log.prenom || log.eleve || log.name || 'Élève'),
+      matiere:txt(log.subject || log.matiere || 'Général'),
+      questionOriginale:txt(log.questionOriginale || log.question_originale || log.question || ''),
+      questionCorrigee:txt(log.questionCorrigee || log.correctedQuestion || log.question_corrigee || log.question || ''),
+      reponseIA:txt(log.reponseIA || log.response || log.reponse || ''),
+      visibilite:visibilityOf(log.visibilite || log.visibility || 'privée'),
+      statut:statusOf(log.statut || log.status || 'nouvelle'),
+      pointsCuriosite:Number(log.pointsCuriosite || 0),
+      dateExplication:dateFr(log.dateExplication || log.date_explication || '')
+    };
+    item.id = stableId('local', item, index);
+    return item;
+  }
+  function rowToItem(row, index){
+    var rowIndex = txt(field(row, ['rowIndex','row','ligne','Ligne','index'], index + 2));
+    var item = {
+      id:'',
+      source:'sheet',
+      localIndex:null,
+      rowIndex:rowIndex,
+      date:dateFr(field(row, ['Date','date'], 0)),
+      heure:txt(field(row, ['Heure','heure','time'], 1)),
+      prenom:txt(field(row, ['Prénom','Prenom','prenom','Élève','Eleve','eleve'], 2)) || 'Élève',
+      matiere:txt(field(row, ['Matière','Matiere','matiere','subject'], 3)) || 'Général',
+      questionOriginale:txt(field(row, ['Question originale','Question originale ','questionOriginale','question_originale','question','Question'], 4)),
+      questionCorrigee:txt(field(row, ['Question corrigée','Question corrigee','questionCorrigee','question_corrigee'], 5)),
+      reponseIA:txt(field(row, ['Réponse IA','Reponse IA','reponseIA','response','reponse'], 6)),
+      visibilite:visibilityOf(field(row, ['Visibilité','Visibilite','visibilite','visibility'], 7)),
+      statut:statusOf(field(row, ['Statut','statut','status'], 8)),
+      pointsCuriosite:Number(field(row, ['Points Curiosité','Points Curiosite','pointsCuriosite'], 9) || 0),
+      dateExplication:dateFr(field(row, ['Date explication','Date Explication','dateExplication','date_explication'], 10))
+    };
+    item.id = stableId('sheet', item, index);
+    return item;
+  }
+  function applyOverlays(items){
+    var overlays = getOverlays();
+    return (items || []).map(function(item){
+      var sig = signature(item);
+      var ov = overlays[sig];
+      if(ov){
+        if(ov.visibilite) item.visibilite = ov.visibilite;
+        if(ov.statut) item.statut = ov.statut;
+        if(ov.dateExplication) item.dateExplication = ov.dateExplication;
+      }
+      return item;
+    });
+  }
+  function mergeItems(localItems, remoteItems){
+    var map = {};
+    (remoteItems || []).forEach(function(item){ map[signature(item)] = item; });
+    (localItems || []).forEach(function(item){ if(!map[signature(item)]) map[signature(item)] = item; });
+    return applyOverlays(Object.keys(map).map(function(k){ return map[k]; })).sort(function(a,b){
+      return String((b.date || '') + ' ' + (b.heure || '')).localeCompare(String((a.date || '') + ' ' + (a.heure || '')), 'fr');
+    });
+  }
+  function rebuildFromLocalOnly(){
+    var localItems = readLocalJournal().map(localToItem);
+    state.items = applyOverlays(localItems);
+  }
+  function loadRemoteQuestions(force){
+    if(state.loading) return;
+    if(state.loadedRemote && !force) return;
+    state.loading = true;
+    state.remoteError = false;
+    renderTeacherQuestionPaneV23418();
+    var cb = '__hibouTeacherQuestionsV23418_' + Date.now() + '_' + Math.floor(Math.random()*100000);
+    var script = document.createElement('script');
+    var done = false;
+    var timer = null;
+    function cleanup(){
+      if(timer) clearTimeout(timer);
+      try{ delete window[cb]; }catch(e){ window[cb] = undefined; }
+      if(script && script.parentNode) script.parentNode.removeChild(script);
+    }
+    window[cb] = function(data){
+      if(done) return;
+      done = true;
+      try{
+        var remote = sourceFromData(data).map(rowToItem).filter(function(item){ return txt(item.questionCorrigee || item.questionOriginale); });
+        var local = readLocalJournal().map(localToItem);
+        state.items = mergeItems(local, remote);
+        state.loadedRemote = true;
+        state.remoteError = false;
+        state.message = remote.length ? 'Questions chargées depuis le Google Sheet.' : 'Aucune question distante trouvée. Affichage du journal local.';
+        state.messageType = remote.length ? 'ok' : 'warn';
+      }catch(e){
+        console.warn('V23.4.18 questions teacher : erreur traitement Sheet', e);
+        rebuildFromLocalOnly();
+        state.remoteError = true;
+        state.message = 'Impossible de lire le Sheet. Le journal local reste affiché.';
+        state.messageType = 'error';
+      }
+      state.loading = false;
+      cleanup();
+      renderTeacherQuestionPaneV23418();
+    };
+    script.onerror = function(){
+      if(done) return;
+      done = true;
+      rebuildFromLocalOnly();
+      state.loading = false;
+      state.remoteError = true;
+      state.message = 'Impossible de charger le Google Sheet. Le journal local reste affiché.';
+      state.messageType = 'error';
+      cleanup();
+      renderTeacherQuestionPaneV23418();
+    };
+    timer = setTimeout(script.onerror, 12000);
+    script.async = true;
+    script.src = SHEET_URL + (SHEET_URL.indexOf('?') === -1 ? '?' : '&') + 'callback=' + encodeURIComponent(cb) + '&cache=' + Date.now();
+    document.head.appendChild(script);
+  }
+  function persistLocalUpdate(item){
+    var logs = readLocalJournal();
+    var sig = signature(item);
+    var changed = false;
+    logs.forEach(function(log, index){
+      var candidate = localToItem(log, index);
+      if(signature(candidate) === sig || (item.localIndex === index)){
+        log.visibilite = item.visibilite;
+        log.visibility = item.visibilite;
+        log.statut = item.statut;
+        log.status = item.statut;
+        if(item.statut === 'expliquée') log.dateExplication = item.dateExplication || todayFr();
+        changed = true;
+      }
+    });
+    if(changed) saveLocalJournal(logs);
+    var overlays = getOverlays();
+    overlays[sig] = {
+      visibilite:item.visibilite,
+      statut:item.statut,
+      dateExplication:item.dateExplication || ''
+    };
+    saveOverlays(overlays);
+  }
+  function sendRemoteUpdate(item){
+    var payload = {
+      action:'updateQuestion',
+      type:'updateQuestion',
+      rowIndex:item.rowIndex || '',
+      ligne:item.rowIndex || '',
+      date:item.date || '',
+      heure:item.heure || '',
+      prenom:item.prenom || '',
+      matiere:item.matiere || '',
+      questionOriginale:item.questionOriginale || '',
+      questionCorrigee:item.questionCorrigee || item.question || '',
+      visibilite:item.visibilite || 'privée',
+      statut:item.statut || 'nouvelle',
+      dateExplication:item.dateExplication || '',
+      source:'Maître Hibou V23.4.18 - Espace enseignant'
+    };
+    try{
+      fetch(SHEET_URL, {
+        method:'POST',
+        mode:'no-cors',
+        headers:{'Content-Type':'text/plain;charset=utf-8'},
+        body:JSON.stringify(payload)
+      }).catch(function(){});
+    }catch(e){}
+    try{
+      var img = new Image();
+      var params = Object.keys(payload).map(function(k){ return encodeURIComponent(k) + '=' + encodeURIComponent(payload[k]); }).join('&');
+      img.src = SHEET_URL + (SHEET_URL.indexOf('?') === -1 ? '?' : '&') + params + '&cache=' + Date.now();
+    }catch(e){}
+  }
+  function updateItem(id, patch){
+    var item = state.items.find(function(x){ return x.id === id; });
+    if(!item) return;
+    Object.keys(patch || {}).forEach(function(k){ item[k] = patch[k]; });
+    if(patch.statut === 'expliquée' && !item.dateExplication) item.dateExplication = todayFr();
+    persistLocalUpdate(item);
+    sendRemoteUpdate(item);
+    state.message = 'Modification appliquée dans l’interface et envoyée au Google Sheet. Si la valeur ne change pas dans le Sheet, il faudra ajouter l’action updateQuestion dans Apps Script.';
+    state.messageType = 'ok';
+    renderTeacherQuestionPaneV23418();
+    try{ if(typeof window.loadQuestionBoxFromSheet === 'function') setTimeout(function(){ window.loadQuestionBoxFromSheet(true); }, 400); }catch(e){}
+  }
+  function visibilityButton(item, value, label){
+    var active = item.visibilite === value ? ' active' : '';
+    return '<button class="v23418-choice-btn visibility-' + (value === 'privée' ? 'privee' : value) + active + '" onclick="teacherQuestionSetVisibilityV23418(' + jsArg(item.id) + ',' + jsArg(value) + ')">' + esc(label) + '</button>';
+  }
+  function statusButton(item, value, label){
+    var active = item.statut === value ? ' active' : '';
+    var cls = value === 'à_expliquer' ? 'a_expliquer' : value;
+    return '<button class="v23418-choice-btn status-' + cls + active + '" onclick="teacherQuestionSetStatusV23418(' + jsArg(item.id) + ',' + jsArg(value) + ')">' + esc(label) + '</button>';
+  }
+  function rowHTML(item){
+    var source = item.source === 'sheet' ? 'Sheet' : 'Local';
+    var question = item.questionCorrigee || item.questionOriginale || '';
+    return '<tr>'
+      + '<td><strong>' + esc(item.prenom || 'Élève') + '</strong><div class="v23418-question-meta">' + esc(item.date || '') + (item.heure ? ' · ' + esc(item.heure) : '') + '</div></td>'
+      + '<td>' + esc(item.matiere || 'Général') + '<div class="v23418-question-meta"><span class="v23418-source-pill">' + esc(source) + '</span></div></td>'
+      + '<td class="v23418-question-text">' + esc(question) + (item.questionOriginale && item.questionOriginale !== question ? '<div class="v23418-question-meta">Originale : ' + esc(item.questionOriginale) + '</div>' : '') + '</td>'
+      + '<td><div class="v23418-btn-group">'
+      + visibilityButton(item, 'privée', '🔒 Privée')
+      + visibilityButton(item, 'classe', '👥 Classe')
+      + visibilityButton(item, 'vedette', '⭐ Vedette')
+      + '</div></td>'
+      + '<td><div class="v23418-btn-group">'
+      + statusButton(item, 'nouvelle', '🟠 Nouvelle')
+      + statusButton(item, 'à_expliquer', '⏳ À expliquer')
+      + statusButton(item, 'expliquée', '✅ Expliquée')
+      + '</div>' + (item.dateExplication ? '<div class="v23418-question-meta">Date explication : ' + esc(item.dateExplication) + '</div>' : '') + '</td>'
+      + '</tr>';
+  }
+  function summaryHTML(items){
+    function count(fn){ return (items || []).filter(fn).length; }
+    return '<div class="v23418-summary-grid">'
+      + '<div class="v23418-summary-card"><strong>' + count(function(){return true;}) + '</strong>Total</div>'
+      + '<div class="v23418-summary-card"><strong>' + count(function(i){return i.visibilite === 'privée';}) + '</strong>Privées</div>'
+      + '<div class="v23418-summary-card"><strong>' + count(function(i){return i.visibilite === 'classe';}) + '</strong>Classe</div>'
+      + '<div class="v23418-summary-card"><strong>' + count(function(i){return i.visibilite === 'vedette';}) + '</strong>Vedettes</div>'
+      + '<div class="v23418-summary-card"><strong>' + count(function(i){return i.statut === 'à_expliquer';}) + '</strong>À expliquer</div>'
+      + '<div class="v23418-summary-card"><strong>' + count(function(i){return i.statut === 'expliquée';}) + '</strong>Expliquées</div>'
+      + '</div>';
+  }
+  function renderTeacherQuestionPaneV23418(){
+    var pane = document.querySelector('.v23-pane[data-pane="questions"]');
+    if(!pane) return;
+    if(!state.initialized){
+      state.initialized = true;
+      rebuildFromLocalOnly();
+      setTimeout(function(){ loadRemoteQuestions(false); }, 0);
+    }
+    var items = state.items || [];
+    var msg = state.message || (state.loading ? 'Chargement du Google Sheet en cours…' : 'Utilise les boutons pour choisir ce que les élèves verront dans la Boîte à questions.');
+    var type = state.messageType || 'warn';
+    pane.innerHTML = '<div class="v23418-question-tools">'
+      + '<div><div class="v23418-question-tools-title">📦 Gestion des questions</div><div class="v23418-question-tools-subtitle">Visibilité : Privée / Classe / Vedette · Statut : Nouvelle / À expliquer / Expliquée</div></div>'
+      + '<button class="v23418-refresh-btn" onclick="refreshTeacherQuestionsV23418()">🔄 Actualiser le Sheet</button>'
+      + '</div>'
+      + summaryHTML(items)
+      + '<div class="v23418-question-message ' + esc(type) + '">' + esc(msg) + '</div>'
+      + '<div class="v23418-question-table-wrap"><table class="v23418-question-table"><thead><tr><th>Élève</th><th>Matière</th><th>Question corrigée</th><th>Visibilité</th><th>Statut</th></tr></thead><tbody>'
+      + (items.length ? items.map(rowHTML).join('') : '<tr><td colspan="5"><div class="v23418-empty">Aucune question enregistrée pour le moment.</div></td></tr>')
+      + '</tbody></table></div>';
+  }
+  window.renderTeacherQuestionPaneV23418 = renderTeacherQuestionPaneV23418;
+  window.refreshTeacherQuestionsV23418 = function(){
+    state.loadedRemote = false;
+    state.message = 'Actualisation demandée…';
+    state.messageType = 'warn';
+    rebuildFromLocalOnly();
+    renderTeacherQuestionPaneV23418();
+    loadRemoteQuestions(true);
+  };
+  window.teacherQuestionSetVisibilityV23418 = function(id, value){
+    updateItem(id, {visibilite:visibilityOf(value)});
+  };
+  window.teacherQuestionSetStatusV23418 = function(id, value){
+    updateItem(id, {statut:statusOf(value)});
+  };
+
+  var previousRender = window.renderTeacherDashboard;
+  window.renderTeacherDashboard = function(){
+    var result;
+    if(typeof previousRender === 'function') result = previousRender.apply(this, arguments);
+    setTimeout(function(){ renderTeacherQuestionPaneV23418(); }, 0);
+    return result;
+  };
+  var previousSetTab = window.setTeacherTabV23;
+  if(typeof previousSetTab === 'function'){
+    window.setTeacherTabV23 = function(tab){
+      var result = previousSetTab.apply(this, arguments);
+      if(tab === 'questions') setTimeout(function(){ renderTeacherQuestionPaneV23418(); }, 0);
+      return result;
+    };
+  }
+  document.addEventListener('DOMContentLoaded', function(){
+    setTimeout(function(){
+      var pane = document.querySelector('.v23-pane[data-pane="questions"]');
+      if(pane) renderTeacherQuestionPaneV23418();
+    }, 500);
+  });
+})();
+</script>
+
+
+<style id="patch-v23419-question-fix-css">
+/* V23.4.19 - meilleur retour visuel dans l'espace enseignant */
+.v23418-question-message.error{font-weight:900;}
+.v23418-question-message.ok{font-weight:900;}
+.v23418-refresh-btn{min-height:44px;}
+.v23418-choice-btn{min-height:34px;}
+</style>
+
+<script id="patch-v23419-question-sheet-fix">
+/* V23.4.19 - Correctif Boîte à questions + modifications enseignant confirmées par Apps Script */
+(function(){
+  if(window.__hibouV23419QuestionFix) return;
+  window.__hibouV23419QuestionFix = true;
+
+  try{ document.title = '🦉 V23.4.19 - Questions Sheet corrigées'; }catch(e){}
+
+  var SHEET_URL = 'https://script.google.com/macros/s/AKfycbwGcErZ0he06Dg_bpPDaHtPHa6fAcDQ-31tB7Rlr9w2JZcNaQnP9YIABJYf-CKpFfpF/exec';
+  var teacherState = { initialized:false, loading:false, message:'', messageType:'warn', items:[] };
+  var qboxState = { loading:false, loaded:false, error:false, rows:[] };
+
+  function byId(id){ return document.getElementById(id); }
+  function txt(v){ return String(v == null ? '' : v).trim(); }
+  function esc(v){ return txt(v).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function norm(v){ return txt(v).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[’']/g,"'").trim(); }
+  function keyNorm(v){ return norm(v).replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'') || 'question'; }
+  function jsArg(v){ return JSON.stringify(txt(v)); }
+  function todayFr(){ try{ return new Date().toLocaleDateString('fr-FR'); }catch(e){ return ''; } }
+  function dateFr(v){
+    var s = txt(v);
+    if(!s) return '';
+    try{
+      if(/^\d{4}-\d{2}-\d{2}T/.test(s)) return new Date(s).toLocaleDateString('fr-FR');
+      if(/^\d{4}-\d{2}-\d{2}/.test(s)) return s.replace(/^(\d{4})-(\d{2})-(\d{2}).*$/,'$3/$2/$1');
+      return s;
+    }catch(e){ return s; }
+  }
+  function field(row, names, arrayIndex){
+    if(Array.isArray(row)) return row[arrayIndex] == null ? '' : row[arrayIndex];
+    for(var i=0;i<names.length;i++){
+      var k = names[i];
+      if(row && row[k] != null && txt(row[k]) !== '') return row[k];
+    }
+    return '';
+  }
+  function visibilityOf(value){
+    var v = norm(value);
+    if(v.indexOf('vedette') >= 0) return 'vedette';
+    if(v.indexOf('classe') >= 0) return 'classe';
+    return 'privée';
+  }
+  function statusOf(value){
+    var s = norm(value).replace(/\s+/g,'_');
+    if(s.indexOf('a_expliquer') >= 0 || s.indexOf('à_expliquer') >= 0 || s === 'aexpliquer') return 'à_expliquer';
+    if(s.indexOf('nouvelle') >= 0) return 'nouvelle';
+    if(s.indexOf('expliquee') >= 0 || s === 'explique' || s.indexOf('explique_') >= 0) return 'expliquée';
+    return 'nouvelle';
+  }
+  function sourceFromData(data){
+    if(data && Array.isArray(data.questions)) return data.questions;
+    if(data && Array.isArray(data.rows)) return data.rows;
+    if(data && Array.isArray(data.data)) return data.data;
+    if(Array.isArray(data)) return data;
+    return [];
+  }
+  function rowToItem(row, index){
+    var rowIndex = txt(field(row, ['rowIndex','row','ligne','Ligne','index'], index + 2));
+    var item = {
+      id:'', source:'sheet', rowIndex:rowIndex,
+      date:dateFr(field(row, ['Date','date'], 0)),
+      heure:txt(field(row, ['Heure','heure','time'], 1)),
+      prenom:txt(field(row, ['Prénom','Prenom','prenom','Élève','Eleve','eleve'], 2)) || 'Élève',
+      matiere:txt(field(row, ['Matière','Matiere','matiere','subject'], 3)) || 'Général',
+      questionOriginale:txt(field(row, ['Question originale','Question originale ','questionOriginale','question_originale','question','Question'], 4)),
+      questionCorrigee:txt(field(row, ['Question corrigée','Question corrigee','questionCorrigee','question_corrigee'], 5)),
+      reponseIA:txt(field(row, ['Réponse IA','Reponse IA','reponseIA','response','reponse'], 6)),
+      visibilite:visibilityOf(field(row, ['Visibilité','Visibilite','visibilite','visibility'], 7)),
+      statut:statusOf(field(row, ['Statut','statut','status'], 8)),
+      pointsCuriosite:Number(field(row, ['Points Curiosité','Points Curiosite','pointsCuriosite'], 9) || 0),
+      dateExplication:dateFr(field(row, ['Date explication','Date Explication','dateExplication','date_explication'], 10))
+    };
+    item.id = 'sheet_' + keyNorm([item.rowIndex,item.date,item.heure,item.prenom,item.questionCorrigee || item.questionOriginale].join('|')) + '_' + index;
+    return item;
+  }
+  function jsonp(params, prefix, timeoutMs){
+    return new Promise(function(resolve, reject){
+      var cb = '__hibou_' + prefix + '_' + Date.now() + '_' + Math.floor(Math.random()*1000000);
+      var script = document.createElement('script');
+      var done = false;
+      var timer = setTimeout(function(){ fail(new Error('Délai dépassé')); }, timeoutMs || 12000);
+      function cleanup(){
+        clearTimeout(timer);
+        try{ delete window[cb]; }catch(e){ window[cb] = undefined; }
+        if(script && script.parentNode) script.parentNode.removeChild(script);
+      }
+      function fail(err){ if(done) return; done = true; cleanup(); reject(err); }
+      window[cb] = function(data){ if(done) return; done = true; cleanup(); resolve(data || {}); };
+      script.onerror = function(){ fail(new Error('Chargement impossible')); };
+      var query = Object.assign({}, params || {}, {callback:cb, cache:Date.now()});
+      var qs = Object.keys(query).map(function(k){ return encodeURIComponent(k) + '=' + encodeURIComponent(query[k]); }).join('&');
+      script.async = true;
+      script.src = SHEET_URL + (SHEET_URL.indexOf('?') === -1 ? '?' : '&') + qs;
+      document.head.appendChild(script);
+    });
+  }
+
+  function qboxEmoji(matiere, visibilite){
+    if(visibilite === 'vedette') return '⭐';
+    var m = norm(matiere);
+    if(m.indexOf('math') >= 0) return '🧮';
+    if(m.indexOf('fran') >= 0) return '📚';
+    if(m.indexOf('science') >= 0) return '🔬';
+    if(m.indexOf('geo') >= 0) return '🌍';
+    if(m.indexOf('anglais') >= 0) return '🇬🇧';
+    if(m.indexOf('histoire') >= 0) return '🏰';
+    return '❓';
+  }
+  function itemToQbox(item){
+    return {
+      question:item.questionCorrigee || item.questionOriginale || '',
+      prenom:item.prenom || 'Élève',
+      matiere:item.matiere || 'Général',
+      date:item.date || '',
+      dateExplication:item.dateExplication || '',
+      visibilite:item.visibilite || 'privée',
+      statut:item.statut || 'nouvelle',
+      emoji:qboxEmoji(item.matiere || '', item.visibilite || 'privée')
+    };
+  }
+  function qboxStatus(q){
+    if(q.statut === 'expliquée') return q.dateExplication ? '✅ Expliquée le ' + esc(q.dateExplication) : '✅ Expliquée en classe';
+    if(q.statut === 'à_expliquer') return '⏳ À expliquer en classe';
+    return '🟠 Nouvelle question';
+  }
+  function qboxCard(q, medal){
+    return '<article class="qbox-v1983-item">'
+      + '<div class="qbox-v1983-emoji">' + esc(medal || q.emoji) + '</div>'
+      + '<div class="qbox-v1983-item-main">'
+      + '<div class="qbox-v1983-question">' + esc(q.question) + '</div>'
+      + '<div class="qbox-v1983-meta"><span class="qbox-v1983-chip">' + esc(q.matiere) + '</span> ' + (q.date ? 'Posée le ' + esc(q.date) : 'Question posée') + ' par ' + esc(q.prenom) + '</div>'
+      + '<div class="qbox-v1983-status ' + (q.statut === 'expliquée' ? 'ok' : 'wait') + '">' + qboxStatus(q) + '</div>'
+      + '</div></article>';
+  }
+  function setHtml(id, html){ var el = byId(id); if(el) el.innerHTML = html; }
+  function setQboxCounts(a,b,c){
+    var el = byId('qboxCountClasse'); if(el) el.textContent = '👥 ' + a + ' question' + (a>1?'s':'') + ' partagée' + (a>1?'s':'');
+    el = byId('qboxCountMes'); if(el) el.textContent = '🔒 ' + b + ' question' + (b>1?'s':'') + ' personnelle' + (b>1?'s':'');
+    el = byId('qboxCountVedette'); if(el) el.textContent = '🏆 ' + c + ' question' + (c>1?'s':'') + ' vedette' + (c>1?'s':'');
+  }
+  function renderQboxV23419(){
+    if(qboxState.loading){
+      var h = '<div class="qbox-v1983-empty">🦉 Chargement des questions du Google Sheet...</div>';
+      setHtml('qboxColClasse', h); setHtml('qboxColMes', h); setHtml('qboxColVedette', h); setQboxCounts(0,0,0); return;
+    }
+    if(qboxState.error){
+      var e = '<div class="qbox-v1983-empty">⚠️ Impossible de charger le Sheet. Vérifie le déploiement Apps Script.</div>';
+      setHtml('qboxColClasse', e); setHtml('qboxColMes', e); setHtml('qboxColVedette', e); setQboxCounts(0,0,0); return;
+    }
+    var name = norm(window.prenomActuel || localStorage.getItem('hibou_prenom') || localStorage.getItem('hibou_last_prenom') || '');
+    var search = norm((byId('questionBoxSearch') || {}).value || '');
+    var matter = txt((byId('questionBoxMatter') || {}).value || '');
+    function ok(q){ return (!search || norm(q.question).indexOf(search) >= 0) && (!matter || q.matiere === matter); }
+    var source = (qboxState.rows || []).map(itemToQbox).filter(function(q){ return txt(q.question); });
+    var classe = source.filter(function(q){ return (q.visibilite === 'classe' || q.visibilite === 'vedette') && ok(q); });
+    var mes = source.filter(function(q){ return name && norm(q.prenom) === name && ok(q); });
+    var vedette = source.filter(function(q){ return q.visibilite === 'vedette' && ok(q); });
+    setHtml('qboxColClasse', classe.length ? classe.map(function(q){ return qboxCard(q); }).join('') : '<div class="qbox-v1983-empty">Aucune question de classe pour le moment.</div>');
+    setHtml('qboxColMes', mes.length ? mes.map(function(q){ return qboxCard(q); }).join('') : '<div class="qbox-v1983-empty">Tu n’as pas encore posé de question.</div>');
+    setHtml('qboxColVedette', vedette.length ? vedette.map(function(q,i){ return qboxCard(q, i < 3 ? ['🥇','🥈','🥉'][i] : '⭐'); }).join('') : '<div class="qbox-v1983-empty">Aucune question vedette pour le moment.</div>');
+    setQboxCounts(classe.length, mes.length, vedette.length);
+  }
+  function loadQboxV23419(force){
+    if(qboxState.loading) return;
+    if(qboxState.loaded && !force){ renderQboxV23419(); return; }
+    qboxState.loading = true; qboxState.error = false; qboxState.rows = [];
+    renderQboxV23419();
+    jsonp({action:'listQuestions'}, 'qbox_v23419', 12000).then(function(data){
+      qboxState.rows = sourceFromData(data).map(rowToItem).filter(function(item){ return txt(item.questionCorrigee || item.questionOriginale); }).reverse();
+      qboxState.loaded = true; qboxState.error = false; qboxState.loading = false;
+      renderQboxV23419();
+    }).catch(function(){
+      qboxState.loading = false; qboxState.loaded = false; qboxState.error = true;
+      renderQboxV23419();
+    });
+  }
+  window.loadQuestionBoxFromSheet = loadQboxV23419;
+  window.renderQuestionBoxList = renderQboxV23419;
+  window.openQuestionBoxPopup = function(){
+    var overlay = byId('questionBoxOverlay');
+    if(overlay){ overlay.classList.remove('hidden'); overlay.setAttribute('aria-hidden','false'); }
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+    loadQboxV23419(true);
+  };
+  window.closeQuestionBoxPopup = function(){
+    var overlay = byId('questionBoxOverlay');
+    if(overlay){ overlay.classList.add('hidden'); overlay.setAttribute('aria-hidden','true'); }
+    document.documentElement.style.overflow = '';
+    document.body.style.overflow = '';
+  };
+
+  function loadTeacherQuestionsV23419(force){
+    if(teacherState.loading) return;
+    if(teacherState.initialized && teacherState.items.length && !force){ renderTeacherQuestionPaneV23419(); return; }
+    teacherState.loading = true;
+    teacherState.message = 'Chargement du Google Sheet en cours…';
+    teacherState.messageType = 'warn';
+    renderTeacherQuestionPaneV23419();
+    jsonp({action:'listQuestions'}, 'teacher_list_v23419', 12000).then(function(data){
+      teacherState.items = sourceFromData(data).map(rowToItem).filter(function(item){ return txt(item.questionCorrigee || item.questionOriginale); }).reverse();
+      teacherState.loading = false;
+      teacherState.initialized = true;
+      teacherState.message = teacherState.items.length ? 'Questions chargées depuis le Google Sheet.' : 'Aucune question trouvée dans le Sheet.';
+      teacherState.messageType = teacherState.items.length ? 'ok' : 'warn';
+      renderTeacherQuestionPaneV23419();
+    }).catch(function(){
+      teacherState.loading = false;
+      teacherState.message = 'Impossible de charger le Sheet. Vérifie l’URL et le déploiement Apps Script.';
+      teacherState.messageType = 'error';
+      renderTeacherQuestionPaneV23419();
+    });
+  }
+  function sendUpdateV23419(item, patch){
+    var next = Object.assign({}, item, patch || {});
+    if(next.statut === 'expliquée' && !next.dateExplication) next.dateExplication = todayFr();
+    if(next.statut !== 'expliquée') next.dateExplication = '';
+    teacherState.message = 'Enregistrement dans le Google Sheet…';
+    teacherState.messageType = 'warn';
+    renderTeacherQuestionPaneV23419();
+    return jsonp({
+      action:'updateQuestion', type:'updateQuestion',
+      rowIndex:next.rowIndex || '', ligne:next.rowIndex || '',
+      date:next.date || '', heure:next.heure || '', prenom:next.prenom || '', matiere:next.matiere || '',
+      questionOriginale:next.questionOriginale || '', questionCorrigee:next.questionCorrigee || '',
+      visibilite:next.visibilite || 'privée', statut:next.statut || 'nouvelle', dateExplication:next.dateExplication || ''
+    }, 'teacher_update_v23419', 12000).then(function(data){
+      if(!data || data.success !== true || (data.action && data.action !== 'updateQuestion') || (!data.action && data.questions)){
+        throw new Error('L’Apps Script n’a pas confirmé la modification.');
+      }
+      Object.keys(next).forEach(function(k){ item[k] = next[k]; });
+      teacherState.message = 'Modification enregistrée dans le Google Sheet.';
+      teacherState.messageType = 'ok';
+      renderTeacherQuestionPaneV23419();
+      qboxState.loaded = false;
+      setTimeout(function(){ loadTeacherQuestionsV23419(true); }, 600);
+      try{ setTimeout(function(){ loadQboxV23419(true); }, 700); }catch(e){}
+    }).catch(function(err){
+      teacherState.message = 'Modification non enregistrée : ' + (err && err.message ? err.message : 'vérifie que le nouveau Apps Script est déployé.');
+      teacherState.messageType = 'error';
+      renderTeacherQuestionPaneV23419();
+    });
+  }
+  function visibilityButton(item, value, label){
+    var active = item.visibilite === value ? ' active' : '';
+    return '<button type="button" class="v23418-choice-btn visibility-' + (value === 'privée' ? 'privee' : value) + active + '" onclick="teacherQuestionSetVisibilityV23419(' + jsArg(item.id) + ',' + jsArg(value) + ')">' + esc(label) + '</button>';
+  }
+  function statusButton(item, value, label){
+    var active = item.statut === value ? ' active' : '';
+    var cls = value === 'à_expliquer' ? 'a_expliquer' : value;
+    return '<button type="button" class="v23418-choice-btn status-' + cls + active + '" onclick="teacherQuestionSetStatusV23419(' + jsArg(item.id) + ',' + jsArg(value) + ')">' + esc(label) + '</button>';
+  }
+  function teacherRowHTML(item){
+    var question = item.questionCorrigee || item.questionOriginale || '';
+    return '<tr>'
+      + '<td><strong>' + esc(item.prenom || 'Élève') + '</strong><div class="v23418-question-meta">' + esc(item.date || '') + (item.heure ? ' · ' + esc(item.heure) : '') + '</div></td>'
+      + '<td>' + esc(item.matiere || 'Général') + '<div class="v23418-question-meta"><span class="v23418-source-pill">Sheet</span>' + (item.rowIndex ? ' ligne ' + esc(item.rowIndex) : '') + '</div></td>'
+      + '<td class="v23418-question-text">' + esc(question) + (item.questionOriginale && item.questionOriginale !== question ? '<div class="v23418-question-meta">Originale : ' + esc(item.questionOriginale) + '</div>' : '') + '</td>'
+      + '<td><div class="v23418-btn-group">' + visibilityButton(item, 'privée', '🔒 Privée') + visibilityButton(item, 'classe', '👥 Classe') + visibilityButton(item, 'vedette', '⭐ Vedette') + '</div></td>'
+      + '<td><div class="v23418-btn-group">' + statusButton(item, 'nouvelle', '🟠 Nouvelle') + statusButton(item, 'à_expliquer', '⏳ À expliquer') + statusButton(item, 'expliquée', '✅ Expliquée') + '</div>' + (item.dateExplication ? '<div class="v23418-question-meta">Date explication : ' + esc(item.dateExplication) + '</div>' : '') + '</td>'
+      + '</tr>';
+  }
+  function summaryHTML(items){
+    function count(fn){ return (items || []).filter(fn).length; }
+    return '<div class="v23418-summary-grid">'
+      + '<div class="v23418-summary-card"><strong>' + count(function(){return true;}) + '</strong>Total</div>'
+      + '<div class="v23418-summary-card"><strong>' + count(function(i){return i.visibilite === 'privée';}) + '</strong>Privées</div>'
+      + '<div class="v23418-summary-card"><strong>' + count(function(i){return i.visibilite === 'classe';}) + '</strong>Classe</div>'
+      + '<div class="v23418-summary-card"><strong>' + count(function(i){return i.visibilite === 'vedette';}) + '</strong>Vedettes</div>'
+      + '<div class="v23418-summary-card"><strong>' + count(function(i){return i.statut === 'à_expliquer';}) + '</strong>À expliquer</div>'
+      + '<div class="v23418-summary-card"><strong>' + count(function(i){return i.statut === 'expliquée';}) + '</strong>Expliquées</div>'
+      + '</div>';
+  }
+  function renderTeacherQuestionPaneV23419(){
+    var pane = document.querySelector('.v23-pane[data-pane="questions"]');
+    if(!pane) return;
+    if(!teacherState.initialized && !teacherState.loading) setTimeout(function(){ loadTeacherQuestionsV23419(true); }, 0);
+    var items = teacherState.items || [];
+    var msg = teacherState.message || 'Utilise les boutons pour choisir ce que les élèves verront dans la Boîte à questions.';
+    var type = teacherState.messageType || 'warn';
+    pane.innerHTML = '<div class="v23418-question-tools">'
+      + '<div><div class="v23418-question-tools-title">📦 Gestion des questions</div><div class="v23418-question-tools-subtitle">Visibilité : Privée / Classe / Vedette · Statut : Nouvelle / À expliquer / Expliquée</div></div>'
+      + '<button type="button" class="v23418-refresh-btn" onclick="refreshTeacherQuestionsV23419()">🔄 Actualiser le Sheet</button>'
+      + '</div>'
+      + summaryHTML(items)
+      + '<div class="v23418-question-message ' + esc(type) + '">' + esc(msg) + '</div>'
+      + '<div class="v23418-question-table-wrap"><table class="v23418-question-table"><thead><tr><th>Élève</th><th>Matière</th><th>Question corrigée</th><th>Visibilité</th><th>Statut</th></tr></thead><tbody>'
+      + (items.length ? items.map(teacherRowHTML).join('') : '<tr><td colspan="5"><div class="v23418-empty">Aucune question enregistrée pour le moment.</div></td></tr>')
+      + '</tbody></table></div>';
+  }
+  window.renderTeacherQuestionPaneV23419 = renderTeacherQuestionPaneV23419;
+  window.refreshTeacherQuestionsV23419 = function(){ teacherState.initialized = false; teacherState.items = []; loadTeacherQuestionsV23419(true); };
+  window.teacherQuestionSetVisibilityV23419 = function(id, value){
+    var item = (teacherState.items || []).find(function(x){ return x.id === id; });
+    if(item) sendUpdateV23419(item, {visibilite:visibilityOf(value)});
+  };
+  window.teacherQuestionSetStatusV23419 = function(id, value){
+    var item = (teacherState.items || []).find(function(x){ return x.id === id; });
+    if(item) sendUpdateV23419(item, {statut:statusOf(value)});
+  };
+
+  var previousRender = window.renderTeacherDashboard;
+  window.renderTeacherDashboard = function(){
+    var result;
+    if(typeof previousRender === 'function') result = previousRender.apply(this, arguments);
+    setTimeout(renderTeacherQuestionPaneV23419, 0);
+    return result;
+  };
+  var previousSetTab = window.setTeacherTabV23;
+  if(typeof previousSetTab === 'function'){
+    window.setTeacherTabV23 = function(tab){
+      var result = previousSetTab.apply(this, arguments);
+      if(tab === 'questions') setTimeout(function(){ loadTeacherQuestionsV23419(true); }, 0);
+      return result;
+    };
+  }
+  document.addEventListener('click', function(ev){
+    var target = ev.target && ev.target.closest && ev.target.closest('#openQuestionBoxBtn, .v21-treasure-card');
+    if(target){ ev.preventDefault(); ev.stopImmediatePropagation(); window.openQuestionBoxPopup(); }
+  }, true);
+  document.addEventListener('DOMContentLoaded', function(){
+    var s = byId('questionBoxSearch'); if(s && !s.__v23419){ s.__v23419 = true; s.addEventListener('input', renderQboxV23419); }
+    var m = byId('questionBoxMatter'); if(m && !m.__v23419){ m.__v23419 = true; m.addEventListener('change', renderQboxV23419); }
+    setTimeout(renderTeacherQuestionPaneV23419, 800);
+  });
+})();
+
 </script>
 
 </body>

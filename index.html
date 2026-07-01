@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 Maître Hibou V24.0.13</title>
+<title>🦉 Maître Hibou V24.0.14</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Baloo+2:wght=700;800&display=swap');
 
@@ -4236,7 +4236,7 @@ body.v21-final .subject-btn .subject-label{font-size:18px !important;line-height
 @media (max-width:899px){body.v21-final .v21-center{width:calc(100% - 24px) !important;margin:0 auto 8px !important;grid-template-columns:1fr !important;}body.v21-final .v21-side-owl,body.v21-final .v21-deco-window,body.v21-final .v21-deco-globe,body.v21-final .v21-deco-books{display:none !important;}body.v21-final .subjects-bar{grid-template-columns:repeat(2,minmax(0,1fr)) !important;}}
 </style>
 <script id="patch-v21-4-home-text-and-title">
-(function(){function applyV214(){try{document.title = '🦉 Maître Hibou V24.0.13';var p=document.querySelector('.v21-hero p');if(p) p.textContent='🌟 Que souhaites-tu apprendre aujourd’hui ?';var h2=document.querySelector('.v21-hero h2');if(h2) h2.setAttribute('aria-hidden','true');}catch(e){}}document.addEventListener('DOMContentLoaded',applyV214);setTimeout(applyV214,100);setTimeout(applyV214,500);setTimeout(applyV214,1200);})();
+(function(){function applyV214(){try{document.title = '🦉 Maître Hibou V24.0.14';var p=document.querySelector('.v21-hero p');if(p) p.textContent='🌟 Que souhaites-tu apprendre aujourd’hui ?';var h2=document.querySelector('.v21-hero h2');if(h2) h2.setAttribute('aria-hidden','true');}catch(e){}}document.addEventListener('DOMContentLoaded',applyV214);setTimeout(applyV214,100);setTimeout(applyV214,500);setTimeout(applyV214,1200);})();
 </script>
 
 
@@ -4472,7 +4472,7 @@ body.v21-final .subject-btn{
 (function(){
   function applyV215(){
     try{
-      document.title = '🦉 Maître Hibou V24.0.13';
+      document.title = '🦉 Maître Hibou V24.0.14';
       var p=document.querySelector('.v21-hero p');
       if(p) p.textContent='🌟 Que souhaites-tu apprendre aujourd’hui ?';
       var h2=document.querySelector('.v21-hero h2');
@@ -4717,7 +4717,7 @@ body.v21-final .v21-sublist{
 (function(){
   function cleanV216(){
     try{
-      document.title = '🦉 Maître Hibou V24.0.13';
+      document.title = '🦉 Maître Hibou V24.0.14';
       document.body.classList.add('v21-final');
       var heroP=document.querySelector('.v21-hero p');
       if(heroP) heroP.textContent='🌟 Que souhaites-tu apprendre aujourd’hui ?';
@@ -12447,7 +12447,7 @@ window.__skillsTeacherV51 = true;
     return {
       prenom: String(prenom ?? "").trim(),
       initiale: String(row.initiale || row.Initiale || "").trim(),
-      naissance: String(row.naissance || row.Naissance || "").trim(),
+      naissance: String(row.naissance || row.Naissance || row.date_naissance || row["Date naissance"] || row["Date de naissance"] || row.anniversaire || row.Anniversaire || "").trim(),
       sexe: String(row.sexe || row.Sexe || "").trim(),
       actif: row.actif ?? row.Actif ?? "",
       active: isActive(row.actif ?? row.Actif),
@@ -22968,7 +22968,7 @@ body.v21-final .v2173-activity-btn.soon{
 (function(){
   if(window.__maitreHibouV2173TitresVerrouilles) return;
   window.__maitreHibouV2173TitresVerrouilles = true;
-  const VERSION_TITLE = '🦉 Maître Hibou V24.0.13';
+  const VERSION_TITLE = '🦉 Maître Hibou V24.0.14';
   const SUBJECTS = {
     francais:{label:'Français', icon:'📖', color:'#FF3B57', color2:'#FF6E82', soft:'#FFECEF', border:'#FFD3DA', shadow:'rgba(255,59,87,.24)', items:[
       {label:'Nom commun', names:['startNomCommun','showNomCommunLesson']},
@@ -25257,7 +25257,7 @@ body.v21-final .v2173-activity-btn.soon{
 (function(){
   if(window.__maitreHibouApiModalV2346) return;
   window.__maitreHibouApiModalV2346 = true;
-  var TITLE = '🦉 Maître Hibou V24.0.13';
+  var TITLE = '🦉 Maître Hibou V24.0.14';
   function byId(id){ return document.getElementById(id); }
   function ensureApiModalV2346(){
     try{ document.title = TITLE; }catch(e){}
@@ -25441,7 +25441,7 @@ body.v21-final .v2173-activity-btn.soon{
 </style>
 <script id="patch-v2347-title-js">
 (function(){
-  try{ document.title = '🦉 Maître Hibou V24.0.13'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V24.0.14'; }catch(e){}
 })();
 </script>
 
@@ -25819,7 +25819,7 @@ body.v21-final .v2173-activity-btn.soon{
 (function(){
   if(window.__maitreHibouFrancaisPopupV2348) return;
   window.__maitreHibouFrancaisPopupV2348 = true;
-  try{ document.title = '🦉 Maître Hibou V24.0.13'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V24.0.14'; }catch(e){}
 
   const TRAINING_COUNT = 10;
   let frState = {activity:null, questions:[], index:0, score:0, answered:false};
@@ -26062,7 +26062,7 @@ body.v21-final .v2173-activity-btn.soon{
 (function(){
   if(window.__maitreHibouFrancaisSheetGrammaireV23410) return;
   window.__maitreHibouFrancaisSheetGrammaireV23410 = true;
-  try{ document.title = '🦉 Maître Hibou V24.0.13'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V24.0.14'; }catch(e){}
 
   const BASE_URL = 'https://script.google.com/macros/s/AKfycbyzfRPrUV7xKgeXUM0LjbOsOne5DieRjDYxmuVbBBUIGL-F9ahMmJZSfpUDYmBaZIOpvQ/exec';
   const SHEET_NAME = 'grammaire';
@@ -26631,7 +26631,7 @@ body.v21-final .v2173-activity-btn.soon{
 (function(){
   if(window.__maitreHibouFrancaisCeinturesV23411) return;
   window.__maitreHibouFrancaisCeinturesV23411 = true;
-  try{ document.title = '🦉 Maître Hibou V24.0.13'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V24.0.14'; }catch(e){}
 
   const BASE_URL = 'https://script.google.com/macros/s/AKfycbyzfRPrUV7xKgeXUM0LjbOsOne5DieRjDYxmuVbBBUIGL-F9ahMmJZSfpUDYmBaZIOpvQ/exec';
   const SHEET_NAME = 'grammaire';
@@ -26965,7 +26965,7 @@ body.v21-final .v2173-activity-btn.soon{
 (function(){
   if(window.__maitreHibouFrancaisSectionsV23412) return;
   window.__maitreHibouFrancaisSectionsV23412 = true;
-  try{ document.title = '🦉 Maître Hibou V24.0.13'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V24.0.14'; }catch(e){}
 
   const GRAMMAR_BELTS = [
     {id:'blanche', title:'Phrase affirmative / négative', label:'Ceinture blanche', desc:'Reconnaître et transformer les phrases.', color:'radial-gradient(circle at 35% 25%,#FFFFFF,#EDE7FF 68%,#C8B8F2)'},
@@ -27044,7 +27044,7 @@ body.v21-final .v2173-activity-btn.soon{
 }
 </style>
 <script id="patch-v23413-version-title">
-(function(){ try{ document.title = '🦉 Maître Hibou V24.0.13'; }catch(e){} })();
+(function(){ try{ document.title = '🦉 Maître Hibou V24.0.14'; }catch(e){} })();
 </script>
 
 
@@ -27377,7 +27377,7 @@ body.v21-final .v21-deco-globe::after{
   window.__v23415GlobeDedicatedWindow = true;
 
   function prepareDedicatedLinks(){
-    try{ document.title = '🦉 Maître Hibou V24.0.13'; }catch(e){}
+    try{ document.title = '🦉 Maître Hibou V24.0.14'; }catch(e){}
 
     const overlay = document.getElementById('v23ShortcutsOverlay');
     if(!overlay) return;
@@ -27491,7 +27491,7 @@ body.v23-shortcuts-open{
   window.__v23416GlobePopupFixed = true;
 
   function forcePopupLayout(){
-    try{ document.title = '🦉 Maître Hibou V24.0.13'; }catch(e){}
+    try{ document.title = '🦉 Maître Hibou V24.0.14'; }catch(e){}
     var overlay = document.getElementById('v23ShortcutsOverlay');
     if(!overlay) return null;
 
@@ -27886,7 +27886,7 @@ body.v21-final .v21-profile-card .profile-life-v23417-open-hint{
 (function(){
   if(window.__maitreHibouProfileLifeV23417) return;
   window.__maitreHibouProfileLifeV23417 = true;
-  try{ document.title = '🦉 Maître Hibou V24.0.13'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V24.0.14'; }catch(e){}
 
   var STUDENTS_URL = 'https://script.google.com/macros/s/AKfycbxz1vYS24sv-c3XVja12geWEXIQl6bQyBoQKBx5kg_fwQaj80_Oc7Y34yeBSRN4lF1f/exec';
   var QUESTIONS_URL = 'https://script.google.com/macros/s/AKfycbwGcErZ0he06Dg_bpPDaHtPHa6fAcDQ-31tB7Rlr9w2JZcNaQnP9YIABJYf-CKpFfpF/exec';
@@ -28938,7 +28938,7 @@ body.v21-final .v21-profile-card .profile-life-v23417-open-hint{
   if(window.__hibouV23419QuestionFix) return;
   window.__hibouV23419QuestionFix = true;
 
-  try{ document.title = '🦉 Maître Hibou V24.0.13'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V24.0.14'; }catch(e){}
 
   var SHEET_URL = 'https://script.google.com/macros/s/AKfycbwGcErZ0he06Dg_bpPDaHtPHa6fAcDQ-31tB7Rlr9w2JZcNaQnP9YIABJYf-CKpFfpF/exec';
   var teacherState = { initialized:false, loading:false, message:'', messageType:'warn', items:[] };
@@ -29268,7 +29268,7 @@ body.v21-final .v21-profile-card .profile-life-v23417-open-hint{
   try {
     if(window.__maitreHibouV23421QuestionsSafe) return;
     window.__maitreHibouV23421QuestionsSafe = true;
-    try{ document.title = '🦉 Maître Hibou V24.0.13'; }catch(e){}
+    try{ document.title = '🦉 Maître Hibou V24.0.14'; }catch(e){}
 
     var SHEET_URL = 'https://script.google.com/macros/s/AKfycbwGcErZ0he06Dg_bpPDaHtPHa6fAcDQ-31tB7Rlr9w2JZcNaQnP9YIABJYf-CKpFfpF/exec';
     var state = { loading:false, loaded:false, items:[], message:'', type:'warn' };
@@ -29550,7 +29550,7 @@ body.v21-final .v21-profile-card .profile-life-v23417-open-hint{
 (function(){
   if(window.__maitreHibouV23422QuestionWorkflow) return;
   window.__maitreHibouV23422QuestionWorkflow = true;
-  try{ document.title = '🦉 Maître Hibou V24.0.13'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V24.0.14'; }catch(e){}
 
   var SHEET_URL = 'https://script.google.com/macros/s/AKfycbwGcErZ0he06Dg_bpPDaHtPHa6fAcDQ-31tB7Rlr9w2JZcNaQnP9YIABJYf-CKpFfpF/exec';
 
@@ -29862,7 +29862,7 @@ body.v21-final .v21-profile-card .profile-life-v23417-open-hint{
 <!-- PATCH V23.4.23 - Titre d'onglet stabilisé : neutralise les anciens patches qui changeaient document.title -->
 <script id="patch-title-stabilise-v23423">
 (function(){
-  var HIBOU_FINAL_TITLE = '🦉 Maître Hibou V24.0.13';
+  var HIBOU_FINAL_TITLE = '🦉 Maître Hibou V24.0.14';
   function setFinalTitle(){
     try{
       if(document.title !== HIBOU_FINAL_TITLE) document.title = HIBOU_FINAL_TITLE;
@@ -29915,7 +29915,7 @@ body.v21-final .v21-profile-card .profile-life-v23417-open-hint{
 <script id="patch-v23424-teacher-direct-js">
 (function(){
   'use strict';
-  var VERSION_TITLE = '🦉 Maître Hibou V24.0.13';
+  var VERSION_TITLE = '🦉 Maître Hibou V24.0.14';
   try{ document.title = VERSION_TITLE; }catch(e){}
 
   var SHEET_URL = window.QUESTION_SHEET_URL || window.HIBOU_QUESTIONS_SHEET_URL || 'https://script.google.com/macros/s/AKfycbwGcErZ0he06Dg_bpPDaHtPHa6fAcDQ-31tB7Rlr9w2JZcNaQnP9YIABJYf-CKpFfpF/exec';
@@ -30521,7 +30521,7 @@ body.v21-final .v21-profile-card .profile-life-v23417-open-hint{
   if(window.__maitreHibouV2403Ready) return;
   window.__maitreHibouV2403Ready = true;
 
-  var VERSION_TITLE = '🦉 Maître Hibou V24.0.13';
+  var VERSION_TITLE = '🦉 Maître Hibou V24.0.14';
   var ORDER = ['francais','maths','anglais','sciences','geographie','histoire'];
 
   var SUBJECTS = {
@@ -31106,7 +31106,7 @@ body.v21-final .v21-profile-card .profile-life-v23417-open-hint{
   if(window.__maitreHibouV2404Conseil) return;
   window.__maitreHibouV2404Conseil = true;
 
-  var VERSION_TITLE = '🦉 Maître Hibou V24.0.13';
+  var VERSION_TITLE = '🦉 Maître Hibou V24.0.14';
 
   function byId(id){ return document.getElementById(id); }
 
@@ -31542,7 +31542,7 @@ body.v21-final .v21-profile-card .profile-life-v23417-open-hint{
   if(window.__maitreHibouV2405TroisCartes) return;
   window.__maitreHibouV2405TroisCartes = true;
 
-  var VERSION_TITLE = '🦉 Maître Hibou V24.0.13';
+  var VERSION_TITLE = '🦉 Maître Hibou V24.0.14';
 
   function byId(id){ return document.getElementById(id); }
 
@@ -31661,7 +31661,7 @@ body.v21-final .v21-profile-card .profile-life-v23417-open-hint{
   if(window.__maitreHibouV2406TrainingLikeBelts) return;
   window.__maitreHibouV2406TrainingLikeBelts = true;
 
-  var VERSION_TITLE = '🦉 Maître Hibou V24.0.13';
+  var VERSION_TITLE = '🦉 Maître Hibou V24.0.14';
 
   function byId(id){ return document.getElementById(id); }
 
@@ -31914,7 +31914,466 @@ body.v21-final .v21-profile-card .profile-life-v23417-open-hint{
 })();
 </script>
 
-<!-- PATCH V24.0.13 - Accueil prénom stable et local -->
+<!-- PATCH V24.0.14 - Anniversaires du mois dans le bandeau + popup annuelle -->
+<style id="patch-v24-0-14-birthdays-css">
+body.v21-final .header-actions{
+  grid-template-columns:repeat(5,minmax(0,1fr)) 42px !important;
+}
+.birthday-top-card-v2414{
+  position:relative;
+  overflow:hidden;
+  cursor:pointer;
+  border:2px solid rgba(255,255,255,.18) !important;
+  background:linear-gradient(135deg,#0D245E 0%,#081A43 100%) !important;
+  color:#fff !important;
+}
+.birthday-top-card-v2414::before{
+  content:"";
+  position:absolute;
+  inset:-35% auto auto -20%;
+  width:110px;
+  height:110px;
+  border-radius:999px;
+  background:radial-gradient(circle,rgba(255,214,102,.38),rgba(255,214,102,0) 68%);
+}
+.birthday-top-card-v2414::after{
+  content:"✨";
+  position:absolute;
+  right:10px;
+  bottom:6px;
+  font-size:22px;
+  opacity:.9;
+}
+.birthday-top-card-v2414:hover{
+  transform:translateY(-1px);
+  box-shadow:0 10px 24px rgba(255,184,0,.18), inset 0 1px 0 rgba(255,255,255,.18) !important;
+}
+.birthday-top-card-v2414 .birthday-cake-v2414{
+  width:54px;
+  height:54px;
+  flex:0 0 54px;
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#fff;
+  color:#FF5E7E;
+  font-size:32px;
+  box-shadow:0 6px 16px rgba(0,0,0,.16);
+  z-index:1;
+}
+.birthday-top-card-v2414 .birthday-text-v2414{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+  z-index:1;
+}
+.birthday-top-card-v2414 .birthday-label-v2414{
+  font-weight:1000;
+  font-size:14px;
+  line-height:1.05;
+  color:#FFEBA6;
+}
+.birthday-top-card-v2414 .birthday-summary-v2414{
+  font-weight:1000;
+  font-size:17px;
+  line-height:1.08;
+  color:#fff;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+.birthday-overlay-v2414{
+  position:fixed;
+  inset:0;
+  z-index:410500;
+  background:rgba(22,20,58,.54);
+  backdrop-filter:blur(8px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+}
+.birthday-overlay-v2414.hidden{display:none!important;}
+.birthday-popup-v2414{
+  width:min(1020px,94vw);
+  max-height:min(860px,90vh);
+  overflow:hidden;
+  background:linear-gradient(180deg,#FFFFFF 0%,#FFFDF6 100%);
+  border:4px solid #FFE08A;
+  border-radius:28px;
+  box-shadow:0 26px 70px rgba(45,43,85,.32);
+  display:flex;
+  flex-direction:column;
+}
+.birthday-head-v2414{
+  display:grid;
+  grid-template-columns:72px 1fr auto;
+  align-items:center;
+  gap:14px;
+  padding:18px 22px 14px;
+  background:linear-gradient(135deg,#FFF5C7 0%,#F4F0FF 100%);
+  border-bottom:2px solid #FFE9A6;
+}
+.birthday-head-icon-v2414{
+  width:64px;
+  height:64px;
+  border-radius:20px;
+  background:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:38px;
+  box-shadow:0 8px 20px rgba(255,184,0,.22);
+}
+.birthday-head-v2414 h2{
+  margin:0;
+  font-family:'Baloo 2','Nunito',sans-serif;
+  font-size:34px;
+  line-height:1;
+  color:#17194A;
+}
+.birthday-head-v2414 p{
+  margin:4px 0 0;
+  font-weight:900;
+  color:#6C63A8;
+}
+.birthday-close-v2414{
+  border:3px solid #BBA8FF;
+  background:#F4F0FF;
+  color:#6C43D9;
+  border-radius:18px;
+  width:54px;
+  height:54px;
+  font-size:30px;
+  font-weight:1000;
+  cursor:pointer;
+}
+.birthday-body-v2414{
+  padding:18px 22px 22px;
+  overflow:auto;
+}
+.birthday-today-v2414{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:16px;
+  padding:14px 16px;
+  border:3px solid #FFD66B;
+  border-radius:22px;
+  background:linear-gradient(135deg,#FFF9E6 0%,#FFFFFF 100%);
+  color:#7A5C00;
+  font-weight:1000;
+  box-shadow:0 8px 22px rgba(255,184,0,.12);
+}
+.birthday-month-grid-v2414{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;
+}
+.birthday-month-v2414{
+  border:2px solid #ECEBF3;
+  border-radius:20px;
+  background:#fff;
+  overflow:hidden;
+  box-shadow:0 6px 16px rgba(45,43,85,.06);
+}
+.birthday-month-v2414.current{
+  border-color:#FFD66B;
+  box-shadow:0 8px 22px rgba(255,184,0,.16);
+}
+.birthday-month-title-v2414{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  padding:10px 12px;
+  font-family:'Baloo 2','Nunito',sans-serif;
+  font-size:20px;
+  font-weight:1000;
+  color:#17194A;
+  background:linear-gradient(135deg,#F7F6FF 0%,#FFF9E6 100%);
+}
+.birthday-count-v2414{
+  font-family:'Nunito',sans-serif;
+  font-size:12px;
+  padding:4px 8px;
+  border-radius:999px;
+  background:#FFEBA6;
+  color:#6B4A00;
+}
+.birthday-list-v2414{
+  display:flex;
+  flex-direction:column;
+  gap:7px;
+  padding:10px;
+}
+.birthday-line-v2414{
+  display:grid;
+  grid-template-columns:42px 1fr;
+  align-items:center;
+  gap:8px;
+  min-height:44px;
+  padding:7px 9px;
+  border-radius:14px;
+  background:#FBFAFF;
+  font-weight:1000;
+  color:#2D2B55;
+}
+.birthday-line-v2414.today{
+  background:linear-gradient(135deg,#FFF1B8 0%,#FFE6EF 100%);
+  outline:2px solid #FFD66B;
+}
+.birthday-day-v2414{
+  width:38px;
+  height:32px;
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#fff;
+  color:#6C43D9;
+  box-shadow:inset 0 0 0 2px #E6DFFF;
+}
+.birthday-empty-v2414{
+  padding:12px;
+  color:#8B89A8;
+  font-weight:900;
+  font-size:13px;
+}
+@media(max-width:1180px){
+  body.v21-final .header-actions{
+    grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+  }
+  body.v21-final #soundBtn{display:none!important;}
+}
+@media(max-width:920px){
+  .birthday-month-grid-v2414{grid-template-columns:repeat(2,minmax(0,1fr));}
+}
+@media(max-width:620px){
+  .birthday-month-grid-v2414{grid-template-columns:1fr;}
+  .birthday-head-v2414{grid-template-columns:1fr auto;text-align:left;}
+  .birthday-head-icon-v2414{display:none;}
+}
+</style>
+<script id="patch-v24-0-14-birthdays-js">
+(function(){
+  if(window.__hibouBirthdaysV2414) return;
+  window.__hibouBirthdaysV2414 = true;
+
+  // Format attendu si tu veux compléter sans Google Sheets :
+  // window.HIBOU_BIRTHDAYS = [{prenom:"Léa", day:12, month:7}, {prenom:"Tim", date:"03/11"}];
+  window.HIBOU_BIRTHDAYS = window.HIBOU_BIRTHDAYS || [];
+
+  var CACHE_KEY = "hibou_birthdays_cache_v2414";
+  var MONTHS = ["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
+
+  function byId(id){ return document.getElementById(id); }
+  function esc(v){
+    return String(v == null ? "" : v).replace(/[&<>"']/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c];
+    });
+  }
+  function norm(v){
+    return String(v || "").trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]/g,"");
+  }
+  function titleName(v){
+    var s = String(v || "").trim();
+    return s ? s.charAt(0).toUpperCase() + s.slice(1) : "";
+  }
+  function parseDate(value){
+    if(value == null || value === "") return null;
+    if(typeof value === "number" && isFinite(value)){
+      var date = new Date(Math.round((value - 25569) * 86400 * 1000));
+      if(!isNaN(date.getTime())) return {day:date.getUTCDate(), month:date.getUTCMonth()+1};
+    }
+    var s = String(value).trim();
+    var m = s.match(/^(\d{1,2})[\/.-](\d{1,2})(?:[\/.-]\d{2,4})?$/);
+    if(m) return validDate(Number(m[1]), Number(m[2]));
+    m = s.match(/^\d{4}-(\d{1,2})-(\d{1,2})/);
+    if(m) return validDate(Number(m[2]), Number(m[1]));
+    return null;
+  }
+  function validDate(day, month){
+    if(day >= 1 && day <= 31 && month >= 1 && month <= 12) return {day:day, month:month};
+    return null;
+  }
+  function isActive(student){
+    var active = student && (student.active != null ? student.active : student.actif);
+    var s = norm(active);
+    return active === true || !s || s === "true" || s === "vrai" || s === "oui" || s === "yes" || s === "1" || s === "actif" || s === "x";
+  }
+  function cleanBirthday(row){
+    var prenom = titleName(row && (row.prenom || row["Prénom"] || row.Prenom || row.eleve || row.name));
+    var raw = row && (row.naissance || row.Naissance || row.date_naissance || row["Date naissance"] || row["Date de naissance"] || row.anniversaire || row.Anniversaire || row.date);
+    var parsed = row && row.day && row.month ? validDate(Number(row.day), Number(row.month)) : parseDate(raw);
+    if(!prenom || !parsed) return null;
+    return {prenom:prenom, day:parsed.day, month:parsed.month};
+  }
+  function mergeBirthdays(lists){
+    var map = {};
+    lists.forEach(function(list){
+      (list || []).forEach(function(item){
+        var b = cleanBirthday(item);
+        if(!b) return;
+        map[norm(b.prenom)] = b;
+      });
+    });
+    return Object.keys(map).map(function(k){ return map[k]; }).sort(function(a,b){
+      return a.month - b.month || a.day - b.day || a.prenom.localeCompare(b.prenom, "fr");
+    });
+  }
+  function localBirthdays(){
+    var fromStorage = [];
+    try{ fromStorage = JSON.parse(localStorage.getItem("hibou_birthdays_v2414") || "[]") || []; }catch(e){}
+    var fromCache = [];
+    try{ fromCache = JSON.parse(localStorage.getItem(CACHE_KEY) || "[]") || []; }catch(e){}
+    return mergeBirthdays([fromCache, window.HIBOU_BIRTHDAYS, fromStorage]);
+  }
+  async function loadBirthdays(force){
+    var local = localBirthdays();
+    if(typeof window.fetchSheetsStudentsV167 !== "function") return local;
+    try{
+      var rows = await window.fetchSheetsStudentsV167(force === true);
+      var active = (Array.isArray(rows) ? rows : []).filter(function(s){
+        return s && s.prenom && !["test","dev"].includes(norm(s.prenom)) && (isActive(s) || (s.active === false && !s.actif));
+      });
+      var merged = mergeBirthdays([local, active]);
+      try{ localStorage.setItem(CACHE_KEY, JSON.stringify(merged)); }catch(e){}
+      return merged;
+    }catch(e){
+      return local;
+    }
+  }
+  function todayParts(){
+    var d = new Date();
+    return {day:d.getDate(), month:d.getMonth()+1};
+  }
+  function monthList(list, month){
+    return (list || []).filter(function(b){ return Number(b.month) === month; }).sort(function(a,b){
+      return a.day - b.day || a.prenom.localeCompare(b.prenom, "fr");
+    });
+  }
+  function todayList(list){
+    var t = todayParts();
+    return (list || []).filter(function(b){ return Number(b.day) === t.day && Number(b.month) === t.month; })
+      .sort(function(a,b){ return a.prenom.localeCompare(b.prenom, "fr"); });
+  }
+  function topSummary(list){
+    var today = todayList(list);
+    if(today.length){
+      return "Aujourd’hui : " + today.map(function(b){ return b.prenom; }).slice(0,3).join(", ") + (today.length > 3 ? " +" + (today.length-3) : "");
+    }
+    var now = todayParts();
+    var month = monthList(list, now.month);
+    if(month.length){
+      return MONTHS[now.month-1].charAt(0).toUpperCase() + MONTHS[now.month-1].slice(1) + " : " + month.map(function(b){ return b.prenom; }).slice(0,3).join(", ") + (month.length > 3 ? " +" + (month.length-3) : "");
+    }
+    return "Aucun ce mois-ci";
+  }
+  function ensureCard(){
+    var actions = document.querySelector(".header-actions");
+    if(!actions) return null;
+    var card = byId("birthdayTopCardV2414");
+    if(!card){
+      card = document.createElement("button");
+      card.type = "button";
+      card.id = "birthdayTopCardV2414";
+      card.className = "bandeau-info-card v21-top-card birthday-top-card-v2414";
+      card.title = "Voir les anniversaires de l’année";
+      card.innerHTML = '<span class="birthday-cake-v2414" aria-hidden="true">🎂</span><span class="birthday-text-v2414"><span class="birthday-label-v2414">Anniversaires</span><span class="birthday-summary-v2414" id="birthdayTopSummaryV2414">Chargement…</span></span>';
+      var sound = byId("soundBtn");
+      if(sound && sound.parentNode === actions) actions.insertBefore(card, sound);
+      else actions.appendChild(card);
+      card.addEventListener("click", function(ev){
+        ev.preventDefault();
+        ev.stopPropagation();
+        openBirthdaysPopup();
+      }, true);
+    }
+    return card;
+  }
+  function updateCard(list){
+    ensureCard();
+    var summary = byId("birthdayTopSummaryV2414");
+    if(summary) summary.textContent = topSummary(list || []);
+  }
+  function ensurePopup(){
+    var ov = byId("birthdaysOverlayV2414");
+    if(ov) return ov;
+    ov = document.createElement("div");
+    ov.id = "birthdaysOverlayV2414";
+    ov.className = "birthday-overlay-v2414 hidden";
+    ov.setAttribute("role","dialog");
+    ov.setAttribute("aria-modal","true");
+    ov.setAttribute("aria-label","Anniversaires de l'année");
+    ov.innerHTML =
+      '<div class="birthday-popup-v2414">' +
+        '<div class="birthday-head-v2414">' +
+          '<div class="birthday-head-icon-v2414" aria-hidden="true">🎂</div>' +
+          '<div><h2>Anniversaires de l’année</h2><p>Rangés par mois, pour ne rater aucune célébration.</p></div>' +
+          '<button type="button" class="birthday-close-v2414" onclick="closeBirthdaysPopupV2414()" aria-label="Fermer">×</button>' +
+        '</div>' +
+        '<div class="birthday-body-v2414" id="birthdaysBodyV2414"></div>' +
+      '</div>';
+    document.body.appendChild(ov);
+    ov.addEventListener("click", function(ev){ if(ev.target === ov) closeBirthdaysPopup(); });
+    document.addEventListener("keydown", function(ev){ if(ev.key === "Escape") closeBirthdaysPopup(); });
+    return ov;
+  }
+  function renderPopup(list){
+    var body = byId("birthdaysBodyV2414");
+    if(!body) return;
+    var t = todayParts();
+    var today = todayList(list);
+    var todayHTML = today.length
+      ? '<div class="birthday-today-v2414"><span>🎉</span><div>Aujourd’hui : <strong>'+today.map(function(b){ return esc(b.prenom); }).join(", ")+'</strong></div></div>'
+      : '<div class="birthday-today-v2414"><span>🎂</span><div>Aucun anniversaire aujourd’hui. Le calendrier reste prêt.</div></div>';
+    var monthsHTML = MONTHS.map(function(name, index){
+      var month = index + 1;
+      var items = monthList(list, month);
+      var rows = items.length ? items.map(function(b){
+        var cls = (b.day === t.day && b.month === t.month) ? " birthday-line-v2414 today" : "birthday-line-v2414";
+        return '<div class="'+cls+'"><span class="birthday-day-v2414">'+esc(b.day)+'</span><span>'+esc(b.prenom)+'</span></div>';
+      }).join("") : '<div class="birthday-empty-v2414">Aucun anniversaire</div>';
+      return '<section class="birthday-month-v2414 '+(month === t.month ? 'current' : '')+'"><div class="birthday-month-title-v2414"><span>'+esc(name)+'</span><span class="birthday-count-v2414">'+items.length+'</span></div><div class="birthday-list-v2414">'+rows+'</div></section>';
+    }).join("");
+    body.innerHTML = todayHTML + '<div class="birthday-month-grid-v2414">' + monthsHTML + '</div>';
+  }
+  function openBirthdaysPopup(){
+    var ov = ensurePopup();
+    var body = byId("birthdaysBodyV2414");
+    if(body) body.innerHTML = '<div class="birthday-today-v2414"><span>🎂</span><div>Chargement des anniversaires…</div></div>';
+    ov.classList.remove("hidden");
+    loadBirthdays(true).then(function(list){
+      updateCard(list);
+      renderPopup(list);
+    });
+  }
+  function closeBirthdaysPopup(){
+    var ov = byId("birthdaysOverlayV2414");
+    if(ov) ov.classList.add("hidden");
+  }
+  function install(){
+    ensureCard();
+    updateCard(localBirthdays());
+    loadBirthdays(false).then(updateCard);
+  }
+
+  window.openBirthdaysPopupV2414 = openBirthdaysPopup;
+  window.closeBirthdaysPopupV2414 = closeBirthdaysPopup;
+  window.refreshBirthdaysCardV2414 = install;
+
+  if(document.readyState === "loading") document.addEventListener("DOMContentLoaded", install);
+  else install();
+  window.addEventListener("load", install);
+  [250,800,1600,3200,5200].forEach(function(ms){ setTimeout(install, ms); });
+})();
+</script>
+
+<!-- PATCH V24.0.14 - Accueil prénom stable et local -->
 <style id="patch-v24-0-12-prenom-stable-css">
 #prenomOverlay:not(.hidden){
   display:flex !important;

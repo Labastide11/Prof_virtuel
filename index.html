@@ -32427,6 +32427,145 @@ body.v21-final .v21-profile-card .profile-life-v23417-open-hint{
 })();
 </script>
 
+<!-- PATCH V24.0.7 - Accueil prénom : entrée locale immédiate, sans blocage Google Sheets -->
+<script id="patch-v24-0-7-prenom-local-fast">
+(function(){
+  if(window.__hibouPrenomLocalFastV2407) return;
+  window.__hibouPrenomLocalFastV2407 = true;
+
+  function byId(id){ return document.getElementById(id); }
+  function text(v){ return String(v == null ? '' : v).trim(); }
+  function safe(fn){
+    try{
+      if(typeof fn === 'function') fn();
+    }catch(e){
+      console.warn('Accueil prénom : action ignorée', e);
+    }
+  }
+  function setError(message){
+    var error = byId('prenomError');
+    if(error) error.textContent = message || '';
+  }
+  function resetButton(){
+    var btn = document.querySelector('.prenom-btn');
+    if(!btn) return;
+    btn.disabled = false;
+    btn.classList.remove('loading');
+    if(btn.dataset && btn.dataset.originalText) btn.textContent = btn.dataset.originalText;
+    else btn.textContent = "C'est parti ! 🚀";
+  }
+  function updateNameEverywhere(name){
+    var ids = ['eleveNom','v21HeaderName','v21HeroName','hibouProfileName'];
+    ids.forEach(function(id){
+      var el = byId(id);
+      if(el) el.textContent = name;
+    });
+  }
+  function addWelcome(name){
+    if(window.__hibouWelcomeShown || window.__hibouWelcomeSheetsShown) return;
+    window.__hibouWelcomeShown = true;
+    var container = byId('chatContainer');
+    if(!container) return;
+    var points = 0;
+    try{ points = Number(window.score || 0); }catch(e){}
+    var savedMsg = points > 0 ? ' Tu as déjà <strong>'+points+' points</strong> ! 🌟' : '';
+    var div = document.createElement('div');
+    div.className = 'message prof';
+    div.innerHTML = '<div class="avatar prof">🦉</div><div class="bubble">Bonjour <strong>'+name.replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c];})+'</strong> ! Ravi de te revoir !'+savedMsg+' Prêt(e) à travailler ? 😊</div>';
+    container.appendChild(div);
+  }
+  function enterLocalPrenom(ev){
+    if(ev){
+      ev.preventDefault();
+      ev.stopPropagation();
+      if(ev.stopImmediatePropagation) ev.stopImmediatePropagation();
+    }
+    var input = byId('prenomInput');
+    var name = text(input && input.value);
+    if(!name){
+      setError('Entre ton prénom !');
+      resetButton();
+      if(input) input.focus();
+      return false;
+    }
+    setError('');
+    resetButton();
+
+    try{ window.prenomActuel = name; }catch(e){}
+    try{ prenomActuel = name; }catch(e){}
+    try{
+      localStorage.setItem('hibou_prenom', name);
+      localStorage.setItem('hibou_last_prenom', name);
+      localStorage.setItem('hibou_current_student', JSON.stringify({
+        prenom:name,
+        active:true,
+        normalized:name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'')
+      }));
+    }catch(e){}
+
+    safe(function(){ if(typeof addStudentToRoster === 'function') addStudentToRoster(name); });
+
+    var overlay = byId('prenomOverlay');
+    if(overlay) overlay.classList.add('hidden');
+    document.body.classList.remove('prenom-mode');
+
+    var badge = byId('eleveBadge');
+    if(badge){
+      badge.style.display = 'flex';
+      badge.textContent = '👤 ' + name;
+    }
+    updateNameEverywhere(name);
+
+    safe(function(){ if(typeof loadStudentProgress === 'function') loadStudentProgress(); });
+    safe(function(){ if(typeof loadStudent === 'function') loadStudent(name); });
+    safe(function(){ if(typeof refreshScoreDisplays === 'function') refreshScoreDisplays(); });
+    safe(function(){ if(typeof renderStudentProgressPanel === 'function') renderStudentProgressPanel(); });
+    safe(function(){ if(typeof renderMasterChallengeCard === 'function') renderMasterChallengeCard(); });
+    safe(function(){ if(typeof updateStudentHeader === 'function') updateStudentHeader(); });
+    safe(function(){ if(typeof refreshHeaderCards === 'function') refreshHeaderCards(); });
+    safe(function(){ if(typeof refreshHibouProfile === 'function') refreshHibouProfile(); });
+    safe(function(){ if(typeof renderHibouProfile === 'function') renderHibouProfile(); });
+    safe(function(){ if(typeof loadWelcomeQuiz === 'function') loadWelcomeQuiz(); });
+
+    addWelcome(name);
+    return false;
+  }
+  function bind(){
+    var btn = document.querySelector('.prenom-btn');
+    if(btn){
+      btn.disabled = false;
+      btn.classList.remove('loading');
+      btn.onclick = enterLocalPrenom;
+    }
+    var input = byId('prenomInput');
+    if(input && !input.__hibouLocalFastBound){
+      input.__hibouLocalFastBound = true;
+      input.disabled = false;
+      input.readOnly = false;
+      input.addEventListener('keydown', function(ev){
+        if(ev.key === 'Enter') enterLocalPrenom(ev);
+      }, true);
+    }
+  }
+
+  document.addEventListener('click', function(ev){
+    var target = ev.target && ev.target.closest ? ev.target.closest('.prenom-btn') : null;
+    if(target) enterLocalPrenom(ev);
+  }, true);
+  document.addEventListener('keydown', function(ev){
+    if(ev.key === 'Enter' && ev.target && ev.target.id === 'prenomInput') enterLocalPrenom(ev);
+  }, true);
+
+  window.savePrenom = enterLocalPrenom;
+  window.savePrenomLocalFastV2407 = enterLocalPrenom;
+
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bind);
+  else bind();
+  window.addEventListener('load', bind);
+  [100,300,700,1200,2200,4000].forEach(function(ms){ setTimeout(bind, ms); });
+})();
+</script>
+
 <!-- PATCH V24.0.7 - Verrou final du titre d'onglet -->
 <script id="patch-v24-0-7-title-final-lock">
 (function(){

@@ -31853,5 +31853,545 @@ body.v21-final .v21-profile-card .profile-life-v23417-open-hint{
 })();
 </script>
 
+<!-- PATCH V24.0.7 - M'entraîner : fenêtre unique, même logique que Valider une compétence -->
+<style id="patch-v24-0-7-entrainer-fenetre-unique-css">
+  #trainingChoiceFullscreenV2406 .training-v2407-card{
+    grid-template-columns:54px 1fr 170px !important;
+  }
+
+  #trainingChoiceFullscreenV2406 .training-v2407-card .v22-state{
+    color:#5F3FD6;
+  }
+
+  #trainingChoiceFullscreenV2406 .v22-domain.maths .training-v2407-card .v22-state{
+    color:#0B74D9;
+  }
+
+  #trainingChoiceFullscreenV2406 .training-v2407-card:not(:disabled){
+    cursor:pointer;
+  }
+
+  #trainingChoiceFullscreenV2406 .training-v2407-question-box{
+    border:3px solid #E6DFFF;
+    border-radius:24px;
+    background:linear-gradient(180deg,#FFFFFF 0%,#FBFAFF 100%);
+    padding:18px;
+    box-shadow:0 8px 22px rgba(108,99,255,.10);
+  }
+
+  #trainingChoiceFullscreenV2406 .training-v2407-topline{
+    display:grid;
+    grid-template-columns:auto 1fr auto;
+    align-items:center;
+    gap:12px;
+    margin-bottom:14px;
+  }
+
+  #trainingChoiceFullscreenV2406 .training-v2407-back{
+    border:2px solid #D8CCFF;
+    background:#F7F3FF;
+    color:#5F3FD6;
+    border-radius:16px;
+    padding:10px 14px;
+    font-family:inherit;
+    font-weight:1000;
+    cursor:pointer;
+  }
+
+  #trainingChoiceFullscreenV2406 .training-v2407-title{
+    text-align:center;
+    color:#17194A;
+    font-family:'Baloo 2','Nunito',sans-serif;
+    font-size:clamp(22px,2.4vw,34px);
+    font-weight:1000;
+    line-height:1.05;
+  }
+
+  #trainingChoiceFullscreenV2406 .training-v2407-counter{
+    color:#6C63A8;
+    font-weight:1000;
+    white-space:nowrap;
+  }
+
+  #trainingChoiceFullscreenV2406 .training-v2407-question{
+    margin:12px 0;
+    padding:20px;
+    border-radius:22px;
+    background:#FFFFFF;
+    border:2px solid #ECEBF3;
+    color:#17194A;
+    font-size:clamp(22px,2.5vw,36px);
+    line-height:1.18;
+    font-weight:1000;
+    text-align:center;
+  }
+
+  #trainingChoiceFullscreenV2406 .training-v2407-options{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:12px;
+  }
+
+  #trainingChoiceFullscreenV2406 .training-v2407-option{
+    min-height:62px;
+    border:3px solid #E6DFFF;
+    border-radius:18px;
+    background:#FFFFFF;
+    color:#17194A;
+    font-family:inherit;
+    font-size:clamp(18px,2vw,27px);
+    font-weight:1000;
+    cursor:pointer;
+    box-shadow:0 6px 16px rgba(45,43,85,.08);
+  }
+
+  #trainingChoiceFullscreenV2406 .training-v2407-option.correct{
+    border-color:#64D884;
+    background:#EAFBF0;
+    color:#157A32;
+  }
+
+  #trainingChoiceFullscreenV2406 .training-v2407-option.wrong{
+    border-color:#FF9AA9;
+    background:#FFF0F2;
+    color:#B21D35;
+  }
+
+  #trainingChoiceFullscreenV2406 .training-v2407-feedback{
+    min-height:32px;
+    margin-top:12px;
+    color:#5F3FD6;
+    font-size:18px;
+    font-weight:1000;
+    text-align:center;
+  }
+
+  #trainingChoiceFullscreenV2406 .training-v2407-result{
+    text-align:center;
+    padding:22px;
+  }
+
+  #trainingChoiceFullscreenV2406 .training-v2407-result h3{
+    margin:0 0 12px;
+    color:#17194A;
+    font-size:clamp(26px,3vw,40px);
+  }
+
+  #trainingChoiceFullscreenV2406 .training-v2407-score{
+    display:inline-grid;
+    place-items:center;
+    min-width:170px;
+    min-height:110px;
+    border-radius:24px;
+    border:3px solid #FFE08A;
+    background:linear-gradient(180deg,#FFF9E6 0%,#FFFFFF 100%);
+    color:#7A5C00;
+    font-size:18px;
+    font-weight:1000;
+  }
+
+  #trainingChoiceFullscreenV2406 .training-v2407-score b{
+    display:block;
+    margin-top:4px;
+    color:#5F3FD6;
+    font-size:42px;
+  }
+
+  #trainingChoiceFullscreenV2406 .training-v2407-actions{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-top:18px;
+  }
+
+  #trainingChoiceFullscreenV2406 .training-v2407-action{
+    border:0;
+    border-radius:16px;
+    background:#6C63FF;
+    color:#FFFFFF;
+    padding:12px 16px;
+    font-family:inherit;
+    font-size:16px;
+    font-weight:1000;
+    cursor:pointer;
+  }
+
+  #trainingChoiceFullscreenV2406 .training-v2407-action.secondary{
+    background:#F4F0FF;
+    color:#5F3FD6;
+    border:2px solid #D8CCFF;
+  }
+
+  #trainingChoiceFullscreenV2406 .training-v2407-idea{
+    border:3px solid #FFE08A;
+    border-radius:24px;
+    background:linear-gradient(180deg,#FFF9E6 0%,#FFFFFF 100%);
+    padding:22px;
+  }
+
+  #trainingChoiceFullscreenV2406 .training-v2407-idea-card{
+    margin:12px 0;
+    padding:18px;
+    border-radius:20px;
+    background:#FFFFFF;
+    border:2px solid #FFE08A;
+    color:#17194A;
+    font-size:24px;
+    font-weight:1000;
+    line-height:1.2;
+  }
+
+  #trainingChoiceFullscreenV2406 .training-v2407-textarea{
+    width:100%;
+    min-height:140px;
+    margin-top:12px;
+    padding:14px;
+    border:3px solid #E6DFFF;
+    border-radius:18px;
+    font-family:'Nunito',sans-serif;
+    font-size:20px;
+    font-weight:800;
+    resize:vertical;
+  }
+
+  @media(max-width:900px){
+    #trainingChoiceFullscreenV2406 .training-v2407-card{
+      grid-template-columns:48px 1fr 150px !important;
+    }
+  }
+
+  @media(max-width:620px){
+    #trainingChoiceFullscreenV2406 .training-v2407-card{
+      grid-template-columns:42px 1fr !important;
+    }
+    #trainingChoiceFullscreenV2406 .training-v2407-card .v22-state{
+      grid-column:2;
+      border-left:none;
+      padding-left:0;
+    }
+    #trainingChoiceFullscreenV2406 .training-v2407-topline{
+      grid-template-columns:1fr;
+    }
+    #trainingChoiceFullscreenV2406 .training-v2407-options{
+      grid-template-columns:1fr;
+    }
+  }
+</style>
+
+<script id="patch-v24-0-7-entrainer-fenetre-unique-script">
+(function(){
+  if(window.__maitreHibouV2407TrainingSingleWindow) return;
+  window.__maitreHibouV2407TrainingSingleWindow = true;
+
+  var VERSION_TITLE = '🦉 V24.0.7 - M entraîner fenêtre unique';
+  var TRAINING_COUNT = 10;
+  var state = {domain:'', belt:null, questions:[], index:0, score:0, answered:false};
+
+  var FRENCH_BELTS = [
+    {id:'blanche', emoji:'⚪', colorName:'blanche', label:'Phrase affirmative / négative', sub:'Reconnaître et transformer une phrase'},
+    {id:'jaune', emoji:'🟡', colorName:'jaune', label:'Trouver le verbe', sub:'Repérer le verbe conjugué'},
+    {id:'orange', emoji:'🟠', colorName:'orange', label:'Trouver le sujet', sub:'Identifier qui fait l’action'},
+    {id:'verte', emoji:'🟢', colorName:'verte', label:'Reconnaître un nom', sub:'Repérer les noms communs'},
+    {id:'bleue', emoji:'🔵', colorName:'bleue', label:'Reconnaître un déterminant', sub:'Associer nom et déterminant'},
+    {id:'marron', emoji:'🟤', colorName:'marron', label:'Trouver l’infinitif', sub:'Passer du verbe conjugué à l’infinitif'},
+    {id:'noire', emoji:'⚫', colorName:'noire', label:'Reconnaître un adjectif', sub:'Repérer les mots qui précisent le nom'},
+    {id:'rouge', emoji:'🔴', colorName:'rouge', label:'Reconnaître le groupe nominal', sub:'Trouver le groupe autour du nom'},
+    {id:'idees', emoji:'✏️', colorName:'écriture', label:'Idées pour écrire', sub:'Tirer une idée et rédiger'}
+  ];
+
+  var MATH_FALLBACK = [
+    {ceinture:'blanche', niveau:1, emoji:'⚪', colorName:'blanche', label:'Petits nombres'},
+    {ceinture:'jaune', niveau:2, emoji:'🟡', colorName:'jaune', label:'Dizaines'},
+    {ceinture:'orange', niveau:3, emoji:'🟠', colorName:'orange', label:'Sans retenue'},
+    {ceinture:'vert_clair', niveau:4, emoji:'🟢', colorName:'vert clair', label:'Avec retenue'},
+    {ceinture:'vert_fonce', niveau:5, emoji:'🟢', colorName:'vert foncé', label:'Complément à la dizaine'},
+    {ceinture:'bleu_clair', niveau:6, emoji:'🔵', colorName:'bleu clair', label:'Ajouter / retrancher 9'},
+    {ceinture:'bleu_fonce', niveau:7, emoji:'🔵', colorName:'bleu foncé', label:'Ajouter / retrancher 11'},
+    {ceinture:'rose', niveau:8, emoji:'🌸', colorName:'rose', label:'Centaines'},
+    {ceinture:'beige', niveau:9, emoji:'🟫', colorName:'beige', label:'Complément à la centaine'},
+    {ceinture:'violet', niveau:10, emoji:'🟣', colorName:'violette', label:'Tables 1, 2 et 10'},
+    {ceinture:'marron', niveau:11, emoji:'🟤', colorName:'marron', label:'Tables 3, 4 et 5'},
+    {ceinture:'rouge', niveau:12, emoji:'🔴', colorName:'rouge', label:'Tables 6 et 7'},
+    {ceinture:'gris', niveau:13, emoji:'⚙️', colorName:'grise', label:'Tables 8 et 9'},
+    {ceinture:'noir', niveau:14, emoji:'⚫', colorName:'noire', label:'Synthèse'}
+  ];
+
+  var IDEAS = [
+    {prompt:'Un hibou trouve une clé brillante dans la cour de l’école.', example:'Ce matin, Maître Hibou découvre une petite clé dorée sous le banc.'},
+    {prompt:'Un cartable se met soudain à parler pendant la classe.', example:'Au moment de sortir le cahier, une voix sort du cartable de Lina.'},
+    {prompt:'Tu ouvres un livre et la première page devient une porte.', example:'La page tremble, puis elle s’ouvre comme l’entrée d’un château.'},
+    {prompt:'Dans la cour, une marelle magique apparaît.', example:'À chaque case, les enfants voyagent dans un lieu différent.'}
+  ];
+
+  function byId(id){ return document.getElementById(id); }
+  function esc(v){ return String(v == null ? '' : v).replace(/[&<>"']/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function norm(v){ return String(v == null ? '' : v).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,''); }
+  function rnd(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
+  function shuffle(arr){ var out=(arr||[]).slice(); for(var i=out.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=out[i]; out[i]=out[j]; out[j]=t; } return out; }
+
+  function ensureOverlay(){
+    var ov = byId('trainingChoiceFullscreenV2406');
+    if(!ov){
+      ov = document.createElement('div');
+      ov.id = 'trainingChoiceFullscreenV2406';
+      ov.className = 'modal-overlay skill-validation-fullscreen-v1861 hidden';
+      ov.setAttribute('aria-hidden','true');
+      ov.innerHTML = '<div class="modal-box"><div id="trainingChoiceBodyV2406"></div></div>';
+      document.body.appendChild(ov);
+      ov.addEventListener('click', function(ev){ if(ev.target === ov) closeTrainingChoiceV2407(); }, true);
+    }
+    return ov;
+  }
+
+  function body(){ ensureOverlay(); return byId('trainingChoiceBodyV2406'); }
+
+  function mathBelts(){
+    var source = Array.isArray(window.MATH_BELTS_V222) && window.MATH_BELTS_V222.length ? window.MATH_BELTS_V222 : MATH_FALLBACK;
+    return source.map(function(b){
+      return {
+        id:b.ceinture || b.skillId || 'blanche',
+        emoji:b.emoji || '🧮',
+        colorName:b.colorName || b.ceinture || 'ceinture',
+        label:b.label || b.competence || b.ceinture || 'Calcul',
+        sub:'10 calculs rapides'
+      };
+    }).sort(function(a,b){ return (a.niveau||0)-(b.niveau||0); });
+  }
+
+  function card(domain,b){
+    var action = 'startTrainingPracticeV2407(&quot;'+domain+'&quot;,&quot;'+esc(b.id)+'&quot;)';
+    return '<button type="button" class="v22-belt-card training-v2407-card" onclick="'+action+'" title="'+esc(b.label)+'">'
+      + '<div class="v22-belt-icon">'+esc(b.emoji)+'</div>'
+      + '<div class="v22-belt-main"><div class="v22-belt-name">'+esc(b.label)+'</div><div class="v22-belt-sub">Ceinture '+esc(b.colorName)+'</div><div class="v22-belt-sub">'+esc(b.sub)+'</div></div>'
+      + '<div class="v22-state ready">S’entraîner</div>'
+      + '</button>';
+  }
+
+  function menuHTML(){
+    return '<div class="v22-skill-header">'
+      + '<div class="v22-skill-owl">🦉</div>'
+      + '<div class="v22-skill-title"><h2>🧠 M’entraîner</h2><p>Choisis une ceinture. Tout se passe dans cette fenêtre.</p></div>'
+      + '<button type="button" class="v22-close-btn" onclick="closeTrainingChoiceV2407()" title="Fermer">×</button>'
+      + '</div>'
+      + '<div class="v22-columns">'
+      + '<section class="v22-domain francais"><div class="v22-domain-title">📖 Français</div><div class="v22-belt-list">'+FRENCH_BELTS.map(function(b){return card('francais',b);}).join('')+'</div></section>'
+      + '<section class="v22-domain maths"><div class="v22-domain-title">🔢 Maths</div><div class="v22-belt-list">'+mathBelts().map(function(b){return card('maths',b);}).join('')+'</div></section>'
+      + '</div>'
+      + '<div class="v22-help">💡 <span>Entraînement = 10 questions. La validation officielle reste dans <strong>Valider une compétence</strong>.</span><span>📖 🧮</span></div>';
+  }
+
+  function openTrainingChoice(){
+    var ov = ensureOverlay();
+    var b = body();
+    if(b) b.innerHTML = menuHTML();
+    ov.classList.remove('hidden');
+    ov.setAttribute('aria-hidden','false');
+    try{ document.documentElement.style.overflow='hidden'; document.body.style.overflow='hidden'; }catch(e){}
+  }
+
+  function closeTrainingChoice(){
+    var ov = byId('trainingChoiceFullscreenV2406');
+    if(ov){ ov.classList.add('hidden'); ov.setAttribute('aria-hidden','true'); }
+    try{ document.documentElement.style.overflow=''; document.body.style.overflow=''; }catch(e){}
+  }
+
+  function optionSet(answer){
+    var n = Number(answer);
+    var set = new Set([String(answer)]);
+    var deltas = shuffle([-12,-10,-5,-4,-3,-2,-1,1,2,3,4,5,10,12,20]);
+    for(var i=0;i<deltas.length && set.size<4;i++){
+      var v = n + deltas[i];
+      if(Number.isFinite(v) && v >= 0) set.add(String(v));
+    }
+    while(set.size<4) set.add(String(n + set.size + 1));
+    return shuffle(Array.from(set));
+  }
+
+  function qMath(id){
+    var b = norm(id), a, c, t, n, ans;
+    if(b === 'noir') b = shuffle(['blanche','jaune','orange','vert_clair','bleu_clair','violet','marron','rouge','gris'])[0];
+    if(b === 'blanche'){ a=rnd(2,18); c=rnd(1,9); ans=a+c; return {q:a+' + '+c+' = ?', options:optionSet(ans), answer:String(ans)}; }
+    if(b === 'jaune'){ a=rnd(10,80); c=[10,20,30,40][rnd(0,3)]; ans=a+c; return {q:a+' + '+c+' = ?', options:optionSet(ans), answer:String(ans)}; }
+    if(b === 'orange'){ a=rnd(21,79); c=rnd(11,19); ans=a+c; return {q:a+' + '+c+' = ?', options:optionSet(ans), answer:String(ans)}; }
+    if(b === 'vert_clair'){ a=rnd(35,89); c=rnd(16,48); ans=a+c; return {q:a+' + '+c+' = ?', options:optionSet(ans), answer:String(ans)}; }
+    if(b === 'vert_fonce'){ t=[20,30,40,50,60,70,80,90][rnd(0,7)]; a=t-rnd(1,9); ans=t-a; return {q:a+' + ? = '+t, options:optionSet(ans), answer:String(ans)}; }
+    if(b === 'bleu_clair'){ a=rnd(20,99); ans=a+9; return {q:a+' + 9 = ?', options:optionSet(ans), answer:String(ans)}; }
+    if(b === 'bleu_fonce'){ a=rnd(20,99); ans=a+11; return {q:a+' + 11 = ?', options:optionSet(ans), answer:String(ans)}; }
+    if(b === 'rose'){ a=rnd(100,800); c=[100,200,300][rnd(0,2)]; ans=a+c; return {q:a+' + '+c+' = ?', options:optionSet(ans), answer:String(ans)}; }
+    if(b === 'beige'){ t=[100,200,300,400,500,600,700,800,900][rnd(0,8)]; a=t-rnd(10,90); ans=t-a; return {q:a+' + ? = '+t, options:optionSet(ans), answer:String(ans)}; }
+    if(b === 'violet'){ t=[1,2,10][rnd(0,2)]; n=rnd(1,10); ans=n*t; return {q:n+' × '+t+' = ?', options:optionSet(ans), answer:String(ans)}; }
+    if(b === 'marron'){ t=[3,4,5][rnd(0,2)]; n=rnd(1,10); ans=n*t; return {q:n+' × '+t+' = ?', options:optionSet(ans), answer:String(ans)}; }
+    if(b === 'rouge'){ t=[6,7][rnd(0,1)]; n=rnd(1,10); ans=n*t; return {q:n+' × '+t+' = ?', options:optionSet(ans), answer:String(ans)}; }
+    if(b === 'gris'){ t=[8,9][rnd(0,1)]; n=rnd(1,10); ans=n*t; return {q:n+' × '+t+' = ?', options:optionSet(ans), answer:String(ans)}; }
+    return qMath('blanche');
+  }
+
+  var FRENCH_BANK = {
+    blanche:[
+      ['La phrase « Je ne mange pas. » est...', ['affirmative','négative','interrogative'], 'négative'],
+      ['La phrase « Le soleil brille. » est...', ['affirmative','négative','exclamative'], 'affirmative'],
+      ['Quelle phrase est négative ?', ['Je joue dehors.','Je ne joue pas dehors.','Joue dehors !'], 'Je ne joue pas dehors.']
+    ],
+    jaune:[
+      ['Dans « Les enfants jouent dans la cour. », le verbe est...', ['enfants','jouent','cour'], 'jouent'],
+      ['Dans « Le chat dort. », le verbe est...', ['chat','dort','Le'], 'dort'],
+      ['Quel mot est un verbe ?', ['maison','courir','bleu'], 'courir']
+    ],
+    orange:[
+      ['Dans « Le chien aboie. », le sujet est...', ['Le chien','aboie','chien aboie'], 'Le chien'],
+      ['Dans « Les élèves écrivent. », le sujet est...', ['écrivent','Les élèves','élèves écrivent'], 'Les élèves']
+    ],
+    verte:[
+      ['Quel mot est un nom commun ?', ['jardin','courir','rapide'], 'jardin'],
+      ['Dans « La fille lit. », le nom est...', ['La','fille','lit'], 'fille']
+    ],
+    bleue:[
+      ['Dans « le ballon », le déterminant est...', ['le','ballon','le ballon'], 'le'],
+      ['Quel mot est un déterminant ?', ['une','maison','manger'], 'une']
+    ],
+    marron:[
+      ['L’infinitif de « joue » est...', ['jouer','joue','jouet'], 'jouer'],
+      ['L’infinitif de « finit » est...', ['finir','finit','final'], 'finir']
+    ],
+    noire:[
+      ['Dans « une grande maison », l’adjectif est...', ['une','grande','maison'], 'grande'],
+      ['Quel mot est un adjectif ?', ['rapide','table','manger'], 'rapide']
+    ],
+    rouge:[
+      ['Dans « le petit chat noir », le groupe nominal est...', ['le petit chat noir','petit noir','chat noir mange'], 'le petit chat noir'],
+      ['Quel groupe est un groupe nominal ?', ['la grande école','court vite','mange une pomme'], 'la grande école']
+    ]
+  };
+
+  function qFrench(id){
+    var rows = FRENCH_BANK[id] || FRENCH_BANK.blanche;
+    var r = rows[rnd(0, rows.length-1)];
+    return {q:r[0], options:shuffle(r[1]), answer:r[2]};
+  }
+
+  function buildQuestions(domain,belt){
+    var out = [];
+    for(var i=0;i<TRAINING_COUNT;i++) out.push(domain === 'maths' ? qMath(belt.id) : qFrench(belt.id));
+    out.forEach(function(q){ q.correct = q.options.findIndex(function(o){ return String(o) === String(q.answer); }); });
+    return out;
+  }
+
+  function startPractice(domain,id){
+    var belts = domain === 'maths' ? mathBelts() : FRENCH_BELTS;
+    var belt = belts.find(function(b){ return norm(b.id) === norm(id); }) || belts[0];
+    if(domain === 'francais' && belt.id === 'idees') return renderIdea();
+    state = {domain:domain, belt:belt, questions:buildQuestions(domain,belt), index:0, score:0, answered:false};
+    renderQuestion();
+  }
+
+  function renderQuestion(){
+    var q = state.questions[state.index];
+    if(!q) return renderResult();
+    state.answered = false;
+    var opts = q.options.map(function(opt,i){
+      return '<button type="button" class="training-v2407-option" data-index="'+i+'" onclick="answerTrainingPracticeV2407('+i+')">'+esc(opt)+'</button>';
+    }).join('');
+    var b = body();
+    if(!b) return;
+    b.innerHTML = '<div class="v22-skill-header">'
+      + '<div class="v22-skill-owl">🦉</div>'
+      + '<div class="v22-skill-title"><h2>🧠 M’entraîner</h2><p>'+esc(state.domain === 'maths' ? 'Maths' : 'Français')+' · '+esc(state.belt.label)+'</p></div>'
+      + '<button type="button" class="v22-close-btn" onclick="closeTrainingChoiceV2407()" title="Fermer">×</button>'
+      + '</div>'
+      + '<div class="training-v2407-question-box">'
+      + '<div class="training-v2407-topline"><button type="button" class="training-v2407-back" onclick="openTrainingChoiceV2407()">← Retour aux entraînements</button><div class="training-v2407-title">'+esc(state.belt.label)+'</div><div class="training-v2407-counter">Question '+(state.index+1)+' / '+state.questions.length+'</div></div>'
+      + '<div class="training-v2407-question">'+esc(q.q)+'</div><div class="training-v2407-options">'+opts+'</div><div id="trainingFeedbackV2407" class="training-v2407-feedback"></div>'
+      + '</div>';
+  }
+
+  function answerPractice(i){
+    if(state.answered) return;
+    state.answered = true;
+    var q = state.questions[state.index];
+    var ok = Number(i) === Number(q.correct);
+    if(ok) state.score++;
+    var buttons = Array.prototype.slice.call(document.querySelectorAll('#trainingChoiceFullscreenV2406 .training-v2407-option'));
+    buttons.forEach(function(btn,idx){
+      btn.disabled = true;
+      if(idx === q.correct) btn.classList.add('correct');
+      if(idx === i && !ok) btn.classList.add('wrong');
+    });
+    var fb = byId('trainingFeedbackV2407');
+    if(fb) fb.innerHTML = ok ? '✅ Bravo !' : '💡 La bonne réponse était : <strong>'+esc(q.answer)+'</strong>';
+    setTimeout(function(){ state.index++; if(state.index >= state.questions.length) renderResult(); else renderQuestion(); }, ok ? 650 : 1150);
+  }
+
+  function renderResult(){
+    var total = state.questions.length || TRAINING_COUNT;
+    var b = body();
+    if(!b) return;
+    b.innerHTML = '<div class="v22-skill-header">'
+      + '<div class="v22-skill-owl">🦉</div><div class="v22-skill-title"><h2>🧠 M’entraîner</h2><p>Entraînement terminé.</p></div>'
+      + '<button type="button" class="v22-close-btn" onclick="closeTrainingChoiceV2407()" title="Fermer">×</button></div>'
+      + '<div class="training-v2407-question-box training-v2407-result"><h3>Bravo, entraînement terminé !</h3>'
+      + '<div class="training-v2407-score">Score<b>'+state.score+' / '+total+'</b></div>'
+      + '<div class="training-v2407-actions"><button type="button" class="training-v2407-action" onclick="startTrainingPracticeV2407(&quot;'+esc(state.domain)+'&quot;,&quot;'+esc(state.belt.id)+'&quot;)">Refaire l’entraînement</button><button type="button" class="training-v2407-action secondary" onclick="openTrainingChoiceV2407()">← Retour aux entraînements</button><button type="button" class="training-v2407-action secondary" onclick="closeTrainingChoiceV2407()">Fermer</button></div>'
+      + '</div>';
+  }
+
+  function renderIdea(){
+    var item = IDEAS[rnd(0, IDEAS.length-1)];
+    var b = body();
+    if(!b) return;
+    b.innerHTML = '<div class="v22-skill-header">'
+      + '<div class="v22-skill-owl">🦉</div><div class="v22-skill-title"><h2>✏️ Idées pour écrire</h2><p>Tout reste dans la fenêtre M’entraîner.</p></div>'
+      + '<button type="button" class="v22-close-btn" onclick="closeTrainingChoiceV2407()" title="Fermer">×</button></div>'
+      + '<div class="training-v2407-idea"><button type="button" class="training-v2407-back" onclick="openTrainingChoiceV2407()">← Retour aux entraînements</button><div class="training-v2407-idea-card">'+esc(item.prompt)+'</div><div><strong>Pour t’aider :</strong><br>'+esc(item.example)+'</div><textarea class="training-v2407-textarea" placeholder="Écris ici ta phrase ou ton début d’histoire..."></textarea><div class="training-v2407-actions"><button type="button" class="training-v2407-action" onclick="startTrainingPracticeV2407(&quot;francais&quot;,&quot;idees&quot;)">Nouvelle idée</button><button type="button" class="training-v2407-action secondary" onclick="openTrainingChoiceV2407()">← Retour aux entraînements</button></div></div>';
+  }
+
+  function bindButton(){
+    var btn = byId('v24AdviceTrain');
+    if(!btn) return;
+    if(btn.__v2404Bound || btn.__v2406TrainingBound || !btn.__v2407TrainingClone){
+      var clean = btn.cloneNode(true);
+      clean.__v2407TrainingClone = true;
+      btn.parentNode.replaceChild(clean, btn);
+      btn = clean;
+    }
+    btn.innerHTML = '🧠 M’entraîner<small>fenêtre unique</small>';
+    btn.setAttribute('title','Ouvrir les entraînements Français et Maths');
+    btn.setAttribute('aria-label','Ouvrir les entraînements Français et Maths');
+    if(btn.__v2407TrainingBound) return;
+    btn.__v2407TrainingBound = true;
+    btn.addEventListener('click', function(ev){ ev.preventDefault(); ev.stopPropagation(); if(ev.stopImmediatePropagation) ev.stopImmediatePropagation(); openTrainingChoice(); }, true);
+  }
+
+  function intercept(ev){
+    var target = ev.target && ev.target.closest ? ev.target.closest('#v24AdviceTrain') : null;
+    if(!target) return;
+    ev.preventDefault();
+    ev.stopPropagation();
+    if(ev.stopImmediatePropagation) ev.stopImmediatePropagation();
+    openTrainingChoice();
+  }
+
+  window.openTrainingChoiceV2407 = openTrainingChoice;
+  window.closeTrainingChoiceV2407 = closeTrainingChoice;
+  window.startTrainingPracticeV2407 = startPractice;
+  window.answerTrainingPracticeV2407 = answerPractice;
+  window.openTrainingChoiceV2406 = openTrainingChoice;
+  window.closeTrainingChoiceV2406 = closeTrainingChoice;
+
+  function install(){
+    try{ document.title = VERSION_TITLE; }catch(e){}
+    ensureOverlay();
+    bindButton();
+  }
+
+  window.addEventListener('click', intercept, true);
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', install);
+  else install();
+  window.addEventListener('load', install);
+  [100,300,700,1200,2200,4000].forEach(function(ms){ setTimeout(install, ms); });
+  setInterval(install, 1200);
+})();
+</script>
+
 </body>
 </html>

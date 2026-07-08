@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Mon carnet EVAR — Le consentement</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FAF6EC; --paper-line:#DED4B8; --ink:#1D3557; --ink-light:#4C5F82;
+    --stamp-red:#D62839; --stamp-green:#2E8B57; --mustard:#F2A93B; --card:#FFFFFF;
+    --shadow: 0 6px 0 rgba(29,53,87,0.15);
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;}
+  body{
+    background: repeating-linear-gradient(var(--paper) 0px, var(--paper) 38px, var(--paper-line) 39px, var(--paper) 40px);
+    font-family:'Nunito', sans-serif; color:var(--ink); min-height:100vh; padding:0 0 60px 0;
+  }
+  header{background:var(--ink); color:var(--paper); padding:22px 20px 26px; border-bottom:6px solid var(--mustard);}
+  header .badge{
+    display:inline-flex; align-items:center; gap:10px; background:rgba(255,255,255,0.08);
+    border:2px solid rgba(242,169,59,0.6); border-radius:999px; padding:6px 16px 6px 10px;
+    font-family:'Baloo 2', sans-serif; font-weight:700; font-size:0.85rem; letter-spacing:0.04em;
+    text-transform:uppercase; margin-bottom:12px;
+  }
+  header .badge .dot{width:26px;height:26px;border-radius:50%; background:var(--mustard); display:flex;align-items:center;justify-content:center; font-size:1rem;}
+  header h1{font-family:'Baloo 2', sans-serif; font-weight:800; font-size:1.7rem; margin:0 0 6px; line-height:1.15;}
+  header p{margin:0; font-size:1rem; color:#D8E1F0; max-width:520px;}
+  .wrap{max-width:640px; margin:0 auto; padding:22px 18px;}
+  .progress-row{display:flex; align-items:center; gap:12px; margin-bottom:18px;}
+  .progress-track{flex:1; height:14px; background:#E9E2CB; border-radius:999px; overflow:hidden; border:2px solid var(--ink);}
+  .progress-fill{height:100%; width:0%; background:var(--mustard); transition:width .4s ease;}
+  .progress-label{font-family:'Baloo 2', sans-serif; font-weight:700; font-size:0.95rem; white-space:nowrap;}
+  .hint{font-size:0.85rem; color:var(--ink-light); text-align:center; margin-top:-8px; margin-bottom:18px;}
+  .card{background:var(--card); border:2.5px solid var(--ink); border-radius:16px; box-shadow:var(--shadow); padding:20px 20px 18px; margin-bottom:20px; position:relative;}
+  .card .num{position:absolute; top:-14px; left:16px; background:var(--ink); color:var(--paper); font-family:'Baloo 2', sans-serif; font-weight:700; font-size:0.85rem; padding:4px 12px; border-radius:999px;}
+  .statement{font-size:1.12rem; font-weight:600; line-height:1.45; margin:10px 0 16px; color:var(--ink);}
+  .choices{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+  .choice-btn{
+    font-family:'Baloo 2', sans-serif; font-weight:700; font-size:1.15rem; padding:16px 10px;
+    border-radius:12px; border:2.5px solid var(--ink); background:var(--paper); color:var(--ink);
+    cursor:pointer; transition:transform .12s ease, background .15s ease; touch-action:manipulation;
+  }
+  .choice-btn:active{transform:scale(0.96);}
+  .choice-btn.selected-true{background:var(--stamp-green); color:white;}
+  .choice-btn.selected-false{background:var(--stamp-red); color:white;}
+  .choice-btn:disabled{cursor:default;}
+  .choice-btn.dim{opacity:0.45;}
+  .feedback{margin-top:14px; padding:12px 14px; border-radius:10px; font-size:0.98rem; font-weight:600; display:none; align-items:flex-start; gap:10px; line-height:1.4;}
+  .feedback.show{display:flex;}
+  .feedback.correct{background:#E4F4EA; color:#1F5E3D; border:2px solid var(--stamp-green);}
+  .feedback.wrong{background:#FBE6E4; color:#8E1F26; border:2px solid var(--stamp-red);}
+  .stamp{font-family:'Baloo 2', sans-serif; font-weight:800; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.06em; border:2.5px solid currentColor; border-radius:8px; padding:3px 8px; transform:rotate(-6deg); flex-shrink:0; margin-top:1px;}
+  .result-panel{background:var(--ink); color:var(--paper); border-radius:16px; padding:26px 22px; text-align:center; display:none;}
+  .result-panel.show{display:block;}
+  .result-panel .stamp-final{font-family:'Baloo 2', sans-serif; font-weight:800; font-size:2.2rem; color:var(--mustard); border:4px solid var(--mustard); border-radius:14px; display:inline-block; padding:10px 26px; transform:rotate(-4deg); margin-bottom:14px;}
+  .result-panel p{margin:6px 0; font-size:1.02rem;}
+  .reset-btn{margin-top:16px; font-family:'Baloo 2', sans-serif; font-weight:700; font-size:1rem; background:var(--mustard); color:var(--ink); border:none; border-radius:999px; padding:12px 28px; cursor:pointer;}
+</style>
+</head>
+<body>
+<header>
+  <div class="badge"><span class="dot">🤝</span> Mon carnet EVAR — Fiche 2</div>
+  <h1>Le consentement : dire oui, dire non</h1>
+  <p>Avant de toucher, de s'approcher ou de prendre quelque chose, on demande. Et un « non », ça se respecte. Vrai ou faux ?</p>
+</header>
+
+<div class="wrap">
+  <div class="progress-row">
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-label"><span id="progressCount">0</span>/8</div>
+  </div>
+  <p class="hint">Touche « Vrai » ou « Faux » pour chaque phrase.</p>
+
+  <div id="cards"></div>
+
+  <div class="result-panel" id="resultPanel">
+    <div class="stamp-final" id="finalScore">0/8</div>
+    <p id="finalMessage"></p>
+    <button class="reset-btn" onclick="resetQuiz()">Recommencer</button>
+  </div>
+</div>
+
+<script>
+const items = [
+  {
+    text: "Avant de prendre la main de quelqu'un ou de s'asseoir juste à côté, il est poli de lui demander s'il est d'accord.",
+    answer: true,
+    explain: "Vrai. Demander le consentement de l'autre, c'est un geste de respect, même pour un petit geste du quotidien."
+  },
+  {
+    text: "Si un copain ou une copine dit non à un jeu, il faut insister jusqu'à ce qu'il ou elle accepte.",
+    answer: false,
+    explain: "Faux. Un non doit être respecté et accepté, pas contourné à force d'insister."
+  },
+  {
+    text: "J'ai le droit de dire non à un câlin, même si c'est un adulte qui me le demande.",
+    answer: true,
+    explain: "Vrai. Toute personne, jeune ou adulte, familière ou non, doit respecter le droit de chacun au respect de son corps."
+  },
+  {
+    text: "Une hésitation ou un doute, c'est la même chose qu'un « oui ».",
+    answer: false,
+    explain: "Faux. Une hésitation ou un doute ne doivent jamais être considérés comme un « oui ». On a le droit de prendre son temps."
+  },
+  {
+    text: "Je peux changer d'avis : un « oui » ou un « non » que j'ai dit avant n'est pas définitif pour toujours.",
+    answer: true,
+    explain: "Vrai. On a le droit de changer d'avis à tout moment."
+  },
+  {
+    text: "Si quelqu'un ne respecte pas mon « non », je dois garder ça pour moi et ne le dire à personne.",
+    answer: false,
+    explain: "Faux. Si mon « non » n'est pas respecté, je peux et je dois en parler à un adulte de confiance."
+  },
+  {
+    text: "Avant de prendre un objet qui appartient à quelqu'un d'autre, je dois lui demander la permission.",
+    answer: true,
+    explain: "Vrai. Demander avant de prendre un objet, c'est aussi une façon de respecter le consentement de l'autre."
+  },
+  {
+    text: "Savoir identifier un adulte de confiance et savoir demander de l'aide, c'est utile si quelque chose ne va pas.",
+    answer: true,
+    explain: "Vrai. Savoir vers qui se tourner est une compétence importante à développer."
+  }
+];
+
+let answered = new Array(items.length).fill(false);
+let score = 0;
+
+function render(){
+  const container = document.getElementById('cards');
+  container.innerHTML = '';
+  items.forEach((item, i) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <div class="num">Question ${i+1}</div>
+      <div class="statement">${item.text}</div>
+      <div class="choices">
+        <button class="choice-btn" data-i="${i}" data-val="true">✅ Vrai</button>
+        <button class="choice-btn" data-i="${i}" data-val="false">❌ Faux</button>
+      </div>
+      <div class="feedback" id="feedback-${i}"></div>
+    `;
+    container.appendChild(card);
+  });
+  container.querySelectorAll('.choice-btn').forEach(btn => {
+    btn.addEventListener('click', onAnswer);
+  });
+}
+
+function onAnswer(e){
+  const btn = e.currentTarget;
+  const i = parseInt(btn.dataset.i);
+  if(answered[i]) return;
+  answered[i] = true;
+
+  const chosen = btn.dataset.val === 'true';
+  const correct = items[i].answer;
+  const isCorrect = chosen === correct;
+  if(isCorrect) score++;
+
+  const card = btn.closest('.card');
+  const buttons = card.querySelectorAll('.choice-btn');
+  buttons.forEach(b => {
+    b.disabled = true;
+    const bVal = b.dataset.val === 'true';
+    if(bVal === chosen){
+      b.classList.add(bVal ? 'selected-true' : 'selected-false');
+    } else {
+      b.classList.add('dim');
+    }
+  });
+
+  const fb = document.getElementById(`feedback-${i}`);
+  fb.classList.add('show', isCorrect ? 'correct' : 'wrong');
+  fb.innerHTML = `<span class="stamp">${isCorrect ? 'Bien vu' : 'Attention'}</span><span>${items[i].explain}</span>`;
+
+  updateProgress();
+}
+
+function updateProgress(){
+  const count = answered.filter(Boolean).length;
+  document.getElementById('progressCount').textContent = count;
+  document.getElementById('progressFill').style.width = (count / items.length * 100) + '%';
+  if(count === items.length){
+    showResult();
+  }
+}
+
+function showResult(){
+  const panel = document.getElementById('resultPanel');
+  document.getElementById('finalScore').textContent = `${score}/${items.length}`;
+  let msg = '';
+  if(score === items.length) msg = "Parfait ! Tu comprends bien ce qu'est le consentement.";
+  else if(score >= items.length - 2) msg = "Bien joué ! Relis les explications pour retenir encore mieux.";
+  else msg = "Continue l'entraînement : relis les explications, tu vas progresser.";
+  document.getElementById('finalMessage').textContent = msg;
+  panel.classList.add('show');
+  panel.scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+function resetQuiz(){
+  answered = new Array(items.length).fill(false);
+  score = 0;
+  document.getElementById('resultPanel').classList.remove('show');
+  updateProgress();
+  render();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+render();
+</script>
+</body>
+</html>

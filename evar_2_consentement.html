@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Mon carnet EVAR — Le consentement</title>
+<title>Mon carnet EVAR — Le consentement — V25.2.5</title>
 <style>
   :root{
     --paper:#FAF6EC; --paper-line:#DED4B8; --ink:#1D3557; --ink-light:#4C5F82;
@@ -102,6 +102,10 @@
     border:2px solid white; background:#fff; color:#1D3557; border-radius:999px; min-width:44px;
     min-height:40px; padding:8px 12px; font-weight:900; font-size:1rem; cursor:pointer;
   }
+  .zoom-percent{
+    min-width:64px; text-align:center; border:2px solid rgba(255,255,255,0.92); background:rgba(255,255,255,0.14);
+    color:white; border-radius:999px; padding:8px 10px; font-weight:900; font-size:0.96rem;
+  }
   .zoom-close-btn{background:#D62839; color:white; border-color:#fff; font-size:1.15rem;}
   .zoom-stage{
     flex:1 1 auto; overflow:auto; border-radius:14px; background:#fff; text-align:center;
@@ -168,16 +172,17 @@
   <div class="zoom-topbar" onclick="event.stopPropagation()">
     <div class="zoom-title">🔍 Affiche agrandie — Le consentement expliqué aux enfants</div>
     <div class="zoom-tools">
-      <button class="zoom-tool-btn" type="button" onclick="zoomPoster(-1, event)">−</button>
-      <button class="zoom-tool-btn" type="button" onclick="resetPosterZoom(event)">100%</button>
-      <button class="zoom-tool-btn" type="button" onclick="zoomPoster(1, event)">+</button>
-      <button class="zoom-tool-btn zoom-close-btn" type="button" onclick="closePosterZoom(event)">×</button>
+      <button class="zoom-tool-btn" type="button" onclick="zoomPoster(-1, event)" aria-label="Réduire l'affiche">−</button>
+      <span class="zoom-percent" id="posterZoomPercent" aria-live="polite">115%</span>
+      <button class="zoom-tool-btn" type="button" onclick="zoomPoster(1, event)" aria-label="Agrandir l'affiche">+</button>
+      <button class="zoom-tool-btn" type="button" onclick="resetPosterZoom(event)" aria-label="Remettre le zoom de départ">↺</button>
+      <button class="zoom-tool-btn zoom-close-btn" type="button" onclick="closePosterZoom(event)" aria-label="Fermer l'affiche agrandie">×</button>
     </div>
   </div>
   <div class="zoom-stage" id="posterZoomStage" onclick="event.stopPropagation()">
     <img id="posterZoomImg" src="evar_consentement_elise_gravel.webp" alt="Affiche Le consentement expliqué aux enfants agrandie">
   </div>
-  <div class="zoom-help">Astuce : utilise + / − pour agrandir. Quand l’image dépasse, fais glisser avec le doigt ou les barres de défilement.</div>
+  <div class="zoom-help">Astuce : utilise + / − pour zoomer. Le pourcentage indique le niveau de zoom. Quand l’image dépasse, fais glisser avec le doigt ou les barres de défilement.</div>
 </div>
 
 <script>
@@ -187,9 +192,11 @@ let posterZoomLevel = 1;
 function applyPosterZoom(){
   const img = document.getElementById('posterZoomImg');
   const stage = document.getElementById('posterZoomStage');
+  const percent = document.getElementById('posterZoomPercent');
   if(!img || !stage) return;
   const base = Math.min(window.innerWidth * 0.90, 900);
   img.style.width = Math.round(base * posterZoomLevel) + 'px';
+  if(percent){ percent.textContent = Math.round(posterZoomLevel * 100) + '%'; }
 }
 function openPosterZoom(){
   const modal = document.getElementById('posterZoomModal');

@@ -165,13 +165,13 @@
 
 
 <div class="zoom-modal" id="posterZoomModal" aria-hidden="true" role="dialog" aria-label="Affiche consentement agrandie">
-  <div class="zoom-topbar">
+  <div class="zoom-topbar" onclick="event.stopPropagation()">
     <div class="zoom-title">🔍 Affiche agrandie — Le consentement expliqué aux enfants</div>
     <div class="zoom-tools">
-      <button class="zoom-tool-btn" type="button" onclick="zoomPoster(-1)">−</button>
-      <button class="zoom-tool-btn" type="button" onclick="resetPosterZoom()">100%</button>
-      <button class="zoom-tool-btn" type="button" onclick="zoomPoster(1)">+</button>
-      <button class="zoom-tool-btn zoom-close-btn" type="button" onclick="closePosterZoom()">×</button>
+      <button class="zoom-tool-btn" type="button" onclick="zoomPoster(-1, event)">−</button>
+      <button class="zoom-tool-btn" type="button" onclick="resetPosterZoom(event)">100%</button>
+      <button class="zoom-tool-btn" type="button" onclick="zoomPoster(1, event)">+</button>
+      <button class="zoom-tool-btn zoom-close-btn" type="button" onclick="closePosterZoom(event)">×</button>
     </div>
   </div>
   <div class="zoom-stage" id="posterZoomStage" onclick="event.stopPropagation()">
@@ -200,26 +200,48 @@ function openPosterZoom(){
   document.body.classList.add('zoom-lock');
   setTimeout(applyPosterZoom, 30);
 }
-function closePosterZoom(){
+function closePosterZoom(event){
+  if(event){ event.preventDefault(); event.stopPropagation(); }
   const modal = document.getElementById('posterZoomModal');
   if(!modal) return;
   modal.classList.remove('show');
   modal.setAttribute('aria-hidden','true');
   document.body.classList.remove('zoom-lock');
 }
-function zoomPoster(direction){
+function zoomPoster(direction, event){
+  if(event){ event.preventDefault(); event.stopPropagation(); }
+  const stage = document.getElementById('posterZoomStage');
+  const oldW = stage ? stage.scrollWidth : 0;
+  const oldH = stage ? stage.scrollHeight : 0;
+  const oldLeft = stage ? stage.scrollLeft : 0;
+  const oldTop = stage ? stage.scrollTop : 0;
   posterZoomLevel += direction > 0 ? 0.25 : -0.25;
   posterZoomLevel = Math.max(0.75, Math.min(3.25, posterZoomLevel));
   applyPosterZoom();
+  if(stage && oldW && oldH){
+    const ratioX = (oldLeft + stage.clientWidth / 2) / oldW;
+    const ratioY = (oldTop + stage.clientHeight / 2) / oldH;
+    requestAnimationFrame(function(){
+      stage.scrollLeft = Math.max(0, ratioX * stage.scrollWidth - stage.clientWidth / 2);
+      stage.scrollTop = Math.max(0, ratioY * stage.scrollHeight - stage.clientHeight / 2);
+    });
+  }
 }
-function resetPosterZoom(){
+function resetPosterZoom(event){
+  if(event){ event.preventDefault(); event.stopPropagation(); }
   posterZoomLevel = 1.15;
   applyPosterZoom();
+  const stage = document.getElementById('posterZoomStage');
+  if(stage){ stage.scrollLeft = 0; stage.scrollTop = 0; }
 }
 window.addEventListener('resize', applyPosterZoom);
 document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closePosterZoom(); });
 const posterModalClick = document.getElementById('posterZoomModal');
-if(posterModalClick){ posterModalClick.addEventListener('click', closePosterZoom); }
+if(posterModalClick){
+  posterModalClick.addEventListener('click', function(e){
+    if(e.target === posterModalClick) closePosterZoom(e);
+  });
+}
 
 const items = [
   {

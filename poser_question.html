@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>🦉 Poser une question — Maître Hibou V25.3.5</title>
+  <style>
+    :root{
+      --bg1:#fff7df; --bg2:#e8f6ff; --ink:#241b4d; --muted:#6f668f;
+      --violet:#6d5dfc; --violet2:#4b3bd6; --green:#20a86b; --orange:#ff9f1a;
+      --card:#ffffff; --line:#e8e1ff; --soft:#f5f2ff;
+      --shadow:0 18px 45px rgba(39, 30, 95, .18);
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:linear-gradient(135deg,var(--bg1),var(--bg2));}
+    body{padding:16px;}
+    .page{max-width:1180px;margin:0 auto;min-height:calc(100vh - 32px);display:grid;grid-template-columns:300px 1fr;gap:18px;align-items:stretch;}
+    .hibou-panel,.work-panel{background:rgba(255,255,255,.94);border:2px solid rgba(255,255,255,.7);border-radius:28px;box-shadow:var(--shadow);overflow:hidden;}
+    .hibou-panel{display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:18px;background:linear-gradient(180deg,#fffdf4,#fff2c8);position:relative;}
+    .hibou-panel::before{content:"";position:absolute;inset:12px;border:2px dashed rgba(137,95,28,.18);border-radius:22px;pointer-events:none;}
+    .hibou-img-wrap{width:100%;display:flex;justify-content:center;align-items:center;min-height:300px;padding:10px;}
+    .hibou-img{max-width:100%;max-height:430px;object-fit:contain;display:block;filter:drop-shadow(0 12px 18px rgba(88,61,20,.18));}
+    .hibou-fallback{display:none;font-size:120px;line-height:1;}
+    .hibou-title{text-align:center;position:relative;z-index:1;}
+    .hibou-title h1{font-size:24px;margin:6px 0 4px;font-weight:1000;}
+    .hibou-title p{margin:0;color:#6c5a19;font-weight:800;line-height:1.35;}
+    .return{position:relative;z-index:1;width:100%;border:0;border-radius:16px;background:#fff;color:var(--violet2);font-weight:1000;padding:12px 10px;box-shadow:0 8px 20px rgba(100,70,10,.12);cursor:pointer;font-size:16px;}
+    .work-panel{padding:18px 20px 20px;display:flex;flex-direction:column;gap:14px;}
+    .top{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;border-bottom:2px solid #eee8ff;padding-bottom:12px;}
+    .top h2{font-size:28px;margin:0 0 4px;font-weight:1000;letter-spacing:-.02em;}
+    .top p{margin:0;color:var(--muted);font-weight:750;line-height:1.35;}
+    .badge{flex:none;background:#efeaff;color:var(--violet2);border:2px solid #ded6ff;border-radius:999px;padding:8px 12px;font-weight:1000;white-space:nowrap;}
+    .steps{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;}
+    .step{border:2px solid #ece8ff;background:#fff;border-radius:14px;padding:8px 7px;text-align:center;font-size:13px;font-weight:1000;color:#756f95;min-height:50px;display:flex;align-items:center;justify-content:center;line-height:1.15;}
+    .step.active{background:linear-gradient(135deg,#fff7db,#fff);border-color:#ffd26f;color:#6d4500;box-shadow:0 8px 20px rgba(255,178,24,.18)}
+    .step.done{background:#e9fff4;border-color:#9ee7c3;color:#0b7a4b;}
+    .card{background:var(--card);border:2px solid var(--line);border-radius:22px;padding:18px;box-shadow:0 10px 26px rgba(39,30,95,.08);}
+    .card h3{margin:0 0 8px;font-size:22px;font-weight:1000;}
+    .help{margin:0 0 14px;color:var(--muted);font-weight:750;line-height:1.4;}
+    textarea{width:100%;border:2px solid #dcd5ff;border-radius:18px;padding:14px 16px;font-size:20px;line-height:1.35;font-family:inherit;font-weight:750;color:var(--ink);resize:vertical;min-height:96px;background:#fff;outline:none;}
+    textarea:focus{border-color:var(--violet);box-shadow:0 0 0 4px rgba(109,93,252,.12);}
+    .small-area{min-height:70px;font-size:18px;}
+    .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;}
+    button{font-family:inherit;}
+    .btn{border:0;border-radius:16px;padding:13px 16px;font-size:17px;font-weight:1000;cursor:pointer;box-shadow:0 8px 20px rgba(32,25,78,.12);min-height:50px;}
+    .primary{background:linear-gradient(135deg,var(--violet),var(--violet2));color:#fff;}
+    .secondary{background:#fff;border:2px solid #dfd8ff;color:var(--violet2);}
+    .success{background:linear-gradient(135deg,#17a663,#3fd38b);color:#fff;}
+    .private{background:linear-gradient(135deg,#3c5cff,#7d8dff);color:#fff;}
+    .class{background:linear-gradient(135deg,#ff9f1a,#ffc85c);color:#3e2500;}
+    .danger{background:#fff0f0;border:2px solid #ffd2d2;color:#a32323;}
+    .question-card{border:2px solid #eadfff;border-radius:18px;background:#fbfaff;padding:13px;margin:10px 0;}
+    .question-card b{display:block;font-size:14px;text-transform:uppercase;letter-spacing:.04em;color:#7a68d8;margin-bottom:4px;}
+    .question-card .text{font-size:20px;font-weight:1000;line-height:1.35;word-break:break-word;}
+    .corrected{background:#fffdf2;border-color:#ffe49a;}
+    .status{border-radius:16px;background:#f3f7ff;border:2px solid #dce8ff;padding:12px 14px;font-weight:850;line-height:1.35;color:#24406f;margin-top:8px;display:none;}
+    .status.good{display:block;background:#eafff4;border-color:#ace8ca;color:#086a43;}
+    .status.warn{display:block;background:#fff8e5;border-color:#ffe0a3;color:#7a5200;}
+    .status.bad{display:block;background:#fff0f0;border-color:#ffd2d2;color:#912626;}
+    .choices{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;}
+    .choice{border:2px solid #e7e0ff;border-radius:18px;padding:16px;background:#fff;cursor:pointer;min-height:120px;text-align:left;box-shadow:0 8px 18px rgba(39,30,95,.08);}
+    .choice strong{display:block;font-size:20px;margin-bottom:6px;color:var(--ink)}
+    .choice span{display:block;color:var(--muted);font-weight:800;line-height:1.3;}
+    .choice.selected{border-color:var(--violet);background:#f5f2ff;box-shadow:0 0 0 4px rgba(109,93,252,.12);}
+    .hidden{display:none!important;}
+    .footer-note{margin-top:auto;color:#7a7396;font-size:14px;font-weight:750;line-height:1.35;padding-top:4px;}
+    @media (max-width:900px){
+      body{padding:10px;}
+      .page{grid-template-columns:190px 1fr;gap:10px;min-height:calc(100vh - 20px);}
+      .hibou-panel{padding:12px;border-radius:22px;}
+      .hibou-img-wrap{min-height:170px;padding:4px;}
+      .hibou-img{max-height:260px;}
+      .hibou-title h1{font-size:18px}.hibou-title p{font-size:13px}.return{font-size:14px;padding:10px 8px;}
+      .work-panel{padding:12px;border-radius:22px;gap:10px;}
+      .top h2{font-size:22px}.top p{font-size:14px}.badge{font-size:13px;padding:6px 8px;}
+      .steps{grid-template-columns:repeat(5,1fr);gap:5px}.step{font-size:11px;padding:6px 4px;min-height:42px;}
+      .card{padding:13px;border-radius:18px}.card h3{font-size:18px}.help{font-size:14px;margin-bottom:10px;}
+      textarea{font-size:17px;min-height:78px;padding:10px 12px;}
+      .btn{font-size:15px;padding:11px 12px;min-height:46px}.question-card .text{font-size:17px}.choices{gap:8px}.choice{min-height:98px;padding:12px}.choice strong{font-size:17px}.choice span{font-size:13px;}
+    }
+    @media (max-width:620px){
+      .page{display:block}.hibou-panel{display:none}.work-panel{min-height:calc(100vh - 20px)}.top{display:block}.badge{display:inline-block;margin-top:8px}.steps{overflow-x:auto;grid-template-columns:repeat(5,120px)}.choices{grid-template-columns:1fr;}
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <aside class="hibou-panel" aria-label="Maître Hibou">
+      <div class="hibou-title">
+        <h1>🦉 Maître Hibou</h1>
+        <p>Écris ta question.<br>Je t’aide à la rendre claire.</p>
+      </div>
+      <div class="hibou-img-wrap">
+        <img class="hibou-img" src="hibou_boite_questions.png" alt="Maître Hibou près de la boîte à questions" onerror="this.style.display='none';document.querySelector('.hibou-fallback').style.display='block';">
+        <div class="hibou-fallback" aria-hidden="true">🦉</div>
+      </div>
+      <button class="return" onclick="goBack()" type="button">← Retour à Maître Hibou</button>
+    </aside>
+    <section class="work-panel">
+      <div class="top">
+        <div>
+          <h2>Poser une question</h2>
+          <p>Tu écris ta question comme tu peux. Ensuite, tu vérifies la reformulation et tu choisis si elle est pour la classe ou privée.</p>
+        </div>
+        <div class="badge" id="studentBadge">Élève</div>
+      </div>
+      <div class="steps" aria-label="Étapes">
+        <div class="step active" data-step="1">1<br>J’écris</div>
+        <div class="step" data-step="2">2<br>Je vérifie</div>
+        <div class="step" data-step="3">3<br>J’écris bien</div>
+        <div class="step" data-step="4">4<br>Je choisis</div>
+        <div class="step" data-step="5">5<br>J’envoie</div>
+      </div>
+      <section id="step1" class="card">
+        <h3>⭐ Étape 1 — Écris ta question</h3>
+        <p class="help">Écris naturellement. Ce n’est pas grave s’il y a des fautes : Maître Hibou t’aidera à clarifier.</p>
+        <textarea id="originalQuestion" placeholder="Exemple : pourquoi les volcans explose"></textarea>
+        <div class="actions">
+          <button class="btn primary" onclick="startReformulation()" type="button">🦉 Reformuler ma question</button>
+          <button class="btn secondary" onclick="clearAll()" type="button">Effacer</button>
+        </div>
+        <div id="status1" class="status"></div>
+      </section>
+      <section id="step2" class="card hidden">
+        <h3>🦉 Étape 2 — Ai-je bien compris ?</h3>
+        <p class="help">Lis la question reformulée. Elle doit garder ton idée.</p>
+        <div class="question-card"><b>Ta question de départ</b><div class="text" id="originalPreview"></div></div>
+        <div class="question-card corrected"><b>Question proposée</b><div class="text" id="correctedPreview"></div></div>
+        <div class="actions">
+          <button class="btn success" onclick="acceptCorrection()" type="button">✅ Oui, c’est ma question</button>
+          <button class="btn secondary" onclick="editCorrection()" type="button">✏️ Je veux modifier</button>
+          <button class="btn danger" onclick="goStep(1)" type="button">← Revenir</button>
+        </div>
+      </section>
+      <section id="step3" class="card hidden">
+        <h3>✍️ Étape 3 — Écris-la correctement</h3>
+        <p class="help">Recopie ou améliore la question. C’est cette phrase qui sera envoyée au maître.</p>
+        <textarea id="finalQuestion" class="small-area"></textarea>
+        <div class="actions">
+          <button class="btn primary" onclick="validateFinalQuestion()" type="button">Continuer</button>
+          <button class="btn secondary" onclick="goStep(2)" type="button">← Retour</button>
+        </div>
+        <div id="status3" class="status"></div>
+      </section>
+      <section id="step4" class="card hidden">
+        <h3>👀 Étape 4 — Qui pourra lire ta question ?</h3>
+        <p class="help">Tu choisis. Les questions privées sont lues seulement par le maître.</p>
+        <div class="choices">
+          <button class="choice selected" id="choiceClasse" onclick="selectVisibility('classe')" type="button"><strong>👥 Question de classe</strong><span>Elle pourra être partagée avec les camarades.</span></button>
+          <button class="choice" id="choicePrivee" onclick="selectVisibility('privée')" type="button"><strong>🔒 Question privée</strong><span>Seul le maître pourra la lire.</span></button>
+        </div>
+        <div class="actions">
+          <button class="btn success" onclick="sendQuestion()" type="button">📨 Envoyer ma question</button>
+          <button class="btn secondary" onclick="goStep(3)" type="button">← Retour</button>
+        </div>
+        <div id="status4" class="status"></div>
+      </section>
+      <section id="step5" class="card hidden">
+        <h3>🎉 Étape 5 — Question envoyée !</h3>
+        <p class="help">Bravo, ta question est enregistrée dans le journal du maître.</p>
+        <div class="question-card corrected"><b>Question envoyée</b><div class="text" id="sentPreview"></div></div>
+        <div id="sentVisibility" class="status good"></div>
+        <div class="actions">
+          <button class="btn primary" onclick="clearAll()" type="button">➕ Poser une autre question</button>
+          <button class="btn secondary" onclick="goBack()" type="button">← Retour à Maître Hibou</button>
+        </div>
+      </section>
+      <div class="footer-note">La réponse n’est pas affichée ici : le maître pourra utiliser ta question pour une explication, une recherche ou une discussion en classe.</div>
+    </section>
+  </main>
+  <script>
+    const HIBOU_QUESTION_LOG_URL = 'https://script.google.com/macros/s/AKfycbwGcErZ0he06Dg_bpPDaHtPHa6fAcDQ-31tB7Rlr9w2JZcNaQnP9YIABJYf-CKpFfpF/exec';
+    let state = { original:'', corrected:'', final:'', visibility:'classe', aiAnswer:'Reformulation locale sur page dédiée.' };
+    function $(id){return document.getElementById(id)}
+    function clean(s){return String(s||'').replace(/\s+/g,' ').trim()}
+    function esc(s){return String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+    function getStudent(){
+      try{ const o=JSON.parse(localStorage.getItem('hibou_current_student')||'{}'); if(o&&o.prenom) return String(o.prenom).trim(); }catch(e){}
+      try{ const p=localStorage.getItem('hibou_last_prenom')||localStorage.getItem('hibou_prenom')||''; if(p.trim()) return p.trim(); }catch(e){}
+      return 'Élève';
+    }
+    function setBadge(){ $('studentBadge').textContent = getStudent(); }
+    function goBack(){
+      const ret = sessionStorage.getItem('hibou_return_url');
+      if(ret){ location.href = ret; return; }
+      location.href = 'index.html';
+    }
+    function goStep(n){
+      for(let i=1;i<=5;i++){$('step'+i).classList.toggle('hidden',i!==n); const st=document.querySelector('.step[data-step="'+i+'"]'); if(st){st.classList.toggle('active',i===n); st.classList.toggle('done',i<n);}}
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+    function status(id,msg,type){ const el=$(id); if(!el)return; el.className='status '+(type||'warn'); el.innerHTML=msg; }
+    function clearStatus(id){ const el=$(id); if(el){el.className='status'; el.innerHTML='';} }
+    function clearAll(){ state={original:'',corrected:'',final:'',visibility:'classe',aiAnswer:'Reformulation locale sur page dédiée.'}; $('originalQuestion').value=''; $('finalQuestion').value=''; clearStatus('status1'); clearStatus('status3'); clearStatus('status4'); selectVisibility('classe'); goStep(1); setTimeout(()=>$('originalQuestion').focus(),80); }
+    function reformulateLocal(q){
+      let s = clean(q).toLowerCase();
+      const replacements = [
+        [/\bpk\b/g,'pourquoi'],[/\bpourkoi\b/g,'pourquoi'],[/\bcmt\b/g,'comment'],[/\bkomment\b/g,'comment'],[/\bsa\b/g,'ça'],
+        [/\bleau\b/g,"l’eau"],[/\bl eau\b/g,"l’eau"],[/\bdispar[eé]?\b/g,'disparaît'],[/\bexplose\b/g,'explosent'],[/\bsale\b/g,'salée'],
+        [/\bvolcan\b/g,'volcan'],[/\bvolcans\b/g,'volcans'],[/\boiseaux\b/g,'oiseaux']
+      ];
+      replacements.forEach(([a,b])=>{s=s.replace(a,b)});
+      s = s.replace(/^pourquoi (.+?) explose(nt)?$/,'pourquoi $1 explosent-ils')
+           .replace(/^pourquoi (.+?) disparait$/,'pourquoi $1 disparaît-elle')
+           .replace(/^pourquoi (.+?) disparaît$/,'pourquoi $1 disparaît-elle')
+           .replace(/^pourquoi la mer est salée$/,'pourquoi la mer est-elle salée')
+           .replace(/^comment les oiseaux savent voler$/,'comment les oiseaux apprennent-ils à voler')
+           .replace(/^comment les oiseaux vole(nt)?$/,'comment les oiseaux apprennent-ils à voler');
+      if(!/[?!.]$/.test(s)) s += ' ?';
+      if(!s.endsWith('?')) s = s.replace(/[.!]+$/,'') + ' ?';
+      s = s.charAt(0).toUpperCase()+s.slice(1);
+      s = s.replace(/ \?/g,' ?').replace(/\s+/g,' ');
+      return s;
+    }
+    function startReformulation(){
+      const q=clean($('originalQuestion').value);
+      if(q.length<4){status('status1','Écris d’abord une vraie question, même courte.','bad');return;}
+      clearStatus('status1'); state.original=q; state.corrected=reformulateLocal(q); state.final=state.corrected;
+      $('originalPreview').textContent=state.original; $('correctedPreview').textContent=state.corrected; $('finalQuestion').value=state.corrected;
+      goStep(2);
+    }
+    function acceptCorrection(){ $('finalQuestion').value=state.corrected; goStep(3); setTimeout(()=>$('finalQuestion').focus(),80); }
+    function editCorrection(){ $('finalQuestion').value=state.corrected; goStep(3); setTimeout(()=>{const f=$('finalQuestion'); f.focus(); f.setSelectionRange(f.value.length,f.value.length);},80); }
+    function validateFinalQuestion(){ const f=clean($('finalQuestion').value); if(f.length<4){status('status3','La question est trop courte. Écris-la un peu plus clairement.','bad');return;} state.final = /[?]$/.test(f)?f:(f.replace(/[.!]+$/,'')+' ?'); clearStatus('status3'); selectVisibility(state.visibility||'classe'); goStep(4); }
+    function selectVisibility(v){ state.visibility=v; $('choiceClasse').classList.toggle('selected',v==='classe'); $('choicePrivee').classList.toggle('selected',v==='privée'); }
+    function localSave(entry){
+      try{ let logs=JSON.parse(localStorage.getItem('hibou_question_journal')||'[]'); logs.unshift(entry); localStorage.setItem('hibou_question_journal',JSON.stringify(logs.slice(0,150))); }catch(e){}
+    }
+    function remoteSave(entry){
+      try{
+        const payload={date:entry.dateOnly,heure:entry.timeOnly,prenom:entry.student,matiere:entry.subject,questionOriginale:entry.questionOriginale,questionCorrigee:entry.questionCorrigee,reponseIA:entry.reponseIA,visibilite:entry.visibilite,statut:entry.statut,pointsCuriosite:entry.pointsCuriosite,eleve:entry.student,question:entry.questionOriginale,reponse:entry.reponseIA,source:'Maître Hibou V25.3.5 - page dédiée Poser une question'};
+        fetch(HIBOU_QUESTION_LOG_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)}).catch(()=>{});
+      }catch(e){}
+    }
+    function addCuriosity(){
+      try{ const name=getStudent().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9_-]/g,'_')||'eleve'; const key='hibou_curiosity_points_'+name; const n=Number(localStorage.getItem(key)||0)+1; localStorage.setItem(key,String(n)); }catch(e){}
+    }
+    function sendQuestion(){
+      const now=new Date();
+      const entry={date:now.toLocaleString('fr-FR'),dateOnly:now.toLocaleDateString('fr-FR'),timeOnly:now.toLocaleTimeString('fr-FR'),student:getStudent(),subject:'Boîte à questions',question:state.final,questionOriginale:state.original,questionCorrigee:state.final,response:'',reponseIA:state.aiAnswer,visibilite:state.visibility==='privée'?'privée':'classe',visibility:state.visibility==='privée'?'privée':'classe',status:'nouvelle',statut:'nouvelle',pointsCuriosite:1};
+      localSave(entry); remoteSave(entry); addCuriosity(); $('sentPreview').textContent=state.final; $('sentVisibility').innerHTML = state.visibility==='privée' ? '🔒 Question privée : seul le maître pourra la lire.' : '👥 Question de classe : elle pourra être partagée avec les camarades.'; goStep(5);
+    }
+    setBadge();
+    setTimeout(()=>$('originalQuestion').focus(),100);
+  </script>
+</body>
+</html>

@@ -174,17 +174,47 @@
     function $(id){return document.getElementById(id)}
     function clean(s){return String(s||'').replace(/\s+/g,' ').trim()}
     function esc(s){return String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+    function getQueryParam(name){
+      try{ return new URLSearchParams(window.location.search || '').get(name) || ''; }catch(e){ return ''; }
+    }
+    function isPopupMode(){
+      try{ return getQueryParam('popup') === '1' || window.parent !== window; }catch(e){ return getQueryParam('popup') === '1'; }
+    }
     function getStudent(){
+      const qp = clean(getQueryParam('prenom'));
+      if(qp){
+        try{
+          localStorage.setItem('hibou_prenom', qp);
+          localStorage.setItem('hibou_last_prenom', qp);
+          const o = JSON.parse(localStorage.getItem('hibou_current_student')||'{}') || {};
+          o.prenom = o.prenom || qp;
+          localStorage.setItem('hibou_current_student', JSON.stringify(o));
+        }catch(e){}
+        return qp;
+      }
       try{ const o=JSON.parse(localStorage.getItem('hibou_current_student')||'{}'); if(o&&o.prenom) return String(o.prenom).trim(); }catch(e){}
       try{ const p=localStorage.getItem('hibou_last_prenom')||localStorage.getItem('hibou_prenom')||''; if(p.trim()) return p.trim(); }catch(e){}
       return 'Élève';
     }
     function setBadge(){ $('studentBadge').textContent = getStudent(); }
     function goBack(){
+      if(isPopupMode()){
+        try{ window.parent.postMessage({type:'HIBOU_CLOSE_QUESTION_POPUP'}, '*'); return; }catch(e){}
+      }
       const ret = sessionStorage.getItem('hibou_return_url');
       if(ret){ location.href = ret; return; }
       location.href = 'index.html';
     }
+    function adaptPopupLabels(){
+      try{
+        if(isPopupMode()){
+          document.querySelectorAll('button').forEach(btn=>{
+            if((btn.textContent||'').includes('Retour à Maître Hibou')) btn.textContent = '× Fermer';
+          });
+        }
+      }catch(e){}
+    }
+
     function goStep(n){
       for(let i=1;i<=5;i++){$('step'+i).classList.toggle('hidden',i!==n); const st=document.querySelector('.step[data-step="'+i+'"]'); if(st){st.classList.toggle('active',i===n); st.classList.toggle('done',i<n);}}
       window.scrollTo({top:0,behavior:'smooth'});
@@ -245,3 +275,5 @@
   </script>
 </body>
 </html>
+
+<script>try{adaptPopupLabels&&adaptPopupLabels();}catch(e){}</script>

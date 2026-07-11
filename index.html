@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 Maître Hibou V25.6.12</title>
+<title>🦉 Maître Hibou V25.6.13</title>
 <style>
 
   :root {
@@ -2946,7 +2946,7 @@ body.fullscreen-active .mockup-right-panel .mockup-full-progress-btn{
 
 
 
-<!-- V25.6.12 : ancien CSS supprimé style-v161-teacher-fullscreen-mode -->
+<!-- V25.6.13 : ancien CSS supprimé style-v161-teacher-fullscreen-mode -->
 
 
 <style id="style-v162-connexion-eleve-propre">
@@ -3207,10 +3207,10 @@ body.prenom-mode .class-motivation-panel {
 </style>
 
 
-<!-- V25.6.12 : ancien CSS supprimé style-v167-teacher-tabs -->
+<!-- V25.6.13 : ancien CSS supprimé style-v167-teacher-tabs -->
 
 
-<!-- V25.6.12 : ancien CSS supprimé style-v1672-teacher-tabs-complete -->
+<!-- V25.6.13 : ancien CSS supprimé style-v1672-teacher-tabs-complete -->
 
 
 <style id="style-v168-ceintures-competences">
@@ -3694,7 +3694,7 @@ body.v21-final .subject-btn .subject-label{font-size:18px !important;line-height
 @media (max-width:899px){body.v21-final .v21-center{width:calc(100% - 24px) !important;margin:0 auto 8px !important;grid-template-columns:1fr !important;}body.v21-final .v21-side-owl,body.v21-final .v21-deco-window,body.v21-final .v21-deco-globe,body.v21-final .v21-deco-books{display:none !important;}body.v21-final .subjects-bar{grid-template-columns:repeat(2,minmax(0,1fr)) !important;}}
 </style>
 <script id="patch-v21-4-home-text-and-title">
-(function(){function applyV214(){try{document.title = '🦉 Maître Hibou V25.6.12';var p=document.querySelector('.v21-hero p');if(p) p.textContent='🌟 Que souhaites-tu apprendre aujourd’hui ?';var h2=document.querySelector('.v21-hero h2');if(h2) h2.setAttribute('aria-hidden','true');}catch(e){}}document.addEventListener('DOMContentLoaded',applyV214);setTimeout(applyV214,100);setTimeout(applyV214,500);setTimeout(applyV214,1200);})();
+(function(){function applyV214(){try{document.title = '🦉 Maître Hibou V25.6.13';var p=document.querySelector('.v21-hero p');if(p) p.textContent='🌟 Que souhaites-tu apprendre aujourd’hui ?';var h2=document.querySelector('.v21-hero h2');if(h2) h2.setAttribute('aria-hidden','true');}catch(e){}}document.addEventListener('DOMContentLoaded',applyV214);setTimeout(applyV214,100);setTimeout(applyV214,500);setTimeout(applyV214,1200);})();
 </script>
 
 
@@ -3930,7 +3930,7 @@ body.v21-final .subject-btn{
 (function(){
   function applyV215(){
     try{
-      document.title = '🦉 Maître Hibou V25.6.12';
+      document.title = '🦉 Maître Hibou V25.6.13';
       var p=document.querySelector('.v21-hero p');
       if(p) p.textContent='🌟 Que souhaites-tu apprendre aujourd’hui ?';
       var h2=document.querySelector('.v21-hero h2');
@@ -4175,7 +4175,7 @@ body.v21-final .v21-sublist{
 (function(){
   function cleanV216(){
     try{
-      document.title = '🦉 Maître Hibou V25.6.12';
+      document.title = '🦉 Maître Hibou V25.6.13';
       document.body.classList.add('v21-final');
       var heroP=document.querySelector('.v21-hero p');
       if(heroP) heroP.textContent='🌟 Que souhaites-tu apprendre aujourd’hui ?';
@@ -4581,7 +4581,7 @@ body.v21-final .v21-treasure-card{
 
 
 
-<!-- V25.6.12 : ancien CSS supprimé patch-v23421-teacher-questions-safe -->
+<!-- V25.6.13 : ancien CSS supprimé patch-v23421-teacher-questions-safe -->
 
 <style id="patch-v24-0-42-bilans-progres-css">
 .v24-history-assessment-card{grid-column:1 / -1;background:linear-gradient(135deg,#FFFFFF 0%,#F4F2FF 72%,#FFF8D9 100%) !important;}
@@ -4627,8 +4627,32 @@ body.v21-final .v21-treasure-card{
 @media(max-width:900px){.v24-history-skills,.v24-history-results{grid-template-columns:repeat(2,minmax(0,1fr));}.v24-history-assessment-list{grid-template-columns:1fr;}}
 </style>
 
+
+<style id="patch-v25-6-13-accueil-double-mode-early">
+/* V25.6.13 : le double choix Élève / Invité est présent dès le premier affichage, avant les scripts. */
+#prenomOverlay .prenom-box.v2567-start{max-width:780px;width:min(94vw,780px);}
+.v2567-start .owl{font-size:58px!important;margin-bottom:4px!important;}
+.v2567-start h2{font-size:30px!important;margin-bottom:4px!important;}
+.v2567-intro{font-size:15px;color:var(--text-muted);font-weight:800;margin:0 0 14px 0;}
+.v2567-choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px;text-align:left;}
+.v2567-card{background:#fff;border:3px solid #EAE8FF;border-radius:22px;padding:16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px;}
+.v2567-card.student{border-color:var(--primary-light);}
+.v2567-card.guest{border-color:#FFE7A3;background:linear-gradient(135deg,#fff 0%,#FFF9E6 100%);}
+.v2567-card h3{font-size:22px;color:var(--primary);margin:0;font-family:"Trebuchet MS",system-ui,sans-serif;}
+.v2567-card.guest h3{color:#7A5C00;}
+.v2567-card p{font-size:13px;line-height:1.35;font-weight:800;color:var(--text-muted);margin:0;}
+.v2567-input{width:100%;padding:13px 15px;border-radius:16px;border:3px solid #EAE8FF;font-family:inherit;font-size:18px;font-weight:900;text-align:center;outline:none;background:#fff;color:var(--text);}
+.v2567-btn{border:none;border-radius:16px;padding:13px 14px;font-family:inherit;font-weight:1000;font-size:15px;cursor:pointer;min-height:48px;box-shadow:0 6px 16px rgba(108,99,255,.22);}
+.v2567-btn.student{background:var(--primary);color:#fff;}
+.v2567-btn.guest{background:var(--accent);color:#7A5C00;}
+.v2567-btn:disabled{opacity:.68;cursor:wait;}
+.v2567-error{min-height:24px;color:var(--secondary);font-size:14px;font-weight:900;text-align:center;margin-top:10px;}
+.v2567-hidden-legacy{position:absolute!important;left:-9999px!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none!important;}
+@media(max-width:700px){.v2567-choice-grid{grid-template-columns:1fr}.v2567-card{padding:12px}.v2567-start h2{font-size:24px!important}.v2567-start .owl{font-size:42px!important}}
+</style>
+
 </head>
-<body>
+<body class="prenom-mode">
 
 <header>
   <div class="logo-area">
@@ -4715,13 +4739,26 @@ body.v21-final .v21-treasure-card{
 
 
 <div class="prenom-overlay" id="prenomOverlay">
-  <div class="prenom-box">
+  <div class="prenom-box v2567-start">
     <div class="owl">🦉</div>
-    <h2>Écris ton prénom:</h2>
-    <p>Bienvenue dans ton espace d’apprentissage ! </p>
-    <input class="prenom-input" type="text" id="prenomInput" placeholder="Ton prénom ici..." autocomplete="off">
-    <div class="modal-error" id="prenomError"></div>
-    <button class="prenom-btn" onclick="savePrenom()">C'est parti ! 🚀</button>
+    <h2>Bienvenue sur Maître Hibou</h2>
+    <p class="v2567-intro">Choisis ton mode de connexion.</p>
+    <input id="prenomInput" class="v2567-hidden-legacy" autocomplete="off" aria-hidden="true">
+    <div class="v2567-choice-grid">
+      <div class="v2567-card student">
+        <h3>👤 Mode élève</h3>
+        <p>Réservé aux élèves de la classe. Le prénom doit être dans la liste du Google Sheet.</p>
+        <input id="v2567StudentName" class="v2567-input" placeholder="Ton prénom" autocomplete="off">
+        <button id="v2567StudentBtn" class="v2567-btn student" type="button" disabled>Chargement de la liste élèves…</button>
+      </div>
+      <div class="v2567-card guest">
+        <h3>🧪 Mode invité</h3>
+        <p>Pour tester librement Maître Hibou sans utiliser le profil d’un élève.</p>
+        <input id="v2567GuestName" class="v2567-input" placeholder="Prénom invité" autocomplete="off">
+        <button id="v2567GuestBtn" class="v2567-btn guest" type="button">Entrer en mode invité</button>
+      </div>
+    </div>
+    <div class="v2567-error" id="prenomError"></div>
   </div>
 </div>
 
@@ -8369,7 +8406,7 @@ setTimeout(removeVieDeClassePanel, 1000);
 </script>
 
 
-<!-- V25.6.12 : ancien JS supprimé patch-teacher-actions-v51b -->
+<!-- V25.6.13 : ancien JS supprimé patch-teacher-actions-v51b -->
 
 
 <script id="quiz-verification-competences-v52">
@@ -11399,7 +11436,7 @@ header{
 
 
 
-<!-- V25.6.12 : ancien JS supprimé script-v161-teacher-fullscreen-mode -->
+<!-- V25.6.13 : ancien JS supprimé script-v161-teacher-fullscreen-mode -->
 
 
 <script id="script-v162-connexion-eleve-propre">
@@ -11450,9 +11487,9 @@ header{
 
 
 
-<!-- V25.6.12 : ancien JS supprimé script-v1671-disable-old-teacher-injection -->
+<!-- V25.6.13 : ancien JS supprimé script-v1671-disable-old-teacher-injection -->
 
-<!-- V25.6.12 : ancien JS supprimé script-v167-teacher-tabs -->
+<!-- V25.6.13 : ancien JS supprimé script-v167-teacher-tabs -->
 
 
 <script id="script-v168-ceintures-competences">
@@ -13868,7 +13905,7 @@ header{
 </script>
 
 
-<!-- V25.6.12 : ancien JS supprimé patch-v1714-api-key-local-force -->
+<!-- V25.6.13 : ancien JS supprimé patch-v1714-api-key-local-force -->
 
 
 
@@ -17174,25 +17211,25 @@ sheet.appendRow([
 </script>
 
 
-<!-- V25.6.12 : ancien CSS supprimé patch-v197-question-box-css -->
+<!-- V25.6.13 : ancien CSS supprimé patch-v197-question-box-css -->
 
 
-<!-- V25.6.12 : ancien CSS supprimé patch-v1981-question-box-input-correctif -->
+<!-- V25.6.13 : ancien CSS supprimé patch-v1981-question-box-input-correctif -->
 
-<!-- V25.6.12 : ancien JS supprimé patch-v197-question-box-js -->
-
-
-
-<!-- V25.6.12 : ancien CSS supprimé patch-v1983-question-box-fullscreen-visual-css -->
+<!-- V25.6.13 : ancien JS supprimé patch-v197-question-box-js -->
 
 
-<!-- V25.6.12 : ancien JS supprimé patch-v1983-question-box-three-columns-js -->
+
+<!-- V25.6.13 : ancien CSS supprimé patch-v1983-question-box-fullscreen-visual-css -->
+
+
+<!-- V25.6.13 : ancien JS supprimé patch-v1983-question-box-three-columns-js -->
 
 
 <!-- PATCH V20.2 - Boîte à questions : majuscule + point d'interrogation, validation IA, points curiosité -->
-<!-- V25.6.12 : ancien CSS supprimé patch-v202-question-writing-css -->
+<!-- V25.6.13 : ancien CSS supprimé patch-v202-question-writing-css -->
 
-<!-- V25.6.12 : ancien JS supprimé patch-v202-question-writing-js -->
+<!-- V25.6.13 : ancien JS supprimé patch-v202-question-writing-js -->
 
 
 
@@ -17365,12 +17402,12 @@ sheet.appendRow([
 
 
 <!-- PATCH V20.4.2 - Boîte à questions : JSONP stable, aucun affichage de démonstration -->
-<!-- V25.6.12 : ancien JS supprimé patch-v2042-question-box-jsonp-stable -->
+<!-- V25.6.13 : ancien JS supprimé patch-v2042-question-box-jsonp-stable -->
 
 
 
 <!-- PATCH V20.4.3 - Boîte à questions : ouverture forcée Sheet, neutralise tout ancien rendu de démo -->
-<!-- V25.6.12 : ancien JS supprimé patch-v2043-question-box-sheet-force -->
+<!-- V25.6.13 : ancien JS supprimé patch-v2043-question-box-sheet-force -->
 
 
 <!-- PATCH V21.0 - Accueil Trésor des questions fidèle au visuel validé -->
@@ -20001,7 +20038,7 @@ body.v21-final .v2173-activity-btn.soon{
 (function(){
   if(window.__maitreHibouV2173TitresVerrouilles) return;
   window.__maitreHibouV2173TitresVerrouilles = true;
-  const VERSION_TITLE = '🦉 Maître Hibou V25.6.12';
+  const VERSION_TITLE = '🦉 Maître Hibou V25.6.13';
   const SUBJECTS = {
     francais:{label:'Français', icon:'📖', color:'#FF3B57', color2:'#FF6E82', soft:'#FFECEF', border:'#FFD3DA', shadow:'rgba(255,59,87,.24)', items:[
       {label:'Nom commun', names:['startNomCommun','showNomCommunLesson']},
@@ -20216,7 +20253,7 @@ body.v21-final .v2173-activity-btn.soon{
 
 
 <!-- PATCH V21.7.3.3 - Correction ciblée : popup Boîte à questions reliée au Google Sheet uniquement -->
-<!-- V25.6.12 : ancien JS supprimé patch-v2173-3-popup-boite-questions-sheet-only -->
+<!-- V25.6.13 : ancien JS supprimé patch-v2173-3-popup-boite-questions-sheet-only -->
 
 
 <style id="patch-v22-2-maths-sheets-css">
@@ -20459,7 +20496,7 @@ body.v21-final .v2173-activity-btn.soon{
 </script>
 
 
-<!-- V25.6.12 : ancien JS supprimé patch-v22-3-restaure-acces-enseignant -->
+<!-- V25.6.13 : ancien JS supprimé patch-v22-3-restaure-acces-enseignant -->
 
 
 <style id="patch-v23-suivi-eleves-css">
@@ -21927,8 +21964,8 @@ body.v21-final .v2173-activity-btn.soon{
 
 
 <!-- PATCH V23.4.6 - Fenêtre clé API accessible sans casser la popup Maths V23.4.3 -->
-<!-- V25.6.12 : ancien CSS supprimé patch-v2346-api-modal-accessible-css -->
-<!-- V25.6.12 : ancien JS supprimé patch-v2346-api-modal-accessible-js -->
+<!-- V25.6.13 : ancien CSS supprimé patch-v2346-api-modal-accessible-css -->
+<!-- V25.6.13 : ancien JS supprimé patch-v2346-api-modal-accessible-js -->
 
 
 
@@ -22018,7 +22055,7 @@ body.v21-final .v2173-activity-btn.soon{
 </style>
 <script id="patch-v2347-title-js">
 (function(){
-  try{ document.title = '🦉 Maître Hibou V25.6.12'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.13'; }catch(e){}
 })();
 </script>
 
@@ -22396,7 +22433,7 @@ body.v21-final .v2173-activity-btn.soon{
 (function(){
   if(window.__maitreHibouFrancaisPopupV2348) return;
   window.__maitreHibouFrancaisPopupV2348 = true;
-  try{ document.title = '🦉 Maître Hibou V25.6.12'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.13'; }catch(e){}
 
   const TRAINING_COUNT = 10;
   let frState = {activity:null, questions:[], index:0, score:0, answered:false};
@@ -22639,7 +22676,7 @@ body.v21-final .v2173-activity-btn.soon{
 (function(){
   if(window.__maitreHibouFrancaisSheetGrammaireV23410) return;
   window.__maitreHibouFrancaisSheetGrammaireV23410 = true;
-  try{ document.title = '🦉 Maître Hibou V25.6.12'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.13'; }catch(e){}
 
   const BASE_URL = 'https://script.google.com/macros/s/AKfycbyzfRPrUV7xKgeXUM0LjbOsOne5DieRjDYxmuVbBBUIGL-F9ahMmJZSfpUDYmBaZIOpvQ/exec';
   const SHEET_NAME = 'grammaire';
@@ -23208,7 +23245,7 @@ body.v21-final .v2173-activity-btn.soon{
 (function(){
   if(window.__maitreHibouFrancaisCeinturesV23411) return;
   window.__maitreHibouFrancaisCeinturesV23411 = true;
-  try{ document.title = '🦉 Maître Hibou V25.6.12'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.13'; }catch(e){}
 
   const BASE_URL = 'https://script.google.com/macros/s/AKfycbyzfRPrUV7xKgeXUM0LjbOsOne5DieRjDYxmuVbBBUIGL-F9ahMmJZSfpUDYmBaZIOpvQ/exec';
   const SHEET_NAME = 'grammaire';
@@ -23625,7 +23662,7 @@ body.v21-final .v2173-activity-btn.soon{
 (function(){
   if(window.__maitreHibouFrancaisSectionsV23412) return;
   window.__maitreHibouFrancaisSectionsV23412 = true;
-  try{ document.title = '🦉 Maître Hibou V25.6.12'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.13'; }catch(e){}
 
   const GRAMMAR_BELTS = [
     {id:'blanche', title:'Phrase affirmative / négative', label:'Ceinture blanche', desc:'Reconnaître et transformer les phrases.', color:'radial-gradient(circle at 35% 25%,#FFFFFF,#EDE7FF 68%,#C8B8F2)'},
@@ -23704,7 +23741,7 @@ body.v21-final .v2173-activity-btn.soon{
 }
 </style>
 <script id="patch-v23413-version-title">
-(function(){ try{ document.title = '🦉 Maître Hibou V25.6.12'; }catch(e){} })();
+(function(){ try{ document.title = '🦉 Maître Hibou V25.6.13'; }catch(e){} })();
 </script>
 
 
@@ -24060,7 +24097,7 @@ body.v21-final .v21-deco-globe::after{
   window.__v23415GlobeDedicatedWindow = true;
 
   function prepareDedicatedLinks(){
-    try{ document.title = '🦉 Maître Hibou V25.6.12'; }catch(e){}
+    try{ document.title = '🦉 Maître Hibou V25.6.13'; }catch(e){}
 
     const overlay = document.getElementById('v23ShortcutsOverlay');
     if(!overlay) return;
@@ -24174,7 +24211,7 @@ body.v23-shortcuts-open{
   window.__v23416GlobePopupFixed = true;
 
   function forcePopupLayout(){
-    try{ document.title = '🦉 Maître Hibou V25.6.12'; }catch(e){}
+    try{ document.title = '🦉 Maître Hibou V25.6.13'; }catch(e){}
     var overlay = document.getElementById('v23ShortcutsOverlay');
     if(!overlay) return null;
 
@@ -24569,7 +24606,7 @@ body.v21-final .v21-profile-card .profile-life-v23417-open-hint{
 (function(){
   if(window.__maitreHibouProfileLifeV23417) return;
   window.__maitreHibouProfileLifeV23417 = true;
-  try{ document.title = '🦉 Maître Hibou V25.6.12'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.13'; }catch(e){}
 
   var STUDENTS_URL = 'https://script.google.com/macros/s/AKfycbxz1vYS24sv-c3XVja12geWEXIQl6bQyBoQKBx5kg_fwQaj80_Oc7Y34yeBSRN4lF1f/exec';
   var QUESTIONS_URL = 'https://script.google.com/macros/s/AKfycbwGcErZ0he06Dg_bpPDaHtPHa6fAcDQ-31tB7Rlr9w2JZcNaQnP9YIABJYf-CKpFfpF/exec';
@@ -25111,27 +25148,27 @@ body.v21-final .v21-profile-card .profile-life-v23417-open-hint{
 
 
 <!-- PATCH V23.4.18 - Espace enseignant : gestion des questions Privée / Classe / Vedette + Statut -->
-<!-- V25.6.12 : ancien CSS supprimé patch-v23418-teacher-question-management-css -->
+<!-- V25.6.13 : ancien CSS supprimé patch-v23418-teacher-question-management-css -->
 
-<!-- V25.6.12 : ancien JS supprimé patch-v23418-teacher-question-management -->
-
-
-<!-- V25.6.12 : ancien CSS supprimé patch-v23419-question-fix-css -->
-
-<!-- V25.6.12 : ancien JS supprimé patch-v23419-question-sheet-fix -->
+<!-- V25.6.13 : ancien JS supprimé patch-v23418-teacher-question-management -->
 
 
-<!-- V25.6.12 : ancien JS supprimé patch-v23421-teacher-questions-safe-js -->
+<!-- V25.6.13 : ancien CSS supprimé patch-v23419-question-fix-css -->
 
-<!-- V25.6.12 : ancien CSS supprimé patch-v23422-question-workflow-css -->
+<!-- V25.6.13 : ancien JS supprimé patch-v23419-question-sheet-fix -->
 
-<!-- V25.6.12 : ancien JS supprimé patch-v23422-question-workflow-js -->
+
+<!-- V25.6.13 : ancien JS supprimé patch-v23421-teacher-questions-safe-js -->
+
+<!-- V25.6.13 : ancien CSS supprimé patch-v23422-question-workflow-css -->
+
+<!-- V25.6.13 : ancien JS supprimé patch-v23422-question-workflow-js -->
 
 
 <!-- PATCH V23.4.23 - Titre d'onglet stabilisé : neutralise les anciens patches qui changeaient document.title -->
 <script id="patch-title-stabilise-v23423">
 (function(){
-  var HIBOU_FINAL_TITLE = '🦉 Maître Hibou V25.6.12';
+  var HIBOU_FINAL_TITLE = '🦉 Maître Hibou V25.6.13';
   function setFinalTitle(){
     try{
       if(document.title !== HIBOU_FINAL_TITLE) document.title = HIBOU_FINAL_TITLE;
@@ -25148,8 +25185,8 @@ body.v21-final .v21-profile-card .profile-life-v23417-open-hint{
 </script>
 
 <!-- PATCH V24.0.4 - Couleur immédiate des boutons statut / visibilité -->
-<!-- V25.6.12 : ancien CSS supprimé patch-v23424-teacher-direct-css -->
-<!-- V25.6.12 : ancien JS supprimé patch-v23424-teacher-direct-js -->
+<!-- V25.6.13 : ancien CSS supprimé patch-v23424-teacher-direct-css -->
+<!-- V25.6.13 : ancien JS supprimé patch-v23424-teacher-direct-js -->
 
 
 
@@ -26006,7 +26043,7 @@ body.v21-final .v21-profile-card .profile-life-v23417-open-hint{
   if(window.__maitreHibouV2403Ready) return;
   window.__maitreHibouV2403Ready = true;
 
-  var VERSION_TITLE = '🦉 Maître Hibou V25.6.12';
+  var VERSION_TITLE = '🦉 Maître Hibou V25.6.13';
   var ORDER = ['francais','maths','anglais','sciences','geographie','histoire'];
 
   var SUBJECTS = {
@@ -27805,7 +27842,7 @@ body.v21-final .v21-profile-card .profile-life-v23417-open-hint{
   if(window.__maitreHibouV2404Conseil) return;
   window.__maitreHibouV2404Conseil = true;
 
-  var VERSION_TITLE = '🦉 Maître Hibou V25.6.12';
+  var VERSION_TITLE = '🦉 Maître Hibou V25.6.13';
 
   function byId(id){ return document.getElementById(id); }
 
@@ -28358,7 +28395,7 @@ body.v21-final .v21-profile-card .profile-life-v23417-open-hint{
   if(window.__maitreHibouV2405TroisCartes) return;
   window.__maitreHibouV2405TroisCartes = true;
 
-  var VERSION_TITLE = '🦉 Maître Hibou V25.6.12';
+  var VERSION_TITLE = '🦉 Maître Hibou V25.6.13';
 
   function byId(id){ return document.getElementById(id); }
 
@@ -28477,7 +28514,7 @@ body.v21-final .v21-profile-card .profile-life-v23417-open-hint{
   if(window.__maitreHibouV2406TrainingLikeBelts) return;
   window.__maitreHibouV2406TrainingLikeBelts = true;
 
-  var VERSION_TITLE = '🦉 Maître Hibou V25.6.12';
+  var VERSION_TITLE = '🦉 Maître Hibou V25.6.13';
 
   function byId(id){ return document.getElementById(id); }
 
@@ -29576,7 +29613,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
     }
   }
   function apply(){
-    try{ document.title = "🦉 Maître Hibou V25.6.12"; }catch(e){}
+    try{ document.title = "🦉 Maître Hibou V25.6.13"; }catch(e){}
     patchProgressRefresh();
     var name = currentName();
     var headerName = byId("v21HeaderName");
@@ -29969,7 +30006,7 @@ body.v21-final #v21TreasureCard.v24-know-card .v24-know-source{
     return card;
   }
   function install(){
-    try{ document.title = "🦉 Maître Hibou V25.6.12"; }catch(e){}
+    try{ document.title = "🦉 Maître Hibou V25.6.13"; }catch(e){}
     var existing = byId("v21TreasureCard");
     if(!existing) return;
     var card = prepareCard(existing);
@@ -30262,7 +30299,7 @@ body.v21-final #v21TreasureCard.v24-know-card .v24-know-source{
     return "Content de te revoir ! En forme ?";
   }
   function apply(){
-    try{ document.title = "🦉 Maître Hibou V25.6.12"; }catch(e){}
+    try{ document.title = "🦉 Maître Hibou V25.6.13"; }catch(e){}
     var hidden = byId("hibouLastSuccess");
     var raw = hidden ? hidden.textContent : "";
     var fixed = normalizeSuccessText(raw);
@@ -30415,7 +30452,7 @@ body.v21-final #eleveBadge{
   if(window.__hibouTitleLockAndBalancedHeaderV2513) return;
   window.__hibouTitleLockAndBalancedHeaderV2513 = true;
 
-  var VERSION_TITLE = "🦉 Maître Hibou V25.6.12";
+  var VERSION_TITLE = "🦉 Maître Hibou V25.6.13";
 
   function byId(id){ return document.getElementById(id); }
   function clean(value){ return String(value == null ? "" : value).replace(/\s+/g, " ").trim(); }
@@ -30535,9 +30572,9 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 }
 </style>
 
-<!-- V25.6.12 : ancien CSS supprimé patch-v25-1-5-acces-enseignant-logo-3s-css -->
+<!-- V25.6.13 : ancien CSS supprimé patch-v25-1-5-acces-enseignant-logo-3s-css -->
 
-<!-- V25.6.12 : ancien JS supprimé patch-v25-1-5-acces-enseignant-logo-3s -->
+<!-- V25.6.13 : ancien JS supprimé patch-v25-1-5-acces-enseignant-logo-3s -->
 
 
 <!-- PATCH V25.4.0 - Carte Raccourcis partagée : Raccourcis / Grandir ensemble -->
@@ -30773,7 +30810,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 (function(){
   if(window.__maitreHibouV2516GrandirEnsemble) return;
   window.__maitreHibouV2516GrandirEnsemble = true;
-  var TITLE = '🦉 Maître Hibou V25.6.12';
+  var TITLE = '🦉 Maître Hibou V25.6.13';
 
   function setTitle(){ try{ document.title = TITLE; }catch(e){} }
   function byId(id){ return document.getElementById(id); }
@@ -31111,7 +31148,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   if(window.__maitreHibouV2517EmiGrow) return;
   window.__maitreHibouV2517EmiGrow = true;
 
-  var TITLE = '🦉 Maître Hibou V25.6.12';
+  var TITLE = '🦉 Maître Hibou V25.6.13';
   var stateBySession = {};
 
   var SESSIONS = [
@@ -31553,7 +31590,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   if(window.__maitreHibouV2518Evar) return;
   window.__maitreHibouV2518Evar = true;
 
-  var TITLE = '🦉 Maître Hibou V25.6.12';
+  var TITLE = '🦉 Maître Hibou V25.6.13';
   var EVAR_PAGES = [
     {id:'corps', icon:'💛', title:'Prendre soin de mon corps', subtitle:'Mon corps, mon bien-être : écouter ses besoins et demander de l’aide.', file:'evar_1_mon_corps.html'},
     {id:'consentement', icon:'🤝', title:'Le consentement', subtitle:'Dire oui, dire non, respecter la réponse de l’autre.', file:'evar_2_consentement.html'},
@@ -31858,7 +31895,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   if(window.__maitreHibouV2519Emc) return;
   window.__maitreHibouV2519Emc = true;
 
-  var TITLE = '🦉 Maître Hibou V25.6.12';
+  var TITLE = '🦉 Maître Hibou V25.6.13';
   var EMC_PAGES = [
     {id:'bien-commun', icon:'🏛️', title:"Le bien commun, c'est quoi ?", subtitle:'Intérêt général, écogestes et projets communs.', file:'emc_1_bien_commun.html'},
     {id:'services-publics', icon:'🚒', title:'Des métiers au service de tous', subtitle:'Pompiers, police, maire, école et services publics.', file:'emc_2_services_publics.html'},
@@ -32075,7 +32112,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 (function(){
   if(window.__mhV2528ShortcutsReadingLayout) return;
   window.__mhV2528ShortcutsReadingLayout = true;
-  var TITLE = '🦉 Maître Hibou V25.6.12';
+  var TITLE = '🦉 Maître Hibou V25.6.13';
   try{ document.title = TITLE; }catch(e){}
 
   function esc(s){
@@ -32171,7 +32208,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   if(window.__maitreHibouV25213DirectTrainingLaunch) return;
   window.__maitreHibouV25213DirectTrainingLaunch = true;
 
-  var VERSION_TITLE = '🦉 Maître Hibou V25.6.12';
+  var VERSION_TITLE = '🦉 Maître Hibou V25.6.13';
 
   function byId(id){ return document.getElementById(id); }
   function norm(v){
@@ -32263,7 +32300,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 (function(){
   if(window.__maitreHibouV25215PreloadExercises) return;
   window.__maitreHibouV25215PreloadExercises = true;
-  try{ document.title = '🦉 Maître Hibou V25.6.12'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.13'; }catch(e){}
   function warm(){
     try{
       if(typeof window.preloadFrenchGrammarRowsV23411 === 'function'){
@@ -32286,7 +32323,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 (function(){
   if(window.__maitreHibouV25216PreloadMaths) return;
   window.__maitreHibouV25216PreloadMaths = true;
-  try{ document.title = '🦉 Maître Hibou V25.6.12'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.13'; }catch(e){}
   function warm(){
     try{
       if(typeof window.preloadMathsRowsV2343 === 'function'){
@@ -32312,7 +32349,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 (function(){
   if(window.__maitreHibouV25220DerniereReussiteDirecte) return;
   window.__maitreHibouV25220DerniereReussiteDirecte = true;
-  try{ document.title = '🦉 Maître Hibou V25.6.12'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.13'; }catch(e){}
   function byId(id){ return document.getElementById(id); }
   function clean(v){ return String(v == null ? '' : v).replace(/\s+/g,' ').trim(); }
   function esc(v){ return String(v == null ? '' : v).replace(/[&<>'"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c];}); }
@@ -32377,7 +32414,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   if(window.__maitreHibouV25221DerniereReussitePrioritaire) return;
   window.__maitreHibouV25221DerniereReussitePrioritaire = true;
 
-  var VERSION_TITLE = '🦉 Maître Hibou V25.6.12';
+  var VERSION_TITLE = '🦉 Maître Hibou V25.6.13';
   var STORAGE_PREFIX = 'hibou_authoritative_last_success_';
   var applying = false;
   var nativeSetItem = null;
@@ -32573,7 +32610,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 (function(){
   if(window.__maitreHibouV25222FrancaisProgressionStable) return;
   window.__maitreHibouV25222FrancaisProgressionStable = true;
-  try{ document.title = '🦉 Maître Hibou V25.6.12'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.13'; }catch(e){}
 
   var BASE_URL = 'https://script.google.com/macros/s/AKfycbyzfRPrUV7xKgeXUM0LjbOsOne5DieRjDYxmuVbBBUIGL-F9ahMmJZSfpUDYmBaZIOpvQ/exec';
   var SHEET_NAME = 'grammaire';
@@ -32906,7 +32943,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 (function(){
   if(window.__maitreHibouV25224MathsFluid) return;
   window.__maitreHibouV25224MathsFluid = true;
-  try{ document.title='🦉 Maître Hibou V25.6.12'; }catch(e){}
+  try{ document.title='🦉 Maître Hibou V25.6.13'; }catch(e){}
 
   var TRAINING_COUNT = 10;
   var BLACK_SYNTHESIS_BELTS = ['blanche','jaune','orange','vert_clair','vert_fonce','bleu_clair','bleu_fonce','rose','beige','violet','marron','rouge','gris'];
@@ -33103,7 +33140,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 (function(){
   if(window.__maitreHibouV25225FrancaisPrechargeRapide) return;
   window.__maitreHibouV25225FrancaisPrechargeRapide = true;
-  try{ document.title = '🦉 Maître Hibou V25.6.12'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.13'; }catch(e){}
 
   var BASE_URL = 'https://script.google.com/macros/s/AKfycbyzfRPrUV7xKgeXUM0LjbOsOne5DieRjDYxmuVbBBUIGL-F9ahMmJZSfpUDYmBaZIOpvQ/exec';
   var SHEET_NAME = 'grammaire';
@@ -33429,7 +33466,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 (function(){
   if(window.__maitreHibouV25226FrancaisResultatBandeau) return;
   window.__maitreHibouV25226FrancaisResultatBandeau = true;
-  try{ document.title = '🦉 Maître Hibou V25.6.12'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.13'; }catch(e){}
 
   function byId(id){ return document.getElementById(id); }
   function clean(v){ return String(v == null ? '' : v).replace(/\s+/g,' ').trim(); }
@@ -33560,7 +33597,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   if(window.__maitreHibouV25227DerniereReussiteStable) return;
   window.__maitreHibouV25227DerniereReussiteStable = true;
 
-  var VERSION_TITLE = '🦉 Maître Hibou V25.6.12';
+  var VERSION_TITLE = '🦉 Maître Hibou V25.6.13';
   var STORAGE_PREFIX = 'hibou_authoritative_last_success_';
   var applying = false;
   var lastCanonicalText = '';
@@ -33800,7 +33837,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   if(window.__maitreHibouV25229BandeauHautUnique) return;
   window.__maitreHibouV25229BandeauHautUnique = true;
 
-  var VERSION_TITLE = '🦉 Maître Hibou V25.6.12';
+  var VERSION_TITLE = '🦉 Maître Hibou V25.6.13';
   var lastApplied = '';
   var applying = false;
 
@@ -33954,7 +33991,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 (function(){
   if(window.__maitreHibouV25230BandeauCentralUnique) return;
   window.__maitreHibouV25230BandeauCentralUnique = true;
-  var VERSION_TITLE = '🦉 Maître Hibou V25.6.12';
+  var VERSION_TITLE = '🦉 Maître Hibou V25.6.13';
   var applying = false;
   var lastRendered = '';
 
@@ -34152,8 +34189,8 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 
 <!-- PATCH V25.4.0 - Anciennes popups élève supprimées : Boîte à questions hébergée par Apps Script -->
 <!-- PATCH V25.4.0 - Accès enseignant robuste tablette : appui long 3 secondes sur le logo -->
-<!-- V25.6.12 : ancien CSS supprimé patch-v2537-teacher-longpress-robust-css -->
-<!-- V25.6.12 : ancien JS supprimé patch-v2537-teacher-longpress-robust-js -->
+<!-- V25.6.13 : ancien CSS supprimé patch-v2537-teacher-longpress-robust-css -->
+<!-- V25.6.13 : ancien JS supprimé patch-v2537-teacher-longpress-robust-js -->
 <!-- FIN PATCH V25.4.0 -->
 
 
@@ -34163,15 +34200,15 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 
 
 <!-- PATCH V25.4.0 - Boîte à questions hébergée par Google Apps Script -->
-<!-- V25.6.12 : ancien CSS supprimé patch-v2540-question-apps-script-css -->
+<!-- V25.6.13 : ancien CSS supprimé patch-v2540-question-apps-script-css -->
 <script id="patch-v2548-question-github-page-js">
 (function(){
   if(window.__hibouQuestionGithubPageV2548) return;
   window.__hibouQuestionGithubPageV2548 = true;
-  try{ document.title = '🦉 Maître Hibou V25.6.12'; }catch(e){}
-  try{ window.MAITRE_HIBOU_VERSION = 'V25.6.12'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.13'; }catch(e){}
+  try{ window.MAITRE_HIBOU_VERSION = 'V25.6.13'; }catch(e){}
 
-  // V25.6.12 : la boîte à questions n'est plus affichée par Apps Script.
+  // V25.6.13 : la boîte à questions n'est plus affichée par Apps Script.
   // Elle devient une page HTML légère séparée, hébergée sur GitHub.
   // Apps Script reste seulement l'API : reformulation IA + enregistrement Sheet.
   var QUESTION_PAGE_URL = 'boite_questions.html';
@@ -34278,22 +34315,22 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 
 
 
-<!-- PATCH V25.6.12 - Espace enseignant : tableau de bord Boîte à questions -->
-<!-- V25.6.12 : ancien CSS supprimé patch-v2550-teacher-questions-css -->
-<!-- V25.6.12 : ancien JS supprimé patch-v2550-teacher-questions-js -->
-<!-- FIN PATCH V25.6.12 -->
+<!-- PATCH V25.6.13 - Espace enseignant : tableau de bord Boîte à questions -->
+<!-- V25.6.13 : ancien CSS supprimé patch-v2550-teacher-questions-css -->
+<!-- V25.6.13 : ancien JS supprimé patch-v2550-teacher-questions-js -->
+<!-- FIN PATCH V25.6.13 -->
 
 
-<!-- PATCH V25.6.12 - Espace enseignant : chargement robuste du Journal des Questions -->
-<!-- V25.6.12 : ancien CSS supprimé patch-v2552-teacher-questions-loader-css -->
-<!-- V25.6.12 : ancien JS supprimé patch-v2552-teacher-questions-loader-js -->
-<!-- FIN PATCH V25.6.12 -->
+<!-- PATCH V25.6.13 - Espace enseignant : chargement robuste du Journal des Questions -->
+<!-- V25.6.13 : ancien CSS supprimé patch-v2552-teacher-questions-loader-css -->
+<!-- V25.6.13 : ancien JS supprimé patch-v2552-teacher-questions-loader-js -->
+<!-- FIN PATCH V25.6.13 -->
 
 
 
-<!-- PATCH V25.6.12 - ancien verrou prénom V25.5.3 supprimé : la connexion est gérée uniquement par le bloc accueil V25.6.12. -->
+<!-- PATCH V25.6.13 - ancien verrou prénom V25.5.3 supprimé : la connexion est gérée uniquement par le bloc accueil V25.6.13. -->
 
-<!-- PATCH V25.6.12 - Espace enseignant séparé : ouverture directe de enseignant.html, sans code -->
+<!-- PATCH V25.6.13 - Espace enseignant séparé : ouverture directe de enseignant.html, sans code -->
 <style id="patch-v25-6-0-enseignant-separe-css">
   /* L'ancien tableau enseignant interne reste dans le fichier pour sécurité de migration,
      mais il n'est plus utilisé ni affiché. */
@@ -34313,8 +34350,8 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   'use strict';
   if(window.__hibouTeacherSeparateV25612) return;
   window.__hibouTeacherSeparateV25612 = true;
-  try{ document.title = '🦉 Maître Hibou V25.6.12'; }catch(e){}
-  try{ window.MAITRE_HIBOU_VERSION = 'V25.6.12'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.13'; }catch(e){}
+  try{ window.MAITRE_HIBOU_VERSION = 'V25.6.13'; }catch(e){}
 
   var LONG_PRESS_MS = 3000;
   var TEACHER_PAGE = 'enseignant.html';
@@ -34390,12 +34427,12 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   setTimeout(install, 1200);
 })();
 </script>
-<!-- FIN PATCH V25.6.12 -->
+<!-- FIN PATCH V25.6.13 -->
 
 
 
 
-<!-- PATCH V25.6.12 - Accueil fiable : liste élèves préchargée, refus instantané, mode invité séparé -->
+<!-- PATCH V25.6.13 - Accueil fiable : liste élèves préchargée, refus instantané, mode invité séparé -->
 <style id="patch-v25-6-7-accueil-fiable-css">
   #prenomOverlay .prenom-box.v2567-start{max-width:780px;width:min(94vw,780px);}
   .v2567-start .owl{font-size:58px!important;margin-bottom:4px!important;}
@@ -34589,14 +34626,14 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',install); else install();
   window.addEventListener('load',function(){setTimeout(ensurePreload,100);});
   setTimeout(install,250);
-  try{document.title='🦉 Maître Hibou V25.6.12';window.MAITRE_HIBOU_VERSION='V25.6.12';}catch(e){}
+  try{document.title='🦉 Maître Hibou V25.6.13';window.MAITRE_HIBOU_VERSION='V25.6.13';}catch(e){}
 })();
 </script>
-<!-- FIN PATCH V25.6.12 -->
+<!-- FIN PATCH V25.6.13 -->
 
 
 <style id="patch-v25-6-10-accueil-clavier-visible">
-/* V25.6.12 — Accueil tablette : le champ prénom reste visible quand le clavier apparaît. */
+/* V25.6.13 — Accueil tablette : le champ prénom reste visible quand le clavier apparaît. */
 body.prenom-mode .prenom-overlay{
   align-items:flex-start !important;
   justify-content:center !important;
@@ -34754,9 +34791,9 @@ body.hibou-keyboard-open #v2567Error{
 
 
 
-<!-- PATCH V25.6.12 — Adaptation automatique PC / tablette / smartphone -->
+<!-- PATCH V25.6.13 — Adaptation automatique PC / tablette / smartphone -->
 <style id="patch-v25-6-11-adaptation-ecrans">
-/* V25.6.12 — Maître Hibou adapte l'interface selon l'écran. */
+/* V25.6.13 — Maître Hibou adapte l'interface selon l'écran. */
 :root{
   --hibou-screen-mode: pc;
 }
@@ -34965,7 +35002,7 @@ body.hibou-keyboard-open .v2567-choice-grid{
 <script id="patch-v25-6-11-adaptation-ecrans">
 (function(){
   'use strict';
-  var VERSION = 'V25.6.12';
+  var VERSION = 'V25.6.13';
   var root = document.documentElement;
   var body = document.body;
   var initialHeight = Math.max(window.innerHeight || 0, (window.visualViewport && window.visualViewport.height) || 0);
@@ -35035,7 +35072,7 @@ body.hibou-keyboard-open .v2567-choice-grid{
   try{ console.info('Maître Hibou '+VERSION+' — mode écran :', root.getAttribute('data-hibou-device')); }catch(e){}
 })();
 </script>
-<!-- FIN PATCH V25.6.12 -->
+<!-- FIN PATCH V25.6.13 -->
 
 </body>
 </html>

@@ -33183,54 +33183,6 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 
 
 <!-- PATCH V25.4.0 - Résultat Français local : affichage robuste dans le bandeau -->
-<script id="patch-v25634-parcours-compatibility-bridge">
-(function(){
-  'use strict';
-  if(window.__hibouV25634ParcoursBridge) return;
-  window.__hibouV25634ParcoursBridge=true;
-  function clean(v){return String(v==null?'':v).replace(/\s+/g,' ').trim();}
-  function norm(v){return clean(v).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'');}
-  function currentName(){
-    var values=[];
-    try{values.push(window.prenomActuel);}catch(e){}
-    try{var c=JSON.parse(localStorage.getItem('hibou_current_student')||'{}');values.push(c&&c.prenom);}catch(e){}
-    ['hibou_prenom','hibou_last_prenom','elevePrenom','maitre_hibou_prenom'].forEach(function(k){try{values.push(localStorage.getItem(k));}catch(e){}});
-    for(var i=0;i<values.length;i++){var n=clean(values[i]);if(n&&!/^(jo|eleve|élève)$/i.test(n))return n;}
-    return '';
-  }
-  function record(text,type,meta){
-    text=clean(text); if(!text) return;
-    var name=currentName();
-    var data={text:text,type:type||'reussite',date:new Date().toISOString(),meta:meta||{}};
-    try{
-      var key=norm(name)||'eleve', json=JSON.stringify(data);
-      localStorage.setItem('hibou_authoritative_last_success_'+key,json);
-      localStorage.setItem('hibou_latest_success_'+key,json);
-      localStorage.setItem('hibou_latest_success_global',json);
-      if(name) localStorage.setItem('hibou_last_success_'+name,text);
-    }catch(e){}
-    try{window.dispatchEvent(new CustomEvent('hibou:last-success-updated',{detail:data}));}catch(e){}
-  }
-  function training(subject,label,score){
-    subject=clean(subject);label=clean(label);score=clean(score);
-    var low=subject.toLowerCase(),txt='';
-    if(low.indexOf('math')>=0) txt='🧮 Entraînement maths'+(label?' : '+label:'')+(score?' — '+score:' terminé');
-    else if(low.indexOf('fran')>=0) txt='📖 Entraînement français'+(label?' : '+label:'')+(score?' — '+score:' terminé');
-    else txt='✅ '+subject+(label?' : '+label:'')+(score?' — '+score:' terminé');
-    record(txt,'entrainement');
-  }
-  function parcours(label){record('🌱 Parcours réussi : '+clean(label||'Grandir ensemble'),'parcours');}
-  window.hibouRecordSuccess=record;
-  window.hibouRecordTrainingSuccess=training;
-  window.hibouRecordParcoursSuccess=parcours;
-  ['25219','25220','25221','25222','25223','25224','25225','25226','25227','25228','25229','25230'].forEach(function(v){
-    window['hibouRecordSuccessV'+v]=record;
-    window['hibouRecordTrainingSuccessV'+v]=training;
-    window['hibouRecordParcoursSuccessV'+v]=parcours;
-  });
-})();
-</script>
-
 <script id="patch-v25-2-26-francais-resultat-bandeau">
 (function(){
   if(window.__maitreHibouV25226FrancaisResultatParcours) return;
@@ -34955,193 +34907,319 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 .v25627-record-status.ok{color:#166534;}
 .v25627-record-status.warn{color:#9a3412;}
 </style>
-<style id="patch-v25632-parcours-records-css">
-/* V25.6.36 — journal du parcours et records locaux immédiats */
-#bandeauLastCard.hibou-journey-card{
-  cursor:pointer !important;
-  align-items:flex-start !important;
-  min-width:420px !important;
-  max-width:620px !important;
-  padding:9px 14px !important;
-}
-#bandeauLastCard.hibou-journey-card .bandeau-info-icon{
-  margin-top:2px;
-}
-#bandeauLastCard.hibou-journey-card .bandeau-info-text{
-  flex:1 1 auto;
-  min-width:0;
-}
-#bandeauLastCard.hibou-journey-card .bandeau-info-label{
-  font-size:12px !important;
-  color:#FFFFFF !important;
-  opacity:1 !important;
-  margin-bottom:4px !important;
-}
-#bandeauLastText.hibou-journey-items{
-  display:grid !important;
-  gap:2px;
-  max-width:none !important;
-  white-space:normal !important;
-  overflow:visible !important;
-  font-size:12px !important;
-  line-height:1.12 !important;
-}
-.hibou-journey-item{
-  display:block;
-  min-width:0;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-  color:#DCEBFF;
-  font-weight:900;
-}
-.hibou-journey-empty{
-  color:#BFD5FF;
-  font-weight:850;
-}
-.hibou-journey-card:hover{
-  box-shadow:0 9px 24px rgba(22,94,188,.18) !important;
-}
-.hibou-journey-popup-card{
-  grid-column:1 / -1;
-}
-.hibou-journey-popup-scroll{
-  max-height:220px;
-  overflow:auto;
-  overscroll-behavior:contain;
-  -webkit-overflow-scrolling:touch;
-  display:grid;
-  gap:8px;
-  padding-right:5px;
-}
-.hibou-journey-popup-row{
-  display:grid;
-  grid-template-columns:auto 1fr;
-  gap:9px;
-  align-items:start;
-  background:#F8F7FF;
-  border:2px solid #ECEBF3;
-  border-radius:16px;
-  padding:9px 11px;
-  color:#2D2B55;
-  font-weight:900;
-  line-height:1.25;
-}
-.hibou-journey-popup-row small{
-  display:block;
-  margin-top:2px;
-  color:#8B89A8;
-  font-weight:850;
-}
-@media(max-width:1180px){
-  #bandeauLastCard.hibou-journey-card{min-width:0 !important;max-width:none !important;}
-}
-@media(max-width:760px){
-  #bandeauLastCard.hibou-journey-card{padding:8px 10px !important;}
-  #bandeauLastText.hibou-journey-items{font-size:11px !important;}
-}
-</style>
-<!-- V25.6.36 : une seule carte de parcours dans le bandeau.
-     L'ancien bloc de réussite a été supprimé du HTML et des reconstructions JavaScript.
-     Le journal compacte les doublons avant stockage, synchronisation et affichage. -->
-
-<script id="patch-v25636-parcours-sync-unique">
+<script id="patch-v25627-records-calcul-fiables-js">
 (function(){
   'use strict';
-  if(window.__hibouV25636ParcoursSyncUnique) return;
-  window.__hibouV25636ParcoursSyncUnique=true;
+  if(window.__hibouRecordsCalculV25627) return;
+  window.__hibouRecordsCalculV25627=true;
 
-  var VERSION='V25.6.36';
-  var API='https://script.google.com/macros/s/AKfycbxz1vYS24sv-c3XVja12geWEXIQl6bQyBoQKBx5kg_fwQaj80_Oc7Y34yeBSRN4lF1f/exec';
-  var RECORD_PREFIX='hibou_v2343_maths_training_record_';
-  var JOURNAL_PREFIX='hibou_journal_parcours_v25636_';
-  var LEGACY_JOURNAL_PREFIX='hibou_journal_parcours_v25632_';
-  var RECORD_QUEUE='hibou_sync_records_v25636';
-  var JOURNAL_QUEUE='hibou_sync_parcours_v25636';
-  var SYNCED_PREFIX='hibou_synced_record_v25636_';
-  var sending=false;
+  var API=window.MAITRE_HIBOU_COMPETENCES_SHEETS_URL || 'https://script.google.com/macros/s/AKfycbxz1vYS24sv-c3XVja12geWEXIQl6bQyBoQKBx5kg_fwQaj80_Oc7Y34yeBSRN4lF1f/exec';
+  var PREFIX='hibou_v2343_maths_training_record_';
 
   function clean(v){return String(v==null?'':v).replace(/\s+/g,' ').trim();}
   function norm(v){return clean(v).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[’']/g,'').replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'');}
   function esc(v){return clean(v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
-  function read(key,fallback){try{var x=JSON.parse(localStorage.getItem(key)||'');return x==null?fallback:x;}catch(e){return fallback;}}
-  function write(key,value){try{localStorage.setItem(key,JSON.stringify(value));return true;}catch(e){return false;}}
-  function arr(v){return Array.isArray(v)?v:[];}
-  function iso(){return new Date().toISOString();}
-  function device(){var ua=navigator.userAgent||'';if(/Android|iPad|Tablet/i.test(ua)||(navigator.maxTouchPoints>1&&Math.min(screen.width,screen.height)>=600))return'tablette';if(/Mobi|iPhone/i.test(ua))return'smartphone';return'ordinateur';}
   function currentName(){
     var vals=[];
     try{vals.push(window.prenomActuel);}catch(e){}
     try{var c=JSON.parse(localStorage.getItem('hibou_current_student')||'{}');vals.push(c&&c.prenom);}catch(e){}
-    ['hibou_prenom','hibou_last_prenom','elevePrenom','maitre_hibou_prenom','maitreHibouCurrentStudent'].forEach(function(k){try{vals.push(localStorage.getItem(k));}catch(e){}});
-    for(var i=0;i<vals.length;i++){var n=clean(vals[i]);if(n&&!/^(jo|eleve|élève|moi)$/i.test(n))return n;}
+    ['hibou_prenom','hibou_last_prenom','elevePrenom','maitre_hibou_prenom'].forEach(function(k){try{vals.push(localStorage.getItem(k));}catch(e){}});
+    for(var i=0;i<vals.length;i++){var n=clean(vals[i]);if(n&& !/^(eleve|élève|jo)$/i.test(n))return n;}
     return '';
   }
-  function formatTime(sec){sec=Math.max(0,Math.round(Number(sec)||0));return String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0');}
-  function formatDate(v){var d=new Date(v||Date.now());if(isNaN(d))return'';return d.toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit'})+' à '+d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});}
-  function journalKey(name){return JOURNAL_PREFIX+(norm(name)||'eleve');}
-  function legacyJournalKey(name){return LEGACY_JOURNAL_PREFIX+(norm(name)||'eleve');}
-  function eventKey(ev){return norm(ev.type)+'|'+norm(ev.texte)+'|'+Math.floor((Date.parse(ev.date)||0)/(10*60*1000));}
-  function normalizeEvent(ev){
-    var e={event_id:clean(ev&&ev.event_id),date:clean(ev&&ev.date)||iso(),prenom:clean(ev&&ev.prenom)||currentName(),type:clean(ev&&ev.type)||'activite',texte:clean(ev&&ev.texte||ev&&ev.text),score:ev&&ev.score!==undefined?ev.score:'',total:ev&&ev.total!==undefined?ev.total:'',temps_secondes:ev&&ev.temps_secondes!==undefined?ev.temps_secondes:'',appareil:clean(ev&&ev.appareil)||device(),source:'maitre_hibou_v25_6_36'};
-    if(!e.event_id)e.event_id='mh_'+norm(e.prenom)+'_'+Date.parse(e.date)+'_'+norm(e.type)+'_'+norm(e.texte).slice(0,48);
-    return e;
+  function device(){return /Android|iPad|Tablet/i.test(navigator.userAgent||'')?'tablette':'ordinateur';}
+  function localKey(name,label){return PREFIX+norm(name)+'_'+norm(label||'calcul_mental_ce2');}
+  function better(n,o){
+    if(!o)return true;
+    var nr=Number(n.total)?Number(n.score)/Number(n.total):0;
+    var orr=Number(o.total)?Number(o.score)/Number(o.total):0;
+    if(nr!==orr)return nr>orr;
+    if(Number(n.score)!==Number(o.score))return Number(n.score)>Number(o.score);
+    return Number(n.time)>0 && (!Number(o.time)||Number(n.time)<Number(o.time));
   }
-  function readJournal(name){
-    var combined=arr(read(journalKey(name),[])).concat(arr(read(legacyJournalKey(name),[])));
-    var map=Object.create(null);
-    combined.forEach(function(raw){var e=normalizeEvent(raw);if(!e.texte||norm(e.prenom)!==norm(name))return;var k=eventKey(e);if(!map[k]||(Date.parse(e.date)||0)>(Date.parse(map[k].date)||0))map[k]=e;});
-    var result=Object.keys(map).map(function(k){return map[k];}).sort(function(a,b){return(Date.parse(b.date)||0)-(Date.parse(a.date)||0);}).slice(0,50);
-    write(journalKey(name),result);
-    return result;
+  function saveLocal(record){
+    var key=localKey(record.prenom,record.ceinture),old=null;
+    try{old=JSON.parse(localStorage.getItem(key)||'null');}catch(e){}
+    var local={score:Number(record.score||0),total:Number(record.total||10),time:Math.round(Number(record.temps_secondes||0)*1000),date:record.date||new Date().toISOString(),label:record.ceinture};
+    if(better(local,old)){try{localStorage.setItem(key,JSON.stringify(local));}catch(e){}}
+    return local;
   }
-  function addEvent(ev,sync){
-    ev=normalizeEvent(ev);if(!ev.prenom||!ev.texte)return;
-    var list=readJournal(ev.prenom),k=eventKey(ev),replaced=false;
-    for(var i=0;i<list.length;i++){if(eventKey(list[i])===k){if((Date.parse(ev.date)||0)>=(Date.parse(list[i].date)||0))list[i]=ev;replaced=true;break;}}
-    if(!replaced)list.unshift(ev);
-    list.sort(function(a,b){return(Date.parse(b.date)||0)-(Date.parse(a.date)||0);});write(journalKey(ev.prenom),list.slice(0,50));
-    renderCard(ev.prenom);renderPopupJourney(ev.prenom);
-    if(sync!==false){enqueue(JOURNAL_QUEUE,ev,'event_id');flushSoon();}
+  function send(record){
+    var payload={source:'maitre_hibou_v25_6_27',appareil:record.appareil,records_calcul:[record]};
+    return fetch(API,{method:'POST',mode:'no-cors',cache:'no-store',headers:{'Content-Type':'text/plain;charset=UTF-8'},body:JSON.stringify(payload)});
   }
-  function recordKey(r){return RECORD_PREFIX+norm(r.prenom)+'_'+norm(r.ceinture||'calcul_mental_ce2');}
-  function normalizeRecord(r){var sec=Number(r&&r.temps_secondes);if(!isFinite(sec)||sec<=0)sec=Number(r&&r.time)/1000;sec=Math.max(1,sec||1);var total=Math.max(1,Number(r&&r.total)||10);return{prenom:clean(r&&r.prenom)||currentName(),ceinture:clean(r&&r.ceinture||r&&r.label)||'Calcul mental CE2',score:Number(r&&r.score)||0,total:total,temps_secondes:Math.round(sec*100)/100,temps_moyen:Math.round((sec/total)*100)/100,date:clean(r&&r.date)||iso(),appareil:clean(r&&r.appareil)||device()};}
-  function quality(r){return[(Number(r.score)||0)/(Number(r.total)||1),Number(r.score)||0,-(Number(r.temps_secondes)||Number(r.time)/1000||999999)];}
-  function better(a,b){if(!b)return true;var x=quality(a),y=quality(b);for(var i=0;i<x.length;i++){if(x[i]!==y[i])return x[i]>y[i];}return false;}
-  function saveRecord(r){r=normalizeRecord(r);var key=recordKey(r),old=read(key,null);var obj={prenom:r.prenom,ceinture:r.ceinture,label:r.ceinture,score:r.score,total:r.total,temps_secondes:r.temps_secondes,temps_moyen:r.temps_moyen,time:Math.round(r.temps_secondes*1000),date:r.date,appareil:r.appareil};if(better(obj,old))write(key,obj);return obj;}
-  function enqueue(key,item,idField){var q=arr(read(key,[])),id=clean(item&&item[idField]);if(!q.some(function(x){return clean(x&&x[idField])===id;})){q.push(item);write(key,q);}}
-  function queueRecord(r){r=normalizeRecord(r);r._id=norm(r.prenom)+'|'+norm(r.ceinture)+'|'+r.score+'|'+r.total+'|'+r.temps_secondes+'|'+r.date;enqueue(RECORD_QUEUE,r,'_id');flushSoon();}
+  function markSuccess(record){
+    var score=record.score+'/'+record.total;
+    if(typeof window.hibouRecordTrainingSuccess==='function') window.hibouRecordTrainingSuccess('Maths',record.ceinture,score);
+  }
+  window.hibouFinalizeMentalRecordV25627=function(data){
+    var name=currentName();
+    if(!name){console.warn('🦉 Aucun prénom actif pour le record calcul');return;}
+    var seconds=Math.max(1,Number(data&&data.seconds||0));
+    var total=Math.max(1,Number(data&&data.total||10));
+    var record={
+      prenom:name,
+      ceinture:clean(data&&data.label)||'Calcul mental CE2',
+      score:Number(data&&data.score||0),
+      total:total,
+      temps_secondes:Math.round(seconds*100)/100,
+      temps_moyen:Math.round((seconds/total)*100)/100,
+      date:(data&&data.date)||new Date().toISOString(),
+      appareil:device()
+    };
+    saveLocal(record);
+    markSuccess(record);
+    send(record).then(function(){
+      try{window.dispatchEvent(new CustomEvent('hibou:math-record-updated',{detail:record}));}catch(e){}
+    }).catch(function(err){console.warn('🦉 Envoi du record vers Google Sheets impossible',err);});
+  };
 
-  /* GET dans un iframe caché : aucune attente élève, aucun CORS, exactement la route validée manuellement. */
-  function sendGet(params,timeout){return new Promise(function(resolve,reject){var f=document.createElement('iframe'),done=false,timer;function finish(ok){if(done)return;done=true;clearTimeout(timer);setTimeout(function(){if(f.parentNode)f.parentNode.removeChild(f);},50);ok?resolve(true):reject(new Error('Envoi non confirmé'));}f.style.cssText='position:fixed;width:1px;height:1px;left:-9999px;top:-9999px;border:0;opacity:0;pointer-events:none';f.setAttribute('aria-hidden','true');f.onload=function(){finish(true);};f.onerror=function(){finish(false);};f.src=API+'?'+new URLSearchParams(Object.assign({},params,{t:Date.now()})).toString();document.body.appendChild(f);timer=setTimeout(function(){finish(false);},timeout||20000);});}
-  async function flush(){if(sending||!navigator.onLine)return;sending=true;try{
-    var rq=arr(read(RECORD_QUEUE,[]));
-    for(var i=0;i<rq.length;i++){var r=rq[i];try{await sendGet({action:'enregistrer_record',prenom:r.prenom,ceinture:r.ceinture,score:r.score,total:r.total,temps_secondes:r.temps_secondes,temps_moyen:r.temps_moyen,date:r.date,appareil:r.appareil});rq.splice(i,1);i--;write(RECORD_QUEUE,rq);try{localStorage.setItem(SYNCED_PREFIX+r._id,'1');}catch(e){}console.info('✅ Record Google Sheets envoyé',r.prenom,r.ceinture,r.score+'/'+r.total);}catch(e){console.warn('🦉 Record conservé en attente',e);break;}}
-    var jq=arr(read(JOURNAL_QUEUE,[]));
-    for(var j=0;j<jq.length;j++){var ev=jq[j];try{await sendGet({action:'enregistrer_parcours',event_id:ev.event_id,date:ev.date,prenom:ev.prenom,type:ev.type,texte:ev.texte,score:ev.score,total:ev.total,temps_secondes:ev.temps_secondes,appareil:ev.appareil,source:ev.source});jq.splice(j,1);j--;write(JOURNAL_QUEUE,jq);}catch(e){break;}}
-  }finally{sending=false;if(arr(read(RECORD_QUEUE,[])).length||arr(read(JOURNAL_QUEUE,[])).length)setTimeout(flush,30000);}}
-  function flushSoon(){clearTimeout(flushSoon.t);flushSoon.t=setTimeout(flush,50);}
+  function jsonp(params){
+    return new Promise(function(resolve,reject){
+      var cb='__hibouRecords'+Date.now()+Math.floor(Math.random()*100000),done=false;
+      var s=document.createElement('script');
+      var timer=setTimeout(function(){if(done)return;done=true;cleanup();reject(new Error('Délai dépassé'));},18000);
+      function cleanup(){clearTimeout(timer);try{delete window[cb];}catch(e){}if(s.parentNode)s.parentNode.removeChild(s);}
+      window[cb]=function(data){if(done)return;done=true;cleanup();resolve(data);};
+      s.onerror=function(){if(done)return;done=true;cleanup();reject(new Error('Erreur réseau'));};
+      params=params||{};params.callback=cb;params.t=Date.now();
+      s.src=API+'?'+new URLSearchParams(params).toString();
+      document.head.appendChild(s);
+    });
+  }
+  function findRecordsCard(){
+    var cards=document.querySelectorAll('#studentProfileLifeInnerV23417 .profile-life-v23417-card');
+    for(var i=0;i<cards.length;i++){var h=cards[i].querySelector('h3');if(h&&/records de calcul/i.test(h.textContent||''))return cards[i];}
+    return null;
+  }
+  function renderRows(rows){
+    var card=findRecordsCard();if(!card)return;
+    var h=card.querySelector('h3');
+    var html='';
+    if(!rows.length){html='<div class="profile-life-v23417-empty">Aucun record de calcul pour le moment.</div>';}
+    else{
+      rows=rows.slice().sort(function(a,b){return Number(b.score||0)-Number(a.score||0)||Number(a.temps_secondes||0)-Number(b.temps_secondes||0);}).slice(0,5);
+      html='<div class="profile-life-v23417-list">'+rows.map(function(r){
+        var sec=Math.max(0,Number(r.temps_secondes||0)),m=Math.floor(sec/60),s=Math.round(sec%60),time=(m?String(m).padStart(2,'0')+':':'00:')+String(s).padStart(2,'0');
+        return '<div class="profile-life-v23417-item"><span>⏱️</span><div><b>'+esc(r.ceinture||'Calcul mental')+'</b>'+esc(r.score)+' / '+esc(r.total)+' en '+time+'<small>Record synchronisé</small></div></div>';
+      }).join('')+'</div>';
+    }
+    card.innerHTML='';if(h)card.appendChild(h);card.insertAdjacentHTML('beforeend',html);
+  }
+  function refreshSheetsRecords(){
+    var name=currentName();if(!name)return Promise.resolve([]);
+    return jsonp({action:'records_calcul',prenom:name}).then(function(rows){
+      rows=Array.isArray(rows)?rows:[];
+      rows.forEach(saveLocal);
+      renderRows(rows);
+      return rows;
+    }).catch(function(err){console.warn('🦉 Lecture records Google Sheets impossible',err);return [];});
+  }
+  window.hibouRefreshMathRecordsV25627=refreshSheetsRecords;
 
-  function renderCard(name){name=clean(name)||currentName();var card=document.getElementById('bandeauLastCard');if(!name||!card)return;var events=readJournal(name).slice(0,3);card.innerHTML='<span class="bandeau-info-icon" aria-hidden="true">🧭</span><span class="bandeau-info-text"><span class="bandeau-info-label">Mon parcours récent</span><span id="bandeauLastText" class="hibou-journey-items">'+(events.length?events.map(function(e){return'<span class="hibou-journey-item">'+esc(e.texte)+'</span>';}).join(''):'<span class="hibou-journey-empty">Ton prochain entraînement apparaîtra ici.</span>')+'</span></span>';card.classList.add('hibou-journey-card');card.title='Voir mon parcours dans Mes progrès';}
-  function renderPopupJourney(name){var body=document.querySelector('#studentProfileLifeInnerV23417 .profile-life-v23417-body');if(!body)return;var card=body.querySelector('.hibou-journey-popup-card');if(!card){card=document.createElement('section');card.className='profile-life-v23417-card wide hibou-journey-popup-card';body.insertBefore(card,body.firstChild);}var events=readJournal(name).slice(0,20);card.innerHTML='<h3>🧭 Mon parcours récent</h3><div class="hibou-journey-popup-scroll">'+(events.length?events.map(function(e){return'<div class="hibou-journey-popup-row"><span>✅</span><div>'+esc(e.texte)+'<small>'+esc(formatDate(e.date))+'</small></div></div>';}).join(''):'<div class="profile-life-v23417-empty">Ton parcours apparaîtra ici après une activité.</div>')+'</div>';}
-  function localRecords(name){var out=[],prefix=RECORD_PREFIX+norm(name)+'_';try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i)||'';if(k.indexOf(prefix)!==0)continue;var r=read(k,null);if(r)out.push(normalizeRecord(Object.assign({},r,{prenom:name,ceinture:r.ceinture||r.label||k.slice(prefix.length).replace(/_/g,' ')})));}}catch(e){}return out.sort(function(a,b){return(Date.parse(b.date)||0)-(Date.parse(a.date)||0);});}
-  function renderRecords(name){var cards=document.querySelectorAll('#studentProfileLifeInnerV23417 .profile-life-v23417-card'),card=null;for(var i=0;i<cards.length;i++){var h=cards[i].querySelector('h3');if(h&&/records de calcul/i.test(h.textContent||'')){card=cards[i];break;}}if(!card)return;var rows=localRecords(name).slice(0,8);card.innerHTML='<h3>🧮 Records de calcul</h3>'+(rows.length?'<div class="profile-life-v23417-list">'+rows.map(function(r){return'<div class="profile-life-v23417-item"><span>⏱️</span><div><b>'+esc(r.ceinture)+'</b>'+r.score+' / '+r.total+' en '+formatTime(r.temps_secondes)+'<small>Meilleur résultat enregistré</small></div></div>';}).join('')+'</div>':'<div class="profile-life-v23417-empty">Aucun record de calcul pour le moment.</div>');}
-
-  window.hibouFinalizeMentalRecordV25627=function(data){var name=currentName();if(!name){console.warn('🦉 Aucun prénom actif');return;}var r=saveRecord({prenom:name,ceinture:clean(data&&data.label)||'Calcul mental CE2',score:Number(data&&data.score)||0,total:Number(data&&data.total)||10,temps_secondes:Number(data&&data.seconds)||1,date:clean(data&&data.date)||iso(),appareil:device()});addEvent({prenom:name,type:'entrainement_calcul',texte:'🧮 Entraînement maths : '+r.ceinture+' — Score '+r.score+' / '+r.total+' en '+formatTime(r.temps_secondes),score:r.score,total:r.total,temps_secondes:r.temps_secondes,date:r.date,appareil:r.appareil},true);queueRecord(r);renderRecords(name);};
-  window.hibouSyncRecordsNowV25636=flush;
-
-  window.addEventListener('hibou:last-success-updated',function(ev){var d=ev&&ev.detail||{},text=clean(d.text);if(!text||/entraînement maths/i.test(text))return;addEvent({prenom:currentName(),type:clean(d.type)||'reussite',texte:text,date:clean(d.date)||iso(),appareil:device()},true);});
-
-  function scan(){var name=currentName();if(!name)return;localRecords(name).forEach(function(r){var id=norm(r.prenom)+'|'+norm(r.ceinture)+'|'+r.score+'|'+r.total+'|'+r.temps_secondes+'|'+r.date;var synced=false;try{synced=localStorage.getItem(SYNCED_PREFIX+id)==='1';}catch(e){}if(!synced){r._id=id;enqueue(RECORD_QUEUE,r,'_id');}});renderCard(name);}
-  function bind(){var card=document.getElementById('bandeauLastCard');if(card&&!card.__v25636){card.__v25636=true;card.setAttribute('role','button');card.setAttribute('tabindex','0');card.addEventListener('click',function(){if(typeof window.openStudentProfileLifeV23417==='function')window.openStudentProfileLifeV23417();},true);}}
-  var oldOpen=window.openStudentProfileLifeV23417;if(typeof oldOpen==='function'&&!oldOpen.__v25636){var wrapped=function(){var x=oldOpen.apply(this,arguments),n=currentName();setTimeout(function(){renderPopupJourney(n);renderRecords(n);},100);return x;};wrapped.__v25636=true;window.openStudentProfileLifeV23417=wrapped;}
-
-  function install(){try{document.title='🦉 Maître Hibou '+VERSION;}catch(e){}scan();bind();flushSoon();}
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);else install();
-  window.addEventListener('load',install);window.addEventListener('online',flushSoon);document.addEventListener('visibilitychange',function(){if(!document.hidden)install();});setInterval(function(){scan();flushSoon();},15000);
+  var oldOpen=window.openStudentProfileLifeV23417;
+  if(typeof oldOpen==='function'&&!oldOpen.__v25627){
+    var wrapped=function(){var r=oldOpen.apply(this,arguments);setTimeout(refreshSheetsRecords,80);return r;};
+    wrapped.__v25627=true;window.openStudentProfileLifeV23417=wrapped;
+  }
+  window.addEventListener('hibou:math-record-updated',function(){setTimeout(refreshSheetsRecords,250);});
+  try{document.title='🦉 Maître Hibou V25.6.36';}catch(e){}
 })();
 </script>
 
-<!-- V25.6.36 : moteur unique local immédiat + synchronisation GET arrière-plan sans CORS. -->
+<!-- V25.6.36 : une seule carte de parcours dans le bandeau.
+     L'ancien bloc de réussite a été supprimé du HTML et des reconstructions JavaScript.
+     Le journal compacte les doublons avant stockage, synchronisation et affichage. -->
+
+<style id="patch-v25636-dernier-evenement-unique-css">
+#bandeauLastCard{
+  cursor:pointer!important;
+  min-width:420px!important;
+  max-width:620px!important;
+  padding:10px 16px!important;
+  align-items:center!important;
+}
+#bandeauLastCard .bandeau-info-label{
+  color:#fff!important;
+  font-size:18px!important;
+  font-weight:1000!important;
+  margin-bottom:3px!important;
+}
+#bandeauLastText{
+  display:block!important;
+  color:#EAF2FF!important;
+  font-size:13px!important;
+  line-height:1.25!important;
+  font-weight:900!important;
+  white-space:normal!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  max-height:34px!important;
+}
+.mh-last-event-popup-card{grid-column:1/-1;}
+.mh-last-event-row{
+  display:grid;
+  grid-template-columns:auto 1fr;
+  gap:10px;
+  align-items:start;
+  background:#F8F7FF;
+  border:2px solid #ECEBF3;
+  border-radius:16px;
+  padding:12px;
+  font-weight:900;
+}
+.mh-last-event-row small{display:block;margin-top:3px;color:#8B89A8;font-weight:850;}
+@media(max-width:900px){#bandeauLastCard{min-width:0!important;max-width:none!important;}}
+</style>
+<script id="patch-v25636-dernier-evenement-unique-js">
+(function(){
+  'use strict';
+  if(window.__hibouV25636UniqueLastEvent) return;
+  window.__hibouV25636UniqueLastEvent=true;
+
+  var VERSION='V25.6.36';
+  var API='https://script.google.com/macros/s/AKfycbxz1vYS24sv-c3XVja12geWEXIQl6bQyBoQKBx5kg_fwQaj80_Oc7Y34yeBSRN4lF1f/exec';
+  var EVENT_PREFIX='hibou_last_event_v25636_';
+  var QUEUE_KEY='hibou_record_queue_v25636';
+  var RECORD_PREFIX='hibou_v2343_maths_training_record_';
+  var sending=false;
+
+  function clean(v){return String(v==null?'':v).replace(/\s+/g,' ').trim();}
+  function norm(v){return clean(v).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'');}
+  function esc(v){return clean(v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function now(){return new Date().toISOString();}
+  function currentName(){
+    var values=[];
+    try{values.push(window.prenomActuel);}catch(e){}
+    try{var c=JSON.parse(localStorage.getItem('hibou_current_student')||'{}');values.push(c&&c.prenom);}catch(e){}
+    ['hibou_prenom','hibou_last_prenom','elevePrenom','maitre_hibou_prenom'].forEach(function(k){try{values.push(localStorage.getItem(k));}catch(e){}});
+    for(var i=0;i<values.length;i++){var n=clean(values[i]);if(n&&!/^(jo|eleve|élève)$/i.test(n))return n;}
+    return '';
+  }
+  function device(){return /Android|iPad|Tablet|Mobile/i.test(navigator.userAgent||'')?'tablette':'pc';}
+  function eventKey(name){return EVENT_PREFIX+norm(name);}
+  function readEvent(name){try{return JSON.parse(localStorage.getItem(eventKey(name))||'null');}catch(e){return null;}}
+  function saveEvent(ev){
+    if(!ev||!clean(ev.prenom)||!clean(ev.texte))return;
+    try{localStorage.setItem(eventKey(ev.prenom),JSON.stringify(ev));}catch(e){}
+    renderCard(ev.prenom);
+    renderPopup(ev.prenom);
+  }
+  function iconFor(type,text){
+    var s=norm((type||'')+' '+(text||''));
+    if(/question/.test(s))return '💬';
+    if(/ceinture|medaille|validee/.test(s))return '🏅';
+    if(/entrainement|calcul|record/.test(s))return '🧮';
+    return '⭐';
+  }
+  function renderCard(name){
+    name=clean(name)||currentName(); if(!name)return;
+    var card=document.getElementById('bandeauLastCard'); if(!card)return;
+    var ev=readEvent(name), text=ev?clean(ev.texte):'Ta prochaine réussite apparaîtra ici.';
+    card.innerHTML='<span class="bandeau-info-icon" aria-hidden="true">'+iconFor(ev&&ev.type,text)+'</span><span class="bandeau-info-text"><span class="bandeau-info-label">Mon parcours récent</span><span id="bandeauLastText">'+esc(text)+'</span></span>';
+    card.setAttribute('title','Voir mes progrès');
+    card.setAttribute('aria-label','Mon parcours récent : '+text);
+  }
+  function renderPopup(name){
+    name=clean(name)||currentName(); if(!name)return;
+    var body=document.querySelector('#studentProfileLifeInnerV23417 .profile-life-v23417-body'); if(!body)return;
+    var card=body.querySelector('.mh-last-event-popup-card');
+    if(!card){card=document.createElement('section');card.className='profile-life-v23417-card wide mh-last-event-popup-card';body.insertBefore(card,body.firstChild);}
+    var ev=readEvent(name);
+    card.innerHTML='<h3>🧭 Mon parcours récent</h3>'+(ev?'<div class="mh-last-event-row"><span>'+iconFor(ev.type,ev.texte)+'</span><div>'+esc(ev.texte)+'<small>'+new Date(ev.date||Date.now()).toLocaleString('fr-FR')+'</small></div></div>':'<div class="profile-life-v23417-empty">Ta prochaine réussite apparaîtra ici.</div>');
+  }
+  function queue(){try{return JSON.parse(localStorage.getItem(QUEUE_KEY)||'[]')||[];}catch(e){return [];}}
+  function writeQueue(q){try{localStorage.setItem(QUEUE_KEY,JSON.stringify(q));}catch(e){}}
+  function queueRecord(r){
+    var q=queue();
+    var id=norm(r.prenom)+'|'+norm(r.ceinture)+'|'+r.score+'|'+r.total+'|'+Math.round(r.temps_secondes)+'|'+r.date;
+    if(!q.some(function(x){return x.id===id;}))q.push(Object.assign({id:id},r));
+    writeQueue(q);setTimeout(flush,20);
+  }
+  function sendGet(params){
+    return new Promise(function(resolve,reject){
+      var f=document.createElement('iframe');
+      f.style.display='none';f.setAttribute('aria-hidden','true');
+      var done=false,t=setTimeout(function(){if(done)return;done=true;try{f.remove();}catch(e){}reject(new Error('timeout'));},12000);
+      f.onload=function(){if(done)return;done=true;clearTimeout(t);setTimeout(function(){try{f.remove();}catch(e){}},50);resolve(true);};
+      f.onerror=function(){if(done)return;done=true;clearTimeout(t);try{f.remove();}catch(e){}reject(new Error('network'));};
+      f.src=API+'?'+Object.keys(params).map(function(k){return encodeURIComponent(k)+'='+encodeURIComponent(params[k]==null?'':params[k]);}).join('&')+'&_='+Date.now();
+      document.body.appendChild(f);
+    });
+  }
+  async function flush(){
+    if(sending||!navigator.onLine)return; sending=true;
+    try{
+      var q=queue();
+      while(q.length){
+        var r=q[0];
+        try{
+          await sendGet({action:'enregistrer_record',prenom:r.prenom,ceinture:r.ceinture,score:r.score,total:r.total,temps_secondes:r.temps_secondes,temps_moyen:r.temps_moyen,date:r.date,appareil:r.appareil});
+          q.shift();writeQueue(q);
+        }catch(e){break;}
+      }
+    }finally{sending=false;}
+  }
+  function saveLocalRecord(r){
+    var key=RECORD_PREFIX+norm(r.prenom)+'_'+norm(r.ceinture);
+    try{localStorage.setItem(key,JSON.stringify({prenom:r.prenom,ceinture:r.ceinture,label:r.ceinture,score:r.score,total:r.total,time:r.temps_secondes,temps_secondes:r.temps_secondes,temps_moyen:r.temps_moyen,date:r.date,appareil:r.appareil}));}catch(e){}
+  }
+  function recordEvent(text,type,meta){
+    var name=currentName(),t=clean(text);if(!name||!t)return;
+    var ev={prenom:name,type:type||'reussite',texte:t,date:now(),meta:meta||{},appareil:device()};
+    saveEvent(ev);
+    try{window.dispatchEvent(new CustomEvent('hibou:last-event-updated',{detail:ev}));}catch(e){}
+  }
+  function parseScore(text){var m=clean(text).match(/(\d+)\s*\/\s*(\d+)/);return m?{score:Number(m[1]),total:Number(m[2])}:null;}
+  function parseTime(text){
+    var s=clean(text),m=s.match(/(\d{1,2}):(\d{2})/);if(m)return Number(m[1])*60+Number(m[2]);
+    m=s.match(/(\d+(?:[.,]\d+)?)\s*s/);return m?Number(m[1].replace(',','.')):0;
+  }
+  function recordTraining(subject,label,scoreText){
+    var name=currentName();if(!name)return;
+    subject=clean(subject);label=clean(label)||'Entraînement';scoreText=clean(scoreText);
+    var low=subject.toLowerCase(),prefix=low.indexOf('fran')>=0?'📖 Entraînement français':'🧮 Entraînement maths';
+    var text=prefix+(label?' : '+label:'')+(scoreText?' — '+scoreText:' terminé');
+    recordEvent(text,'entrainement');
+    if(low.indexOf('math')>=0){
+      var sc=parseScore(scoreText)||{score:0,total:10},secs=Math.max(1,parseTime(scoreText)||1);
+      var r={prenom:name,ceinture:label,score:sc.score,total:sc.total,temps_secondes:secs,temps_moyen:Math.round((secs/sc.total)*100)/100,date:now(),appareil:device()};
+      saveLocalRecord(r);queueRecord(r);
+    }
+  }
+  function finalizeMental(data){
+    var name=currentName();if(!name)return;
+    var r={prenom:name,ceinture:clean(data&&data.label)||'Calcul mental CE2',score:Number(data&&data.score)||0,total:Number(data&&data.total)||10,temps_secondes:Math.max(1,Math.round(Number(data&&data.seconds)||1)),date:clean(data&&data.date)||now(),appareil:device()};
+    r.temps_moyen=Math.round((r.temps_secondes/r.total)*100)/100;
+    saveLocalRecord(r);queueRecord(r);
+    recordEvent('🧮 '+r.ceinture+' : '+r.score+'/'+r.total+' en '+String(Math.floor(r.temps_secondes/60)).padStart(2,'0')+':'+String(r.temps_secondes%60).padStart(2,'0'),'entrainement',{record:r});
+  }
+
+  window.hibouRecordSuccess=recordEvent;
+  window.hibouRecordTrainingSuccess=recordTraining;
+  window.hibouFinalizeMentalRecordV25627=finalizeMental;
+  ['25219','25220','25221','25222','25223','25224','25225','25226','25227','25228','25229','25230','25632'].forEach(function(v){
+    window['hibouRecordSuccessV'+v]=recordEvent;
+    window['hibouRecordTrainingSuccessV'+v]=recordTraining;
+  });
+
+  var oldOpen=window.openStudentProfileLifeV23417;
+  if(typeof oldOpen==='function'&&!oldOpen.__v25636){
+    var wrapped=function(){var r=oldOpen.apply(this,arguments);setTimeout(function(){renderPopup(currentName());},50);return r;};
+    wrapped.__v25636=true;window.openStudentProfileLifeV23417=wrapped;
+  }
+  function bind(){
+    var card=document.getElementById('bandeauLastCard');if(card&&!card.__v25636){card.__v25636=true;card.addEventListener('click',function(){if(typeof window.openStudentProfileLifeV23417==='function')window.openStudentProfileLifeV23417();});}
+    renderCard(currentName());
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind);else bind();
+  window.addEventListener('load',function(){bind();flush();});
+  window.addEventListener('online',flush);
+  document.addEventListener('visibilitychange',function(){if(!document.hidden){bind();flush();}});
+  setInterval(function(){bind();flush();},15000);
+  try{document.title='🦉 Maître Hibou '+VERSION;}catch(e){}
+})();
+</script>
+
 </body>
 </html>

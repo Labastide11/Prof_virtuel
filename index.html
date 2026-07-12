@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 Maître Hibou V25.6.27</title>
+<title>🦉 Maître Hibou V25.6.28</title>
 <style>
 
   :root {
@@ -3694,7 +3694,7 @@ body.v21-final .subject-btn .subject-label{font-size:18px !important;line-height
 @media (max-width:899px){body.v21-final .v21-center{width:calc(100% - 24px) !important;margin:0 auto 8px !important;grid-template-columns:1fr !important;}body.v21-final .v21-side-owl,body.v21-final .v21-deco-window,body.v21-final .v21-deco-globe,body.v21-final .v21-deco-books{display:none !important;}body.v21-final .subjects-bar{grid-template-columns:repeat(2,minmax(0,1fr)) !important;}}
 </style>
 <script id="patch-v21-4-home-text-and-title">
-(function(){function applyV214(){try{document.title = '🦉 Maître Hibou V25.6.27';var p=document.querySelector('.v21-hero p');if(p) p.textContent='🌟 Que souhaites-tu apprendre aujourd’hui ?';var h2=document.querySelector('.v21-hero h2');if(h2) h2.setAttribute('aria-hidden','true');}catch(e){}}document.addEventListener('DOMContentLoaded',applyV214);setTimeout(applyV214,100);setTimeout(applyV214,500);setTimeout(applyV214,1200);})();
+(function(){function applyV214(){try{document.title = '🦉 Maître Hibou V25.6.28';var p=document.querySelector('.v21-hero p');if(p) p.textContent='🌟 Que souhaites-tu apprendre aujourd’hui ?';var h2=document.querySelector('.v21-hero h2');if(h2) h2.setAttribute('aria-hidden','true');}catch(e){}}document.addEventListener('DOMContentLoaded',applyV214);setTimeout(applyV214,100);setTimeout(applyV214,500);setTimeout(applyV214,1200);})();
 </script>
 
 
@@ -3930,7 +3930,7 @@ body.v21-final .subject-btn{
 (function(){
   function applyV215(){
     try{
-      document.title = '🦉 Maître Hibou V25.6.27';
+      document.title = '🦉 Maître Hibou V25.6.28';
       var p=document.querySelector('.v21-hero p');
       if(p) p.textContent='🌟 Que souhaites-tu apprendre aujourd’hui ?';
       var h2=document.querySelector('.v21-hero h2');
@@ -4175,7 +4175,7 @@ body.v21-final .v21-sublist{
 (function(){
   function cleanV216(){
     try{
-      document.title = '🦉 Maître Hibou V25.6.27';
+      document.title = '🦉 Maître Hibou V25.6.28';
       document.body.classList.add('v21-final');
       var heroP=document.querySelector('.v21-hero p');
       if(heroP) heroP.textContent='🌟 Que souhaites-tu apprendre aujourd’hui ?';
@@ -6758,17 +6758,20 @@ function showCalculMentalResult() {
     <button class="mental-next-btn" onclick="startCalculMentalCE2()">🔄 Refaire 10 calculs</button>
   `;
   try {
-    if (typeof window.hibouFinalizeMentalRecordV25627 === 'function') {
-      window.hibouFinalizeMentalRecordV25627({
+    if (typeof window.hibouSaveMentalRecordV25628 === 'function') {
+      window.hibouSaveMentalRecordV25628({
         label: getCalculMentalPeriodTitle(s.period),
         score: scoreInitial,
         total: total,
         seconds: Math.max(1, (Date.now() - Number(s.startedAt || Date.now())) / 1000),
-        date: new Date().toISOString()
+        date: new Date().toISOString(),
+        resultBox: box
       });
+    } else {
+      console.error('🦉 V25.6.28 : moteur d’enregistrement des records absent.');
     }
   } catch (recordError) {
-    console.warn('🦉 Record calcul mental non enregistré', recordError);
+    console.error('🦉 V25.6.28 : record calcul mental non enregistré', recordError);
   }
   calculMentalState = null;
 }
@@ -20333,7 +20336,7 @@ body.v21-final .v2173-activity-btn.soon{
 (function(){
   if(window.__maitreHibouV2173TitresVerrouilles) return;
   window.__maitreHibouV2173TitresVerrouilles = true;
-  const VERSION_TITLE = '🦉 Maître Hibou V25.6.27';
+  const VERSION_TITLE = '🦉 Maître Hibou V25.6.28';
   const SUBJECTS = {
     francais:{label:'Français', icon:'📖', color:'#FF3B57', color2:'#FF6E82', soft:'#FFECEF', border:'#FFD3DA', shadow:'rgba(255,59,87,.24)', items:[
       {label:'Nom commun', names:['startNomCommun','showNomCommunLesson']},
@@ -22350,7 +22353,7 @@ body.v21-final .v2173-activity-btn.soon{
 </style>
 <script id="patch-v2347-title-js">
 (function(){
-  try{ document.title = '🦉 Maître Hibou V25.6.27'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.28'; }catch(e){}
 })();
 </script>
 
@@ -22728,7 +22731,7 @@ body.v21-final .v2173-activity-btn.soon{
 (function(){
   if(window.__maitreHibouFrancaisPopupV2348) return;
   window.__maitreHibouFrancaisPopupV2348 = true;
-  try{ document.title = '🦉 Maître Hibou V25.6.27'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.28'; }catch(e){}
 
   const TRAINING_COUNT = 10;
   let frState = {activity:null, questions:[], index:0, score:0, answered:false};
@@ -22971,7 +22974,7 @@ body.v21-final .v2173-activity-btn.soon{
 (function(){
   if(window.__maitreHibouFrancaisSheetGrammaireV23410) return;
   window.__maitreHibouFrancaisSheetGrammaireV23410 = true;
-  try{ document.title = '🦉 Maître Hibou V25.6.27'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.28'; }catch(e){}
 
   const BASE_URL = 'https://script.google.com/macros/s/AKfycbyzfRPrUV7xKgeXUM0LjbOsOne5DieRjDYxmuVbBBUIGL-F9ahMmJZSfpUDYmBaZIOpvQ/exec';
   const SHEET_NAME = 'grammaire';
@@ -23540,7 +23543,7 @@ body.v21-final .v2173-activity-btn.soon{
 (function(){
   if(window.__maitreHibouFrancaisCeinturesV23411) return;
   window.__maitreHibouFrancaisCeinturesV23411 = true;
-  try{ document.title = '🦉 Maître Hibou V25.6.27'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.28'; }catch(e){}
 
   const BASE_URL = 'https://script.google.com/macros/s/AKfycbyzfRPrUV7xKgeXUM0LjbOsOne5DieRjDYxmuVbBBUIGL-F9ahMmJZSfpUDYmBaZIOpvQ/exec';
   const SHEET_NAME = 'grammaire';
@@ -23957,7 +23960,7 @@ body.v21-final .v2173-activity-btn.soon{
 (function(){
   if(window.__maitreHibouFrancaisSectionsV23412) return;
   window.__maitreHibouFrancaisSectionsV23412 = true;
-  try{ document.title = '🦉 Maître Hibou V25.6.27'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.28'; }catch(e){}
 
   const GRAMMAR_BELTS = [
     {id:'blanche', title:'Phrase affirmative / négative', label:'Ceinture blanche', desc:'Reconnaître et transformer les phrases.', color:'radial-gradient(circle at 35% 25%,#FFFFFF,#EDE7FF 68%,#C8B8F2)'},
@@ -24036,7 +24039,7 @@ body.v21-final .v2173-activity-btn.soon{
 }
 </style>
 <script id="patch-v23413-version-title">
-(function(){ try{ document.title = '🦉 Maître Hibou V25.6.27'; }catch(e){} })();
+(function(){ try{ document.title = '🦉 Maître Hibou V25.6.28'; }catch(e){} })();
 </script>
 
 
@@ -24392,7 +24395,7 @@ body.v21-final .v21-deco-globe::after{
   window.__v23415GlobeDedicatedWindow = true;
 
   function prepareDedicatedLinks(){
-    try{ document.title = '🦉 Maître Hibou V25.6.27'; }catch(e){}
+    try{ document.title = '🦉 Maître Hibou V25.6.28'; }catch(e){}
 
     const overlay = document.getElementById('v23ShortcutsOverlay');
     if(!overlay) return;
@@ -24506,7 +24509,7 @@ body.v23-shortcuts-open{
   window.__v23416GlobePopupFixed = true;
 
   function forcePopupLayout(){
-    try{ document.title = '🦉 Maître Hibou V25.6.27'; }catch(e){}
+    try{ document.title = '🦉 Maître Hibou V25.6.28'; }catch(e){}
     var overlay = document.getElementById('v23ShortcutsOverlay');
     if(!overlay) return null;
 
@@ -24901,7 +24904,7 @@ body.v21-final .v21-profile-card .profile-life-v23417-open-hint{
 (function(){
   if(window.__maitreHibouProfileLifeV23417) return;
   window.__maitreHibouProfileLifeV23417 = true;
-  try{ document.title = '🦉 Maître Hibou V25.6.27'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.28'; }catch(e){}
 
   var STUDENTS_URL = 'https://script.google.com/macros/s/AKfycbxz1vYS24sv-c3XVja12geWEXIQl6bQyBoQKBx5kg_fwQaj80_Oc7Y34yeBSRN4lF1f/exec';
   var QUESTIONS_URL = 'https://script.google.com/macros/s/AKfycbwGcErZ0he06Dg_bpPDaHtPHa6fAcDQ-31tB7Rlr9w2JZcNaQnP9YIABJYf-CKpFfpF/exec';
@@ -25463,7 +25466,7 @@ body.v21-final .v21-profile-card .profile-life-v23417-open-hint{
 <!-- PATCH V23.4.23 - Titre d'onglet stabilisé : neutralise les anciens patches qui changeaient document.title -->
 <script id="patch-title-stabilise-v23423">
 (function(){
-  var HIBOU_FINAL_TITLE = '🦉 Maître Hibou V25.6.27';
+  var HIBOU_FINAL_TITLE = '🦉 Maître Hibou V25.6.28';
   function setFinalTitle(){
     try{
       if(document.title !== HIBOU_FINAL_TITLE) document.title = HIBOU_FINAL_TITLE;
@@ -26338,7 +26341,7 @@ body.v21-final .v21-profile-card .profile-life-v23417-open-hint{
   if(window.__maitreHibouV2403Ready) return;
   window.__maitreHibouV2403Ready = true;
 
-  var VERSION_TITLE = '🦉 Maître Hibou V25.6.27';
+  var VERSION_TITLE = '🦉 Maître Hibou V25.6.28';
   var ORDER = ['francais','maths','anglais','sciences','geographie','histoire'];
 
   var SUBJECTS = {
@@ -28137,7 +28140,7 @@ body.v21-final .v21-profile-card .profile-life-v23417-open-hint{
   if(window.__maitreHibouV2404Conseil) return;
   window.__maitreHibouV2404Conseil = true;
 
-  var VERSION_TITLE = '🦉 Maître Hibou V25.6.27';
+  var VERSION_TITLE = '🦉 Maître Hibou V25.6.28';
 
   function byId(id){ return document.getElementById(id); }
 
@@ -28690,7 +28693,7 @@ body.v21-final .v21-profile-card .profile-life-v23417-open-hint{
   if(window.__maitreHibouV2405TroisCartes) return;
   window.__maitreHibouV2405TroisCartes = true;
 
-  var VERSION_TITLE = '🦉 Maître Hibou V25.6.27';
+  var VERSION_TITLE = '🦉 Maître Hibou V25.6.28';
 
   function byId(id){ return document.getElementById(id); }
 
@@ -28809,7 +28812,7 @@ body.v21-final .v21-profile-card .profile-life-v23417-open-hint{
   if(window.__maitreHibouV2406TrainingLikeBelts) return;
   window.__maitreHibouV2406TrainingLikeBelts = true;
 
-  var VERSION_TITLE = '🦉 Maître Hibou V25.6.27';
+  var VERSION_TITLE = '🦉 Maître Hibou V25.6.28';
 
   function byId(id){ return document.getElementById(id); }
 
@@ -29811,7 +29814,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
     }
   }
   function apply(){
-    try{ document.title = "🦉 Maître Hibou V25.6.27"; }catch(e){}
+    try{ document.title = "🦉 Maître Hibou V25.6.28"; }catch(e){}
     patchProgressRefresh();
     var name = currentName();
     var headerName = byId("v21HeaderName");
@@ -30204,7 +30207,7 @@ body.v21-final #v21TreasureCard.v24-know-card .v24-know-source{
     return card;
   }
   function install(){
-    try{ document.title = "🦉 Maître Hibou V25.6.27"; }catch(e){}
+    try{ document.title = "🦉 Maître Hibou V25.6.28"; }catch(e){}
     var existing = byId("v21TreasureCard");
     if(!existing) return;
     var card = prepareCard(existing);
@@ -30497,7 +30500,7 @@ body.v21-final #v21TreasureCard.v24-know-card .v24-know-source{
     return "Content de te revoir ! En forme ?";
   }
   function apply(){
-    try{ document.title = "🦉 Maître Hibou V25.6.27"; }catch(e){}
+    try{ document.title = "🦉 Maître Hibou V25.6.28"; }catch(e){}
     var hidden = byId("hibouLastSuccess");
     var raw = hidden ? hidden.textContent : "";
     var fixed = normalizeSuccessText(raw);
@@ -30650,7 +30653,7 @@ body.v21-final #eleveBadge{
   if(window.__hibouTitleLockAndBalancedHeaderV2513) return;
   window.__hibouTitleLockAndBalancedHeaderV2513 = true;
 
-  var VERSION_TITLE = "🦉 Maître Hibou V25.6.27";
+  var VERSION_TITLE = "🦉 Maître Hibou V25.6.28";
 
   function byId(id){ return document.getElementById(id); }
   function clean(value){ return String(value == null ? "" : value).replace(/\s+/g, " ").trim(); }
@@ -31008,7 +31011,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 (function(){
   if(window.__maitreHibouV2516GrandirEnsemble) return;
   window.__maitreHibouV2516GrandirEnsemble = true;
-  var TITLE = '🦉 Maître Hibou V25.6.27';
+  var TITLE = '🦉 Maître Hibou V25.6.28';
 
   function setTitle(){ try{ document.title = TITLE; }catch(e){} }
   function byId(id){ return document.getElementById(id); }
@@ -31346,7 +31349,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   if(window.__maitreHibouV2517EmiGrow) return;
   window.__maitreHibouV2517EmiGrow = true;
 
-  var TITLE = '🦉 Maître Hibou V25.6.27';
+  var TITLE = '🦉 Maître Hibou V25.6.28';
   var stateBySession = {};
 
   var SESSIONS = [
@@ -31788,7 +31791,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   if(window.__maitreHibouV2518Evar) return;
   window.__maitreHibouV2518Evar = true;
 
-  var TITLE = '🦉 Maître Hibou V25.6.27';
+  var TITLE = '🦉 Maître Hibou V25.6.28';
   var EVAR_PAGES = [
     {id:'corps', icon:'💛', title:'Prendre soin de mon corps', subtitle:'Mon corps, mon bien-être : écouter ses besoins et demander de l’aide.', file:'evar_1_mon_corps.html'},
     {id:'consentement', icon:'🤝', title:'Le consentement', subtitle:'Dire oui, dire non, respecter la réponse de l’autre.', file:'evar_2_consentement.html'},
@@ -32093,7 +32096,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   if(window.__maitreHibouV2519Emc) return;
   window.__maitreHibouV2519Emc = true;
 
-  var TITLE = '🦉 Maître Hibou V25.6.27';
+  var TITLE = '🦉 Maître Hibou V25.6.28';
   var EMC_PAGES = [
     {id:'bien-commun', icon:'🏛️', title:"Le bien commun, c'est quoi ?", subtitle:'Intérêt général, écogestes et projets communs.', file:'emc_1_bien_commun.html'},
     {id:'services-publics', icon:'🚒', title:'Des métiers au service de tous', subtitle:'Pompiers, police, maire, école et services publics.', file:'emc_2_services_publics.html'},
@@ -32310,7 +32313,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 (function(){
   if(window.__mhV2528ShortcutsReadingLayout) return;
   window.__mhV2528ShortcutsReadingLayout = true;
-  var TITLE = '🦉 Maître Hibou V25.6.27';
+  var TITLE = '🦉 Maître Hibou V25.6.28';
   try{ document.title = TITLE; }catch(e){}
 
   function esc(s){
@@ -32406,7 +32409,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   if(window.__maitreHibouV25213DirectTrainingLaunch) return;
   window.__maitreHibouV25213DirectTrainingLaunch = true;
 
-  var VERSION_TITLE = '🦉 Maître Hibou V25.6.27';
+  var VERSION_TITLE = '🦉 Maître Hibou V25.6.28';
 
   function byId(id){ return document.getElementById(id); }
   function norm(v){
@@ -32498,7 +32501,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 (function(){
   if(window.__maitreHibouV25215PreloadExercises) return;
   window.__maitreHibouV25215PreloadExercises = true;
-  try{ document.title = '🦉 Maître Hibou V25.6.27'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.28'; }catch(e){}
   function warm(){
     try{
       if(typeof window.preloadFrenchGrammarRowsV23411 === 'function'){
@@ -32521,7 +32524,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 (function(){
   if(window.__maitreHibouV25216PreloadMaths) return;
   window.__maitreHibouV25216PreloadMaths = true;
-  try{ document.title = '🦉 Maître Hibou V25.6.27'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.28'; }catch(e){}
   function warm(){
     try{
       if(typeof window.preloadMathsRowsV2343 === 'function'){
@@ -32547,7 +32550,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 (function(){
   if(window.__maitreHibouV25220DerniereReussiteDirecte) return;
   window.__maitreHibouV25220DerniereReussiteDirecte = true;
-  try{ document.title = '🦉 Maître Hibou V25.6.27'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.28'; }catch(e){}
   function byId(id){ return document.getElementById(id); }
   function clean(v){ return String(v == null ? '' : v).replace(/\s+/g,' ').trim(); }
   function esc(v){ return String(v == null ? '' : v).replace(/[&<>'"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c];}); }
@@ -32612,7 +32615,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   if(window.__maitreHibouV25221DerniereReussitePrioritaire) return;
   window.__maitreHibouV25221DerniereReussitePrioritaire = true;
 
-  var VERSION_TITLE = '🦉 Maître Hibou V25.6.27';
+  var VERSION_TITLE = '🦉 Maître Hibou V25.6.28';
   var STORAGE_PREFIX = 'hibou_authoritative_last_success_';
   var applying = false;
   var nativeSetItem = null;
@@ -32808,7 +32811,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 (function(){
   if(window.__maitreHibouV25222FrancaisProgressionStable) return;
   window.__maitreHibouV25222FrancaisProgressionStable = true;
-  try{ document.title = '🦉 Maître Hibou V25.6.27'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.28'; }catch(e){}
 
   var BASE_URL = 'https://script.google.com/macros/s/AKfycbyzfRPrUV7xKgeXUM0LjbOsOne5DieRjDYxmuVbBBUIGL-F9ahMmJZSfpUDYmBaZIOpvQ/exec';
   var SHEET_NAME = 'grammaire';
@@ -33141,7 +33144,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 (function(){
   if(window.__maitreHibouV25224MathsFluid) return;
   window.__maitreHibouV25224MathsFluid = true;
-  try{ document.title='🦉 Maître Hibou V25.6.27'; }catch(e){}
+  try{ document.title='🦉 Maître Hibou V25.6.28'; }catch(e){}
 
   var TRAINING_COUNT = 10;
   var BLACK_SYNTHESIS_BELTS = ['blanche','jaune','orange','vert_clair','vert_fonce','bleu_clair','bleu_fonce','rose','beige','violet','marron','rouge','gris'];
@@ -33338,7 +33341,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 (function(){
   if(window.__maitreHibouV25225FrancaisPrechargeRapide) return;
   window.__maitreHibouV25225FrancaisPrechargeRapide = true;
-  try{ document.title = '🦉 Maître Hibou V25.6.27'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.28'; }catch(e){}
 
   var BASE_URL = 'https://script.google.com/macros/s/AKfycbyzfRPrUV7xKgeXUM0LjbOsOne5DieRjDYxmuVbBBUIGL-F9ahMmJZSfpUDYmBaZIOpvQ/exec';
   var SHEET_NAME = 'grammaire';
@@ -33664,7 +33667,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 (function(){
   if(window.__maitreHibouV25226FrancaisResultatBandeau) return;
   window.__maitreHibouV25226FrancaisResultatBandeau = true;
-  try{ document.title = '🦉 Maître Hibou V25.6.27'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.28'; }catch(e){}
 
   function byId(id){ return document.getElementById(id); }
   function clean(v){ return String(v == null ? '' : v).replace(/\s+/g,' ').trim(); }
@@ -33795,7 +33798,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   if(window.__maitreHibouV25227DerniereReussiteStable) return;
   window.__maitreHibouV25227DerniereReussiteStable = true;
 
-  var VERSION_TITLE = '🦉 Maître Hibou V25.6.27';
+  var VERSION_TITLE = '🦉 Maître Hibou V25.6.28';
   var STORAGE_PREFIX = 'hibou_authoritative_last_success_';
   var applying = false;
   var lastCanonicalText = '';
@@ -34035,7 +34038,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   if(window.__maitreHibouV25229BandeauHautUnique) return;
   window.__maitreHibouV25229BandeauHautUnique = true;
 
-  var VERSION_TITLE = '🦉 Maître Hibou V25.6.27';
+  var VERSION_TITLE = '🦉 Maître Hibou V25.6.28';
   var lastApplied = '';
   var applying = false;
 
@@ -34189,7 +34192,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 (function(){
   if(window.__maitreHibouV25230BandeauCentralUnique) return;
   window.__maitreHibouV25230BandeauCentralUnique = true;
-  var VERSION_TITLE = '🦉 Maître Hibou V25.6.27';
+  var VERSION_TITLE = '🦉 Maître Hibou V25.6.28';
   var applying = false;
   var lastRendered = '';
 
@@ -34403,8 +34406,8 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 (function(){
   if(window.__hibouQuestionGithubPageV2548) return;
   window.__hibouQuestionGithubPageV2548 = true;
-  try{ document.title = '🦉 Maître Hibou V25.6.27'; }catch(e){}
-  try{ window.MAITRE_HIBOU_VERSION = 'V25.6.27'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.28'; }catch(e){}
+  try{ window.MAITRE_HIBOU_VERSION = 'V25.6.28'; }catch(e){}
 
   // V25.6.16 : la boîte à questions n'est plus affichée par Apps Script.
   // Elle devient une page HTML légère séparée, hébergée sur GitHub.
@@ -34548,8 +34551,8 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   'use strict';
   if(window.__hibouTeacherSeparateV25612) return;
   window.__hibouTeacherSeparateV25612 = true;
-  try{ document.title = '🦉 Maître Hibou V25.6.27'; }catch(e){}
-  try{ window.MAITRE_HIBOU_VERSION = 'V25.6.27'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.28'; }catch(e){}
+  try{ window.MAITRE_HIBOU_VERSION = 'V25.6.28'; }catch(e){}
 
   var LONG_PRESS_MS = 3000;
   var TEACHER_PAGE = 'enseignant.html';
@@ -35194,8 +35197,8 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   setTimeout(install,250);
 
   try{
-    document.title = '🦉 Maître Hibou V25.6.27';
-    window.MAITRE_HIBOU_VERSION = 'V25.6.27';
+    document.title = '🦉 Maître Hibou V25.6.28';
+    window.MAITRE_HIBOU_VERSION = 'V25.6.28';
   }catch(e){}
 })();
 </script>
@@ -35278,7 +35281,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 })();
 </script>
 
-<!-- PATCH V25.6.27 - Restauration robuste des ceintures dans Mes progrès et Valider une compétence -->
+<!-- PATCH V25.6.28 - Restauration robuste des ceintures dans Mes progrès et Valider une compétence -->
 <script id="patch-v25-6-20-ceintures-eleve-robustes">
 (function(){
   'use strict';
@@ -35595,7 +35598,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
     if(!force && cache.length) return cache;
     if(inflight) return inflight;
     inflight=fetchRows().then(function(rows){hydrateCurrent(rows);refreshUI();return rows;})
-      .catch(function(err){console.warn('V25.6.27 : ceintures non rechargées, données locales conservées',err);refreshUI();return cachedRows();})
+      .catch(function(err){console.warn('V25.6.28 : ceintures non rechargées, données locales conservées',err);refreshUI();return cachedRows();})
       .finally(function(){inflight=null;});
     return inflight;
   }
@@ -35640,13 +35643,13 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
     if(key && key!==lastStudentKey){lastStudentKey=key;refresh(true);}
   },800);
 
-  try{ document.title='🦉 Maître Hibou V25.6.27'; window.MAITRE_HIBOU_VERSION='V25.6.27'; }catch(e){}
+  try{ document.title='🦉 Maître Hibou V25.6.28'; window.MAITRE_HIBOU_VERSION='V25.6.28'; }catch(e){}
 })();
 </script>
-<!-- FIN PATCH V25.6.27 -->
+<!-- FIN PATCH V25.6.28 -->
 
 
-<!-- PATCH V25.6.27 - Mes progrès : médailles et compétences acquises avec ascenseur -->
+<!-- PATCH V25.6.28 - Mes progrès : médailles et compétences acquises avec ascenseur -->
 <style id="patch-v25621-progress-achievements">
 .profile-life-v23417-header.v25621-progress-header{
   grid-template-columns:auto minmax(250px,.9fr) minmax(440px,1.25fr);
@@ -35848,7 +35851,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',watchOverlay);
   else watchOverlay();
   window.addEventListener('load',function(){watchOverlay();scheduleRender(150);});
-  try{document.title='🦉 Maître Hibou V25.6.27';}catch(e){}
+  try{document.title='🦉 Maître Hibou V25.6.28';}catch(e){}
 })();
 </script>
 
@@ -35937,7 +35940,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
     wrapped.__v25623Wrapped = true;
     window.openStudentProfileLifeV23417 = wrapped;
   }
-  try{ document.title = '🦉 Maître Hibou V25.6.27'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.28'; }catch(e){}
 })();
 </script>
 
@@ -36040,7 +36043,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
     window.openStudentProfileLifeV23417=wrapped;
   }
   document.addEventListener('hibou:question-added',function(){setTimeout(refresh,100);});
-  try{document.title='🦉 Maître Hibou V25.6.27';}catch(e){}
+  try{document.title='🦉 Maître Hibou V25.6.28';}catch(e){}
 })();
 </script>
 
@@ -36053,6 +36056,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 <script id="patch-v25627-records-calcul-fiables-js">
 (function(){
   'use strict';
+  return; // V25.6.28 : ancien module désactivé
   if(window.__hibouRecordsCalculV25627) return;
   window.__hibouRecordsCalculV25627=true;
 
@@ -36172,7 +36176,146 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
     wrapped.__v25627=true;window.openStudentProfileLifeV23417=wrapped;
   }
   window.addEventListener('hibou:math-record-updated',function(){setTimeout(refreshSheetsRecords,250);});
-  try{document.title='🦉 Maître Hibou V25.6.27';}catch(e){}
+  try{document.title='🦉 Maître Hibou V25.6.28';}catch(e){}
+})();
+</script>
+
+
+<style id="patch-v25628-records-reels-css">
+.v25628-sync-status{margin-top:10px;padding:9px 11px;border-radius:12px;font-size:13px;font-weight:900;line-height:1.3;background:#F7F6FF;border:2px solid #EAE8FF;color:#625E82;}
+.v25628-sync-status.ok{background:#EAF8ED;border-color:#9DDFAB;color:#166534;}
+.v25628-sync-status.wait{background:#FFF8DD;border-color:#F5D873;color:#7A5200;}
+.v25628-sync-status.bad{background:#FFECEC;border-color:#FFB8B8;color:#9B1C1C;}
+</style>
+<script id="patch-v25628-records-reels-js">
+(function(){
+  'use strict';
+  if(window.__hibouRecordsReelsV25628) return;
+  window.__hibouRecordsReelsV25628 = true;
+
+  var API = window.MAITRE_HIBOU_COMPETENCES_SHEETS_URL || 'https://script.google.com/macros/s/AKfycbxz1vYS24sv-c3XVja12geWEXIQl6bQyBoQKBx5kg_fwQaj80_Oc7Y34yeBSRN4lF1f/exec';
+  var RECORD_PREFIX = 'hibou_v2343_maths_training_record_';
+  var QUEUE_KEY = 'hibou_records_calcul_queue_v25628';
+
+  function clean(v){ return String(v == null ? '' : v).replace(/\s+/g,' ').trim(); }
+  function norm(v){ return clean(v).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[’']/g,'').replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,''); }
+  function currentName(){
+    var values=[];
+    try{ values.push(window.prenomActuel); }catch(e){}
+    try{ var cur=JSON.parse(localStorage.getItem('hibou_current_student')||'{}'); values.push(cur && (cur.prenom||cur.name)); }catch(e){}
+    ['hibou_prenom','hibou_last_prenom','elevePrenom','maitre_hibou_prenom'].forEach(function(k){ try{ values.push(localStorage.getItem(k)); }catch(e){} });
+    for(var i=0;i<values.length;i++){
+      var n=clean(values[i]);
+      if(n && !/^(jo|eleve|élève|invite|invité)$/i.test(n)) return n;
+    }
+    return '';
+  }
+  function device(){ return /Android|iPad|Tablet/i.test(navigator.userAgent||'') ? 'tablette' : 'ordinateur'; }
+  function recordKey(r){ return RECORD_PREFIX + norm(r.prenom) + '_' + norm(r.ceinture || 'calcul_mental_ce2'); }
+  function ratio(r){ return Number(r.total)>0 ? Number(r.score)/Number(r.total) : 0; }
+  function isBetter(a,b){
+    if(!b) return true;
+    if(ratio(a)!==ratio(b)) return ratio(a)>ratio(b);
+    if(Number(a.score)!==Number(b.score)) return Number(a.score)>Number(b.score);
+    return Number(a.time||a.temps_secondes)>0 && (!Number(b.time||b.temps_secondes) || Number(a.time||a.temps_secondes)<Number(b.time||b.temps_secondes));
+  }
+  function saveLocal(r){
+    var local={score:Number(r.score||0),total:Number(r.total||10),time:Math.round(Number(r.temps_secondes||0)*1000),date:r.date,label:r.ceinture,ceinture:r.ceinture,temps_secondes:Number(r.temps_secondes||0),temps_moyen:Number(r.temps_moyen||0),prenom:r.prenom,appareil:r.appareil};
+    var old=null; try{ old=JSON.parse(localStorage.getItem(recordKey(r))||'null'); }catch(e){}
+    if(isBetter(local,old)){ try{ localStorage.setItem(recordKey(r),JSON.stringify(local)); }catch(e){} }
+  }
+  function queueRead(){ try{ var q=JSON.parse(localStorage.getItem(QUEUE_KEY)||'[]'); return Array.isArray(q)?q:[]; }catch(e){ return []; } }
+  function queueWrite(q){ try{ localStorage.setItem(QUEUE_KEY,JSON.stringify(q)); }catch(e){} }
+  function enqueue(r){
+    var q=queueRead(), key=norm(r.prenom)+'|'+norm(r.ceinture), replaced=false;
+    q=q.map(function(x){ if((norm(x.prenom)+'|'+norm(x.ceinture))===key){ replaced=true; return isBetter(r,x)?r:x; } return x; });
+    if(!replaced) q.push(r);
+    queueWrite(q.slice(-30));
+  }
+  function updateSuccess(r){
+    var score=r.score+'/'+r.total;
+    if(typeof window.hibouRecordTrainingSuccessV25221==='function') window.hibouRecordTrainingSuccessV25221('maths',r.ceinture,score);
+    else if(typeof window.hibouRecordTrainingSuccessV25220==='function') window.hibouRecordTrainingSuccessV25220('maths',r.ceinture,score);
+    var text='🧮 Entraînement maths : '+r.ceinture+' — '+score;
+    ['bandeauLastText','hibouLastSuccess','v21ProfileLastSuccess'].forEach(function(id){ var el=document.getElementById(id); if(el) el.textContent=text; });
+    try{ window.dispatchEvent(new CustomEvent('hibou:last-success-updated',{detail:{text:text,type:'entrainement',date:r.date}})); }catch(e){}
+  }
+  function status(box,text,cls){
+    if(!box) return;
+    var el=box.querySelector('.v25628-sync-status');
+    if(!el){ el=document.createElement('div'); el.className='v25628-sync-status'; box.appendChild(el); }
+    el.className='v25628-sync-status '+(cls||''); el.textContent=text;
+  }
+  function jsonp(params,timeout){
+    timeout=timeout||20000;
+    return new Promise(function(resolve,reject){
+      var cb='__hibouRec'+Date.now()+Math.floor(Math.random()*100000), done=false, script=document.createElement('script');
+      var timer=setTimeout(function(){ if(done)return; done=true; cleanup(); reject(new Error('Délai dépassé')); },timeout);
+      function cleanup(){ clearTimeout(timer); try{delete window[cb];}catch(e){} if(script.parentNode)script.parentNode.removeChild(script); }
+      window[cb]=function(data){ if(done)return; done=true; cleanup(); resolve(data); };
+      script.onerror=function(){ if(done)return; done=true; cleanup(); reject(new Error('Erreur réseau JSONP')); };
+      params=params||{}; params.callback=cb; params.t=Date.now();
+      script.src=API+'?'+new URLSearchParams(params).toString();
+      document.head.appendChild(script);
+    });
+  }
+  function sendOne(r){
+    return jsonp({
+      action:'enregistrer_record',
+      prenom:r.prenom,
+      ceinture:r.ceinture,
+      score:r.score,
+      total:r.total,
+      temps_secondes:r.temps_secondes,
+      temps_moyen:r.temps_moyen,
+      date:r.date,
+      appareil:r.appareil
+    }).then(function(res){
+      if(!res || res.ok===false) throw new Error((res&&res.error)||'Écriture refusée');
+      return res;
+    });
+  }
+  function verify(r){
+    return jsonp({action:'records_calcul',prenom:r.prenom}).then(function(rows){
+      rows=Array.isArray(rows)?rows:[];
+      var found=rows.some(function(x){return norm(x.ceinture)===norm(r.ceinture);});
+      if(!found) throw new Error('Record non retrouvé après écriture');
+      return rows;
+    });
+  }
+  function sendQueued(box){
+    var q=queueRead();
+    if(!q.length) return Promise.resolve(true);
+    status(box,'⏳ Enregistrement réel dans Google Sheets…','wait');
+    var chain=Promise.resolve();
+    q.forEach(function(r){ chain=chain.then(function(){ return sendOne(r).then(function(){ return verify(r); }); }); });
+    return chain.then(function(){
+      queueWrite([]);
+      status(box,'✅ Record vérifié dans Google Sheets.','ok');
+      try{window.dispatchEvent(new CustomEvent('hibou:math-record-updated'));}catch(e){}
+      return true;
+    }).catch(function(err){
+      status(box,'⚠️ Échec de la synchronisation : record gardé sur la tablette.','bad');
+      console.error('🦉 V25.6.28 synchronisation record impossible',err);
+      return false;
+    });
+  }
+
+  window.hibouSaveMentalRecordV25628=function(data){
+    var name=currentName();
+    if(!name){ status(data&&data.resultBox,'⚠️ Record non enregistré : élève non identifié.','bad'); return; }
+    var seconds=Math.max(1,Number(data&&data.seconds||0));
+    var total=Math.max(1,Number(data&&data.total||10));
+    var r={prenom:name,ceinture:clean(data&&data.label)||'Calcul mental CE2',score:Number(data&&data.score||0),total:total,temps_secondes:Math.round(seconds*100)/100,temps_moyen:Math.round((seconds/total)*100)/100,date:(data&&data.date)||new Date().toISOString(),appareil:device()};
+    saveLocal(r); enqueue(r); updateSuccess(r);
+    status(data&&data.resultBox,'⏳ Record conservé. Vérification Google Sheets en cours…','wait');
+    sendQueued(data&&data.resultBox);
+  };
+
+  function retry(){ if(queueRead().length) sendQueued(null); }
+  window.addEventListener('online',retry);
+  window.addEventListener('load',function(){ setTimeout(retry,1800); });
+  try{document.title='🦉 Maître Hibou V25.6.28';}catch(e){}
 })();
 </script>
 

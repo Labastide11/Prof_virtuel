@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 Maître Hibou V25.6.33</title>
+<title>🦉 Maître Hibou V25.6.34</title>
 <style>
 
   :root {
@@ -3694,7 +3694,7 @@ body.v21-final .subject-btn .subject-label{font-size:18px !important;line-height
 @media (max-width:899px){body.v21-final .v21-center{width:calc(100% - 24px) !important;margin:0 auto 8px !important;grid-template-columns:1fr !important;}body.v21-final .v21-side-owl,body.v21-final .v21-deco-window,body.v21-final .v21-deco-globe,body.v21-final .v21-deco-books{display:none !important;}body.v21-final .subjects-bar{grid-template-columns:repeat(2,minmax(0,1fr)) !important;}}
 </style>
 <script id="patch-v21-4-home-text-and-title">
-(function(){function applyV214(){try{document.title = '🦉 Maître Hibou V25.6.33';var p=document.querySelector('.v21-hero p');if(p) p.textContent='🌟 Que souhaites-tu apprendre aujourd’hui ?';var h2=document.querySelector('.v21-hero h2');if(h2) h2.setAttribute('aria-hidden','true');}catch(e){}}document.addEventListener('DOMContentLoaded',applyV214);setTimeout(applyV214,100);setTimeout(applyV214,500);setTimeout(applyV214,1200);})();
+(function(){function applyV214(){try{document.title = '🦉 Maître Hibou V25.6.34';var p=document.querySelector('.v21-hero p');if(p) p.textContent='🌟 Que souhaites-tu apprendre aujourd’hui ?';var h2=document.querySelector('.v21-hero h2');if(h2) h2.setAttribute('aria-hidden','true');}catch(e){}}document.addEventListener('DOMContentLoaded',applyV214);setTimeout(applyV214,100);setTimeout(applyV214,500);setTimeout(applyV214,1200);})();
 </script>
 
 
@@ -3930,7 +3930,7 @@ body.v21-final .subject-btn{
 (function(){
   function applyV215(){
     try{
-      document.title = '🦉 Maître Hibou V25.6.33';
+      document.title = '🦉 Maître Hibou V25.6.34';
       var p=document.querySelector('.v21-hero p');
       if(p) p.textContent='🌟 Que souhaites-tu apprendre aujourd’hui ?';
       var h2=document.querySelector('.v21-hero h2');
@@ -4175,7 +4175,7 @@ body.v21-final .v21-sublist{
 (function(){
   function cleanV216(){
     try{
-      document.title = '🦉 Maître Hibou V25.6.33';
+      document.title = '🦉 Maître Hibou V25.6.34';
       document.body.classList.add('v21-final');
       var heroP=document.querySelector('.v21-hero p');
       if(heroP) heroP.textContent='🌟 Que souhaites-tu apprendre aujourd’hui ?';
@@ -4980,10 +4980,6 @@ html.hibou-device-tablette body.hibou-keyboard-open #prenomOverlay{
   <button class="hibou-train-btn" onclick="startHibouRecommendedTraining()">🔄 Je m'entraîne</button>
 </section>
 
-<section id="hibouSuccessCard" class="hibou-success-card" aria-label="Dernière réussite">
-  <span>🌟 Dernière réussite :</span>
-  <strong id="hibouLastSuccess">Prêt pour une première réussite ! enregistrée pour l'instant.</strong>
-</section>
 
 
 <div class="dashboard-v2">
@@ -10947,14 +10943,12 @@ body.competence-mode #masterChallengeCard.master-challenge-card{
   window.refreshHibouProfile = function(){
     const panel = document.getElementById('hibouProfilePanel');
     const adviceCard = document.getElementById('hibouAdviceCard');
-    const successCard = document.getElementById('hibouSuccessCard');
     if(!panel) return;
 
     const prenom = (typeof prenomActuel !== 'undefined' && prenomActuel) ? prenomActuel : '';
     if(!prenom){
       panel.classList.remove('visible');
       if(adviceCard) adviceCard.classList.remove('visible');
-      if(successCard) successCard.classList.remove('visible');
       return;
     }
 
@@ -10978,8 +10972,6 @@ body.competence-mode #masterChallengeCard.master-challenge-card{
 
     const last = localStorage.getItem('hibou_last_success_' + prenom);
     if(last){
-      document.getElementById('hibouLastSuccess').textContent = last;
-      successCard?.classList.add('visible');
     }
 
     panel.classList.add('visible');
@@ -11262,39 +11254,7 @@ header{
   }
 }
 </style>
-<script id="patch-bandeau-harmonise-v129">
-(function(){
-  if(window.__bandeauHarmoniseV129) return;
-  window.__bandeauHarmoniseV129 = true;
 
-  const FRIENDLY_EMPTY_SUCCESS = "Prêt pour une première réussite !";
-
-  function normalizeLastSuccessText(){
-    const targets = [
-      document.getElementById("bandeauLastText"),
-      document.getElementById("hibouLastSuccess")
-    ].filter(Boolean);
-
-    targets.forEach(function(el){
-      const txt = (el.textContent || "").trim().toLowerCase();
-      if(!txt || txt.includes("aucune réussite") || txt.includes("pour l'instant") || txt.includes("pour l’instant") || txt.includes("enregistrée pour")){
-        el.textContent = FRIENDLY_EMPTY_SUCCESS;
-      }
-      el.title = el.textContent;
-    });
-  }
-
-  document.addEventListener("DOMContentLoaded", function(){
-    normalizeLastSuccessText();
-    setTimeout(normalizeLastSuccessText, 100);
-    setTimeout(normalizeLastSuccessText, 600);
-    setInterval(normalizeLastSuccessText, 900);
-  });
-  window.addEventListener("load", function(){
-    setTimeout(normalizeLastSuccessText, 150);
-  });
-})();
-</script>
 
 
 
@@ -13188,8 +13148,6 @@ header{
         const txt = (stats.last.medal || "🏅") + " " + stats.last.title + " validée (" + score + ")";
         // V25.4.0 : les compteurs de ceintures ne doivent plus écrire dans le bandeau "dernière réussite".
         // Ils restent responsables uniquement des compteurs et de la popup des médailles.
-        const successCard = document.getElementById("hibouSuccessCard");
-        if(successCard) successCard.classList.add("visible");
       }
     }finally{
       isRendering = false;
@@ -14605,8 +14563,6 @@ sheet.appendRow([
       const txt = medalLabel(last) + " · " + last.title + " validée" + (last.score ? " (" + last.score + "/" + (last.total || 20) + ")" : "");
       // V25.4.0 : ancienne mise à jour du bandeau neutralisée.
       // Le bandeau supérieur suit uniquement le moteur de dernière réussite stable.
-      const successCard = document.getElementById("hibouSuccessCard");
-      if(successCard) successCard.classList.add("visible");
     }
   }
 
@@ -17009,7 +16965,7 @@ sheet.appendRow([
     if(rows.length){
       var last = rows[rows.length-1];
       var txt = last.medal + " · " + last.title + " validée (" + last.score + "/" + last.total + ")";
-      ["bandeauLastText","hibouLastSuccess"].forEach(function(id){var el=document.getElementById(id); if(el) el.textContent=txt;});
+      try{ if(typeof window.hibouRecordSuccess==='function') window.hibouRecordSuccess(txt,'ceinture'); }catch(e){}
     }
   }
 
@@ -18669,11 +18625,12 @@ body.v21-final .quick-btn{
           </span>
         </div>
 
-        <div class="bandeau-info-card v21-top-card" id="bandeauLastCard">
-          <span class="bandeau-info-icon" aria-hidden="true">👋</span>
+        <div class="bandeau-info-card v21-top-card hibou-journey-card" id="bandeauLastCard" role="button" tabindex="0" title="Voir mon parcours dans Mes progrès" aria-label="Mon parcours récent. Ouvrir Mes progrès.">
+          <span class="bandeau-info-icon" aria-hidden="true">🧭</span>
           <span class="bandeau-info-text">
-            <span class="bandeau-info-label">Bonjour <span id="v21HeaderName">Jo</span> !</span>
-            <span id="bandeauLastText">Continue comme ça, tu progresses chaque jour !</span>
+            <span class="bandeau-info-label">Mon parcours récent</span>
+            <span id="bandeauLastText" class="hibou-journey-items"><span class="hibou-journey-empty">Ton prochain entraînement apparaîtra ici.</span></span>
+            <span id="v21HeaderName" hidden>Jo</span>
           </span>
         </div>
 
@@ -20333,7 +20290,7 @@ body.v21-final .v2173-activity-btn.soon{
 (function(){
   if(window.__maitreHibouV2173TitresVerrouilles) return;
   window.__maitreHibouV2173TitresVerrouilles = true;
-  const VERSION_TITLE = '🦉 Maître Hibou V25.6.33';
+  const VERSION_TITLE = '🦉 Maître Hibou V25.6.34';
   const SUBJECTS = {
     francais:{label:'Français', icon:'📖', color:'#FF3B57', color2:'#FF6E82', soft:'#FFECEF', border:'#FFD3DA', shadow:'rgba(255,59,87,.24)', items:[
       {label:'Nom commun', names:['startNomCommun','showNomCommunLesson']},
@@ -22350,7 +22307,7 @@ body.v21-final .v2173-activity-btn.soon{
 </style>
 <script id="patch-v2347-title-js">
 (function(){
-  try{ document.title = '🦉 Maître Hibou V25.6.33'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.34'; }catch(e){}
 })();
 </script>
 
@@ -22728,7 +22685,7 @@ body.v21-final .v2173-activity-btn.soon{
 (function(){
   if(window.__maitreHibouFrancaisPopupV2348) return;
   window.__maitreHibouFrancaisPopupV2348 = true;
-  try{ document.title = '🦉 Maître Hibou V25.6.33'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.34'; }catch(e){}
 
   const TRAINING_COUNT = 10;
   let frState = {activity:null, questions:[], index:0, score:0, answered:false};
@@ -22971,7 +22928,7 @@ body.v21-final .v2173-activity-btn.soon{
 (function(){
   if(window.__maitreHibouFrancaisSheetGrammaireV23410) return;
   window.__maitreHibouFrancaisSheetGrammaireV23410 = true;
-  try{ document.title = '🦉 Maître Hibou V25.6.33'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.34'; }catch(e){}
 
   const BASE_URL = 'https://script.google.com/macros/s/AKfycbyzfRPrUV7xKgeXUM0LjbOsOne5DieRjDYxmuVbBBUIGL-F9ahMmJZSfpUDYmBaZIOpvQ/exec';
   const SHEET_NAME = 'grammaire';
@@ -23540,7 +23497,7 @@ body.v21-final .v2173-activity-btn.soon{
 (function(){
   if(window.__maitreHibouFrancaisCeinturesV23411) return;
   window.__maitreHibouFrancaisCeinturesV23411 = true;
-  try{ document.title = '🦉 Maître Hibou V25.6.33'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.34'; }catch(e){}
 
   const BASE_URL = 'https://script.google.com/macros/s/AKfycbyzfRPrUV7xKgeXUM0LjbOsOne5DieRjDYxmuVbBBUIGL-F9ahMmJZSfpUDYmBaZIOpvQ/exec';
   const SHEET_NAME = 'grammaire';
@@ -23957,7 +23914,7 @@ body.v21-final .v2173-activity-btn.soon{
 (function(){
   if(window.__maitreHibouFrancaisSectionsV23412) return;
   window.__maitreHibouFrancaisSectionsV23412 = true;
-  try{ document.title = '🦉 Maître Hibou V25.6.33'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.34'; }catch(e){}
 
   const GRAMMAR_BELTS = [
     {id:'blanche', title:'Phrase affirmative / négative', label:'Ceinture blanche', desc:'Reconnaître et transformer les phrases.', color:'radial-gradient(circle at 35% 25%,#FFFFFF,#EDE7FF 68%,#C8B8F2)'},
@@ -24036,7 +23993,7 @@ body.v21-final .v2173-activity-btn.soon{
 }
 </style>
 <script id="patch-v23413-version-title">
-(function(){ try{ document.title = '🦉 Maître Hibou V25.6.33'; }catch(e){} })();
+(function(){ try{ document.title = '🦉 Maître Hibou V25.6.34'; }catch(e){} })();
 </script>
 
 
@@ -24392,7 +24349,7 @@ body.v21-final .v21-deco-globe::after{
   window.__v23415GlobeDedicatedWindow = true;
 
   function prepareDedicatedLinks(){
-    try{ document.title = '🦉 Maître Hibou V25.6.33'; }catch(e){}
+    try{ document.title = '🦉 Maître Hibou V25.6.34'; }catch(e){}
 
     const overlay = document.getElementById('v23ShortcutsOverlay');
     if(!overlay) return;
@@ -24506,7 +24463,7 @@ body.v23-shortcuts-open{
   window.__v23416GlobePopupFixed = true;
 
   function forcePopupLayout(){
-    try{ document.title = '🦉 Maître Hibou V25.6.33'; }catch(e){}
+    try{ document.title = '🦉 Maître Hibou V25.6.34'; }catch(e){}
     var overlay = document.getElementById('v23ShortcutsOverlay');
     if(!overlay) return null;
 
@@ -24901,7 +24858,7 @@ body.v21-final .v21-profile-card .profile-life-v23417-open-hint{
 (function(){
   if(window.__maitreHibouProfileLifeV23417) return;
   window.__maitreHibouProfileLifeV23417 = true;
-  try{ document.title = '🦉 Maître Hibou V25.6.33'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.34'; }catch(e){}
 
   var STUDENTS_URL = 'https://script.google.com/macros/s/AKfycbxz1vYS24sv-c3XVja12geWEXIQl6bQyBoQKBx5kg_fwQaj80_Oc7Y34yeBSRN4lF1f/exec';
   var QUESTIONS_URL = 'https://script.google.com/macros/s/AKfycbwGcErZ0he06Dg_bpPDaHtPHa6fAcDQ-31tB7Rlr9w2JZcNaQnP9YIABJYf-CKpFfpF/exec';
@@ -25463,7 +25420,7 @@ body.v21-final .v21-profile-card .profile-life-v23417-open-hint{
 <!-- PATCH V23.4.23 - Titre d'onglet stabilisé : neutralise les anciens patches qui changeaient document.title -->
 <script id="patch-title-stabilise-v23423">
 (function(){
-  var HIBOU_FINAL_TITLE = '🦉 Maître Hibou V25.6.33';
+  var HIBOU_FINAL_TITLE = '🦉 Maître Hibou V25.6.34';
   function setFinalTitle(){
     try{
       if(document.title !== HIBOU_FINAL_TITLE) document.title = HIBOU_FINAL_TITLE;
@@ -26338,7 +26295,7 @@ body.v21-final .v21-profile-card .profile-life-v23417-open-hint{
   if(window.__maitreHibouV2403Ready) return;
   window.__maitreHibouV2403Ready = true;
 
-  var VERSION_TITLE = '🦉 Maître Hibou V25.6.33';
+  var VERSION_TITLE = '🦉 Maître Hibou V25.6.34';
   var ORDER = ['francais','maths','anglais','sciences','geographie','histoire'];
 
   var SUBJECTS = {
@@ -28137,7 +28094,7 @@ body.v21-final .v21-profile-card .profile-life-v23417-open-hint{
   if(window.__maitreHibouV2404Conseil) return;
   window.__maitreHibouV2404Conseil = true;
 
-  var VERSION_TITLE = '🦉 Maître Hibou V25.6.33';
+  var VERSION_TITLE = '🦉 Maître Hibou V25.6.34';
 
   function byId(id){ return document.getElementById(id); }
 
@@ -28690,7 +28647,7 @@ body.v21-final .v21-profile-card .profile-life-v23417-open-hint{
   if(window.__maitreHibouV2405TroisCartes) return;
   window.__maitreHibouV2405TroisCartes = true;
 
-  var VERSION_TITLE = '🦉 Maître Hibou V25.6.33';
+  var VERSION_TITLE = '🦉 Maître Hibou V25.6.34';
 
   function byId(id){ return document.getElementById(id); }
 
@@ -28809,7 +28766,7 @@ body.v21-final .v21-profile-card .profile-life-v23417-open-hint{
   if(window.__maitreHibouV2406TrainingLikeBelts) return;
   window.__maitreHibouV2406TrainingLikeBelts = true;
 
-  var VERSION_TITLE = '🦉 Maître Hibou V25.6.33';
+  var VERSION_TITLE = '🦉 Maître Hibou V25.6.34';
 
   function byId(id){ return document.getElementById(id); }
 
@@ -29776,66 +29733,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   }
 }
 </style>
-<script id="patch-v24-0-21-bandeau-epure-js">
-(function(){
-  if(window.__hibouBandeauEpureV2421) return;
-  window.__hibouBandeauEpureV2421 = true;
 
-  function byId(id){ return document.getElementById(id); }
-  function clean(v){ return String(v || "").trim(); }
-  function currentName(){
-    try{
-      if(clean(window.prenomActuel)) return clean(window.prenomActuel);
-      return clean(localStorage.getItem("hibou_prenom") || localStorage.getItem("hibou_last_prenom") || localStorage.getItem("elevePrenom") || "toi");
-    }catch(e){ return "toi"; }
-  }
-  function lastSuccessText(){
-    var raw = clean((byId("hibouLastSuccess") || {}).textContent || "");
-    if(raw && raw.indexOf("première réussite") < 0) return raw;
-    return "";
-  }
-  function patchProgressRefresh(){
-    if(window.__hibouProgressRefreshV2421) return;
-    window.__hibouProgressRefreshV2421 = true;
-    var oldRefresh = window.refreshProgressCard;
-    if(typeof oldRefresh === "function"){
-      window.refreshProgressCard = function(){
-        var r = oldRefresh.apply(this, arguments);
-        var success = byId("v21ProfileLastSuccess");
-        if(success){
-          var last = lastSuccessText();
-          if(last) success.textContent = last;
-        }
-        return r;
-      };
-    }
-  }
-  function apply(){
-    try{ document.title = "🦉 Maître Hibou V25.6.33"; }catch(e){}
-    patchProgressRefresh();
-    var name = currentName();
-    var headerName = byId("v21HeaderName");
-    if(headerName) headerName.textContent = name;
-    var text = byId("bandeauLastText");
-    // V25.4.0 : ne plus réécrire le bandeau, il est piloté par le moteur de dernière réussite.
-    var card = byId("bandeauLastCard");
-    if(card){
-      card.setAttribute("aria-label", "Bonjour " + name + ", content de te revoir");
-      card.setAttribute("title", "Bonjour " + name);
-    }
-    var score = byId("scoreBadge");
-    if(score) score.setAttribute("aria-hidden", "true");
-    var rewards = byId("mockupCompetencesCard");
-    if(rewards) rewards.setAttribute("aria-hidden", "true");
-  }
-
-  if(document.readyState === "loading") document.addEventListener("DOMContentLoaded", apply);
-  else apply();
-  window.addEventListener("load", apply);
-  [100,300,800,1600,3000,5000].forEach(function(ms){ setTimeout(apply, ms); });
-  setInterval(apply, 1500);
-})();
-</script>
 
 <style id="patch-v24-0-26-le-savais-tu-css">
 body.v21-final .v21-center #v21TreasureCard.v24-know-card{
@@ -30204,7 +30102,7 @@ body.v21-final #v21TreasureCard.v24-know-card .v24-know-source{
     return card;
   }
   function install(){
-    try{ document.title = "🦉 Maître Hibou V25.6.33"; }catch(e){}
+    try{ document.title = "🦉 Maître Hibou V25.6.34"; }catch(e){}
     var existing = byId("v21TreasureCard");
     if(!existing) return;
     var card = prepareCard(existing);
@@ -30470,57 +30368,7 @@ body.v21-final #v21TreasureCard.v24-know-card .v24-know-source{
 })();
 </script>
 
-<script id="patch-v25-1-2-bandeau-reussite-lisible">
-(function(){
-  if(window.__hibouBandeauReussiteLisibleV2512) return;
-  window.__hibouBandeauReussiteLisibleV2512 = true;
 
-  function byId(id){ return document.getElementById(id); }
-  function clean(v){ return String(v == null ? "" : v).replace(/\s+/g, " ").trim(); }
-  function normalizeSuccessText(value){
-    var text = clean(value);
-    if(!text || /premi[eè]re r[eé]ussite/i.test(text) || /enregistr[eé]e pour l'instant/i.test(text)){
-      return "";
-    }
-    text = text
-      .replace(/^or\s*[·:-]?\s*/i, "🥇 ")
-      .replace(/^argent\s*[·:-]?\s*/i, "🥈 ")
-      .replace(/^bronze\s*[·:-]?\s*/i, "🥉 ")
-      .replace(/^🥇\s*or\s*[·:-]?\s*/i, "🥇 ")
-      .replace(/^🥈\s*argent\s*[·:-]?\s*/i, "🥈 ")
-      .replace(/^🥉\s*bronze\s*[·:-]?\s*/i, "🥉 ")
-      .replace(/\s*[·]\s*/g, " ");
-    text = text.replace(/^(🥇|🥈|🥉)\s+Ceinture/i, "$1 Ceinture");
-    return text;
-  }
-  function fallbackText(){
-    return "Content de te revoir ! En forme ?";
-  }
-  function apply(){
-    try{ document.title = "🦉 Maître Hibou V25.6.33"; }catch(e){}
-    var hidden = byId("hibouLastSuccess");
-    var raw = hidden ? hidden.textContent : "";
-    var fixed = normalizeSuccessText(raw);
-    var top = byId("bandeauLastText");
-    if(top){
-      var topFixed = normalizeSuccessText(top.textContent);
-      top.textContent = fixed || topFixed || fallbackText();
-    }
-    if(hidden && fixed && hidden.textContent !== fixed) hidden.textContent = fixed;
-    var profile = byId("v21ProfileLastSuccess");
-    if(profile){
-      var profileFixed = normalizeSuccessText(profile.textContent);
-      profile.textContent = fixed || profileFixed || "Prêt pour une première réussite !";
-    }
-  }
-  if(document.readyState === "loading") document.addEventListener("DOMContentLoaded", apply);
-  else apply();
-  window.addEventListener("load", apply);
-  ["focus","storage","hibou:bilan-updated"].forEach(function(name){ window.addEventListener(name, apply); });
-  [50,150,300,700,1200,2200,4000].forEach(function(ms){ setTimeout(apply, ms); });
-  setInterval(apply, 3000); // V25.4.0 : ralenti, inutile pendant chaque calcul
-})();
-</script>
 
 <style id="patch-v25-1-3-bandeau-superieur-equilibre-css">
 body.v21-final header,
@@ -30647,60 +30495,15 @@ body.v21-final #eleveBadge{
 
 <script id="patch-v25-1-3-title-lock-and-header">
 (function(){
-  if(window.__hibouTitleLockAndBalancedHeaderV2513) return;
-  window.__hibouTitleLockAndBalancedHeaderV2513 = true;
-
-  var VERSION_TITLE = "🦉 Maître Hibou V25.6.33";
-
-  function byId(id){ return document.getElementById(id); }
-  function clean(value){ return String(value == null ? "" : value).replace(/\s+/g, " ").trim(); }
-  function normalizeSuccessText(value){
-    var text = clean(value);
-    if(!text || /premi[eè]re r[eé]ussite/i.test(text) || /enregistr[eé]e pour l'instant/i.test(text)){
-      return "";
-    }
-    return text
-      .replace(/^or\s*[·:-]?\s*/i, "🥇 ")
-      .replace(/^argent\s*[·:-]?\s*/i, "🥈 ")
-      .replace(/^bronze\s*[·:-]?\s*/i, "🥉 ")
-      .replace(/^🥇\s*or\s*[·:-]?\s*/i, "🥇 ")
-      .replace(/^🥈\s*argent\s*[·:-]?\s*/i, "🥈 ")
-      .replace(/^🥉\s*bronze\s*[·:-]?\s*/i, "🥉 ")
-      .replace(/\s*[·]\s*/g, " ")
-      .replace(/^(🥇|🥈|🥉)\s+Ceinture/i, "$1 Ceinture");
-  }
-  function applyBalancedHeader(){
-    var header = document.querySelector("body.v21-final header, body.v21-final header.mockup-header");
+  if(window.__hibouTitleLockAndBalancedHeaderV25634) return;
+  window.__hibouTitleLockAndBalancedHeaderV25634 = true;
+  function apply(){
+    try{ document.title = "🦉 Maître Hibou V25.6.34"; }catch(e){}
+    var header=document.querySelector("body.v21-final header, body.v21-final header.mockup-header");
     if(header) header.classList.add("v25-1-3-balanced-header");
   }
-  function applyTitleAndText(){
-    try{
-      if(document.title !== VERSION_TITLE) document.title = VERSION_TITLE;
-    }catch(e){}
-    var hidden = byId("hibouLastSuccess");
-    var raw = hidden ? hidden.textContent : "";
-    var fixed = normalizeSuccessText(raw);
-    var top = byId("bandeauLastText");
-    if(top){
-      var topFixed = normalizeSuccessText(top.textContent);
-      top.textContent = fixed || topFixed || "Content de te revoir ! En forme ?";
-    }
-    if(hidden && fixed && hidden.textContent !== fixed) hidden.textContent = fixed;
-    var profile = byId("v21ProfileLastSuccess");
-    if(profile){
-      var profileFixed = normalizeSuccessText(profile.textContent);
-      profile.textContent = fixed || profileFixed || "Prêt pour une première réussite !";
-    }
-    applyBalancedHeader();
-  }
-  if(document.readyState === "loading") document.addEventListener("DOMContentLoaded", applyTitleAndText);
-  else applyTitleAndText();
-  window.addEventListener("load", applyTitleAndText);
-  ["focus","pageshow","visibilitychange","storage","hibou:bilan-updated"].forEach(function(name){
-    window.addEventListener(name, applyTitleAndText);
-  });
-  [25,75,150,300,700,1200,2200,4000,7000].forEach(function(ms){ setTimeout(applyTitleAndText, ms); });
-  setInterval(applyTitleAndText, 3000); // V25.4.0
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',apply); else apply();
+  window.addEventListener('load',apply);
 })();
 </script>
 
@@ -31008,7 +30811,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 (function(){
   if(window.__maitreHibouV2516GrandirEnsemble) return;
   window.__maitreHibouV2516GrandirEnsemble = true;
-  var TITLE = '🦉 Maître Hibou V25.6.33';
+  var TITLE = '🦉 Maître Hibou V25.6.34';
 
   function setTitle(){ try{ document.title = TITLE; }catch(e){} }
   function byId(id){ return document.getElementById(id); }
@@ -31346,7 +31149,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   if(window.__maitreHibouV2517EmiGrow) return;
   window.__maitreHibouV2517EmiGrow = true;
 
-  var TITLE = '🦉 Maître Hibou V25.6.33';
+  var TITLE = '🦉 Maître Hibou V25.6.34';
   var stateBySession = {};
 
   var SESSIONS = [
@@ -31788,7 +31591,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   if(window.__maitreHibouV2518Evar) return;
   window.__maitreHibouV2518Evar = true;
 
-  var TITLE = '🦉 Maître Hibou V25.6.33';
+  var TITLE = '🦉 Maître Hibou V25.6.34';
   var EVAR_PAGES = [
     {id:'corps', icon:'💛', title:'Prendre soin de mon corps', subtitle:'Mon corps, mon bien-être : écouter ses besoins et demander de l’aide.', file:'evar_1_mon_corps.html'},
     {id:'consentement', icon:'🤝', title:'Le consentement', subtitle:'Dire oui, dire non, respecter la réponse de l’autre.', file:'evar_2_consentement.html'},
@@ -32093,7 +31896,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   if(window.__maitreHibouV2519Emc) return;
   window.__maitreHibouV2519Emc = true;
 
-  var TITLE = '🦉 Maître Hibou V25.6.33';
+  var TITLE = '🦉 Maître Hibou V25.6.34';
   var EMC_PAGES = [
     {id:'bien-commun', icon:'🏛️', title:"Le bien commun, c'est quoi ?", subtitle:'Intérêt général, écogestes et projets communs.', file:'emc_1_bien_commun.html'},
     {id:'services-publics', icon:'🚒', title:'Des métiers au service de tous', subtitle:'Pompiers, police, maire, école et services publics.', file:'emc_2_services_publics.html'},
@@ -32310,7 +32113,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 (function(){
   if(window.__mhV2528ShortcutsReadingLayout) return;
   window.__mhV2528ShortcutsReadingLayout = true;
-  var TITLE = '🦉 Maître Hibou V25.6.33';
+  var TITLE = '🦉 Maître Hibou V25.6.34';
   try{ document.title = TITLE; }catch(e){}
 
   function esc(s){
@@ -32406,7 +32209,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   if(window.__maitreHibouV25213DirectTrainingLaunch) return;
   window.__maitreHibouV25213DirectTrainingLaunch = true;
 
-  var VERSION_TITLE = '🦉 Maître Hibou V25.6.33';
+  var VERSION_TITLE = '🦉 Maître Hibou V25.6.34';
 
   function byId(id){ return document.getElementById(id); }
   function norm(v){
@@ -32498,7 +32301,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 (function(){
   if(window.__maitreHibouV25215PreloadExercises) return;
   window.__maitreHibouV25215PreloadExercises = true;
-  try{ document.title = '🦉 Maître Hibou V25.6.33'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.34'; }catch(e){}
   function warm(){
     try{
       if(typeof window.preloadFrenchGrammarRowsV23411 === 'function'){
@@ -32521,7 +32324,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 (function(){
   if(window.__maitreHibouV25216PreloadMaths) return;
   window.__maitreHibouV25216PreloadMaths = true;
-  try{ document.title = '🦉 Maître Hibou V25.6.33'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.34'; }catch(e){}
   function warm(){
     try{
       if(typeof window.preloadMathsRowsV2343 === 'function'){
@@ -32543,262 +32346,12 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 <!-- PATCH V25.4.0 - Bandeau central : dernière réussite unifiée (entraînement / ceinture / parcours) -->
 <!-- PATCH V25.4.0 - ancien observateur de réussite V25.2.19 supprimé pour fluidifier les exercices -->
 <!-- PATCH V25.4.0 - Dernière réussite : enregistrement direct après résultat d'entraînement -->
-<script id="patch-v25-2-20-derniere-reussite-directe">
-(function(){
-  if(window.__maitreHibouV25220DerniereReussiteDirecte) return;
-  window.__maitreHibouV25220DerniereReussiteDirecte = true;
-  try{ document.title = '🦉 Maître Hibou V25.6.33'; }catch(e){}
-  function byId(id){ return document.getElementById(id); }
-  function clean(v){ return String(v == null ? '' : v).replace(/\s+/g,' ').trim(); }
-  function esc(v){ return String(v == null ? '' : v).replace(/[&<>'"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c];}); }
-  function norm(v){ return clean(v).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,''); }
-  function currentName(){
-    var vals=[];
-    try{ vals.push(window.prenomActuel); }catch(e){}
-    ['elevePrenom','hibou_prenom','hibou_last_prenom','maitre_hibou_prenom'].forEach(function(k){ try{ vals.push(localStorage.getItem(k)); }catch(e){} });
-    ['v21HeaderName','eleveNom','studentName'].forEach(function(id){ var el=byId(id); if(el) vals.push(el.textContent); });
-    for(var i=0;i<vals.length;i++){ var n=clean(vals[i]); if(n && !/^(jo|eleve|élève)$/i.test(n)) return n; }
-    return 'Élève';
-  }
-  function key(){ return 'hibou_latest_success_' + (norm(currentName()) || 'eleve'); }
-  function apply(text,type){
-    text = clean(text);
-    if(!text) return;
-    var data = {text:text, type:type || 'reussite', date:new Date().toISOString()};
-    try{
-      localStorage.setItem(key(), JSON.stringify(data));
-      localStorage.setItem('hibou_last_success_' + currentName(), text);
-      localStorage.setItem('hibou_latest_success_global', JSON.stringify(data));
-    }catch(e){}
-    ['bandeauLastText','hibouLastSuccess','v21ProfileLastSuccess'].forEach(function(id){ var el=byId(id); if(el) el.textContent = text; });
-    var card = byId('bandeauLastCard') || byId('hibouSuccessCard');
-    if(card){ card.setAttribute('title', text); card.setAttribute('aria-label', text); card.classList.add('mh-v25220-success-live'); }
-    var label = document.querySelector('#bandeauLastCard .bandeau-info-label');
-    if(label){
-      var labelText = type === 'entrainement' ? 'Dernier entraînement' : (type === 'parcours' ? 'Dernier parcours' : 'Dernière réussite');
-      label.innerHTML = esc(labelText);
-    }
-    var icon = document.querySelector('#bandeauLastCard .bandeau-info-icon');
-    if(icon) icon.textContent = '👋';
-    try{ window.dispatchEvent(new CustomEvent('hibou:last-success-updated',{detail:data})); }catch(e){}
-  }
-  window.hibouRecordSuccessV25220 = apply;
-  window.hibouRecordTrainingSuccessV25220 = function(subject,label,score){
-    subject = clean(subject); label = clean(label); score = clean(score);
-    var txt;
-    if(subject.toLowerCase().indexOf('math') >= 0){
-      txt = '🧮 Entraînement maths' + (label ? ' : ' + label : '') + (score ? ' — ' + score : ' terminé');
-    }else if(subject.toLowerCase().indexOf('fran') >= 0){
-      txt = '📖 Entraînement français' + (label ? ' : ' + label : '') + (score ? ' — ' + score : ' terminé');
-    }else{
-      txt = '✅ ' + subject + (label ? ' : ' + label : '') + (score ? ' — ' + score : ' terminé');
-    }
-    apply(txt, 'entrainement');
-  };
-  // Au chargement, réaffiche la dernière réussite mémorisée.
-  function restore(){
-    try{ var raw=localStorage.getItem(key()); if(raw){ var d=JSON.parse(raw); if(d && d.text) apply(d.text, d.type || 'reussite'); } }catch(e){}
-  }
-  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', restore); else restore();
-  window.addEventListener('load', restore);
-})();
-</script>
+
 
 
 
 <!-- PATCH V25.4.0 - Audit/correctif : dernière réussite vraiment prioritaire -->
-<script id="patch-v25-2-21-derniere-reussite-prioritaire">
-(function(){
-  if(window.__maitreHibouV25221DerniereReussitePrioritaire) return;
-  window.__maitreHibouV25221DerniereReussitePrioritaire = true;
 
-  var VERSION_TITLE = '🦉 Maître Hibou V25.6.33';
-  var STORAGE_PREFIX = 'hibou_authoritative_last_success_';
-  var applying = false;
-  var nativeSetItem = null;
-
-  function byId(id){ return document.getElementById(id); }
-  function clean(v){ return String(v == null ? '' : v).replace(/\s+/g,' ').trim(); }
-  function esc(v){ return String(v == null ? '' : v).replace(/[&<>'"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c];}); }
-  function norm(v){ return clean(v).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[’']/g,'').replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,''); }
-  function currentName(){
-    var vals=[];
-    try{ vals.push(window.prenomActuel); }catch(e){}
-    ['elevePrenom','hibou_prenom','hibou_last_prenom','maitre_hibou_prenom','maitreHibouCurrentStudent'].forEach(function(k){
-      try{ vals.push(localStorage.getItem(k)); }catch(e){}
-    });
-    ['v21HeaderName','eleveNom','studentName','hibouProfileName'].forEach(function(id){ var el=byId(id); if(el) vals.push(el.textContent); });
-    for(var i=0;i<vals.length;i++){
-      var n=clean(vals[i]);
-      if(n && !/^(jo|eleve|élève|moi)$/i.test(n)) return n;
-    }
-    return 'Élève';
-  }
-  function studentKey(){ return norm(currentName()) || 'eleve'; }
-  function storageKey(){ return STORAGE_PREFIX + studentKey(); }
-  function isFallback(t){
-    t=clean(t);
-    return !t || /premi[eè]re r[eé]ussite/i.test(t) || /enregistr[eé]e pour/i.test(t) || /content de te revoir/i.test(t) || /continue comme ça/i.test(t) || /en forme/i.test(t);
-  }
-  function normalizeText(t){
-    t=clean(t);
-    if(isFallback(t)) return '';
-    return t
-      .replace(/^or\s*[·:-]?\s*/i,'🥇 ')
-      .replace(/^argent\s*[·:-]?\s*/i,'🥈 ')
-      .replace(/^bronze\s*[·:-]?\s*/i,'🥉 ')
-      .replace(/^🥇\s*or\s*[·:-]?\s*/i,'🥇 ')
-      .replace(/^🥈\s*argent\s*[·:-]?\s*/i,'🥈 ')
-      .replace(/^🥉\s*bronze\s*[·:-]?\s*/i,'🥉 ')
-      .replace(/\s*[·]\s*/g,' ')
-      .replace(/^Continue comme ça,\s*/i,'')
-      .trim();
-  }
-  function labelFor(type){
-    if(type === 'entrainement') return 'Dernier entraînement';
-    if(type === 'ceinture') return 'Dernière ceinture';
-    if(type === 'parcours') return 'Dernier parcours';
-    return 'Dernière réussite';
-  }
-  function readAuthoritative(){
-    try{
-      var raw=localStorage.getItem(storageKey());
-      if(raw){ var d=JSON.parse(raw); if(d && normalizeText(d.text)) return d; }
-    }catch(e){}
-    // Migration douce : seulement si aucune réussite prioritaire n'existe encore.
-    try{
-      var raw2=localStorage.getItem('hibou_latest_success_' + studentKey());
-      if(raw2){ var d2=JSON.parse(raw2); if(d2 && normalizeText(d2.text)) return d2; }
-    }catch(e){}
-    try{
-      var old=normalizeText(localStorage.getItem('hibou_last_success_' + currentName()));
-      if(old) return {text:old, type:/ceinture|valid[ée]e|🥇|🥈|🥉/i.test(old)?'ceinture':'reussite', date:new Date().toISOString()};
-    }catch(e){}
-    return null;
-  }
-  function writeAuthoritative(data){
-    if(!data || !normalizeText(data.text)) return;
-    applying = true;
-    try{
-      var json=JSON.stringify(data);
-      localStorage.setItem(storageKey(), json);
-      localStorage.setItem('hibou_latest_success_' + studentKey(), json);
-      localStorage.setItem('hibou_latest_success_global', json);
-      localStorage.setItem('hibou_last_success_' + currentName(), data.text);
-    }catch(e){}
-    applying = false;
-  }
-  function applyToDom(data){
-    data = data || readAuthoritative();
-    if(!data) return;
-    var text = normalizeText(data.text);
-    if(!text) return;
-    try{ document.title = VERSION_TITLE; }catch(e){}
-    var ids=['bandeauLastText','hibouLastSuccess','v21ProfileLastSuccess'];
-    ids.forEach(function(id){ var el=byId(id); if(el && clean(el.textContent)!==text) el.textContent=text; });
-    var label=document.querySelector('#bandeauLastCard .bandeau-info-label');
-    if(label){ label.innerHTML = esc(labelFor(data.type)); }
-    var icon=document.querySelector('#bandeauLastCard .bandeau-info-icon');
-    if(icon) icon.textContent='👋';
-    var card=byId('bandeauLastCard') || byId('hibouSuccessCard');
-    if(card){
-      card.setAttribute('title', labelFor(data.type) + ' : ' + text);
-      card.setAttribute('aria-label', labelFor(data.type) + ' : ' + text);
-      card.classList.add('mh-v25221-success-live');
-    }
-  }
-  function record(text,type,meta){
-    text=normalizeText(text);
-    if(!text) return;
-    var data={text:text, type:type||'reussite', date:new Date().toISOString(), meta:meta||{}};
-    writeAuthoritative(data);
-    applyToDom(data);
-    try{ window.dispatchEvent(new CustomEvent('hibou:last-success-updated',{detail:data})); }catch(e){}
-  }
-
-  window.hibouRecordSuccessV25221 = record;
-  window.hibouRecordTrainingSuccessV25221 = function(subject,label,score){
-    subject=clean(subject); label=clean(label); score=clean(score);
-    var txt='';
-    if(subject.toLowerCase().indexOf('math')>=0){
-      txt='🧮 Entraînement maths' + (label?' : '+label:'') + (score?' — '+score:' terminé');
-    }else if(subject.toLowerCase().indexOf('fran')>=0){
-      txt='📖 Entraînement français' + (label?' : '+label:'') + (score?' — '+score:' terminé');
-    }else{
-      txt='✅ ' + subject + (label?' : '+label:'') + (score?' — '+score:' terminé');
-    }
-    record(txt,'entrainement');
-  };
-  window.hibouRecordParcoursSuccessV25221 = function(label){ record('🌱 Parcours réussi : ' + clean(label || 'Grandir ensemble'), 'parcours'); };
-
-  // Compatibilité : les anciens appels V25.2.19/V25.2.20 pointent vers le correctif prioritaire.
-  window.hibouRecordSuccessV25220 = record;
-  window.hibouRecordTrainingSuccessV25220 = window.hibouRecordTrainingSuccessV25221;
-  window.hibouRecordParcoursSuccessV25220 = window.hibouRecordParcoursSuccessV25221;
-  window.hibouRecordSuccessV25219 = record;
-  window.hibouRecordTrainingSuccessV25219 = window.hibouRecordTrainingSuccessV25221;
-  window.hibouRecordParcoursSuccessV25219 = window.hibouRecordParcoursSuccessV25221;
-
-  // Audit : les anciennes fonctions de ceintures écrivent encore "hibou_last_success_*".
-  // On intercepte uniquement ces vraies écritures de validation pour enregistrer une ceinture récente.
-  try{
-    if(!localStorage.__mhV25221SetItemWrapped){
-      nativeSetItem = Storage.prototype.setItem;
-      Storage.prototype.setItem = function(k,v){
-        var res = nativeSetItem.apply(this, arguments);
-        try{
-          if(!applying && /^hibou_last_success_/i.test(String(k||''))){
-            var val=normalizeText(v);
-            if(val && /ceinture|valid[ée]e|🥇|🥈|🥉/i.test(val)){
-              record(val,'ceinture');
-            }
-          }
-        }catch(e){}
-        return res;
-      };
-      try{ localStorage.__mhV25221SetItemWrapped='1'; }catch(e){}
-    }
-  }catch(e){}
-
-  function restoreSoon(){ setTimeout(function(){ applyToDom(readAuthoritative()); }, 0); setTimeout(function(){ applyToDom(readAuthoritative()); }, 80); setTimeout(function(){ applyToDom(readAuthoritative()); }, 300); }
-  ['refreshV168BeltCounters','refreshHeaderCards','renderV168SheetsBelts','refreshHibouProfile','renderHibouProfile','updateStudentHeader','loadStudentProgress','savePrenom','loadStudent'].forEach(function(fn){
-    var old=window[fn];
-    if(typeof old==='function' && !old.__mhV25221Wrapped){
-      var wrapped=function(){ var r=old.apply(this, arguments); restoreSoon(); return r; };
-      wrapped.__mhV25221Wrapped=true;
-      window[fn]=wrapped;
-    }
-  });
-
-  function installObserver(){
-    // V25.4.0 : observer ciblé seulement sur les trois zones de réussite.
-    // L'ancien observateur surveillait tout le body : le chrono des exercices déclenchait donc un recalcul à chaque seconde.
-    if(typeof MutationObserver === 'undefined') return;
-    ['bandeauLastText','hibouLastSuccess','v21ProfileLastSuccess'].forEach(function(id){
-      var el=byId(id);
-      if(!el || el.__mhV25223Observer) return;
-      el.__mhV25223Observer=true;
-      var pending=false;
-      var obs=new MutationObserver(function(){
-        if(applying || pending) return;
-        pending=true;
-        setTimeout(function(){
-          pending=false;
-          var data=readAuthoritative();
-          if(data && normalizeText(data.text) && normalizeText(el.textContent)!==normalizeText(data.text)) applyToDom(data);
-        }, 80);
-      });
-      obs.observe(el,{childList:true,subtree:true,characterData:true});
-    });
-  }
-
-  function boot(){ installObserver(); applyToDom(readAuthoritative()); }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', boot); else boot();
-  window.addEventListener('load', boot);
-  ['focus','pageshow','visibilitychange','hibou:last-success-updated','hibou:bilan-updated'].forEach(function(ev){ window.addEventListener(ev,function(){ setTimeout(boot,60); }); });
-  var n=0; var t=setInterval(function(){ n++; boot(); if(n>10) clearInterval(t); },700);
-})();
-</script>
 <!-- FIN PATCH V25.4.0 -->
 
 
@@ -32808,7 +32361,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 (function(){
   if(window.__maitreHibouV25222FrancaisProgressionStable) return;
   window.__maitreHibouV25222FrancaisProgressionStable = true;
-  try{ document.title = '🦉 Maître Hibou V25.6.33'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.34'; }catch(e){}
 
   var BASE_URL = 'https://script.google.com/macros/s/AKfycbyzfRPrUV7xKgeXUM0LjbOsOne5DieRjDYxmuVbBBUIGL-F9ahMmJZSfpUDYmBaZIOpvQ/exec';
   var SHEET_NAME = 'grammaire';
@@ -33141,7 +32694,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 (function(){
   if(window.__maitreHibouV25224MathsFluid) return;
   window.__maitreHibouV25224MathsFluid = true;
-  try{ document.title='🦉 Maître Hibou V25.6.33'; }catch(e){}
+  try{ document.title='🦉 Maître Hibou V25.6.34'; }catch(e){}
 
   var TRAINING_COUNT = 10;
   var BLACK_SYNTHESIS_BELTS = ['blanche','jaune','orange','vert_clair','vert_fonce','bleu_clair','bleu_fonce','rose','beige','violet','marron','rouge','gris'];
@@ -33338,7 +32891,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 (function(){
   if(window.__maitreHibouV25225FrancaisPrechargeRapide) return;
   window.__maitreHibouV25225FrancaisPrechargeRapide = true;
-  try{ document.title = '🦉 Maître Hibou V25.6.33'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.34'; }catch(e){}
 
   var BASE_URL = 'https://script.google.com/macros/s/AKfycbyzfRPrUV7xKgeXUM0LjbOsOne5DieRjDYxmuVbBBUIGL-F9ahMmJZSfpUDYmBaZIOpvQ/exec';
   var SHEET_NAME = 'grammaire';
@@ -33660,129 +33213,90 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 
 
 <!-- PATCH V25.4.0 - Résultat Français local : affichage robuste dans le bandeau -->
+<script id="patch-v25634-parcours-compatibility-bridge">
+(function(){
+  'use strict';
+  if(window.__hibouV25634ParcoursBridge) return;
+  window.__hibouV25634ParcoursBridge=true;
+  function clean(v){return String(v==null?'':v).replace(/\s+/g,' ').trim();}
+  function norm(v){return clean(v).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'');}
+  function currentName(){
+    var values=[];
+    try{values.push(window.prenomActuel);}catch(e){}
+    try{var c=JSON.parse(localStorage.getItem('hibou_current_student')||'{}');values.push(c&&c.prenom);}catch(e){}
+    ['hibou_prenom','hibou_last_prenom','elevePrenom','maitre_hibou_prenom'].forEach(function(k){try{values.push(localStorage.getItem(k));}catch(e){}});
+    for(var i=0;i<values.length;i++){var n=clean(values[i]);if(n&&!/^(jo|eleve|élève)$/i.test(n))return n;}
+    return '';
+  }
+  function record(text,type,meta){
+    text=clean(text); if(!text) return;
+    var name=currentName();
+    var data={text:text,type:type||'reussite',date:new Date().toISOString(),meta:meta||{}};
+    try{
+      var key=norm(name)||'eleve', json=JSON.stringify(data);
+      localStorage.setItem('hibou_authoritative_last_success_'+key,json);
+      localStorage.setItem('hibou_latest_success_'+key,json);
+      localStorage.setItem('hibou_latest_success_global',json);
+      if(name) localStorage.setItem('hibou_last_success_'+name,text);
+      var profile=document.getElementById('v21ProfileLastSuccess');
+      if(profile) profile.textContent=text;
+    }catch(e){}
+    try{window.dispatchEvent(new CustomEvent('hibou:last-success-updated',{detail:data}));}catch(e){}
+  }
+  function training(subject,label,score){
+    subject=clean(subject);label=clean(label);score=clean(score);
+    var low=subject.toLowerCase(),txt='';
+    if(low.indexOf('math')>=0) txt='🧮 Entraînement maths'+(label?' : '+label:'')+(score?' — '+score:' terminé');
+    else if(low.indexOf('fran')>=0) txt='📖 Entraînement français'+(label?' : '+label:'')+(score?' — '+score:' terminé');
+    else txt='✅ '+subject+(label?' : '+label:'')+(score?' — '+score:' terminé');
+    record(txt,'entrainement');
+  }
+  function parcours(label){record('🌱 Parcours réussi : '+clean(label||'Grandir ensemble'),'parcours');}
+  window.hibouRecordSuccess=record;
+  window.hibouRecordTrainingSuccess=training;
+  window.hibouRecordParcoursSuccess=parcours;
+  ['25219','25220','25221','25222','25223','25224','25225','25226','25227','25228','25229','25230'].forEach(function(v){
+    window['hibouRecordSuccessV'+v]=record;
+    window['hibouRecordTrainingSuccessV'+v]=training;
+    window['hibouRecordParcoursSuccessV'+v]=parcours;
+  });
+})();
+</script>
+
 <script id="patch-v25-2-26-francais-resultat-bandeau">
 (function(){
-  if(window.__maitreHibouV25226FrancaisResultatBandeau) return;
-  window.__maitreHibouV25226FrancaisResultatBandeau = true;
-  try{ document.title = '🦉 Maître Hibou V25.6.33'; }catch(e){}
-
-  function byId(id){ return document.getElementById(id); }
-  function clean(v){ return String(v == null ? '' : v).replace(/\s+/g,' ').trim(); }
-  function esc(v){ return String(v == null ? '' : v).replace(/[&<>'"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c];}); }
-  function norm(v){ return clean(v).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,''); }
-  function currentName(){
-    var vals=[];
-    try{ vals.push(window.prenomActuel); }catch(e){}
-    ['elevePrenom','hibou_prenom','hibou_last_prenom','maitre_hibou_prenom','maitreHibouCurrentStudent'].forEach(function(k){ try{ vals.push(localStorage.getItem(k)); }catch(e){} });
-    ['v21HeaderName','eleveNom','studentName','hibouProfileName'].forEach(function(id){ var el=byId(id); if(el) vals.push(el.textContent); });
-    for(var i=0;i<vals.length;i++){ var n=clean(vals[i]); if(n && !/^(jo|eleve|élève|moi)$/i.test(n)) return n; }
-    return 'Élève';
+  if(window.__maitreHibouV25226FrancaisResultatParcours) return;
+  window.__maitreHibouV25226FrancaisResultatParcours=true;
+  function clean(v){return String(v==null?'':v).replace(/\s+/g,' ').trim();}
+  function byId(id){return document.getElementById(id);}
+  function labelFromActivity(id){
+    var map={blanche:'Ceinture blanche — Phrase affirmative / négative',jaune:'Ceinture jaune — Trouver le verbe',orange:'Ceinture orange — Trouver le sujet',verte:'Ceinture verte — Reconnaître un nom',bleue:'Ceinture bleue — Reconnaître un déterminant',marron:'Ceinture marron — Trouver l’infinitif',noire:'Ceinture noire — Reconnaître l’adjectif',rouge:'Ceinture rouge — Reconnaître le groupe nominal',idees:'Idées pour écrire'};
+    return map[id]||id||'grammaire';
   }
-  function studentKey(){ return norm(currentName()) || 'eleve'; }
-  function setAllLastSuccess(text,type){
-    text=clean(text); if(!text) return;
-    var data={text:text,type:type||'entrainement',date:new Date().toISOString(),source:'patch-v25-2-26-francais-resultat-bandeau'};
-    try{
-      var json=JSON.stringify(data);
-      localStorage.setItem('hibou_authoritative_last_success_'+studentKey(), json);
-      localStorage.setItem('hibou_latest_success_'+studentKey(), json);
-      localStorage.setItem('hibou_latest_success_global', json);
-      localStorage.setItem('hibou_last_success_'+currentName(), text);
-    }catch(e){}
-    ['bandeauLastText','hibouLastSuccess','v21ProfileLastSuccess'].forEach(function(id){ var el=byId(id); if(el) el.textContent=text; });
-    var label=document.querySelector('#bandeauLastCard .bandeau-info-label');
-    if(label){ label.innerHTML = 'Dernier entraînement'; }
-    var icon=document.querySelector('#bandeauLastCard .bandeau-info-icon');
-    if(icon) icon.textContent='👋';
-    var card=byId('bandeauLastCard') || byId('hibouSuccessCard');
-    if(card){
-      card.setAttribute('title','Dernier entraînement : '+text);
-      card.setAttribute('aria-label','Dernier entraînement : '+text);
-      card.classList.add('mh-v25221-success-live');
-    }
-    try{ window.dispatchEvent(new CustomEvent('hibou:last-success-updated',{detail:data})); }catch(e){}
+  var current='blanche',last='';
+  function detect(){
+    var ov=byId('frenchTrainingOverlayV2348'); if(!ov) return;
+    var result=ov.querySelector('.fr-v2348-result'); if(!result) return;
+    var text=clean(result.textContent); if(!/entraînement terminé|entrainement terminé|score/i.test(text)) return;
+    var m=text.match(/(\d+)\s*\/\s*(\d+)/); if(!m) return;
+    var feedback=clean((ov.querySelector('.fr-v2348-feedback')||{}).textContent||'');
+    var label=feedback?clean(feedback.split('·')[0]):''; if(!label||/source/i.test(label))label=labelFromActivity(current);
+    var score=m[1]+' / '+m[2],key=label+'|'+score; if(key===last)return; last=key;
+    if(typeof window.hibouRecordTrainingSuccess==='function') window.hibouRecordTrainingSuccess('français',label,'Score '+score);
   }
-  function labelFromActivity(activityId){
-    var map={
-      blanche:'Ceinture blanche — Phrase affirmative / négative',
-      jaune:'Ceinture jaune — Trouver le verbe',
-      orange:'Ceinture orange — Trouver le sujet',
-      verte:'Ceinture verte — Reconnaître un nom',
-      bleue:'Ceinture bleue — Reconnaître un déterminant',
-      marron:'Ceinture marron — Trouver l’infinitif',
-      noire:'Ceinture noire — Reconnaître l’adjectif',
-      rouge:'Ceinture rouge — Reconnaître le groupe nominal',
-      idees:'Idées pour écrire'
-    };
-    return map[activityId] || activityId || 'grammaire';
-  }
-  var currentFrenchActivity = 'blanche';
-  var lastRecordedKey = '';
-
-  function parseFrenchResult(){
-    var ov=byId('frenchTrainingOverlayV2348');
-    if(!ov) return null;
-    var result=ov.querySelector('.fr-v2348-result');
-    if(!result) return null;
-    var text=clean(result.textContent);
-    if(!/entraînement terminé|entrainement terminé|score/i.test(text)) return null;
-    var scoreMatch = text.match(/(\d+)\s*\/\s*(\d+)/);
-    if(!scoreMatch) return null;
-    var score=scoreMatch[1]+' / '+scoreMatch[2];
-    var pctMatch=text.match(/(\d+)\s*%/);
-    var pct=pctMatch ? pctMatch[1]+'%' : '';
-    var feedback=clean((ov.querySelector('.fr-v2348-feedback')||{}).textContent || '');
-    var label=feedback ? clean(feedback.split('·')[0]) : '';
-    if(!label || /source/i.test(label)) label = labelFromActivity(currentFrenchActivity);
-    return {label:label, score:score, pct:pct, key:currentFrenchActivity+'|'+score+'|'+pct+'|'+Date.now().toString().slice(0,-4)};
-  }
-  function recordFrenchResultIfVisible(){
-    var r=parseFrenchResult();
-    if(!r) return;
-    var stableKey=r.label+'|'+r.score+'|'+r.pct;
-    if(lastRecordedKey===stableKey) return;
-    lastRecordedKey=stableKey;
-    var scoreText='Score '+r.score+(r.pct?' — '+r.pct:'');
-    var finalText='📖 Entraînement français : '+r.label+' — '+scoreText;
-    try{
-      if(window.hibouRecordTrainingSuccessV25221) window.hibouRecordTrainingSuccessV25221('français', r.label, scoreText);
-      else if(window.hibouRecordTrainingSuccessV25220) window.hibouRecordTrainingSuccessV25220('français', r.label, scoreText);
-    }catch(e){}
-    setAllLastSuccess(finalText,'entrainement');
-    setTimeout(function(){ setAllLastSuccess(finalText,'entrainement'); },120);
-    setTimeout(function(){ setAllLastSuccess(finalText,'entrainement'); },500);
-  }
-
-  function installWrappers(){
-    if(typeof window.startFrenchTrainingV2348 === 'function' && !window.startFrenchTrainingV2348.__mhV25226Wrapped){
+  function install(){
+    if(typeof window.startFrenchTrainingV2348==='function'&&!window.startFrenchTrainingV2348.__journeyWrapped){
       var oldStart=window.startFrenchTrainingV2348;
-      var wrappedStart=function(activityId){ currentFrenchActivity = clean(activityId || currentFrenchActivity || 'blanche'); lastRecordedKey=''; return oldStart.apply(this, arguments); };
-      wrappedStart.__mhV25226Wrapped=true;
-      window.startFrenchTrainingV2348=wrappedStart;
+      window.startFrenchTrainingV2348=function(id){current=clean(id||current||'blanche');last='';return oldStart.apply(this,arguments);};
+      window.startFrenchTrainingV2348.__journeyWrapped=true;
     }
-    if(typeof window.answerFrenchTrainingV2348 === 'function' && !window.answerFrenchTrainingV2348.__mhV25226Wrapped){
+    if(typeof window.answerFrenchTrainingV2348==='function'&&!window.answerFrenchTrainingV2348.__journeyWrapped){
       var oldAnswer=window.answerFrenchTrainingV2348;
-      var wrappedAnswer=function(){
-        var r=oldAnswer.apply(this, arguments);
-        [50,180,450,900,1400].forEach(function(ms){ setTimeout(recordFrenchResultIfVisible, ms); });
-        return r;
-      };
-      wrappedAnswer.__mhV25226Wrapped=true;
-      window.answerFrenchTrainingV2348=wrappedAnswer;
+      window.answerFrenchTrainingV2348=function(){var r=oldAnswer.apply(this,arguments);[80,250,600,1100].forEach(function(ms){setTimeout(detect,ms);});return r;};
+      window.answerFrenchTrainingV2348.__journeyWrapped=true;
     }
   }
-  installWrappers();
-  setTimeout(installWrappers,300);
-  setTimeout(installWrappers,1000);
-  window.addEventListener('load',function(){ setTimeout(installWrappers,200); });
-
-  // Filet de sécurité : si la page de résultat existe déjà, on l'enregistre aussi.
-  document.addEventListener('click',function(){ setTimeout(recordFrenchResultIfVisible,250); },true);
-  window.__maitreHibouV25226FrenchResultAudit={
-    version:'V25.4.0',
-    correction:'Le résultat du quiz français local est détecté à la fin et écrit directement dans bandeauLastText, hibouLastSuccess et v21ProfileLastSuccess.',
-    cible:'banque locale immédiate et Google Sheets préchargé'
-  };
+  install();setTimeout(install,350);window.addEventListener('load',function(){setTimeout(install,200);});
 })();
 </script>
 <!-- FIN PATCH V25.4.0 -->
@@ -33790,596 +33304,19 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 
 
 <!-- PATCH V25.4.0 - Bandeau et Mes progrès : dernière réussite stable et unique -->
-<script id="patch-v25-2-27-derniere-reussite-stable">
-(function(){
-  if(window.__maitreHibouV25227DerniereReussiteStable) return;
-  window.__maitreHibouV25227DerniereReussiteStable = true;
 
-  var VERSION_TITLE = '🦉 Maître Hibou V25.6.33';
-  var STORAGE_PREFIX = 'hibou_authoritative_last_success_';
-  var applying = false;
-  var lastCanonicalText = '';
-  var lastCanonicalType = 'reussite';
-
-  function byId(id){ return document.getElementById(id); }
-  function clean(v){ return String(v == null ? '' : v).replace(/\s+/g,' ').trim(); }
-  function esc(v){ return String(v == null ? '' : v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
-  function norm(v){ return clean(v).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[’']/g,'').replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,''); }
-  function isFallback(t){
-    t=clean(t);
-    return !t || /premi[eè]re r[eé]ussite/i.test(t) || /pr[êe]t pour/i.test(t) || /content de te revoir/i.test(t) || /continue comme/i.test(t) || /en forme/i.test(t) || /enregistr[eé]e pour/i.test(t);
-  }
-  function normalizeText(t){
-    t=clean(t);
-    if(isFallback(t)) return '';
-    t=t
-      .replace(/^or\s*[·:-]?\s*/i,'🥇 ')
-      .replace(/^argent\s*[·:-]?\s*/i,'🥈 ')
-      .replace(/^bronze\s*[·:-]?\s*/i,'🥉 ')
-      .replace(/^🥇\s*or\s*[·:-]?\s*/i,'🥇 ')
-      .replace(/^🥈\s*argent\s*[·:-]?\s*/i,'🥈 ')
-      .replace(/^🥉\s*bronze\s*[·:-]?\s*/i,'🥉 ')
-      .replace(/\s*[·]\s*/g,' ')
-      .replace(/^Continue comme ça,\s*/i,'')
-      .trim();
-    return t;
-  }
-  function inferType(text){
-    text=clean(text).toLowerCase();
-    if(/entrainement|entraînement|score\s*\d+\s*\/\s*(10|20)|calcul/.test(text)) return 'entrainement';
-    if(/parcours|evar|emc|emi|mission/.test(text)) return 'parcours';
-    if(/ceinture|valid[ée]e|🥇|🥈|🥉/.test(text)) return 'ceinture';
-    return 'reussite';
-  }
-  function labelFor(type){
-    if(type==='entrainement') return 'Dernier entraînement';
-    if(type==='ceinture') return 'Dernière ceinture';
-    if(type==='parcours') return 'Dernier parcours';
-    return 'Dernière réussite';
-  }
-  function currentName(){
-    var vals=[];
-    try{ vals.push(window.prenomActuel); }catch(e){}
-    ['hibou_prenom','hibou_last_prenom','elevePrenom','maitre_hibou_prenom','maitreHibouCurrentStudent'].forEach(function(k){ try{ vals.push(localStorage.getItem(k)); }catch(e){} });
-    ['eleveNom','studentName','hibouProfileName','v21HeroName'].forEach(function(id){ var el=byId(id); if(el) vals.push(el.textContent); });
-    var hn=byId('v21HeaderName'); if(hn) vals.push(hn.textContent);
-    for(var i=0;i<vals.length;i++){
-      var n=clean(vals[i]);
-      if(n && !/^(jo|eleve|élève|moi|toi|dernier|derni[eè]re)$/i.test(n)) return n;
-    }
-    return 'Élève';
-  }
-  function studentKey(){ return norm(currentName()) || 'eleve'; }
-  function storageKey(){ return STORAGE_PREFIX + studentKey(); }
-  function parseStored(raw, source, fallbackType){
-    raw=clean(raw);
-    if(!raw) return null;
-    try{
-      if(raw.charAt(0)==='{'){
-        var d=JSON.parse(raw);
-        var text=normalizeText(d && d.text);
-        if(!text) return null;
-        return {text:text,type:d.type||inferType(text)||fallbackType||'reussite',date:d.date||'',source:source};
-      }
-    }catch(e){}
-    var text=normalizeText(raw);
-    if(!text) return null;
-    return {text:text,type:fallbackType||inferType(text),date:'',source:source};
-  }
-  function candidateWeight(c, idx){
-    if(!c || !c.text) return -9999;
-    var w=idx;
-    var t=Date.parse(c.date||'') || 0;
-    if(t) w += Math.min(5000, Math.floor(t/100000000));
-    if(c.source && /authoritative/.test(c.source)) w += 200;
-    if(c.source && /profile-dom/.test(c.source)) w += 120;
-    if(c.source && /top-dom/.test(c.source)) w += 40;
-    if(c.type==='entrainement') w += 80;
-    if(c.type==='parcours') w += 60;
-    if(c.type==='ceinture') w += 30;
-    return w;
-  }
-  function collectCandidates(){
-    var key=studentKey(), name=currentName();
-    var out=[];
-    function add(raw, source, type){ var c=parseStored(raw, source, type); if(c) out.push(c); }
-    try{ add(localStorage.getItem('hibou_authoritative_last_success_'+key), 'authoritative-current'); }catch(e){}
-    try{ add(localStorage.getItem('hibou_latest_success_'+key), 'latest-current'); }catch(e){}
-    try{ add(localStorage.getItem('hibou_latest_success_global'), 'latest-global'); }catch(e){}
-    try{ add(localStorage.getItem('hibou_last_success_'+name), 'old-name'); }catch(e){}
-    try{ add(localStorage.getItem('hibou_last_success_'+key), 'old-key'); }catch(e){}
-    add((byId('v21ProfileLastSuccess')||{}).textContent, 'profile-dom');
-    // V25.4.0 : on n'utilise plus le bandeau du haut comme source, seulement comme affichage.
-    // Cela évite que les anciens scripts recyclent une ancienne ceinture et polluent la dernière réussite.
-    return out;
-  }
-  function chooseCandidate(){
-    var candidates=collectCandidates();
-    if(!candidates.length) return null;
-    candidates.sort(function(a,b){ return candidateWeight(b, candidates.indexOf(b)) - candidateWeight(a, candidates.indexOf(a)); });
-    return candidates[0];
-  }
-  function save(data){
-    if(!data || !normalizeText(data.text)) return;
-    applying=true;
-    try{
-      var normalized={text:normalizeText(data.text), type:data.type||inferType(data.text), date:data.date||new Date().toISOString(), source:'patch-v25-2-27'};
-      var json=JSON.stringify(normalized);
-      var key=studentKey(), name=currentName();
-      localStorage.setItem('hibou_authoritative_last_success_'+key, json);
-      localStorage.setItem('hibou_latest_success_'+key, json);
-      localStorage.setItem('hibou_latest_success_global', json);
-      localStorage.setItem('hibou_last_success_'+name, normalized.text);
-      localStorage.setItem('hibou_last_success_'+key, normalized.text);
-    }catch(e){}
-    applying=false;
-  }
-  function apply(data){
-    data=data || chooseCandidate();
-    if(!data) return;
-    var text=normalizeText(data.text);
-    if(!text) return;
-    var type=data.type || inferType(text);
-    lastCanonicalText=text;
-    lastCanonicalType=type;
-    save({text:text,type:type,date:data.date||new Date().toISOString()});
-    applying=true;
-    try{ document.title = VERSION_TITLE; }catch(e){}
-    ['bandeauLastText','hibouLastSuccess','v21ProfileLastSuccess'].forEach(function(id){
-      var el=byId(id); if(el && clean(el.textContent)!==text) el.textContent=text;
-    });
-    var label=document.querySelector('#bandeauLastCard .bandeau-info-label');
-    if(label){ label.innerHTML = esc(labelFor(type)); }
-    var icon=document.querySelector('#bandeauLastCard .bandeau-info-icon');
-    if(icon) icon.textContent='👋';
-    var card=byId('bandeauLastCard') || byId('hibouSuccessCard');
-    if(card){
-      card.setAttribute('title', labelFor(type)+' : '+text);
-      card.setAttribute('aria-label', labelFor(type)+' : '+text);
-      card.classList.add('mh-v25227-last-success-stable');
-    }
-    applying=false;
-  }
-  function record(text,type,meta){
-    text=normalizeText(text); if(!text) return;
-    var data={text:text,type:type||inferType(text),date:new Date().toISOString(),meta:meta||{},source:'record-v25-2-27'};
-    apply(data);
-    try{ window.dispatchEvent(new CustomEvent('hibou:last-success-updated',{detail:data})); }catch(e){}
-  }
-  function recordTraining(subject,label,score){
-    subject=clean(subject); label=clean(label); score=clean(score);
-    var s=subject.toLowerCase();
-    var txt='';
-    if(s.indexOf('math')>=0) txt='🧮 Entraînement maths' + (label?' : '+label:'') + (score?' — '+score:' terminé');
-    else if(s.indexOf('fran')>=0 || s.indexOf('français')>=0) txt='📖 Entraînement français' + (label?' : '+label:'') + (score?' — '+score:' terminé');
-    else txt='✅ ' + subject + (label?' : '+label:'') + (score?' — '+score:' terminé');
-    record(txt,'entrainement');
-  }
-  window.hibouRecordSuccessV25227 = record;
-  window.hibouRecordTrainingSuccessV25227 = recordTraining;
-  window.hibouRecordParcoursSuccessV25227 = function(label){ record('🌱 Parcours réussi : '+clean(label||'Grandir ensemble'),'parcours'); };
-  // Redirige tous les anciens points d'entrée vers le moteur stable final.
-  ['25226','25225','25224','25223','25222','25221','25220','25219'].forEach(function(v){
-    window['hibouRecordSuccessV'+v] = record;
-    window['hibouRecordTrainingSuccessV'+v] = recordTraining;
-    window['hibouRecordParcoursSuccessV'+v] = window.hibouRecordParcoursSuccessV25227;
-  });
-
-  // Intercepte les anciennes écritures de ceinture sans les laisser reprendre la priorité sur un entraînement plus récent.
-  try{
-    if(!window.__mhV25227StorageWrapped){
-      window.__mhV25227StorageWrapped=true;
-      var nativeSetItem=Storage.prototype.setItem;
-      Storage.prototype.setItem=function(k,v){
-        var res=nativeSetItem.apply(this, arguments);
-        try{
-          if(!applying && /^hibou_last_success_/i.test(String(k||''))){
-            var val=normalizeText(v);
-            if(val && /ceinture|valid[ée]e|🥇|🥈|🥉/i.test(val)){
-              var current=chooseCandidate();
-              // Si la réussite courante est un entraînement daté, on ne la remplace pas par une ancienne ceinture recyclée.
-              if(!(current && current.type==='entrainement' && Date.now()-(Date.parse(current.date||'')||0) < 15*60*1000)) record(val,'ceinture');
-            }
-          }
-        }catch(e){}
-        return res;
-      };
-    }
-  }catch(e){}
-
-  function stabilize(){
-    var data=chooseCandidate();
-    if(data) apply(data);
-    else if(lastCanonicalText) apply({text:lastCanonicalText,type:lastCanonicalType,date:new Date().toISOString()});
-  }
-  function watch(id){
-    if(typeof MutationObserver==='undefined') return;
-    var el=byId(id); if(!el || el.__mhV25227Watched) return;
-    el.__mhV25227Watched=true;
-    var obs=new MutationObserver(function(){
-      if(applying) return;
-      setTimeout(function(){
-        var wanted=lastCanonicalText || (chooseCandidate()||{}).text;
-        wanted=normalizeText(wanted);
-        if(wanted && normalizeText(el.textContent)!==wanted) stabilize();
-      }, 0);
-    });
-    obs.observe(el,{childList:true,characterData:true,subtree:true});
-  }
-  function boot(){
-    stabilize();
-    watch('bandeauLastText');
-    watch('hibouLastSuccess');
-    watch('v21ProfileLastSuccess');
-  }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', boot); else boot();
-  window.addEventListener('load', function(){ boot(); setTimeout(boot,120); setTimeout(boot,600); });
-  ['focus','pageshow','visibilitychange','storage','hibou:last-success-updated','hibou:bilan-updated'].forEach(function(ev){ window.addEventListener(ev,function(){ setTimeout(stabilize,40); }); });
-  // Filet de sécurité léger : compense les anciens intervalles sans surveiller toute la page.
-  setInterval(stabilize, 900);
-
-  window.__maitreHibouV25227DerniereReussiteAudit={
-    version:'V25.4.0',
-    correction:'Un seul texte de dernière réussite est choisi, enregistré puis imposé aux trois zones : bandeau supérieur, champ caché et carte Mes progrès.',
-    evite:'alternance entre ancienne ceinture et dernier entraînement'
-  };
-})();
-</script>
 <!-- FIN PATCH V25.4.0 -->
 
 
 
 <!-- PATCH V25.4.0 - Bandeau supérieur : affichage unique, sans double information -->
-<script id="patch-v25-2-29-bandeau-haut-unique">
-(function(){
-  if(window.__maitreHibouV25229BandeauHautUnique) return;
-  window.__maitreHibouV25229BandeauHautUnique = true;
 
-  var VERSION_TITLE = '🦉 Maître Hibou V25.6.33';
-  var lastApplied = '';
-  var applying = false;
-
-  function byId(id){ return document.getElementById(id); }
-  function clean(v){ return String(v == null ? '' : v).replace(/\s+/g,' ').trim(); }
-  function esc(v){ return String(v == null ? '' : v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
-  function norm(v){ return clean(v).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,''); }
-  function isEmptySuccess(t){
-    t = clean(t);
-    return !t || /premi[eè]re r[eé]ussite|pr[êe]t pour|content de te revoir|continue comme|en forme|enregistr[eé]e pour/i.test(t);
-  }
-  function normalize(t){
-    t = clean(t);
-    if(isEmptySuccess(t)) return '';
-    return t.replace(/^Continue comme ça,\s*/i,'').trim();
-  }
-  function currentName(){
-    var vals=[];
-    try{ vals.push(window.prenomActuel); }catch(e){}
-    ['hibou_prenom','hibou_last_prenom','elevePrenom','maitreHibouCurrentStudent','maitre_hibou_prenom'].forEach(function(k){ try{ vals.push(localStorage.getItem(k)); }catch(e){} });
-    ['v21HeaderName','eleveNom'].forEach(function(id){ var el=byId(id); if(el) vals.push(el.textContent); });
-    for(var i=0;i<vals.length;i++){
-      var n=clean(vals[i]);
-      if(n && !/^(jo|eleve|élève|toi|moi)$/i.test(n)) return n;
-    }
-    return 'Élève';
-  }
-  function key(){ return norm(currentName()) || 'eleve'; }
-  function inferType(t){
-    t = clean(t).toLowerCase();
-    if(/entrainement|entraînement|score\s*\d+\s*\/\s*(10|20)|calcul/.test(t)) return 'entrainement';
-    if(/parcours|evar|emc|emi|mission/.test(t)) return 'parcours';
-    if(/ceinture|valid[ée]e|🥇|🥈|🥉/.test(t)) return 'ceinture';
-    return 'reussite';
-  }
-  function labelFor(type){
-    if(type === 'entrainement') return 'Dernier entraînement';
-    if(type === 'parcours') return 'Dernier parcours';
-    if(type === 'ceinture') return 'Dernière ceinture';
-    return 'Dernière réussite';
-  }
-  function readJSON(raw){
-    raw = clean(raw);
-    if(!raw) return null;
-    try{
-      if(raw.charAt(0)==='{'){
-        var d = JSON.parse(raw);
-        var text = normalize(d && d.text);
-        if(text) return {text:text, type:d.type || inferType(text), date:d.date || ''};
-      }
-    }catch(e){}
-    var text = normalize(raw);
-    return text ? {text:text, type:inferType(text), date:''} : null;
-  }
-  function sourceOfTruth(){
-    var k = key(), name = currentName();
-    var keys = [
-      'hibou_authoritative_last_success_' + k,
-      'hibou_latest_success_' + k,
-      'hibou_latest_success_global',
-      'hibou_last_success_' + name,
-      'hibou_last_success_' + k
-    ];
-    for(var i=0;i<keys.length;i++){
-      try{ var d = readJSON(localStorage.getItem(keys[i])); if(d) return d; }catch(e){}
-    }
-    // Source de secours : Mes progrès, car l'utilisateur constate qu'elle est stable.
-    var profile = normalize((byId('v21ProfileLastSuccess') || {}).textContent);
-    if(profile) return {text:profile, type:inferType(profile), date:''};
-    return null;
-  }
-  function save(d){
-    if(!d || !d.text) return;
-    try{
-      var json = JSON.stringify({text:d.text, type:d.type || inferType(d.text), date:d.date || new Date().toISOString(), source:'v25.2.29'});
-      var k = key(), name = currentName();
-      localStorage.setItem('hibou_authoritative_last_success_' + k, json);
-      localStorage.setItem('hibou_latest_success_' + k, json);
-      localStorage.setItem('hibou_latest_success_global', json);
-      localStorage.setItem('hibou_last_success_' + name, d.text);
-      localStorage.setItem('hibou_last_success_' + k, d.text);
-    }catch(e){}
-  }
-  function apply(){
-    if(applying) return;
-    var d = sourceOfTruth();
-    if(!d || !d.text) return;
-    applying = true;
-    try{ document.title = VERSION_TITLE; }catch(e){}
-    save(d);
-    var label = document.querySelector('#bandeauLastCard .bandeau-info-label');
-    var text = byId('bandeauLastText');
-    var hidden = byId('hibouLastSuccess');
-    var profile = byId('v21ProfileLastSuccess');
-    var lbl = labelFor(d.type || inferType(d.text));
-    if(label && clean(label.textContent) !== lbl) label.innerHTML = esc(lbl);
-    if(text && clean(text.textContent) !== d.text) text.textContent = d.text;
-    if(hidden && clean(hidden.textContent) !== d.text) hidden.textContent = d.text;
-    if(profile && clean(profile.textContent) !== d.text) profile.textContent = d.text;
-    var card = byId('bandeauLastCard');
-    if(card){
-      card.setAttribute('title', lbl + ' : ' + d.text);
-      card.setAttribute('aria-label', lbl + ' : ' + d.text);
-    }
-    var icon = document.querySelector('#bandeauLastCard .bandeau-info-icon');
-    if(icon) icon.textContent = '👋';
-    lastApplied = d.text;
-    applying = false;
-  }
-  function record(text,type){
-    var d = {text:normalize(text), type:type || inferType(text), date:new Date().toISOString()};
-    if(!d.text) return;
-    save(d);
-    apply();
-    try{ window.dispatchEvent(new CustomEvent('hibou:last-success-updated',{detail:d})); }catch(e){}
-  }
-  // Derniers alias : toutes les versions écrivent maintenant dans le même moteur.
-  window.hibouRecordSuccessV25229 = record;
-  window.hibouRecordTrainingSuccessV25229 = function(subject,label,score){
-    subject=clean(subject); label=clean(label); score=clean(score);
-    var s=subject.toLowerCase(), txt='';
-    if(s.indexOf('math')>=0) txt='🧮 Entraînement maths' + (label?' : '+label:'') + (score?' — '+score:' terminé');
-    else if(s.indexOf('fran')>=0) txt='📖 Entraînement français' + (label?' : '+label:'') + (score?' — '+score:' terminé');
-    else txt='✅ '+subject+(label?' : '+label:'')+(score?' — '+score:' terminé');
-    record(txt,'entrainement');
-  };
-  ['25228','25227','25226','25225','25224','25223','25222','25221','25220','25219'].forEach(function(v){
-    window['hibouRecordSuccessV'+v] = record;
-    window['hibouRecordTrainingSuccessV'+v] = window.hibouRecordTrainingSuccessV25229;
-  });
-  function watch(id){
-    var el = byId(id);
-    if(!el || el.__mhV25229Watched || typeof MutationObserver==='undefined') return;
-    el.__mhV25229Watched = true;
-    new MutationObserver(function(){ if(!applying) setTimeout(apply, 20); }).observe(el,{childList:true,characterData:true,subtree:true});
-  }
-  function boot(){ apply(); watch('bandeauLastText'); watch('hibouLastSuccess'); watch('v21ProfileLastSuccess'); }
-  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
-  window.addEventListener('load', function(){ boot(); setTimeout(apply,200); setTimeout(apply,900); });
-  ['focus','pageshow','visibilitychange','hibou:last-success-updated'].forEach(function(ev){ window.addEventListener(ev,function(){ setTimeout(apply,60); }); });
-  // Filet léger contre les anciens intervalles du bandeau, sans surveiller toute la page.
-  setInterval(apply, 1200);
-})();
-</script>
 <!-- FIN PATCH V25.4.0 -->
 
 
 
 <!-- PATCH V25.4.0 - Bandeau central : affichage unique sans doublon -->
-<script id="patch-v25-2-30-bandeau-central-unique">
-(function(){
-  if(window.__maitreHibouV25230BandeauCentralUnique) return;
-  window.__maitreHibouV25230BandeauCentralUnique = true;
-  var VERSION_TITLE = '🦉 Maître Hibou V25.6.33';
-  var applying = false;
-  var lastRendered = '';
 
-  function byId(id){ return document.getElementById(id); }
-  function clean(v){ return String(v == null ? '' : v).replace(/\s+/g,' ').trim(); }
-  function esc(v){ return String(v == null ? '' : v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
-  function norm(v){ return clean(v).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,''); }
-  function emptyText(t){ return !clean(t) || /premi[eè]re r[eé]ussite|pr[êe]t pour|content de te revoir|continue comme|en forme|enregistr[eé]e pour/i.test(clean(t)); }
-  function normalizeText(t){
-    t = clean(t);
-    if(emptyText(t)) return '';
-    return t.replace(/^Continue comme ça,\s*/i,'').replace(/\s*[·]\s*/g,' ').trim();
-  }
-  function currentName(){
-    var vals=[];
-    try{ vals.push(window.prenomActuel); }catch(e){}
-    ['hibou_prenom','hibou_last_prenom','elevePrenom','maitreHibouCurrentStudent','maitre_hibou_prenom'].forEach(function(k){ try{ vals.push(localStorage.getItem(k)); }catch(e){} });
-    ['eleveNom','studentName','hibouProfileName','v21HeaderName'].forEach(function(id){ var el=byId(id); if(el) vals.push(el.textContent); });
-    for(var i=0;i<vals.length;i++){
-      var n=clean(vals[i]);
-      if(n && !/^(jo|eleve|élève|toi|moi|dernier|derni[eè]re|entrainement|entraînement)$/i.test(n)) return n;
-    }
-    return 'Élève';
-  }
-  function key(){ return norm(currentName()) || 'eleve'; }
-  function parseData(raw, source){
-    raw=clean(raw);
-    if(!raw) return null;
-    try{
-      if(raw.charAt(0)==='{'){
-        var d=JSON.parse(raw);
-        var text=normalizeText(d && d.text);
-        if(text) return {text:text, type:d.type || inferType(text), date:d.date || '', source:source};
-      }
-    }catch(e){}
-    var text=normalizeText(raw);
-    return text ? {text:text, type:inferType(text), date:'', source:source} : null;
-  }
-  function inferType(t){
-    t=clean(t).toLowerCase();
-    if(/entrainement|entraînement|score\s*\d+\s*\/\s*(10|20)|calcul/.test(t)) return 'entrainement';
-    if(/parcours|mission|evar|emc|emi/.test(t)) return 'parcours';
-    if(/ceinture|valid[ée]e|🥇|🥈|🥉/.test(t)) return 'ceinture';
-    return 'reussite';
-  }
-  function labelFor(type){
-    if(type==='entrainement') return 'Dernier entraînement';
-    if(type==='ceinture') return 'Dernière ceinture';
-    if(type==='parcours') return 'Dernier parcours';
-    return 'Dernière réussite';
-  }
-  function compactForTop(text,type){
-    text=normalizeText(text);
-    if(!text) return '';
-    if(type==='entrainement'){
-      text = text
-        .replace(/^\s*[📖🧮✅]?\s*Entra[îi]nement\s+fran[çc]ais\s*[:：]\s*/i,'Français : ')
-        .replace(/^\s*[📖🧮✅]?\s*Entra[îi]nement\s+maths?\s*[:：]\s*/i,'Maths : ')
-        .replace(/^\s*[📖🧮✅]?\s*Entra[îi]nement\s*/i,'');
-    }
-    if(type==='parcours') text = text.replace(/^\s*🌱?\s*Parcours\s+r[ée]ussi\s*[:：]\s*/i,'');
-    return text.trim();
-  }
-  function sourceOfTruth(){
-    // La carte Mes progrès est la source visuelle stable ; elle évite de recycler le vieux texte du bandeau haut.
-    var profile = normalizeText((byId('v21ProfileLastSuccess')||{}).textContent);
-    if(profile) return {text:profile, type:inferType(profile), source:'profile-card'};
-    var k=key(), name=currentName();
-    var keys=[
-      'hibou_authoritative_last_success_'+k,
-      'hibou_latest_success_'+k,
-      'hibou_latest_success_global',
-      'hibou_last_success_'+name,
-      'hibou_last_success_'+k
-    ];
-    var best=null;
-    keys.forEach(function(storageKey, idx){
-      try{
-        var d=parseData(localStorage.getItem(storageKey), storageKey);
-        if(!d) return;
-        var time=Date.parse(d.date||'')||0;
-        var score=time + (idx===0?5000:0) + (d.type==='entrainement'?1200:0) + (d.type==='parcours'?900:0) + (d.type==='ceinture'?600:0);
-        if(!best || score>best._score){ d._score=score; best=d; }
-      }catch(e){}
-    });
-    return best;
-  }
-  function persist(d){
-    if(!d || !normalizeText(d.text)) return;
-    try{
-      var k=key(), name=currentName();
-      var data={text:normalizeText(d.text), type:d.type||inferType(d.text), date:d.date||new Date().toISOString(), source:'v25.2.31'};
-      var json=JSON.stringify(data);
-      localStorage.setItem('hibou_authoritative_last_success_'+k,json);
-      localStorage.setItem('hibou_latest_success_'+k,json);
-      localStorage.setItem('hibou_latest_success_global',json);
-      localStorage.setItem('hibou_last_success_'+name,data.text);
-      localStorage.setItem('hibou_last_success_'+k,data.text);
-    }catch(e){}
-  }
-  function ensureHeaderNameHidden(label){
-    // Plusieurs anciens scripts cherchent encore #v21HeaderName : on conserve l'id, mais il n'est plus affiché dans le titre du bandeau.
-    var name=currentName();
-    var hn=byId('v21HeaderName');
-    if(!hn){
-      hn=document.createElement('span');
-      hn.id='v21HeaderName';
-      hn.style.display='none';
-      if(label && label.parentNode) label.parentNode.appendChild(hn);
-      else document.body.appendChild(hn);
-    }
-    hn.textContent=name;
-    hn.style.display='none';
-  }
-  function apply(){
-    if(applying) return;
-    var d=sourceOfTruth();
-    if(!d || !normalizeText(d.text)) return;
-    applying=true;
-    try{ document.title=VERSION_TITLE; }catch(e){}
-    var type=d.type || inferType(d.text);
-    var full=normalizeText(d.text);
-    var topText=compactForTop(full,type);
-    var labelText=labelFor(type);
-    persist({text:full,type:type,date:d.date});
-
-    var label=document.querySelector('#bandeauLastCard .bandeau-info-label');
-    var textEl=byId('bandeauLastText');
-    var profile=byId('v21ProfileLastSuccess');
-    var hidden=byId('hibouLastSuccess');
-    var icon=document.querySelector('#bandeauLastCard .bandeau-info-icon');
-    var card=byId('bandeauLastCard');
-
-    if(label){ label.innerHTML=esc(labelText); ensureHeaderNameHidden(label); }
-    if(textEl) textEl.textContent=topText;
-    // Mes progrès conserve le libellé complet, plus précis.
-    if(profile) profile.textContent=full;
-    if(hidden) hidden.textContent=full;
-    if(icon) icon.textContent='👋';
-    if(card){
-      card.setAttribute('title', labelText+' : '+full);
-      card.setAttribute('aria-label', labelText+' : '+full);
-      card.classList.add('mh-v25230-top-single');
-    }
-    lastRendered=labelText+'|'+topText;
-    applying=false;
-  }
-  function record(text,type){
-    var full=normalizeText(text);
-    if(!full) return;
-    persist({text:full,type:type||inferType(full),date:new Date().toISOString()});
-    apply();
-    try{ window.dispatchEvent(new CustomEvent('hibou:last-success-updated',{detail:{text:full,type:type||inferType(full)}})); }catch(e){}
-  }
-  window.hibouRecordSuccessV25230=record;
-  window.hibouRecordTrainingSuccessV25230=function(subject,label,score){
-    subject=clean(subject); label=clean(label); score=clean(score);
-    var s=subject.toLowerCase();
-    var txt='';
-    if(s.indexOf('math')>=0) txt='🧮 Entraînement maths' + (label?' : '+label:'') + (score?' — '+score:' terminé');
-    else if(s.indexOf('fran')>=0) txt='📖 Entraînement français' + (label?' : '+label:'') + (score?' — '+score:' terminé');
-    else txt='✅ '+subject+(label?' : '+label:'')+(score?' — '+score:' terminé');
-    record(txt,'entrainement');
-  };
-  ['25229','25228','25227','25226','25225','25224','25223','25222','25221','25220','25219'].forEach(function(v){
-    window['hibouRecordSuccessV'+v]=record;
-    window['hibouRecordTrainingSuccessV'+v]=window.hibouRecordTrainingSuccessV25230;
-    window['hibouRecordParcoursSuccessV'+v]=function(label){ record('🌱 Parcours réussi : '+clean(label||'Grandir ensemble'),'parcours'); };
-  });
-
-  function boot(){ apply(); }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', boot); else boot();
-  window.addEventListener('load', function(){ boot(); setTimeout(apply,120); setTimeout(apply,600); });
-  ['focus','pageshow','visibilitychange','storage','hibou:last-success-updated','hibou:bilan-updated'].forEach(function(ev){ window.addEventListener(ev,function(){ setTimeout(apply,50); }); });
-  // Dernier filet contre les anciens scripts : on ne change que la carte du bandeau central, pas tout le DOM.
-  setInterval(apply, 900);
-  if(typeof MutationObserver!=='undefined'){
-    var card=byId('bandeauLastCard');
-    if(card && !card.__mhV25230Watched){
-      card.__mhV25230Watched=true;
-      new MutationObserver(function(){ if(!applying) setTimeout(apply,30); }).observe(card,{childList:true,characterData:true,subtree:true});
-    }
-  }
-  window.__maitreHibouV25230Audit={
-    correction:'La carte du bandeau central n’affiche plus deux fois la même information : label court + texte compact.',
-    source:'Mes progrès prioritaire, localStorage en secours',
-    version:'V25.4.0'
-  };
-})();
-</script>
 <!-- FIN PATCH V25.4.0 -->
 
 
@@ -34403,8 +33340,8 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 (function(){
   if(window.__hibouQuestionGithubPageV2548) return;
   window.__hibouQuestionGithubPageV2548 = true;
-  try{ document.title = '🦉 Maître Hibou V25.6.33'; }catch(e){}
-  try{ window.MAITRE_HIBOU_VERSION = 'V25.6.33'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.34'; }catch(e){}
+  try{ window.MAITRE_HIBOU_VERSION = 'V25.6.34'; }catch(e){}
 
   // V25.6.16 : la boîte à questions n'est plus affichée par Apps Script.
   // Elle devient une page HTML légère séparée, hébergée sur GitHub.
@@ -34548,8 +33485,8 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   'use strict';
   if(window.__hibouTeacherSeparateV25612) return;
   window.__hibouTeacherSeparateV25612 = true;
-  try{ document.title = '🦉 Maître Hibou V25.6.33'; }catch(e){}
-  try{ window.MAITRE_HIBOU_VERSION = 'V25.6.33'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.34'; }catch(e){}
+  try{ window.MAITRE_HIBOU_VERSION = 'V25.6.34'; }catch(e){}
 
   var LONG_PRESS_MS = 3000;
   var TEACHER_PAGE = 'enseignant.html';
@@ -35194,8 +34131,8 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   setTimeout(install,250);
 
   try{
-    document.title = '🦉 Maître Hibou V25.6.33';
-    window.MAITRE_HIBOU_VERSION = 'V25.6.33';
+    document.title = '🦉 Maître Hibou V25.6.34';
+    window.MAITRE_HIBOU_VERSION = 'V25.6.34';
   }catch(e){}
 })();
 </script>
@@ -35278,7 +34215,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 })();
 </script>
 
-<!-- PATCH V25.6.33 - Restauration robuste des ceintures dans Mes progrès et Valider une compétence -->
+<!-- PATCH V25.6.34 - Restauration robuste des ceintures dans Mes progrès et Valider une compétence -->
 <script id="patch-v25-6-20-ceintures-eleve-robustes">
 (function(){
   'use strict';
@@ -35595,7 +34532,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
     if(!force && cache.length) return cache;
     if(inflight) return inflight;
     inflight=fetchRows().then(function(rows){hydrateCurrent(rows);refreshUI();return rows;})
-      .catch(function(err){console.warn('V25.6.33 : ceintures non rechargées, données locales conservées',err);refreshUI();return cachedRows();})
+      .catch(function(err){console.warn('V25.6.34 : ceintures non rechargées, données locales conservées',err);refreshUI();return cachedRows();})
       .finally(function(){inflight=null;});
     return inflight;
   }
@@ -35640,13 +34577,13 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
     if(key && key!==lastStudentKey){lastStudentKey=key;refresh(true);}
   },800);
 
-  try{ document.title='🦉 Maître Hibou V25.6.33'; window.MAITRE_HIBOU_VERSION='V25.6.33'; }catch(e){}
+  try{ document.title='🦉 Maître Hibou V25.6.34'; window.MAITRE_HIBOU_VERSION='V25.6.34'; }catch(e){}
 })();
 </script>
-<!-- FIN PATCH V25.6.33 -->
+<!-- FIN PATCH V25.6.34 -->
 
 
-<!-- PATCH V25.6.33 - Mes progrès : médailles et compétences acquises avec ascenseur -->
+<!-- PATCH V25.6.34 - Mes progrès : médailles et compétences acquises avec ascenseur -->
 <style id="patch-v25621-progress-achievements">
 .profile-life-v23417-header.v25621-progress-header{
   grid-template-columns:auto minmax(250px,.9fr) minmax(440px,1.25fr);
@@ -35848,7 +34785,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',watchOverlay);
   else watchOverlay();
   window.addEventListener('load',function(){watchOverlay();scheduleRender(150);});
-  try{document.title='🦉 Maître Hibou V25.6.33';}catch(e){}
+  try{document.title='🦉 Maître Hibou V25.6.34';}catch(e){}
 })();
 </script>
 
@@ -35937,7 +34874,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
     wrapped.__v25623Wrapped = true;
     window.openStudentProfileLifeV23417 = wrapped;
   }
-  try{ document.title = '🦉 Maître Hibou V25.6.33'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.34'; }catch(e){}
 })();
 </script>
 
@@ -36040,7 +34977,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
     window.openStudentProfileLifeV23417=wrapped;
   }
   document.addEventListener('hibou:question-added',function(){setTimeout(refresh,100);});
-  try{document.title='🦉 Maître Hibou V25.6.33';}catch(e){}
+  try{document.title='🦉 Maître Hibou V25.6.34';}catch(e){}
 })();
 </script>
 
@@ -36093,13 +35030,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   }
   function markSuccess(record){
     var score=record.score+'/'+record.total;
-    if(typeof window.hibouRecordTrainingSuccessV25220==='function'){
-      window.hibouRecordTrainingSuccessV25220('Maths',record.ceinture,score);
-    }else if(typeof window.hibouRecordSuccessV25220==='function'){
-      window.hibouRecordSuccessV25220('🧮 Entraînement maths : '+record.ceinture+' — '+score,'entrainement');
-    }
-    var text='🧮 Entraînement maths : '+record.ceinture+' — '+score;
-    ['bandeauLastText','hibouLastSuccess','v21ProfileLastSuccess'].forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=text;});
+    if(typeof window.hibouRecordTrainingSuccess==='function') window.hibouRecordTrainingSuccess('Maths',record.ceinture,score);
   }
   window.hibouFinalizeMentalRecordV25627=function(data){
     var name=currentName();
@@ -36172,12 +35103,12 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
     wrapped.__v25627=true;window.openStudentProfileLifeV23417=wrapped;
   }
   window.addEventListener('hibou:math-record-updated',function(){setTimeout(refreshSheetsRecords,250);});
-  try{document.title='🦉 Maître Hibou V25.6.33';}catch(e){}
+  try{document.title='🦉 Maître Hibou V25.6.34';}catch(e){}
 })();
 </script>
 
 <style id="patch-v25632-parcours-records-css">
-/* V25.6.33 — journal du parcours et records locaux immédiats */
+/* V25.6.34 — journal du parcours et records locaux immédiats */
 #bandeauLastCard.hibou-journey-card{
   cursor:pointer !important;
   align-items:flex-start !important;
@@ -36194,7 +35125,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 }
 #bandeauLastCard.hibou-journey-card .bandeau-info-label{
   font-size:12px !important;
-  color:#163B76 !important;
+  color:#FFFFFF !important;
   opacity:1 !important;
   margin-bottom:4px !important;
 }
@@ -36213,11 +35144,11 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   overflow:hidden;
   text-overflow:ellipsis;
   white-space:nowrap;
-  color:#102F63;
+  color:#DCEBFF;
   font-weight:900;
 }
 .hibou-journey-empty{
-  color:#6F7692;
+  color:#BFD5FF;
   font-weight:850;
 }
 .hibou-journey-card:hover{
@@ -36268,7 +35199,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   if(window.__hibouV25632ParcoursRecords) return;
   window.__hibouV25632ParcoursRecords = true;
 
-  var VERSION = 'V25.6.33';
+  var VERSION = 'V25.6.34';
   var API = window.MAITRE_HIBOU_COMPETENCES_SHEETS_URL || 'https://script.google.com/macros/s/AKfycbxz1vYS24sv-c3XVja12geWEXIQl6bQyBoQKBx5kg_fwQaj80_Oc7Y34yeBSRN4lF1f/exec';
   var RECORD_PREFIX = 'hibou_v2343_maths_training_record_';
   var JOURNAL_PREFIX = 'hibou_journal_parcours_v25632_';
@@ -36593,186 +35524,6 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 </script>
 
 
-<style id="patch-v25633-mon-parcours-stable-css">
-/* V25.6.33 — carte unique et stable : les anciens modules continuent à écrire
-   dans l'ancienne carte cachée, mais l'élève ne voit plus que Mon parcours récent. */
-#bandeauLastCard{
-  display:none !important;
-  visibility:hidden !important;
-}
-#bandeauJourneyCard{
-  display:flex !important;
-  align-items:center !important;
-  cursor:pointer !important;
-  min-width:320px !important;
-  max-width:580px !important;
-}
-#bandeauJourneyCard .bandeau-info-label{
-  display:block !important;
-  font-weight:1000 !important;
-  white-space:nowrap !important;
-}
-#bandeauJourneyCard .hibou-journey-items{
-  display:grid !important;
-  gap:2px !important;
-  min-width:0 !important;
-}
-#bandeauJourneyCard .hibou-journey-item,
-#bandeauJourneyCard .hibou-journey-empty{
-  display:block !important;
-  overflow:hidden !important;
-  text-overflow:ellipsis !important;
-  white-space:nowrap !important;
-  font-size:12px !important;
-  line-height:1.25 !important;
-  font-weight:850 !important;
-}
-#bandeauJourneyCard:focus-visible{
-  outline:4px solid #FFD93D !important;
-  outline-offset:3px !important;
-}
-@media(max-width:1180px){
-  #bandeauJourneyCard{min-width:0 !important;max-width:none !important;}
-}
-@media(max-width:760px){
-  #bandeauJourneyCard{padding:8px 10px !important;}
-  #bandeauJourneyCard .hibou-journey-item,
-  #bandeauJourneyCard .hibou-journey-empty{font-size:11px !important;}
-}
-</style>
-<script id="patch-v25633-mon-parcours-stable-js">
-(function(){
-  'use strict';
-  if(window.__hibouV25633MonParcoursStable) return;
-  window.__hibouV25633MonParcoursStable = true;
-
-  var JOURNAL_PREFIXES = [
-    'hibou_journal_parcours_v25632_',
-    'hibou_journal_parcours_v25633_'
-  ];
-  var lastSignature = '';
-
-  function clean(v){
-    return String(v == null ? '' : v).replace(/\s+/g,' ').trim();
-  }
-  function norm(v){
-    return clean(v).toLowerCase().normalize('NFD')
-      .replace(/[\u0300-\u036f]/g,'')
-      .replace(/[’']/g,'')
-      .replace(/[^a-z0-9]+/g,'_')
-      .replace(/^_+|_+$/g,'');
-  }
-  function esc(v){
-    return clean(v).replace(/[&<>"']/g,function(c){
-      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
-    });
-  }
-  function currentName(){
-    var vals=[];
-    try{ vals.push(window.prenomActuel); }catch(e){}
-    try{
-      var c=JSON.parse(localStorage.getItem('hibou_current_student')||'{}');
-      vals.push(c && c.prenom);
-    }catch(e){}
-    ['hibou_prenom','hibou_last_prenom','elevePrenom','maitre_hibou_prenom','maitreHibouCurrentStudent'].forEach(function(k){
-      try{ vals.push(localStorage.getItem(k)); }catch(e){}
-    });
-    ['v21HeaderName','eleveNom','studentName','hibouProfileName'].forEach(function(id){
-      var el=document.getElementById(id); if(el) vals.push(el.textContent);
-    });
-    for(var i=0;i<vals.length;i++){
-      var n=clean(vals[i]);
-      if(n && !/^(jo|eleve|élève|moi)$/i.test(n)) return n;
-    }
-    return '';
-  }
-  function readJson(key){
-    try{
-      var value=JSON.parse(localStorage.getItem(key)||'[]');
-      return Array.isArray(value) ? value : [];
-    }catch(e){ return []; }
-  }
-  function readJournal(name){
-    var all=[];
-    JOURNAL_PREFIXES.forEach(function(prefix){
-      all=all.concat(readJson(prefix+(norm(name)||'eleve')));
-    });
-    var map=Object.create(null);
-    all.forEach(function(ev){
-      if(!ev) return;
-      var text=clean(ev.texte||ev.text);
-      if(!text) return;
-      var id=clean(ev.event_id)||[clean(ev.date),clean(ev.type),text].join('|');
-      if(!map[id] || (Date.parse(ev.date)||0)>(Date.parse(map[id].date)||0)) map[id]=ev;
-    });
-    return Object.keys(map).map(function(k){return map[k];}).sort(function(a,b){
-      return (Date.parse(b.date)||0)-(Date.parse(a.date)||0);
-    });
-  }
-  function ensureCard(){
-    var old=document.getElementById('bandeauLastCard');
-    if(!old || !old.parentNode) return null;
-    old.style.setProperty('display','none','important');
-    var card=document.getElementById('bandeauJourneyCard');
-    if(!card){
-      card=document.createElement('div');
-      card.id='bandeauJourneyCard';
-      card.className='bandeau-info-card v21-top-card hibou-journey-card';
-      card.setAttribute('role','button');
-      card.setAttribute('tabindex','0');
-      card.setAttribute('title','Voir mon parcours dans Mes progrès');
-      card.setAttribute('aria-label','Mon parcours récent. Ouvrir Mes progrès.');
-      old.parentNode.insertBefore(card, old.nextSibling);
-      function open(ev){
-        if(ev){ev.preventDefault();ev.stopPropagation();}
-        if(typeof window.openStudentProfileLifeV23417==='function') window.openStudentProfileLifeV23417();
-        else if(typeof window.openProgressPopup==='function') window.openProgressPopup();
-      }
-      card.addEventListener('click',open,true);
-      card.addEventListener('keydown',function(ev){
-        if(ev.key==='Enter'||ev.key===' ') open(ev);
-      },true);
-    }
-    return card;
-  }
-  function render(force){
-    var card=ensureCard();
-    if(!card) return;
-    var name=currentName();
-    var events=name ? readJournal(name).slice(0,3) : [];
-    var signature=name+'|'+events.map(function(ev){return clean(ev.event_id)+'|'+clean(ev.date)+'|'+clean(ev.texte||ev.text);}).join('||');
-    if(!force && signature===lastSignature) return;
-    lastSignature=signature;
-    var rows=events.length ? events.map(function(ev){
-      return '<span class="hibou-journey-item">'+esc(ev.texte||ev.text)+'</span>';
-    }).join('') : '<span class="hibou-journey-empty">Ton prochain entraînement apparaîtra ici.</span>';
-    card.innerHTML=
-      '<span class="bandeau-info-icon" aria-hidden="true">🧭</span>'+
-      '<span class="bandeau-info-text">'+
-        '<span class="bandeau-info-label">Mon parcours récent</span>'+
-        '<span class="hibou-journey-items">'+rows+'</span>'+
-      '</span>';
-  }
-  function boot(){
-    render(true);
-    var old=document.getElementById('bandeauLastCard');
-    if(old && !old.__hibouV25633Observed){
-      old.__hibouV25633Observed=true;
-      new MutationObserver(function(){render(true);}).observe(old,{childList:true,subtree:true,characterData:true,attributes:true});
-    }
-  }
-
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot);
-  else boot();
-  window.addEventListener('load',function(){[0,100,350,900,1800].forEach(function(ms){setTimeout(function(){render(true);},ms);});});
-  ['focus','pageshow','visibilitychange','hibou:last-success-updated','hibou:bilan-updated','hibou:belts-updated'].forEach(function(ev){
-    window.addEventListener(ev,function(){setTimeout(function(){render(true);},40);});
-  });
-  setInterval(function(){render(false);},1000);
-
-  try{document.title='🦉 Maître Hibou V25.6.33';}catch(e){}
-})();
-</script>
-
+<!-- V25.6.34 : le bandeau contient une seule carte réelle #bandeauLastCard, dédiée au journal du parcours. -->
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 Maître Hibou V25.6.16</title>
+<title>🦉 Maître Hibou V25.6.17</title>
 <style>
 
   :root {
@@ -3694,7 +3694,7 @@ body.v21-final .subject-btn .subject-label{font-size:18px !important;line-height
 @media (max-width:899px){body.v21-final .v21-center{width:calc(100% - 24px) !important;margin:0 auto 8px !important;grid-template-columns:1fr !important;}body.v21-final .v21-side-owl,body.v21-final .v21-deco-window,body.v21-final .v21-deco-globe,body.v21-final .v21-deco-books{display:none !important;}body.v21-final .subjects-bar{grid-template-columns:repeat(2,minmax(0,1fr)) !important;}}
 </style>
 <script id="patch-v21-4-home-text-and-title">
-(function(){function applyV214(){try{document.title = '🦉 Maître Hibou V25.6.16';var p=document.querySelector('.v21-hero p');if(p) p.textContent='🌟 Que souhaites-tu apprendre aujourd’hui ?';var h2=document.querySelector('.v21-hero h2');if(h2) h2.setAttribute('aria-hidden','true');}catch(e){}}document.addEventListener('DOMContentLoaded',applyV214);setTimeout(applyV214,100);setTimeout(applyV214,500);setTimeout(applyV214,1200);})();
+(function(){function applyV214(){try{document.title = '🦉 Maître Hibou V25.6.17';var p=document.querySelector('.v21-hero p');if(p) p.textContent='🌟 Que souhaites-tu apprendre aujourd’hui ?';var h2=document.querySelector('.v21-hero h2');if(h2) h2.setAttribute('aria-hidden','true');}catch(e){}}document.addEventListener('DOMContentLoaded',applyV214);setTimeout(applyV214,100);setTimeout(applyV214,500);setTimeout(applyV214,1200);})();
 </script>
 
 
@@ -3930,7 +3930,7 @@ body.v21-final .subject-btn{
 (function(){
   function applyV215(){
     try{
-      document.title = '🦉 Maître Hibou V25.6.16';
+      document.title = '🦉 Maître Hibou V25.6.17';
       var p=document.querySelector('.v21-hero p');
       if(p) p.textContent='🌟 Que souhaites-tu apprendre aujourd’hui ?';
       var h2=document.querySelector('.v21-hero h2');
@@ -4175,7 +4175,7 @@ body.v21-final .v21-sublist{
 (function(){
   function cleanV216(){
     try{
-      document.title = '🦉 Maître Hibou V25.6.16';
+      document.title = '🦉 Maître Hibou V25.6.17';
       document.body.classList.add('v21-final');
       var heroP=document.querySelector('.v21-hero p');
       if(heroP) heroP.textContent='🌟 Que souhaites-tu apprendre aujourd’hui ?';
@@ -4469,118 +4469,6 @@ body.v21-final .v21-treasure-card{
 
 
 
-<style id="patch-v23-3-accueil-prenom-paysage-visible">
-/* V23.3 - Accueil prénom paysage : patch volontairement simple, sans optimisation du code */
-@media (orientation: landscape){
-  .prenom-overlay{
-    align-items:center !important;
-    justify-content:center !important;
-    padding:18px 32px !important;
-    overflow:hidden !important;
-  }
-
-  .prenom-box{
-    width:min(980px,86vw) !important;
-    max-width:none !important;
-    background:rgba(255,255,255,.96) !important;
-    border:3px solid var(--primary-light) !important;
-    border-radius:34px !important;
-    box-shadow:0 24px 70px rgba(108,99,255,.16) !important;
-    padding:26px 64px 30px 64px !important;
-  }
-
-  .prenom-box .owl{
-    font-size:70px !important;
-    margin-bottom:4px !important;
-    animation:none !important;
-  }
-
-  .prenom-box h2{
-    font-size:46px !important;
-    line-height:1 !important;
-    margin:4px 0 10px 0 !important;
-    color:#211B70 !important;
-  }
-
-  .prenom-box p{
-    max-width:760px !important;
-    margin:0 auto 22px auto !important;
-    font-size:20px !important;
-    line-height:1.35 !important;
-    font-weight:900 !important;
-    color:var(--text-muted) !important;
-  }
-
-  .prenom-input{
-    width:min(720px,100%) !important;
-    margin:0 auto 18px auto !important;
-    min-height:68px !important;
-    border-radius:24px !important;
-    font-size:24px !important;
-    padding:16px 24px !important;
-  }
-
-  .prenom-btn{
-    width:min(720px,100%) !important;
-    margin:0 auto !important;
-    min-height:66px !important;
-    border-radius:24px !important;
-    font-size:22px !important;
-    padding:16px 24px !important;
-  }
-}
-
-/* Mode paysage bas : utile quand le clavier tablette réduit la hauteur disponible */
-@media (orientation: landscape) and (max-height:620px){
-  .prenom-overlay{
-    align-items:flex-start !important;
-    padding-top:8px !important;
-  }
-
-  .prenom-box{
-    width:min(1020px,90vw) !important;
-    padding:12px 46px 14px 46px !important;
-    border-radius:28px !important;
-  }
-
-  .prenom-box .owl{
-    font-size:44px !important;
-    margin-bottom:0 !important;
-  }
-
-  .prenom-box h2{
-    font-size:34px !important;
-    margin:0 0 4px 0 !important;
-  }
-
-  .prenom-box p{
-    font-size:15px !important;
-    line-height:1.25 !important;
-    margin:0 auto 8px auto !important;
-  }
-
-  .prenom-input{
-    min-height:48px !important;
-    font-size:18px !important;
-    padding:10px 18px !important;
-    margin-bottom:8px !important;
-    border-radius:18px !important;
-  }
-
-  .prenom-btn{
-    min-height:48px !important;
-    font-size:17px !important;
-    padding:10px 18px !important;
-    border-radius:18px !important;
-  }
-}
-</style>
-
-
-
-
-
-
 <!-- V25.6.16 : ancien CSS supprimé patch-v23421-teacher-questions-safe -->
 
 <style id="patch-v24-0-42-bilans-progres-css">
@@ -4628,29 +4516,352 @@ body.v21-final .v21-treasure-card{
 </style>
 
 
-<style id="patch-v25-6-13-accueil-double-mode-early">
-/* V25.6.16 : le double choix Élève / Invité est présent dès le premier affichage, avant les scripts. */
-#prenomOverlay .prenom-box.v2567-start{max-width:780px;width:min(94vw,780px);}
-.v2567-start .owl{font-size:58px!important;margin-bottom:4px!important;}
-.v2567-start h2{font-size:30px!important;margin-bottom:4px!important;}
-.v2567-intro{font-size:15px;color:var(--text-muted);font-weight:800;margin:0 0 14px 0;}
-.v2567-choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px;text-align:left;}
-.v2567-card{background:#fff;border:3px solid #EAE8FF;border-radius:22px;padding:16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px;}
-.v2567-card.student{border-color:var(--primary-light);}
-.v2567-card.guest{border-color:#FFE7A3;background:linear-gradient(135deg,#fff 0%,#FFF9E6 100%);}
-.v2567-card h3{font-size:22px;color:var(--primary);margin:0;font-family:"Trebuchet MS",system-ui,sans-serif;}
-.v2567-card.guest h3{color:#7A5C00;}
-.v2567-card p{font-size:13px;line-height:1.35;font-weight:800;color:var(--text-muted);margin:0;}
-.v2567-input{width:100%;padding:13px 15px;border-radius:16px;border:3px solid #EAE8FF;font-family:inherit;font-size:18px;font-weight:900;text-align:center;outline:none;background:#fff;color:var(--text);}
-.v2567-btn{border:none;border-radius:16px;padding:13px 14px;font-family:inherit;font-weight:1000;font-size:15px;cursor:pointer;min-height:48px;box-shadow:0 6px 16px rgba(108,99,255,.22);}
-.v2567-btn.student{background:var(--primary);color:#fff;}
-.v2567-btn.guest{background:var(--accent);color:#7A5C00;}
-.v2567-btn:disabled{opacity:.68;cursor:wait;}
-.v2567-error{min-height:24px;color:var(--secondary);font-size:14px;font-weight:900;text-align:center;margin-top:10px;}
-.v2567-hidden-legacy{position:absolute!important;left:-9999px!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none!important;}
-@media(max-width:700px){.v2567-choice-grid{grid-template-columns:1fr}.v2567-card{padding:12px}.v2567-start h2{font-size:24px!important}.v2567-start .owl{font-size:42px!important}}
-</style>
+<style id="patch-v25-6-11-adaptation-ecrans">
+/* V25.6.17 — Maître Hibou adapte l'interface selon l'écran. */
+:root{
+  --hibou-screen-mode: pc;
+}
+html.hibou-device-tablette{ --hibou-screen-mode: tablette; }
+html.hibou-device-smartphone{ --hibou-screen-mode: smartphone; }
+html.hibou-device-pc{ --hibou-screen-mode: pc; }
 
+/* Base : les zones tactiles restent confortables sur tablette/smartphone. */
+html.hibou-device-tablette button,
+html.hibou-device-tablette .subject-btn,
+html.hibou-device-tablette .quick-btn,
+html.hibou-device-tablette input,
+html.hibou-device-tablette textarea,
+html.hibou-device-smartphone button,
+html.hibou-device-smartphone .subject-btn,
+html.hibou-device-smartphone .quick-btn,
+html.hibou-device-smartphone input,
+html.hibou-device-smartphone textarea{
+  touch-action: manipulation;
+}
+
+/* PC : on utilise davantage la largeur, sans grossir inutilement. */
+html.hibou-device-pc .chat-container,
+html.hibou-device-pc .quick-questions,
+html.hibou-device-pc .input-wrapper,
+html.hibou-device-pc .welcome-quiz-container,
+html.hibou-device-pc .master-challenge-card,
+html.hibou-device-pc .progress-panel,
+html.hibou-device-pc .progress-mini-wrap{
+  max-width: 980px !important;
+}
+html.hibou-device-pc .subject-btn{
+  font-size: 14px;
+  padding: 9px 16px;
+}
+html.hibou-device-pc .modal-box{
+  max-width: 620px;
+}
+
+/* Tablette : priorité à la lisibilité tactile et aux boutons visibles. */
+html.hibou-device-tablette body{
+  min-height: 100dvh;
+}
+html.hibou-device-tablette header{
+  padding: 9px 12px;
+}
+html.hibou-device-tablette .logo-text{
+  font-size: clamp(16px, 2.2vw, 20px);
+}
+html.hibou-device-tablette .subjects-bar{
+  padding: 8px 12px;
+  gap: 7px;
+}
+html.hibou-device-tablette .subject-btn{
+  min-height: 42px;
+  font-size: 13px;
+  padding: 8px 12px;
+}
+html.hibou-device-tablette .quick-questions{
+  width: calc(100% - 18px) !important;
+  max-width: 940px !important;
+  padding: 10px 12px !important;
+}
+html.hibou-device-tablette .quick-btn{
+  min-height: 38px;
+  font-size: 13px;
+}
+html.hibou-device-tablette .chat-container{
+  width: 100% !important;
+  max-width: 940px !important;
+  min-height: 300px;
+}
+html.hibou-device-tablette .modal-box{
+  max-width: min(92vw, 820px) !important;
+}
+html.hibou-device-tablette .btn-round,
+html.hibou-device-tablette .action-btn{
+  min-width: 38px;
+  min-height: 38px;
+}
+
+/* Smartphone : une colonne, moins de texte, pas de tableau large. */
+html.hibou-device-smartphone header{
+  padding: 8px 10px;
+}
+html.hibou-device-smartphone .logo-icon{ font-size: 22px !important; }
+html.hibou-device-smartphone .logo-text{ font-size: 16px !important; }
+html.hibou-device-smartphone .header-actions{
+  gap: 6px;
+  transform: scale(.94);
+  transform-origin: right center;
+}
+html.hibou-device-smartphone .subjects-bar{
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  overflow: visible !important;
+  white-space: normal !important;
+  padding: 8px 10px;
+}
+html.hibou-device-smartphone .subject-btn{
+  justify-content: center;
+  min-height: 42px;
+  font-size: 12px;
+  padding: 8px 8px;
+}
+html.hibou-device-smartphone .quick-questions{
+  position: static !important;
+  width: calc(100% - 16px) !important;
+  margin-top: 6px !important;
+  padding: 8px !important;
+}
+html.hibou-device-smartphone .quick-btn{
+  flex: 1 1 100%;
+  min-height: 40px;
+  text-align: center;
+}
+html.hibou-device-smartphone .chat-container{
+  min-height: 42vh !important;
+  max-height: none !important;
+  padding: 8px 10px !important;
+}
+html.hibou-device-smartphone .message{ max-width: 96% !important; }
+html.hibou-device-smartphone .bubble{ font-size: 14px !important; }
+html.hibou-device-smartphone .input-area{ padding: 8px 10px !important; }
+html.hibou-device-smartphone .modal-overlay{ padding: 8px !important; }
+html.hibou-device-smartphone .modal-box{
+  max-width: 96vw !important;
+  max-height: 92dvh !important;
+  overflow: auto !important;
+  padding: 18px !important;
+}
+
+/* Accueil : adaptation par appareil. */
+html.hibou-device-pc .prenom-box.v2567-start{
+  width: min(960px, 92vw) !important;
+  max-width: none !important;
+}
+html.hibou-device-tablette .prenom-box.v2567-start{
+  width: min(1040px, 96vw) !important;
+  max-width: none !important;
+}
+html.hibou-device-tablette .v2567-choice-grid{
+  grid-template-columns: 1fr 1fr !important;
+}
+html.hibou-device-tablette .v2567-input{
+  min-height: 52px;
+  font-size: 18px;
+}
+html.hibou-device-tablette .v2567-btn{
+  min-height: 50px;
+}
+html.hibou-device-smartphone .prenom-overlay{
+  align-items: flex-start !important;
+  padding: 8px !important;
+  overflow-y: auto !important;
+}
+html.hibou-device-smartphone .prenom-box.v2567-start{
+  width: 96vw !important;
+  padding: 12px !important;
+  border-radius: 22px !important;
+}
+html.hibou-device-smartphone .prenom-box.v2567-start .owl{
+  font-size: 42px !important;
+  margin-bottom: 2px !important;
+}
+html.hibou-device-smartphone .prenom-box.v2567-start h2{
+  font-size: 24px !important;
+  line-height: 1.05 !important;
+}
+html.hibou-device-smartphone .v2567-choice-grid{
+  grid-template-columns: 1fr !important;
+  gap: 10px !important;
+}
+html.hibou-device-smartphone .v2567-card{
+  padding: 12px !important;
+}
+html.hibou-device-smartphone .v2567-card h3{
+  font-size: 18px !important;
+}
+html.hibou-device-smartphone .v2567-card p{
+  font-size: 13px !important;
+  line-height: 1.25 !important;
+}
+html.hibou-device-smartphone .v2567-input{
+  min-height: 46px !important;
+  font-size: 16px !important;
+}
+html.hibou-device-smartphone .v2567-btn{
+  min-height: 46px !important;
+  font-size: 14px !important;
+}
+
+/* Le correctif clavier V25.6.10 reste prioritaire, quel que soit l'appareil. */
+html.hibou-keyboard-open .prenom-box.v2567-start,
+body.hibou-keyboard-open .prenom-box.v2567-start{
+  transform: translateY(0) !important;
+}
+html.hibou-keyboard-open .v2567-choice-grid,
+body.hibou-keyboard-open .v2567-choice-grid{
+  gap: 8px !important;
+}
+
+/* Petit marqueur de diagnostic visuel optionnel, caché par défaut. */
+.hibou-device-debug{ display:none !important; }
+</style>
+<style id="patch-v25-6-17-connexion-stable-critical">
+/* V25.6.17 — Page de connexion stable sur tablette.
+   Une seule maquette est appliquée dès le premier affichage. */
+html,body{min-height:100%;}
+body.prenom-mode{overflow:hidden!important;}
+body.prenom-mode header,
+body.prenom-mode .subjects-bar,
+body.prenom-mode #quickQuestions,
+body.prenom-mode .quick-questions,
+body.prenom-mode .mockup-main-shell,
+body.prenom-mode .mockup-left-panel,
+body.prenom-mode .mockup-right-panel,
+body.prenom-mode .chat-container,
+body.prenom-mode .input-area,
+body.prenom-mode .logout-area,
+body.prenom-mode .hibou-profile-panel,
+body.prenom-mode .hibou-advice-card,
+body.prenom-mode .hibou-success-card,
+body.prenom-mode .welcome-quiz-container,
+body.prenom-mode .master-challenge-card,
+body.prenom-mode .progress-mini-wrap,
+body.prenom-mode .progress-panel,
+body.prenom-mode .diagnostic-panel,
+body.prenom-mode .class-motivation-panel{display:none!important;}
+
+#prenomOverlay.prenom-overlay{
+  position:fixed!important;
+  inset:0!important;
+  width:100%!important;
+  height:100dvh!important;
+  min-height:100svh!important;
+  z-index:99999!important;
+  display:flex!important;
+  align-items:flex-start!important;
+  justify-content:center!important;
+  overflow-y:auto!important;
+  overscroll-behavior:contain!important;
+  -webkit-overflow-scrolling:touch!important;
+  padding:clamp(12px,4vh,34px) 18px calc(22px + env(safe-area-inset-bottom))!important;
+  background:
+    radial-gradient(circle at 18% 16%,rgba(255,217,61,.28) 0 125px,transparent 126px),
+    radial-gradient(circle at 84% 18%,rgba(108,99,255,.18) 0 145px,transparent 146px),
+    linear-gradient(135deg,#F7F6FF 0%,#FFFFFF 100%)!important;
+}
+#prenomOverlay.hidden{display:none!important;}
+#prenomOverlay .prenom-box.v2567-start{
+  width:min(980px,94vw)!important;
+  max-width:none!important;
+  margin:0 auto!important;
+  padding:20px 26px 18px!important;
+  border:3px solid var(--primary-light)!important;
+  border-radius:28px!important;
+  background:rgba(255,255,255,.97)!important;
+  box-shadow:0 18px 50px rgba(108,99,255,.16)!important;
+  text-align:center!important;
+  transform:none!important;
+  transition:none!important;
+  contain:layout paint;
+}
+#prenomOverlay .v2567-start .owl{font-size:54px!important;line-height:1!important;margin:0 0 3px!important;animation:none!important;}
+#prenomOverlay .v2567-start h2{font-size:30px!important;line-height:1.05!important;margin:0 0 4px!important;color:#211B70!important;}
+#prenomOverlay .v2567-intro{font-size:15px!important;line-height:1.3!important;color:var(--text-muted)!important;font-weight:800!important;margin:0 0 12px!important;}
+#prenomOverlay .v2567-choice-grid{display:grid!important;grid-template-columns:1fr 1fr!important;gap:14px!important;margin:10px 0 0!important;text-align:left!important;}
+#prenomOverlay .v2567-card{background:#fff!important;border:3px solid #EAE8FF!important;border-radius:22px!important;padding:15px!important;box-shadow:var(--shadow)!important;display:flex!important;flex-direction:column!important;gap:9px!important;min-width:0!important;}
+#prenomOverlay .v2567-card.guest{border-color:#FFE7A3!important;background:linear-gradient(135deg,#fff 0%,#FFF9E6 100%)!important;}
+#prenomOverlay .v2567-card h3{font-size:21px!important;line-height:1.1!important;color:var(--primary)!important;margin:0!important;font-family:"Trebuchet MS",system-ui,sans-serif!important;}
+#prenomOverlay .v2567-card.guest h3{color:#7A5C00!important;}
+#prenomOverlay .v2567-card p{font-size:13px!important;line-height:1.3!important;font-weight:800!important;color:var(--text-muted)!important;margin:0!important;min-height:34px!important;}
+#prenomOverlay .v2567-input{width:100%!important;min-height:50px!important;padding:12px 15px!important;border-radius:16px!important;border:3px solid #EAE8FF!important;font-family:inherit!important;font-size:18px!important;font-weight:900!important;text-align:center!important;outline:none!important;background:#fff!important;color:var(--text)!important;margin:0!important;}
+#prenomOverlay .v2567-input:focus{border-color:var(--primary)!important;box-shadow:0 0 0 4px rgba(108,99,255,.12)!important;}
+#prenomOverlay .v2567-btn{width:100%!important;min-height:48px!important;border:none!important;border-radius:16px!important;padding:12px 14px!important;font-family:inherit!important;font-weight:1000!important;font-size:15px!important;cursor:pointer!important;box-shadow:0 6px 16px rgba(108,99,255,.22)!important;}
+#prenomOverlay .v2567-btn.student{background:var(--primary)!important;color:#fff!important;}
+#prenomOverlay .v2567-btn.guest{background:var(--accent)!important;color:#7A5C00!important;}
+#prenomOverlay .v2567-btn:disabled{opacity:.68!important;cursor:wait!important;}
+#prenomOverlay .v2567-error{min-height:22px!important;color:var(--secondary)!important;font-size:14px!important;font-weight:900!important;text-align:center!important;margin-top:8px!important;line-height:1.3!important;}
+#prenomOverlay .v2567-note{background:#F7F6FF!important;border:2px solid #ECEBF3!important;border-radius:14px!important;padding:8px 10px!important;font-size:12px!important;font-weight:800!important;color:var(--text-muted)!important;line-height:1.3!important;margin-top:6px!important;text-align:center!important;}
+#prenomInput.v2567-hidden-legacy{position:fixed!important;left:-10000px!important;top:-10000px!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none!important;}
+
+/* Appareil déterminé une fois avec les dimensions physiques : le clavier ne change plus tablette en smartphone. */
+html.hibou-device-tablette #prenomOverlay .prenom-box.v2567-start{width:min(1040px,96vw)!important;}
+html.hibou-device-smartphone #prenomOverlay{padding:8px!important;}
+html.hibou-device-smartphone #prenomOverlay .prenom-box.v2567-start{width:96vw!important;padding:12px!important;border-radius:22px!important;}
+html.hibou-device-smartphone #prenomOverlay .v2567-start .owl{font-size:42px!important;}
+html.hibou-device-smartphone #prenomOverlay .v2567-start h2{font-size:24px!important;}
+html.hibou-device-smartphone #prenomOverlay .v2567-choice-grid{grid-template-columns:1fr!important;gap:10px!important;}
+html.hibou-device-smartphone #prenomOverlay .v2567-card{padding:12px!important;}
+html.hibou-device-smartphone #prenomOverlay .v2567-card p{min-height:0!important;}
+
+/* Un seul passage en mode compact, uniquement quand le clavier est réellement ouvert. */
+html.hibou-keyboard-open #prenomOverlay,
+body.hibou-keyboard-open #prenomOverlay{padding:6px 12px calc(14px + env(safe-area-inset-bottom))!important;}
+html.hibou-keyboard-open #prenomOverlay .prenom-box.v2567-start,
+body.hibou-keyboard-open #prenomOverlay .prenom-box.v2567-start{width:min(1040px,96vw)!important;padding:8px 18px 10px!important;border-radius:22px!important;}
+html.hibou-keyboard-open #prenomOverlay .v2567-start .owl,
+body.hibou-keyboard-open #prenomOverlay .v2567-start .owl{display:none!important;}
+html.hibou-keyboard-open #prenomOverlay .v2567-start h2,
+body.hibou-keyboard-open #prenomOverlay .v2567-start h2{font-size:24px!important;margin:0 0 2px!important;}
+html.hibou-keyboard-open #prenomOverlay .v2567-intro,
+html.hibou-keyboard-open #prenomOverlay .v2567-card p,
+html.hibou-keyboard-open #prenomOverlay .v2567-note,
+body.hibou-keyboard-open #prenomOverlay .v2567-intro,
+body.hibou-keyboard-open #prenomOverlay .v2567-card p,
+body.hibou-keyboard-open #prenomOverlay .v2567-note{display:none!important;}
+html.hibou-keyboard-open #prenomOverlay .v2567-choice-grid,
+body.hibou-keyboard-open #prenomOverlay .v2567-choice-grid{grid-template-columns:1fr 1fr!important;gap:8px!important;margin-top:6px!important;}
+html.hibou-keyboard-open #prenomOverlay .v2567-card,
+body.hibou-keyboard-open #prenomOverlay .v2567-card{padding:8px 10px!important;gap:6px!important;}
+html.hibou-keyboard-open #prenomOverlay .v2567-card h3,
+body.hibou-keyboard-open #prenomOverlay .v2567-card h3{font-size:17px!important;}
+html.hibou-keyboard-open #prenomOverlay .v2567-input,
+body.hibou-keyboard-open #prenomOverlay .v2567-input{min-height:44px!important;height:44px!important;font-size:18px!important;padding:8px 12px!important;}
+html.hibou-keyboard-open #prenomOverlay .v2567-btn,
+body.hibou-keyboard-open #prenomOverlay .v2567-btn{min-height:42px!important;height:42px!important;padding:8px 10px!important;font-size:14px!important;}
+html.hibou-keyboard-open #prenomOverlay .v2567-error,
+body.hibou-keyboard-open #prenomOverlay .v2567-error{min-height:18px!important;margin-top:4px!important;font-size:13px!important;}
+
+@media(max-width:720px){
+  #prenomOverlay .v2567-choice-grid{grid-template-columns:1fr!important;}
+  #prenomOverlay .v2567-card p{min-height:0!important;}
+  html.hibou-keyboard-open #prenomOverlay .v2567-choice-grid,
+  body.hibou-keyboard-open #prenomOverlay .v2567-choice-grid{grid-template-columns:1fr!important;}
+}
+</style>
+<script id="patch-v25-6-17-device-early">
+(function(){
+  'use strict';
+  var root=document.documentElement;
+  var ua=String(navigator.userAgent||'').toLowerCase();
+  var sw=Math.min((screen&&screen.width)||0,(screen&&screen.height)||0);
+  var sl=Math.max((screen&&screen.width)||0,(screen&&screen.height)||0);
+  var touch=(navigator.maxTouchPoints||0)>0||('ontouchstart' in window);
+  var mobileUA=/iphone|ipod|android.*mobile|windows phone/.test(ua);
+  var tabletUA=/ipad|tablet|android(?!.*mobile)|kindle|silk/.test(ua);
+  var mode=mobileUA||sl<760||sw<420?'smartphone':(tabletUA||(touch&&sl>=760&&sl<=1600))?'tablette':'pc';
+  root.classList.add('hibou-device-'+mode);
+  root.setAttribute('data-hibou-device',mode);
+  window.HIBOU_DEVICE=mode;
+})();
+</script>
 </head>
 <body class="prenom-mode">
 
@@ -4739,26 +4950,27 @@ body.v21-final .v21-treasure-card{
 
 
 <div class="prenom-overlay" id="prenomOverlay">
-  <div class="prenom-box v2567-start">
+  <div class="prenom-box v2567-start" data-v25617-ready="1">
     <div class="owl">🦉</div>
     <h2>Bienvenue sur Maître Hibou</h2>
     <p class="v2567-intro">Choisis ton mode de connexion.</p>
-    <input id="prenomInput" class="v2567-hidden-legacy" autocomplete="off" aria-hidden="true">
+    <input id="prenomInput" class="v2567-hidden-legacy" autocomplete="off" aria-hidden="true" tabindex="-1">
     <div class="v2567-choice-grid">
-      <div class="v2567-card student">
+      <section class="v2567-card student">
         <h3>👤 Mode élève</h3>
-        <p>Réservé aux élèves de la classe. Le prénom est vérifié directement dans le Google Sheet, sans charger toute la liste.</p>
-        <input id="v2567StudentName" class="v2567-input" placeholder="Ton prénom" autocomplete="off">
+        <p>Écris ton prénom exactement comme dans la liste de la classe. Les majuscules ne comptent pas.</p>
+        <input id="v2567StudentName" class="v2567-input" placeholder="Ton prénom" autocomplete="off" autocapitalize="words" spellcheck="false">
         <button id="v2567StudentBtn" class="v2567-btn student" type="button">Entrer en mode élève</button>
-      </div>
-      <div class="v2567-card guest">
+      </section>
+      <section class="v2567-card guest">
         <h3>🧪 Mode invité</h3>
-        <p>Pour tester librement Maître Hibou sans utiliser le profil d’un élève.</p>
-        <input id="v2567GuestName" class="v2567-input" placeholder="Prénom invité" autocomplete="off">
-        <button id="v2567GuestBtn" class="v2567-btn guest" type="button">Entrer en mode invité</button>
-      </div>
+        <p>Pour tester librement Maître Hibou sans être dans la liste élèves.</p>
+        <input id="v2567GuestName" class="v2567-input" placeholder="Prénom invité (facultatif)" autocomplete="off">
+        <button id="v2567GuestBtn" class="v2567-btn guest" type="button">Tester en invité</button>
+      </section>
     </div>
-    <div class="v2567-error" id="prenomError"></div>
+    <div id="v2567Error" class="v2567-error" role="alert" aria-live="polite"></div>
+    <div class="v2567-note"><b>Connexion stricte :</b> le prénom doit être écrit correctement.</div>
   </div>
 </div>
 
@@ -4994,7 +5206,7 @@ window.addEventListener('load', () => {
     pInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') savePrenom();
     });
-    pInput.focus();
+    // V25.6.17 : aucun focus automatique sur le champ caché.
   }
 });
 
@@ -22055,7 +22267,7 @@ body.v21-final .v2173-activity-btn.soon{
 </style>
 <script id="patch-v2347-title-js">
 (function(){
-  try{ document.title = '🦉 Maître Hibou V25.6.16'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.17'; }catch(e){}
 })();
 </script>
 
@@ -22433,7 +22645,7 @@ body.v21-final .v2173-activity-btn.soon{
 (function(){
   if(window.__maitreHibouFrancaisPopupV2348) return;
   window.__maitreHibouFrancaisPopupV2348 = true;
-  try{ document.title = '🦉 Maître Hibou V25.6.16'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.17'; }catch(e){}
 
   const TRAINING_COUNT = 10;
   let frState = {activity:null, questions:[], index:0, score:0, answered:false};
@@ -22676,7 +22888,7 @@ body.v21-final .v2173-activity-btn.soon{
 (function(){
   if(window.__maitreHibouFrancaisSheetGrammaireV23410) return;
   window.__maitreHibouFrancaisSheetGrammaireV23410 = true;
-  try{ document.title = '🦉 Maître Hibou V25.6.16'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.17'; }catch(e){}
 
   const BASE_URL = 'https://script.google.com/macros/s/AKfycbyzfRPrUV7xKgeXUM0LjbOsOne5DieRjDYxmuVbBBUIGL-F9ahMmJZSfpUDYmBaZIOpvQ/exec';
   const SHEET_NAME = 'grammaire';
@@ -23245,7 +23457,7 @@ body.v21-final .v2173-activity-btn.soon{
 (function(){
   if(window.__maitreHibouFrancaisCeinturesV23411) return;
   window.__maitreHibouFrancaisCeinturesV23411 = true;
-  try{ document.title = '🦉 Maître Hibou V25.6.16'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.17'; }catch(e){}
 
   const BASE_URL = 'https://script.google.com/macros/s/AKfycbyzfRPrUV7xKgeXUM0LjbOsOne5DieRjDYxmuVbBBUIGL-F9ahMmJZSfpUDYmBaZIOpvQ/exec';
   const SHEET_NAME = 'grammaire';
@@ -23662,7 +23874,7 @@ body.v21-final .v2173-activity-btn.soon{
 (function(){
   if(window.__maitreHibouFrancaisSectionsV23412) return;
   window.__maitreHibouFrancaisSectionsV23412 = true;
-  try{ document.title = '🦉 Maître Hibou V25.6.16'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.17'; }catch(e){}
 
   const GRAMMAR_BELTS = [
     {id:'blanche', title:'Phrase affirmative / négative', label:'Ceinture blanche', desc:'Reconnaître et transformer les phrases.', color:'radial-gradient(circle at 35% 25%,#FFFFFF,#EDE7FF 68%,#C8B8F2)'},
@@ -23741,7 +23953,7 @@ body.v21-final .v2173-activity-btn.soon{
 }
 </style>
 <script id="patch-v23413-version-title">
-(function(){ try{ document.title = '🦉 Maître Hibou V25.6.16'; }catch(e){} })();
+(function(){ try{ document.title = '🦉 Maître Hibou V25.6.17'; }catch(e){} })();
 </script>
 
 
@@ -24097,7 +24309,7 @@ body.v21-final .v21-deco-globe::after{
   window.__v23415GlobeDedicatedWindow = true;
 
   function prepareDedicatedLinks(){
-    try{ document.title = '🦉 Maître Hibou V25.6.16'; }catch(e){}
+    try{ document.title = '🦉 Maître Hibou V25.6.17'; }catch(e){}
 
     const overlay = document.getElementById('v23ShortcutsOverlay');
     if(!overlay) return;
@@ -24211,7 +24423,7 @@ body.v23-shortcuts-open{
   window.__v23416GlobePopupFixed = true;
 
   function forcePopupLayout(){
-    try{ document.title = '🦉 Maître Hibou V25.6.16'; }catch(e){}
+    try{ document.title = '🦉 Maître Hibou V25.6.17'; }catch(e){}
     var overlay = document.getElementById('v23ShortcutsOverlay');
     if(!overlay) return null;
 
@@ -24606,7 +24818,7 @@ body.v21-final .v21-profile-card .profile-life-v23417-open-hint{
 (function(){
   if(window.__maitreHibouProfileLifeV23417) return;
   window.__maitreHibouProfileLifeV23417 = true;
-  try{ document.title = '🦉 Maître Hibou V25.6.16'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.17'; }catch(e){}
 
   var STUDENTS_URL = 'https://script.google.com/macros/s/AKfycbxz1vYS24sv-c3XVja12geWEXIQl6bQyBoQKBx5kg_fwQaj80_Oc7Y34yeBSRN4lF1f/exec';
   var QUESTIONS_URL = 'https://script.google.com/macros/s/AKfycbwGcErZ0he06Dg_bpPDaHtPHa6fAcDQ-31tB7Rlr9w2JZcNaQnP9YIABJYf-CKpFfpF/exec';
@@ -29368,103 +29580,6 @@ body.v21-final .birthday-top-card-v2414{
 </script>
 
 <!-- PATCH V25.1 - Accueil prénom adapté au clavier tablette -->
-<style id="patch-v24-0-37-prenom-keyboard-css">
-body.prenom-keyboard-open #prenomOverlay:not(.hidden){
-  align-items:flex-start !important;
-  justify-content:center !important;
-  height:var(--prenom-visual-height, 100dvh) !important;
-  min-height:0 !important;
-  padding:6px 24px 10px !important;
-  overflow:auto !important;
-  -webkit-overflow-scrolling:touch !important;
-}
-body.prenom-keyboard-open #prenomOverlay:not(.hidden) .prenom-box{
-  width:min(960px,92vw) !important;
-  max-width:none !important;
-  padding:8px 48px 10px !important;
-  border-radius:24px !important;
-  transform:none !important;
-}
-body.prenom-keyboard-open #prenomOverlay:not(.hidden) .prenom-box .owl{
-  display:none !important;
-}
-body.prenom-keyboard-open #prenomOverlay:not(.hidden) .prenom-box h2{
-  font-size:30px !important;
-  line-height:1 !important;
-  margin:0 0 4px !important;
-}
-body.prenom-keyboard-open #prenomOverlay:not(.hidden) .prenom-box p{
-  font-size:14px !important;
-  line-height:1.2 !important;
-  margin:0 auto 8px !important;
-}
-body.prenom-keyboard-open #prenomOverlay:not(.hidden) #prenomInput{
-  min-height:46px !important;
-  height:46px !important;
-  font-size:18px !important;
-  margin-bottom:8px !important;
-  padding:8px 18px !important;
-}
-body.prenom-keyboard-open #prenomOverlay:not(.hidden) .prenom-btn{
-  display:block !important;
-  min-height:48px !important;
-  height:48px !important;
-  font-size:18px !important;
-  padding:8px 18px !important;
-}
-</style>
-<script id="patch-v24-0-37-prenom-keyboard-js">
-(function(){
-  if(window.__hibouPrenomKeyboardV2437) return;
-  window.__hibouPrenomKeyboardV2437 = true;
-
-  function visible(el){
-    return el && !el.classList.contains("hidden");
-  }
-  function updatePrenomKeyboardMode(){
-    var overlay = document.getElementById("prenomOverlay");
-    var input = document.getElementById("prenomInput");
-    var active = visible(overlay) && input && document.activeElement === input;
-    var vv = window.visualViewport;
-    var visualHeight = vv ? Math.round(vv.height) : window.innerHeight;
-    var keyboardLooksOpen = active && vv && (window.innerHeight - visualHeight > 110 || visualHeight < window.innerHeight * 0.78);
-
-    document.body.classList.toggle("prenom-keyboard-open", !!keyboardLooksOpen);
-    if(overlay){
-      if(keyboardLooksOpen){
-        overlay.style.setProperty("--prenom-visual-height", Math.max(320, visualHeight) + "px");
-        setTimeout(function(){
-          try{
-            var btn = overlay.querySelector(".prenom-btn");
-            if(btn) btn.scrollIntoView({block:"nearest", inline:"nearest"});
-          }catch(e){}
-        }, 80);
-      }else{
-        overlay.style.removeProperty("--prenom-visual-height");
-      }
-    }
-  }
-  function installPrenomKeyboardMode(){
-    var input = document.getElementById("prenomInput");
-    if(!input) return;
-    ["focus","input","blur"].forEach(function(evt){
-      input.addEventListener(evt, function(){
-        [0,80,220,420].forEach(function(delay){ setTimeout(updatePrenomKeyboardMode, delay); });
-      }, true);
-    });
-    if(window.visualViewport){
-      window.visualViewport.addEventListener("resize", updatePrenomKeyboardMode);
-      window.visualViewport.addEventListener("scroll", updatePrenomKeyboardMode);
-    }
-    window.addEventListener("resize", updatePrenomKeyboardMode);
-    updatePrenomKeyboardMode();
-  }
-  if(document.readyState === "loading") document.addEventListener("DOMContentLoaded", installPrenomKeyboardMode);
-  else installPrenomKeyboardMode();
-  window.addEventListener("load", installPrenomKeyboardMode);
-})();
-</script>
-
 <!-- PATCH V25.1 - Bandeau supérieur épuré : bonjour + anniversaires -->
 <style id="patch-v24-0-21-bandeau-epure-css">
 body.v21-final header.mockup-header,
@@ -32300,7 +32415,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 (function(){
   if(window.__maitreHibouV25215PreloadExercises) return;
   window.__maitreHibouV25215PreloadExercises = true;
-  try{ document.title = '🦉 Maître Hibou V25.6.16'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.17'; }catch(e){}
   function warm(){
     try{
       if(typeof window.preloadFrenchGrammarRowsV23411 === 'function'){
@@ -32323,7 +32438,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 (function(){
   if(window.__maitreHibouV25216PreloadMaths) return;
   window.__maitreHibouV25216PreloadMaths = true;
-  try{ document.title = '🦉 Maître Hibou V25.6.16'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.17'; }catch(e){}
   function warm(){
     try{
       if(typeof window.preloadMathsRowsV2343 === 'function'){
@@ -32349,7 +32464,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 (function(){
   if(window.__maitreHibouV25220DerniereReussiteDirecte) return;
   window.__maitreHibouV25220DerniereReussiteDirecte = true;
-  try{ document.title = '🦉 Maître Hibou V25.6.16'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.17'; }catch(e){}
   function byId(id){ return document.getElementById(id); }
   function clean(v){ return String(v == null ? '' : v).replace(/\s+/g,' ').trim(); }
   function esc(v){ return String(v == null ? '' : v).replace(/[&<>'"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c];}); }
@@ -32610,7 +32725,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 (function(){
   if(window.__maitreHibouV25222FrancaisProgressionStable) return;
   window.__maitreHibouV25222FrancaisProgressionStable = true;
-  try{ document.title = '🦉 Maître Hibou V25.6.16'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.17'; }catch(e){}
 
   var BASE_URL = 'https://script.google.com/macros/s/AKfycbyzfRPrUV7xKgeXUM0LjbOsOne5DieRjDYxmuVbBBUIGL-F9ahMmJZSfpUDYmBaZIOpvQ/exec';
   var SHEET_NAME = 'grammaire';
@@ -33140,7 +33255,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 (function(){
   if(window.__maitreHibouV25225FrancaisPrechargeRapide) return;
   window.__maitreHibouV25225FrancaisPrechargeRapide = true;
-  try{ document.title = '🦉 Maître Hibou V25.6.16'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.17'; }catch(e){}
 
   var BASE_URL = 'https://script.google.com/macros/s/AKfycbyzfRPrUV7xKgeXUM0LjbOsOne5DieRjDYxmuVbBBUIGL-F9ahMmJZSfpUDYmBaZIOpvQ/exec';
   var SHEET_NAME = 'grammaire';
@@ -33466,7 +33581,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 (function(){
   if(window.__maitreHibouV25226FrancaisResultatBandeau) return;
   window.__maitreHibouV25226FrancaisResultatBandeau = true;
-  try{ document.title = '🦉 Maître Hibou V25.6.16'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.17'; }catch(e){}
 
   function byId(id){ return document.getElementById(id); }
   function clean(v){ return String(v == null ? '' : v).replace(/\s+/g,' ').trim(); }
@@ -34205,8 +34320,8 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 (function(){
   if(window.__hibouQuestionGithubPageV2548) return;
   window.__hibouQuestionGithubPageV2548 = true;
-  try{ document.title = '🦉 Maître Hibou V25.6.16'; }catch(e){}
-  try{ window.MAITRE_HIBOU_VERSION = 'V25.6.16'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.17'; }catch(e){}
+  try{ window.MAITRE_HIBOU_VERSION = 'V25.6.17'; }catch(e){}
 
   // V25.6.16 : la boîte à questions n'est plus affichée par Apps Script.
   // Elle devient une page HTML légère séparée, hébergée sur GitHub.
@@ -34318,13 +34433,13 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 <!-- PATCH V25.6.16 - Espace enseignant : tableau de bord Boîte à questions -->
 <!-- V25.6.16 : ancien CSS supprimé patch-v2550-teacher-questions-css -->
 <!-- V25.6.16 : ancien JS supprimé patch-v2550-teacher-questions-js -->
-<!-- FIN PATCH V25.6.16 -->
+<!-- FIN PATCH V25.6.17 -->
 
 
 <!-- PATCH V25.6.16 - Espace enseignant : chargement robuste du Journal des Questions -->
 <!-- V25.6.16 : ancien CSS supprimé patch-v2552-teacher-questions-loader-css -->
 <!-- V25.6.16 : ancien JS supprimé patch-v2552-teacher-questions-loader-js -->
-<!-- FIN PATCH V25.6.16 -->
+<!-- FIN PATCH V25.6.17 -->
 
 
 
@@ -34350,8 +34465,8 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   'use strict';
   if(window.__hibouTeacherSeparateV25612) return;
   window.__hibouTeacherSeparateV25612 = true;
-  try{ document.title = '🦉 Maître Hibou V25.6.16'; }catch(e){}
-  try{ window.MAITRE_HIBOU_VERSION = 'V25.6.16'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.6.17'; }catch(e){}
+  try{ window.MAITRE_HIBOU_VERSION = 'V25.6.17'; }catch(e){}
 
   var LONG_PRESS_MS = 3000;
   var TEACHER_PAGE = 'enseignant.html';
@@ -34427,43 +34542,20 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   setTimeout(install, 1200);
 })();
 </script>
-<!-- FIN PATCH V25.6.16 -->
+<!-- FIN PATCH V25.6.17 -->
 
 
 
 
-<!-- PATCH V25.6.16 - Connexion élève stricte et robuste sur PC et tablette -->
-<style id="patch-v25-6-16-accueil-verif-serveur-css">
-  #prenomOverlay .prenom-box.v2567-start{max-width:780px;width:min(94vw,780px);}
-  .v2567-start .owl{font-size:58px!important;margin-bottom:4px!important;}
-  .v2567-start h2{font-size:30px!important;margin-bottom:4px!important;}
-  .v2567-intro{font-size:15px;color:var(--text-muted);font-weight:800;margin:0 0 14px 0;}
-  .v2567-choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px;text-align:left;}
-  .v2567-card{background:#fff;border:3px solid #EAE8FF;border-radius:22px;padding:16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px;}
-  .v2567-card.student{border-color:var(--primary-light);}
-  .v2567-card.guest{border-color:#FFE7A3;background:linear-gradient(135deg,#fff 0%,#FFF9E6 100%);}
-  .v2567-card h3{font-size:22px;color:var(--primary);margin:0;font-family:"Trebuchet MS",system-ui,sans-serif;}
-  .v2567-card.guest h3{color:#7A5C00;}
-  .v2567-card p{font-size:13px;line-height:1.35;font-weight:800;color:var(--text-muted);margin:0;}
-  .v2567-input{width:100%;padding:13px 15px;border-radius:16px;border:3px solid #EAE8FF;font-family:inherit;font-size:18px;font-weight:900;text-align:center;outline:none;background:#fff;color:var(--text);}
-  .v2567-input:focus{border-color:var(--primary);box-shadow:0 0 0 4px rgba(108,99,255,.12);}
-  .v2567-btn{border:none;border-radius:16px;padding:13px 14px;font-family:inherit;font-weight:1000;font-size:15px;cursor:pointer;min-height:48px;box-shadow:0 6px 16px rgba(108,99,255,.22);}
-  .v2567-btn.student{background:var(--primary);color:#fff;}
-  .v2567-btn.guest{background:var(--accent);color:#7A5C00;}
-  .v2567-btn:disabled{opacity:.68;cursor:wait;}
-  .v2567-error{min-height:24px;color:var(--secondary);font-size:14px;font-weight:900;text-align:center;margin-top:12px;line-height:1.35;}
-  .v2567-note{background:#F7F6FF;border:2px solid #ECEBF3;border-radius:16px;padding:10px 12px;font-size:12px;font-weight:800;color:var(--text-muted);line-height:1.35;margin-top:12px;text-align:center;}
-  #prenomInput.v2567-hidden-legacy{position:absolute!important;left:-9999px!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none!important;}
-  @media(max-width:720px){.v2567-choice-grid{grid-template-columns:1fr}.v2567-start h2{font-size:25px!important}.v2567-card h3{font-size:20px}.v2567-input{font-size:17px}}
-</style>
-<script id="patch-v25-6-16-accueil-verification-stricte-js">
+<!-- PATCH V25.6.17 - Connexion élève stricte et robuste sur PC et tablette -->
+<script id="patch-v25-6-17-accueil-verification-stricte-js">
 (function(){
   'use strict';
-  if(window.__hibouAccueilV25616) return;
-  window.__hibouAccueilV25616 = true;
+  if(window.__hibouAccueilV25617) return;
+  window.__hibouAccueilV25617 = true;
 
   /*
-    V25.6.16 — Connexion élève stricte et robuste
+    V25.6.17 — Connexion élève stricte et robuste
     - aucune correction approximative : "Tmi" n'est jamais accepté pour "Tim" ;
     - seules la casse et les espaces extérieurs sont neutralisés ;
     - vérification parallèle par prénom + liste des élèves actifs ;
@@ -34472,7 +34564,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   var STUDENTS_API_URL = 'https://script.google.com/macros/s/AKfycbxz1vYS24sv-c3XVja12geWEXIQl6bQyBoQKBx5kg_fwQaj80_Oc7Y34yeBSRN4lF1f/exec';
   var VERIFY_TIMEOUT_MS = 18000;
   var ROSTER_TIMEOUT_MS = 22000;
-  var CACHE_KEY = 'hibou_students_roster_v25616';
+  var CACHE_KEY = 'hibou_students_roster_v25617';
   var CACHE_FRESH_MS = 24 * 60 * 60 * 1000;
   var CACHE_FALLBACK_MS = 30 * 24 * 60 * 60 * 1000;
 
@@ -34531,7 +34623,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
       actif:isStudentActive(student),
       active:isStudentActive(student),
       mode:'eleve',
-      source:'liste_eleves_v25616'
+      source:'liste_eleves_v25617'
     };
   }
   function extractRoster(data){
@@ -34772,7 +34864,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
     [
       'hibou_prenom','hibou_last_prenom','hibou_current_student','maitreHibouCurrentStudent',
       'elevePrenom','maitre_hibou_prenom','hibou_mode',
-      'hibou_verified_student_v25614','hibou_verified_student_v25616'
+      'hibou_verified_student_v25614','hibou_verified_student_v25616','hibou_verified_student_v25617'
     ].forEach(function(k){ try{ localStorage.removeItem(k); }catch(e){} });
     try{ window.prenomActuel = ''; }catch(e){}
     try{ prenomActuel = ''; }catch(e){}
@@ -34789,6 +34881,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
       localStorage.setItem('hibou_current_student',JSON.stringify(student || {prenom:name,mode:mode,invite:mode==='invite'}));
       if(mode === 'eleve'){
         localStorage.setItem('hibou_verified_student_v25614',name);
+        localStorage.setItem('hibou_verified_student_v25617',name);
         localStorage.setItem('hibou_verified_student_v25616',name);
       }
     }catch(e){}
@@ -34869,7 +34962,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
         input.focus();
         try{ input.select(); }catch(e){}
       }
-      try{ console.warn('V25.6.16 connexion élève stricte :',err); }catch(e){}
+      try{ console.warn('V25.6.17 connexion élève stricte :',err); }catch(e){}
     }).finally(function(){
       loginBusy = false;
       setStudentButton('ready');
@@ -34887,67 +34980,80 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
     return true;
   }
 
-  function renderStart(){
-    var overlay = byId('prenomOverlay');
-    var box = overlay ? overlay.querySelector('.prenom-box') : null;
-    if(!box) return;
-    if(box.dataset && box.dataset.v25616Ready === '1' && byId('v2567StudentName')) return;
-
-    box.className = 'prenom-box v2567-start';
-    if(box.dataset) box.dataset.v25616Ready = '1';
-    box.innerHTML =
-      '<div class="owl">🦉</div>' +
-      '<h2>Bienvenue sur Maître Hibou</h2>' +
-      '<p class="v2567-intro">Choisis ton mode de connexion.</p>' +
-      '<input id="prenomInput" class="v2567-hidden-legacy" autocomplete="off" aria-hidden="true">' +
-      '<div class="v2567-choice-grid">' +
-        '<section class="v2567-card student">' +
-          '<h3>👤 Mode élève</h3>' +
-          '<p>Écris ton prénom exactement comme dans la liste de la classe. Les majuscules ne comptent pas.</p>' +
-          '<input id="v2567StudentName" class="v2567-input" placeholder="Ton prénom" autocomplete="off" autocapitalize="words" spellcheck="false">' +
-          '<button id="v2567StudentBtn" class="v2567-btn student" type="button">Entrer en mode élève</button>' +
-        '</section>' +
-        '<section class="v2567-card guest">' +
-          '<h3>🧪 Mode invité</h3>' +
-          '<p>Pour tester librement Maître Hibou sans être dans la liste élèves.</p>' +
-          '<input id="v2567GuestName" class="v2567-input" placeholder="Prénom invité (facultatif)" autocomplete="off">' +
-          '<button id="v2567GuestBtn" class="v2567-btn guest" type="button">Tester en invité</button>' +
-        '</section>' +
-      '</div>' +
-      '<div id="v2567Error" class="v2567-error" role="alert" aria-live="polite"></div>' +
-      '<div class="v2567-note"><b>Connexion stricte :</b> une faute dans le prénom est refusée, mais une connexion lente ne verrouille jamais le bouton.</div>';
-
+  function bindStartControls(){
     var studentButton = byId('v2567StudentBtn');
     var guestButton = byId('v2567GuestBtn');
     var studentInput = byId('v2567StudentName');
     var guestInput = byId('v2567GuestName');
 
-    if(studentButton) studentButton.onclick = function(ev){
-      ev.preventDefault();
-      loginStudent();
-      return false;
-    };
-    if(guestButton) guestButton.onclick = function(ev){
-      ev.preventDefault();
-      loginGuest();
-      return false;
-    };
-    if(studentInput) studentInput.addEventListener('keydown',function(ev){
-      if(ev.key === 'Enter'){
+    if(studentButton && studentButton.dataset.v25617Bound !== '1'){
+      studentButton.dataset.v25617Bound = '1';
+      studentButton.addEventListener('click',function(ev){
         ev.preventDefault();
         loginStudent();
-      }
-    },true);
-    if(guestInput) guestInput.addEventListener('keydown',function(ev){
-      if(ev.key === 'Enter'){
+      });
+    }
+    if(guestButton && guestButton.dataset.v25617Bound !== '1'){
+      guestButton.dataset.v25617Bound = '1';
+      guestButton.addEventListener('click',function(ev){
         ev.preventDefault();
         loginGuest();
-      }
-    },true);
-
+      });
+    }
+    if(studentInput && studentInput.dataset.v25617Bound !== '1'){
+      studentInput.dataset.v25617Bound = '1';
+      studentInput.addEventListener('keydown',function(ev){
+        if(ev.key === 'Enter'){
+          ev.preventDefault();
+          loginStudent();
+        }
+      },true);
+    }
+    if(guestInput && guestInput.dataset.v25617Bound !== '1'){
+      guestInput.dataset.v25617Bound = '1';
+      guestInput.addEventListener('keydown',function(ev){
+        if(ev.key === 'Enter'){
+          ev.preventDefault();
+          loginGuest();
+        }
+      },true);
+    }
     setStudentButton('ready');
     setError('');
-    setTimeout(function(){ try{ if(studentInput) studentInput.focus(); }catch(e){} },60);
+  }
+
+  function renderStart(){
+    var overlay = byId('prenomOverlay');
+    var box = overlay ? overlay.querySelector('.prenom-box') : null;
+    if(!box) return;
+
+    /* La structure finale est déjà dans le HTML : aucune reconstruction après affichage. */
+    if(!byId('v2567StudentName') || !byId('v2567GuestName')){
+      box.className = 'prenom-box v2567-start';
+      box.innerHTML =
+        '<div class="owl">🦉</div>' +
+        '<h2>Bienvenue sur Maître Hibou</h2>' +
+        '<p class="v2567-intro">Choisis ton mode de connexion.</p>' +
+        '<input id="prenomInput" class="v2567-hidden-legacy" autocomplete="off" aria-hidden="true" tabindex="-1">' +
+        '<div class="v2567-choice-grid">' +
+          '<section class="v2567-card student">' +
+            '<h3>👤 Mode élève</h3>' +
+            '<p>Écris ton prénom exactement comme dans la liste de la classe. Les majuscules ne comptent pas.</p>' +
+            '<input id="v2567StudentName" class="v2567-input" placeholder="Ton prénom" autocomplete="off" autocapitalize="words" spellcheck="false">' +
+            '<button id="v2567StudentBtn" class="v2567-btn student" type="button">Entrer en mode élève</button>' +
+          '</section>' +
+          '<section class="v2567-card guest">' +
+            '<h3>🧪 Mode invité</h3>' +
+            '<p>Pour tester librement Maître Hibou sans être dans la liste élèves.</p>' +
+            '<input id="v2567GuestName" class="v2567-input" placeholder="Prénom invité (facultatif)" autocomplete="off">' +
+            '<button id="v2567GuestBtn" class="v2567-btn guest" type="button">Tester en invité</button>' +
+          '</section>' +
+        '</div>' +
+        '<div id="v2567Error" class="v2567-error" role="alert" aria-live="polite"></div>' +
+        '<div class="v2567-note"><b>Connexion stricte :</b> le prénom doit être écrit correctement.</div>';
+    }
+    if(box.dataset) box.dataset.v25617Ready = '1';
+    bindStartControls();
   }
 
   function showStart(){
@@ -34976,7 +35082,8 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
     try{
       var mode = localStorage.getItem('hibou_mode') || '';
       var current = JSON.parse(localStorage.getItem('hibou_current_student') || '{}');
-      var verified = localStorage.getItem('hibou_verified_student_v25616') ||
+      var verified = localStorage.getItem('hibou_verified_student_v25617') ||
+                     localStorage.getItem('hibou_verified_student_v25616') ||
                      localStorage.getItem('hibou_verified_student_v25614') || '';
       if(mode === 'eleve' && (!current || !current.prenom || exactKey(verified) !== exactKey(current.prenom))){
         clearStudent();
@@ -35004,455 +35111,88 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   setTimeout(install,250);
 
   try{
-    document.title = '🦉 Maître Hibou V25.6.16';
-    window.MAITRE_HIBOU_VERSION = 'V25.6.16';
+    document.title = '🦉 Maître Hibou V25.6.17';
+    window.MAITRE_HIBOU_VERSION = 'V25.6.17';
   }catch(e){}
 })();
 </script>
-<!-- FIN PATCH V25.6.16 -->
-
-
-<style id="patch-v25-6-10-accueil-clavier-visible">
-/* V25.6.16 — Accueil tablette : le champ prénom reste visible quand le clavier apparaît. */
-body.prenom-mode .prenom-overlay{
-  align-items:flex-start !important;
-  justify-content:center !important;
-  overflow-y:auto !important;
-  -webkit-overflow-scrolling:touch !important;
-  padding-top:clamp(6px, 2vh, 18px) !important;
-  padding-bottom:calc(24px + env(safe-area-inset-bottom)) !important;
-}
-
-body.prenom-mode .prenom-box.v2567-start{
-  margin-top:0 !important;
-  transition:transform .18s ease, padding .18s ease !important;
-}
-
-/* Quand le clavier Android réduit l’espace disponible, on compacte fortement l’accueil. */
-body.hibou-keyboard-open .prenom-overlay{
-  align-items:flex-start !important;
-  overflow-y:auto !important;
-  padding:6px 12px 18px 12px !important;
-}
-
-body.hibou-keyboard-open .prenom-box.v2567-start{
-  width:min(1040px, 96vw) !important;
-  max-width:none !important;
-  padding:8px 22px 10px 22px !important;
-  border-radius:24px !important;
-  box-shadow:0 10px 30px rgba(108,99,255,.12) !important;
-}
-
-body.hibou-keyboard-open .prenom-box.v2567-start .owl{
-  display:none !important;
-}
-
-body.hibou-keyboard-open .prenom-box.v2567-start h2{
-  font-size:clamp(22px, 3.2vw, 30px) !important;
-  line-height:1.05 !important;
-  margin:0 0 2px 0 !important;
-}
-
-body.hibou-keyboard-open .v2567-intro,
-body.hibou-keyboard-open .v2567-card p,
-body.hibou-keyboard-open .v2567-note{
-  display:none !important;
-}
-
-body.hibou-keyboard-open .v2567-choice-grid{
-  grid-template-columns:1fr 1fr !important;
-  gap:10px !important;
-  margin-top:8px !important;
-}
-
-body.hibou-keyboard-open .v2567-card{
-  padding:10px 12px !important;
-  min-height:0 !important;
-}
-
-body.hibou-keyboard-open .v2567-card h3{
-  margin:0 0 6px 0 !important;
-  font-size:clamp(16px, 2vw, 20px) !important;
-}
-
-body.hibou-keyboard-open .v2567-input{
-  min-height:44px !important;
-  height:44px !important;
-  font-size:18px !important;
-  padding:8px 14px !important;
-  margin:0 0 6px 0 !important;
-  border-radius:16px !important;
-}
-
-body.hibou-keyboard-open .v2567-btn{
-  min-height:42px !important;
-  height:42px !important;
-  padding:8px 12px !important;
-  border-radius:16px !important;
-  font-size:14px !important;
-}
-
-body.hibou-keyboard-open #prenomError,
-body.hibou-keyboard-open #v2567Error{
-  margin-top:4px !important;
-  min-height:18px !important;
-  font-size:13px !important;
-}
-
-@media (orientation: landscape) and (max-height:560px){
-  body.prenom-mode .prenom-box.v2567-start{
-    width:min(1040px, 96vw) !important;
-    padding:8px 22px 10px 22px !important;
-  }
-  body.prenom-mode .prenom-box.v2567-start .owl{
-    display:none !important;
-  }
-  body.prenom-mode .prenom-box.v2567-start h2{
-    font-size:clamp(22px, 3.2vw, 30px) !important;
-    margin:0 0 2px 0 !important;
-  }
-  body.prenom-mode .v2567-intro,
-  body.prenom-mode .v2567-card p,
-  body.prenom-mode .v2567-note{
-    display:none !important;
-  }
-  body.prenom-mode .v2567-choice-grid{
-    grid-template-columns:1fr 1fr !important;
-    gap:10px !important;
-    margin-top:8px !important;
-  }
-  body.prenom-mode .v2567-card{
-    padding:10px 12px !important;
-  }
-}
-
-@media (max-width:700px){
-  body.hibou-keyboard-open .v2567-choice-grid{
-    grid-template-columns:1fr !important;
-  }
-}
-</style>
-
-<script id="patch-v25-6-10-accueil-clavier-visible-js">
-(function(){
-  'use strict';
-  function isStartInput(el){
-    return el && (el.id === 'v2567StudentName' || el.id === 'v2567GuestName' || el.id === 'prenomInput');
-  }
-  function setKeyboardMode(on){
-    document.body.classList.toggle('hibou-keyboard-open', !!on);
-  }
-  function focusVisible(el){
-    if(!isStartInput(el)) return;
-    setKeyboardMode(true);
-    setTimeout(function(){
-      try{ el.scrollIntoView({block:'center', inline:'nearest', behavior:'smooth'}); }catch(e){ try{ el.scrollIntoView(false); }catch(_e){} }
-    }, 120);
-  }
-  document.addEventListener('focusin', function(ev){ focusVisible(ev.target); }, true);
-  document.addEventListener('focusout', function(){
-    setTimeout(function(){
-      if(!isStartInput(document.activeElement)) setKeyboardMode(false);
-    }, 220);
-  }, true);
-  if(window.visualViewport){
-    var baseH = window.innerHeight || 0;
-    function checkViewport(){
-      var active = document.activeElement;
-      var small = baseH && window.visualViewport.height < baseH * 0.78;
-      if(isStartInput(active) || small) setKeyboardMode(true);
-      else setKeyboardMode(false);
-    }
-    window.visualViewport.addEventListener('resize', checkViewport);
-    window.visualViewport.addEventListener('scroll', checkViewport);
-  }
-})();
-</script>
-
+<!-- FIN PATCH V25.6.17 -->
 
 
 <!-- PATCH V25.6.16 — Adaptation automatique PC / tablette / smartphone -->
-<style id="patch-v25-6-11-adaptation-ecrans">
-/* V25.6.16 — Maître Hibou adapte l'interface selon l'écran. */
-:root{
-  --hibou-screen-mode: pc;
-}
-html.hibou-device-tablette{ --hibou-screen-mode: tablette; }
-html.hibou-device-smartphone{ --hibou-screen-mode: smartphone; }
-html.hibou-device-pc{ --hibou-screen-mode: pc; }
+<!-- FIN PATCH V25.6.17 -->
 
-/* Base : les zones tactiles restent confortables sur tablette/smartphone. */
-html.hibou-device-tablette button,
-html.hibou-device-tablette .subject-btn,
-html.hibou-device-tablette .quick-btn,
-html.hibou-device-tablette input,
-html.hibou-device-tablette textarea,
-html.hibou-device-smartphone button,
-html.hibou-device-smartphone .subject-btn,
-html.hibou-device-smartphone .quick-btn,
-html.hibou-device-smartphone input,
-html.hibou-device-smartphone textarea{
-  touch-action: manipulation;
-}
-
-/* PC : on utilise davantage la largeur, sans grossir inutilement. */
-html.hibou-device-pc .chat-container,
-html.hibou-device-pc .quick-questions,
-html.hibou-device-pc .input-wrapper,
-html.hibou-device-pc .welcome-quiz-container,
-html.hibou-device-pc .master-challenge-card,
-html.hibou-device-pc .progress-panel,
-html.hibou-device-pc .progress-mini-wrap{
-  max-width: 980px !important;
-}
-html.hibou-device-pc .subject-btn{
-  font-size: 14px;
-  padding: 9px 16px;
-}
-html.hibou-device-pc .modal-box{
-  max-width: 620px;
-}
-
-/* Tablette : priorité à la lisibilité tactile et aux boutons visibles. */
-html.hibou-device-tablette body{
-  min-height: 100dvh;
-}
-html.hibou-device-tablette header{
-  padding: 9px 12px;
-}
-html.hibou-device-tablette .logo-text{
-  font-size: clamp(16px, 2.2vw, 20px);
-}
-html.hibou-device-tablette .subjects-bar{
-  padding: 8px 12px;
-  gap: 7px;
-}
-html.hibou-device-tablette .subject-btn{
-  min-height: 42px;
-  font-size: 13px;
-  padding: 8px 12px;
-}
-html.hibou-device-tablette .quick-questions{
-  width: calc(100% - 18px) !important;
-  max-width: 940px !important;
-  padding: 10px 12px !important;
-}
-html.hibou-device-tablette .quick-btn{
-  min-height: 38px;
-  font-size: 13px;
-}
-html.hibou-device-tablette .chat-container{
-  width: 100% !important;
-  max-width: 940px !important;
-  min-height: 300px;
-}
-html.hibou-device-tablette .modal-box{
-  max-width: min(92vw, 820px) !important;
-}
-html.hibou-device-tablette .btn-round,
-html.hibou-device-tablette .action-btn{
-  min-width: 38px;
-  min-height: 38px;
-}
-
-/* Smartphone : une colonne, moins de texte, pas de tableau large. */
-html.hibou-device-smartphone header{
-  padding: 8px 10px;
-}
-html.hibou-device-smartphone .logo-icon{ font-size: 22px !important; }
-html.hibou-device-smartphone .logo-text{ font-size: 16px !important; }
-html.hibou-device-smartphone .header-actions{
-  gap: 6px;
-  transform: scale(.94);
-  transform-origin: right center;
-}
-html.hibou-device-smartphone .subjects-bar{
-  display: grid !important;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  overflow: visible !important;
-  white-space: normal !important;
-  padding: 8px 10px;
-}
-html.hibou-device-smartphone .subject-btn{
-  justify-content: center;
-  min-height: 42px;
-  font-size: 12px;
-  padding: 8px 8px;
-}
-html.hibou-device-smartphone .quick-questions{
-  position: static !important;
-  width: calc(100% - 16px) !important;
-  margin-top: 6px !important;
-  padding: 8px !important;
-}
-html.hibou-device-smartphone .quick-btn{
-  flex: 1 1 100%;
-  min-height: 40px;
-  text-align: center;
-}
-html.hibou-device-smartphone .chat-container{
-  min-height: 42vh !important;
-  max-height: none !important;
-  padding: 8px 10px !important;
-}
-html.hibou-device-smartphone .message{ max-width: 96% !important; }
-html.hibou-device-smartphone .bubble{ font-size: 14px !important; }
-html.hibou-device-smartphone .input-area{ padding: 8px 10px !important; }
-html.hibou-device-smartphone .modal-overlay{ padding: 8px !important; }
-html.hibou-device-smartphone .modal-box{
-  max-width: 96vw !important;
-  max-height: 92dvh !important;
-  overflow: auto !important;
-  padding: 18px !important;
-}
-
-/* Accueil : adaptation par appareil. */
-html.hibou-device-pc .prenom-box.v2567-start{
-  width: min(960px, 92vw) !important;
-  max-width: none !important;
-}
-html.hibou-device-tablette .prenom-box.v2567-start{
-  width: min(1040px, 96vw) !important;
-  max-width: none !important;
-}
-html.hibou-device-tablette .v2567-choice-grid{
-  grid-template-columns: 1fr 1fr !important;
-}
-html.hibou-device-tablette .v2567-input{
-  min-height: 52px;
-  font-size: 18px;
-}
-html.hibou-device-tablette .v2567-btn{
-  min-height: 50px;
-}
-html.hibou-device-smartphone .prenom-overlay{
-  align-items: flex-start !important;
-  padding: 8px !important;
-  overflow-y: auto !important;
-}
-html.hibou-device-smartphone .prenom-box.v2567-start{
-  width: 96vw !important;
-  padding: 12px !important;
-  border-radius: 22px !important;
-}
-html.hibou-device-smartphone .prenom-box.v2567-start .owl{
-  font-size: 42px !important;
-  margin-bottom: 2px !important;
-}
-html.hibou-device-smartphone .prenom-box.v2567-start h2{
-  font-size: 24px !important;
-  line-height: 1.05 !important;
-}
-html.hibou-device-smartphone .v2567-choice-grid{
-  grid-template-columns: 1fr !important;
-  gap: 10px !important;
-}
-html.hibou-device-smartphone .v2567-card{
-  padding: 12px !important;
-}
-html.hibou-device-smartphone .v2567-card h3{
-  font-size: 18px !important;
-}
-html.hibou-device-smartphone .v2567-card p{
-  font-size: 13px !important;
-  line-height: 1.25 !important;
-}
-html.hibou-device-smartphone .v2567-input{
-  min-height: 46px !important;
-  font-size: 16px !important;
-}
-html.hibou-device-smartphone .v2567-btn{
-  min-height: 46px !important;
-  font-size: 14px !important;
-}
-
-/* Le correctif clavier V25.6.10 reste prioritaire, quel que soit l'appareil. */
-html.hibou-keyboard-open .prenom-box.v2567-start,
-body.hibou-keyboard-open .prenom-box.v2567-start{
-  transform: translateY(0) !important;
-}
-html.hibou-keyboard-open .v2567-choice-grid,
-body.hibou-keyboard-open .v2567-choice-grid{
-  gap: 8px !important;
-}
-
-/* Petit marqueur de diagnostic visuel optionnel, caché par défaut. */
-.hibou-device-debug{ display:none !important; }
-</style>
-<script id="patch-v25-6-11-adaptation-ecrans">
+<script id="patch-v25-6-17-clavier-stable">
 (function(){
   'use strict';
-  var VERSION = 'V25.6.16';
-  var root = document.documentElement;
-  var body = document.body;
-  var initialHeight = Math.max(window.innerHeight || 0, (window.visualViewport && window.visualViewport.height) || 0);
+  if(window.__hibouKeyboardStableV25617) return;
+  window.__hibouKeyboardStableV25617=true;
 
-  function detectHibouDevice(){
-    var ua = String(navigator.userAgent || '').toLowerCase();
-    var w = Math.min(window.innerWidth || 0, screen.width || window.innerWidth || 0);
-    var h = Math.min(window.innerHeight || 0, screen.height || window.innerHeight || 0);
-    var maxDim = Math.max(w, h);
-    var minDim = Math.min(w, h);
-    var touch = (navigator.maxTouchPoints || 0) > 0 || ('ontouchstart' in window);
-    var isMobileUA = /iphone|ipod|android.*mobile|windows phone/.test(ua);
-    var isTabletUA = /ipad|tablet|android(?!.*mobile)|kindle|silk/.test(ua);
+  var root=document.documentElement;
+  var body=document.body;
+  var vv=window.visualViewport;
+  var baseHeight=Math.max((vv&&vv.height)||0,window.innerHeight||0);
+  var open=false;
+  var timer=0;
 
-    if (isMobileUA || maxDim < 760 || minDim < 520) return 'smartphone';
-    if (isTabletUA || (touch && maxDim >= 760 && maxDim <= 1400)) return 'tablette';
-    return 'pc';
+  function isLoginInput(el){
+    return !!el&&(el.id==='v2567StudentName'||el.id==='v2567GuestName');
   }
-
-  function applyMode(){
-    var mode = detectHibouDevice();
-    ['hibou-device-pc','hibou-device-tablette','hibou-device-smartphone'].forEach(function(c){
-      root.classList.remove(c); if(document.body) document.body.classList.remove(c);
-    });
-    root.classList.add('hibou-device-' + mode);
-    if(document.body) document.body.classList.add('hibou-device-' + mode);
-    root.setAttribute('data-hibou-device', mode);
-    if(document.body) document.body.setAttribute('data-hibou-device', mode);
-    try{ window.HIBOU_DEVICE = mode; window.MAITRE_HIBOU_VERSION = VERSION; document.title = '🦉 Maître Hibou ' + VERSION; }catch(e){}
-    return mode;
-  }
-
-  function setKeyboardState(){
-    var vv = window.visualViewport;
-    var visibleH = vv ? vv.height : window.innerHeight;
-    var currentW = window.innerWidth || 0;
-    var currentMode = root.getAttribute('data-hibou-device') || detectHibouDevice();
-    var likelyKeyboard = false;
-    if (currentMode !== 'pc') {
-      likelyKeyboard = visibleH < initialHeight * 0.72 || (window.screen && window.screen.height && visibleH < window.screen.height * 0.58);
+  function setOpen(value){
+    value=!!value;
+    if(value===open) return;
+    open=value;
+    root.classList.toggle('hibou-keyboard-open',value);
+    body.classList.toggle('hibou-keyboard-open',value);
+    body.classList.remove('prenom-keyboard-open');
+    if(value){
+      var active=document.activeElement;
+      setTimeout(function(){
+        if(isLoginInput(active)){
+          try{active.scrollIntoView({block:'nearest',inline:'nearest',behavior:'auto'});}catch(e){}
+        }
+      },40);
     }
-    root.classList.toggle('hibou-keyboard-open', !!likelyKeyboard);
-    if(document.body) document.body.classList.toggle('hibou-keyboard-open', !!likelyKeyboard);
-    if (likelyKeyboard) {
-      var active = document.activeElement;
-      if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA')) {
-        setTimeout(function(){ try{ active.scrollIntoView({block:'center', inline:'nearest', behavior:'smooth'}); }catch(e){} }, 60);
+  }
+  function measure(){
+    clearTimeout(timer);
+    timer=setTimeout(function(){
+      var overlay=document.getElementById('prenomOverlay');
+      if(!overlay||overlay.classList.contains('hidden')||!body.classList.contains('prenom-mode')){
+        setOpen(false);
+        return;
       }
+      var active=document.activeElement;
+      var visible=(vv&&vv.height)||window.innerHeight||0;
+      var delta=Math.max(0,baseHeight-visible);
+      var keyboard=isLoginInput(active)&&delta>Math.max(110,baseHeight*0.16);
+      setOpen(keyboard);
+    },110);
+  }
+
+  document.addEventListener('focusin',function(ev){
+    if(isLoginInput(ev.target)){
+      /* On attend la vraie réduction du viewport : aucun changement de format au simple focus. */
+      measure();
+      setTimeout(measure,220);
     }
+  },true);
+  document.addEventListener('focusout',function(){
+    setTimeout(function(){if(!isLoginInput(document.activeElement)) setOpen(false);},220);
+  },true);
+  if(vv){
+    vv.addEventListener('resize',measure,{passive:true});
+    vv.addEventListener('scroll',measure,{passive:true});
   }
-
-  function refresh(){
-    applyMode();
-    setKeyboardState();
-  }
-
-  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', refresh, {once:true});
-  else refresh();
-  window.addEventListener('resize', function(){ setTimeout(refresh, 80); }, {passive:true});
-  window.addEventListener('orientationchange', function(){ setTimeout(function(){ initialHeight = Math.max(window.innerHeight || 0, (window.visualViewport && window.visualViewport.height) || 0); refresh(); }, 250); }, {passive:true});
-  if(window.visualViewport){
-    window.visualViewport.addEventListener('resize', setKeyboardState, {passive:true});
-    window.visualViewport.addEventListener('scroll', setKeyboardState, {passive:true});
-  }
-  document.addEventListener('focusin', function(){ setTimeout(setKeyboardState, 80); }, true);
-  document.addEventListener('focusout', function(){ setTimeout(setKeyboardState, 180); }, true);
-  try{ console.info('Maître Hibou '+VERSION+' — mode écran :', root.getAttribute('data-hibou-device')); }catch(e){}
+  window.addEventListener('orientationchange',function(){
+    setOpen(false);
+    setTimeout(function(){baseHeight=Math.max((vv&&vv.height)||0,window.innerHeight||0);},500);
+  },{passive:true});
+  window.addEventListener('pageshow',function(){
+    baseHeight=Math.max((vv&&vv.height)||0,window.innerHeight||0);
+    setOpen(false);
+  },{passive:true});
 })();
 </script>
-<!-- FIN PATCH V25.6.16 -->
-
 </body>
 </html>

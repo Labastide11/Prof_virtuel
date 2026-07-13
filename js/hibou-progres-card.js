@@ -1,11 +1,11 @@
-// V25.7.9 — Carte Mes progrès de l'accueil : portrait selon sexe.
+// V25.7.10 — Carte Mes progrès : une seule ligne de titre stable + portrait selon sexe.
 // Module externe : n'alourdit pas index.html et ne touche pas au Conseil de Maître Hibou.
 (function(){
   'use strict';
-  if(window.__hibouProgressCardV2579) return;
-  window.__hibouProgressCardV2579 = true;
+  if(window.__hibouProgressCardV25710) return;
+  window.__hibouProgressCardV25710 = true;
 
-  var VERSION = 'V25.7.9';
+  var VERSION = 'V25.7.10';
   var IMG = {
     or: 'images/medaille_or.jpg',
     argent: 'images/medaille_argent.jpg',
@@ -89,6 +89,23 @@
         }
       };
     }
+  }
+  function ensureCompactHeader(head, name){
+    if(!head || !head.querySelector) return;
+    var oldTitle = head.querySelector('h3');
+    if(oldTitle){
+      oldTitle.classList.add('v25710-hidden-old-title');
+      oldTitle.setAttribute('aria-hidden','true');
+    }
+    var title = head.querySelector('.v25710-compact-title');
+    if(!title){
+      title = document.createElement('div');
+      title.className = 'v25710-compact-title';
+      var hint = head.querySelector('.profile-life-v23417-open-hint');
+      if(hint) head.insertBefore(title, hint);
+      else head.appendChild(title);
+    }
+    title.textContent = (name || 'Élève') + ' - mes progrès en CE2';
   }
   function bestRows(){
     try{
@@ -232,12 +249,8 @@
     card.setAttribute('role','button');
     card.setAttribute('tabindex','0');
 
-    var h3 = head.querySelector('h3');
-    if(h3){
-      h3.classList.add('v2578-progress-title');
-      h3.textContent = name + ' · mes progrès en CE2';
-    }
     applyStudentPortrait(head, info);
+    ensureCompactHeader(head, name);
 
     var hint = head.querySelector('.profile-life-v23417-open-hint');
     if(!hint){

@@ -1,7 +1,7 @@
-/* V25.7.10 — Carte Mes progrès : titre unique stable + médailles image + zone centrale défilante.
+/* V25.7.11 — Carte Mes progrès : titre unique stable + médailles image + zone centrale défilante.
    Objectif : ne pas modifier le conseil de Maître Hibou ni Mon parcours récent. */
 
-/* V25.7.9 — En-tête compact : portrait + “Tim · mes progrès en CE2” + bouton à droite. */
+/* V25.7.11 — En-tête compact : portrait + “Tim - mes progrès en CE2” + bouton “Voir mes progrès”. */
 body.v21-final .v21-profile-card.v2578-progress-card .v21-profile-head{
   display:flex !important;
   align-items:center !important;
@@ -331,7 +331,7 @@ body.v21-final .v21-profile-card.v2578-progress-card .v21-change-student-btn{
 }
 
 
-/* V25.7.10 — Titre unique : on masque l'ancien h3 que les anciens scripts peuvent réécrire en “Mes progrès”. */
+/* V25.7.11 — Titre unique : on masque l'ancien h3 que les anciens scripts peuvent réécrire en “Mes progrès”. */
 body.v21-final .v21-profile-card.v2578-progress-card .v21-profile-head h3.v25710-hidden-old-title,
 body.v21-final .v21-profile-card.v2578-progress-card .v21-profile-head h3.v2578-progress-title{
   display:none !important;

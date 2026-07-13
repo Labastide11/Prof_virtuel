@@ -1,1 +1,65 @@
-
+/* V25.7.1 — Journal élève modulaire */
+#bandeauLastCard.mh-journal-eleve {
+  cursor: pointer !important;
+}
+#bandeauLastCard.mh-journal-eleve .bandeau-info-icon {
+  flex-shrink: 0 !important;
+}
+#bandeauLastCard.mh-journal-eleve .bandeau-info-label {
+  color: #fff !important;
+  font-weight: 1000 !important;
+}
+#bandeauLastCard.mh-journal-eleve #bandeauLastText {
+  display: block !important;
+  max-width: none !important;
+  color: #EAF2FF !important;
+  font-weight: 950 !important;
+  white-space: normal !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  line-height: 1.18 !important;
+  max-height: 2.45em !important;
+}
+.mh-journal-popup-card {
+  grid-column: 1 / -1 !important;
+}
+.mh-journal-last-row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px;
+  align-items: start;
+  background: #F8F7FF;
+  border: 2px solid #ECEBF3;
+  border-radius: 16px;
+  padding: 12px;
+  font-weight: 900;
+}
+.mh-journal-last-row small {
+  display: block;
+  margin-top: 3px;
+  color: #8B89A8;
+  font-weight: 850;
+}
+.mh-journal-history {
+  display: grid;
+  gap: 8px;
+  max-height: 210px;
+  overflow: auto;
+  padding-right: 3px;
+}
+.mh-journal-history-row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 8px;
+  align-items: start;
+  border: 1px solid #ECEBF3;
+  border-radius: 13px;
+  padding: 8px;
+  background: #fff;
+}
+.mh-journal-history-row small {
+  display: block;
+  color: #8B89A8;
+  font-weight: 800;
+  margin-top: 2px;
+}

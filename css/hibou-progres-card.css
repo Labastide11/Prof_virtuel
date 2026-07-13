@@ -1,0 +1,204 @@
+/* V25.7.6 — Carte Mes progrès : médailles image + zone centrale défilante.
+   Objectif : ne pas modifier le conseil de Maître Hibou ni Mon parcours récent. */
+body.v21-final .v21-profile-card.v2576-progress-card{
+  display:flex !important;
+  flex-direction:column !important;
+  overflow:hidden !important;
+}
+body.v21-final .v21-profile-card.v2576-progress-card .v21-profile-head{
+  flex:0 0 auto !important;
+  margin-bottom:8px !important;
+  gap:10px !important;
+}
+body.v21-final .v21-profile-card.v2576-progress-card .v21-student{
+  min-width:0 !important;
+}
+body.v21-final .v21-profile-card.v2576-progress-card .v21-profile-head h3{
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  white-space:nowrap !important;
+}
+body.v21-final .v21-profile-card.v2576-progress-card .v21-stats.v2576-progress-stats{
+  display:flex !important;
+  flex-direction:column !important;
+  flex:1 1 auto !important;
+  min-height:0 !important;
+  gap:8px !important;
+}
+.v2576-open-hint{
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:6px !important;
+  margin-left:auto !important;
+  padding:7px 12px !important;
+  border-radius:999px !important;
+  border:2px solid #B8D8FF !important;
+  background:#FFFFFF !important;
+  color:#13356D !important;
+  font-size:12.5px !important;
+  font-weight:1000 !important;
+  line-height:1 !important;
+  box-shadow:0 3px 8px rgba(26,100,190,.08) !important;
+  white-space:nowrap !important;
+}
+.v2576-progress-scroll{
+  flex:1 1 auto;
+  min-height:0;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;
+  display:grid;
+  gap:8px;
+  padding-right:4px;
+  scrollbar-gutter:stable;
+}
+.v2576-progress-scroll::-webkit-scrollbar{width:9px;}
+.v2576-progress-scroll::-webkit-scrollbar-track{background:#EDF6FF;border-radius:999px;}
+.v2576-progress-scroll::-webkit-scrollbar-thumb{background:#9CCBFF;border-radius:999px;border:2px solid #EDF6FF;}
+.v2576-section{
+  background:rgba(255,255,255,.96);
+  border:2px solid rgba(174,208,241,.95);
+  border-radius:16px;
+  padding:8px 10px;
+  box-shadow:0 4px 12px rgba(54,94,140,.08);
+}
+.v2576-section-title{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  color:#0F2B60;
+  font-size:13.5px;
+  font-weight:1000;
+  line-height:1.1;
+  margin-bottom:6px;
+}
+.v2576-section-title .v2576-arrow{
+  color:#1E8BFF;
+  font-size:22px;
+  line-height:1;
+}
+.v2576-medals-section{
+  cursor:pointer;
+}
+.v2576-medals-section:active{
+  transform:translateY(1px);
+}
+.v2576-medal-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:8px;
+  align-items:stretch;
+}
+.v2576-medal-tile{
+  min-width:0;
+  display:grid;
+  grid-template-rows:auto auto auto;
+  justify-items:center;
+  align-content:center;
+  gap:2px;
+  padding:4px 4px 5px;
+  border-radius:14px;
+  background:linear-gradient(180deg,#FFFFFF 0%,#F7FBFF 100%);
+  border:2px solid #E4F1FF;
+}
+.v2576-medal-tile img{
+  width:52px;
+  height:52px;
+  object-fit:contain;
+  display:block;
+  filter:drop-shadow(0 4px 4px rgba(0,0,0,.12));
+}
+.v2576-medal-count{
+  min-width:34px;
+  padding:1px 8px 2px;
+  border-radius:999px;
+  background:#FFFFFF;
+  border:2px solid #DCEBFF;
+  color:#082B63;
+  font-size:16px;
+  font-weight:1000;
+  line-height:1.05;
+  text-align:center;
+}
+.v2576-medal-label{
+  color:#4D5F7E;
+  font-size:10.5px;
+  font-weight:1000;
+  line-height:1;
+}
+.v2576-medal-tile.or .v2576-medal-count{border-color:#FFD977;background:#FFF9E3;}
+.v2576-medal-tile.argent .v2576-medal-count{border-color:#BFDFFF;background:#F4FAFF;}
+.v2576-medal-tile.bronze .v2576-medal-count{border-color:#A8E9C1;background:#F4FFF7;}
+.v2576-lines{
+  display:grid;
+  gap:5px;
+}
+.v2576-line{
+  display:grid;
+  grid-template-columns:auto 1fr;
+  gap:7px;
+  align-items:center;
+  color:#102A5D;
+  font-size:12.5px;
+  font-weight:900;
+  line-height:1.2;
+}
+.v2576-line strong{
+  color:#061F4F;
+  font-weight:1000;
+}
+.v2576-pill{
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  padding:3px 8px;
+  border-radius:999px;
+  background:#F7FAFF;
+  border:1.8px solid #E1EDFF;
+  color:#102A5D;
+  font-weight:1000;
+}
+.v2576-skills{
+  display:flex;
+  flex-wrap:wrap;
+  gap:5px;
+}
+.v2576-skill{
+  display:inline-flex;
+  align-items:center;
+  max-width:100%;
+  padding:4px 8px;
+  border-radius:999px;
+  background:#F7F6FF;
+  border:1.8px solid #E8E5FF;
+  color:#102A5D;
+  font-size:11.5px;
+  font-weight:900;
+  line-height:1.15;
+}
+.v2576-empty{
+  color:#6F7891;
+  font-size:12px;
+  font-weight:900;
+}
+body.v21-final .v21-profile-card.v2576-progress-card .v21-change-student-btn{
+  flex:0 0 auto !important;
+  margin-top:2px !important;
+}
+@media (min-width:900px) and (max-width:1180px), (max-height:720px){
+  .v2576-open-hint{font-size:10.5px !important;padding:5px 8px !important;}
+  .v2576-section{padding:6px 8px;border-radius:14px;}
+  .v2576-section-title{font-size:12px;margin-bottom:4px;}
+  .v2576-medal-grid{gap:5px;}
+  .v2576-medal-tile{padding:3px 2px 4px;border-radius:12px;}
+  .v2576-medal-tile img{width:40px;height:40px;}
+  .v2576-medal-count{font-size:13.5px;min-width:28px;padding:1px 6px;}
+  .v2576-medal-label{font-size:9px;}
+  .v2576-line{font-size:10.5px;gap:5px;}
+  .v2576-skill{font-size:10px;padding:3px 6px;}
+}
+@media(max-width:899px){
+  .v2576-medal-tile img{width:48px;height:48px;}
+}

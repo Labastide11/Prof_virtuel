@@ -1,11 +1,11 @@
-// V25.7.10 — Carte Mes progrès : une seule ligne de titre stable + portrait selon sexe.
+// V25.7.11 — Carte Mes progrès : bouton stable “Voir mes progrès” + portrait selon sexe.
 // Module externe : n'alourdit pas index.html et ne touche pas au Conseil de Maître Hibou.
 (function(){
   'use strict';
-  if(window.__hibouProgressCardV25710) return;
-  window.__hibouProgressCardV25710 = true;
+  if(window.__hibouProgressCardV25711) return;
+  window.__hibouProgressCardV25711 = true;
 
-  var VERSION = 'V25.7.10';
+  var VERSION = 'V25.7.11';
   var IMG = {
     or: 'images/medaille_or.jpg',
     argent: 'images/medaille_argent.jpg',
@@ -244,8 +244,8 @@
     var skills = unique(rows.map(skillSentence)).slice(0,10);
 
     card.classList.add('profile-life-v23417-clickable','v2578-progress-card');
-    card.setAttribute('aria-label','Mes progrès en CE2 de '+name+'. En voir plus.');
-    card.setAttribute('title','En voir plus !');
+    card.setAttribute('aria-label','Mes progrès en CE2 de '+name+'. Voir mes progrès.');
+    card.setAttribute('title','Voir mes progrès');
     card.setAttribute('role','button');
     card.setAttribute('tabindex','0');
 
@@ -259,7 +259,7 @@
       head.appendChild(hint);
     }
     hint.classList.add('v2578-open-hint');
-    hint.textContent = 'En voir plus !';
+    hint.textContent = 'Voir mes progrès';
 
     var skillsHtml = skills.length
       ? skills.slice(0,6).map(function(s){return '<span class="v2578-skill">'+esc(s)+'</span>';}).join('')
@@ -267,7 +267,7 @@
 
     var html = ''
       + '<div class="v2578-progress-scroll" tabindex="0" aria-label="Résumé des progrès de '+esc(name)+'">'
-      +   '<section class="v2578-section v2578-medals-section" role="button" tabindex="0" title="Ouvre pour en savoir plus sur les médailles">'
+      +   '<section class="v2578-section v2578-medals-section" role="button" tabindex="0" title="Voir mes progrès">'
       +     '<div class="v2578-section-title"><span>🏅 Mes médailles</span><span class="v2578-arrow">›</span></div>'
       +     '<div class="v2578-medal-grid">'
       +       medalTile('or','Or',medals.or)

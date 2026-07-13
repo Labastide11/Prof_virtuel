@@ -1,25 +1,27 @@
 /*
- * Maître Hibou — Journal élève modulaire V25.7.1
+ * Maître Hibou — Journal élève modulaire V25.7.12
  * Objectif : une seule porte d'entrée pour le parcours élève : window.hibouTrackEvent(...)
  * L'index.html ne doit plus contenir de moteur lourd pour « Mon parcours récent ».
  */
 (function () {
   'use strict';
 
-  if (window.__hibouJournalEleveV2571) return;
-  window.__hibouJournalEleveV2571 = true;
+  if (window.__hibouJournalEleveV25712) return;
+  window.__hibouJournalEleveV25712 = true;
 
-  var VERSION = 'V25.7.1';
+  var VERSION = 'V25.7.12';
   var API = 'https://script.google.com/macros/s/AKfycbxz1vYS24sv-c3XVja12geWEXIQl6bQyBoQKBx5kg_fwQaj80_Oc7Y34yeBSRN4lF1f/exec';
   var LAST_PREFIX = 'hibou_journal_last_';
   var HISTORY_PREFIX = 'hibou_journal_history_';
-  var QUEUE_KEY = 'hibou_journal_queue_v2571';
-  var RECORD_QUEUE_KEY = 'hibou_records_calcul_queue_v2571';
+  var QUEUE_KEY = 'hibou_journal_queue_v25712';
+  var RECORD_QUEUE_KEY = 'hibou_records_calcul_queue_v25712';
   var DEFAULT_TEXT = 'Ta prochaine réussite apparaîtra ici.';
   var MAX_HISTORY = 20;
   var isRendering = false;
   var isFlushingEvents = false;
   var isFlushingRecords = false;
+  var DEDUPE_MS = 2200;
+  var recentSignatures = {};
 
   function clean(value) {
     return String(value == null ? '' : value).replace(/\s+/g, ' ').trim();
@@ -168,7 +170,8 @@
 
   function makeDisplay(event) {
     if (!event) return DEFAULT_TEXT;
-    var title = clean(event.titre || event.title || 'Activité terminée');
+    if (event.affichage && !event.__rebuildDisplay) return clean(event.affichage);
+    var title = clean(event.titre || event.title || event.texte || event.text || 'Activité terminée');
     var detail = clean(event.detail || event.details || '');
     var type = clean(event.type);
     var score = event.score !== '' && event.score != null ? Number(event.score) : null;
@@ -219,13 +222,13 @@
       type: type,
       matiere: clean(raw.matiere || raw.subject || ''),
       domaine: clean(raw.domaine || raw.domain || ''),
-      titre: clean(raw.titre || raw.title || 'Activité terminée'),
+      titre: clean(raw.titre || raw.title || raw.texte || raw.text || 'Activité terminée'),
       detail: clean(raw.detail || raw.details || ''),
       score: score,
       total: total,
       niveau: medalFromScore(score, total, raw.niveau || raw.medaille || raw.medal),
       temps_secondes: timeSeconds,
-      source: clean(raw.source || 'maitre_hibou'),
+      source: clean(raw.source || 'maitre_hibou_v25_7_12'),
       appareil: clean(raw.appareil || getDevice()),
       id_evenement: clean(raw.id_evenement || raw.id || '')
     };
@@ -305,9 +308,10 @@
   function eventParams(event) {
     return {
       action: 'enregistrer_parcours',
-      date: event.date,
+      date: event.date_iso,
       heure: event.heure,
       prenom: event.prenom,
+      texte: event.affichage,
       type: event.type,
       matiere: event.matiere,
       domaine: event.domaine,
@@ -434,9 +438,22 @@
     card.innerHTML = html;
   }
 
+  function signatureFor(event) {
+    return [normalizeKey(event.prenom), normalizeKey(event.type), normalizeKey(event.matiere), normalizeKey(event.titre), normalizeKey(event.detail), String(event.score), String(event.total)].join('|');
+  }
+
+  function isDuplicateLiveEvent(event) {
+    var signature = signatureFor(event);
+    var now = Date.now();
+    var previous = recentSignatures[signature] || 0;
+    recentSignatures[signature] = now;
+    return previous && (now - previous) < DEDUPE_MS;
+  }
+
   function trackEvent(raw) {
     var event = normalizeEvent(raw);
     if (!event) return null;
+    if (isDuplicateLiveEvent(event)) return event;
     saveLocal(event);
     renderRecentEvent(event.prenom);
     renderProfileJournal(event.prenom);
@@ -482,49 +499,68 @@
   function recordSuccess(text, type, meta) {
     meta = meta || {};
     type = normalizeKey(type || 'activite_terminee');
+    var fullText = clean(text);
 
     if (type === 'entrainement') {
+      var parsed = parseTrainingScore(fullText);
+      var detectedSubject = meta.matiere || meta.subject || '';
+      if (!detectedSubject) {
+        if (/fran[cç]ais|grammaire|conjugaison|orthographe|lecture/i.test(fullText)) detectedSubject = 'Français';
+        else if (/math|calcul|nombre|ceinture/i.test(fullText)) detectedSubject = 'Maths';
+        else detectedSubject = 'Activité';
+      }
+      var subjectKey = normalizeKey(detectedSubject);
+      var titlePart = fullText.replace(/^[🧮📖✍️✅⭐🏅\s]+/, '').split('—')[0].trim() || 'Entraînement terminé';
+      var detailPart = fullText.indexOf('—') >= 0 ? fullText.split('—').slice(1).join('—').trim() : parsed.detail;
       return trackEvent({
         type: 'entrainement_termine',
-        matiere: meta.matiere || 'Maths',
-        domaine: meta.domaine || 'Calcul mental',
-        titre: clean(text).replace(/^🧮\s*/, '').split('—')[0].trim() || 'Entraînement terminé',
-        detail: clean(text).indexOf('—') >= 0 ? clean(text).split('—').slice(1).join('—').trim() : '',
-        score: meta.score,
-        total: meta.total,
-        temps_secondes: meta.temps_secondes,
-        source: meta.source || 'ancien_entrainement'
+        matiere: capitalizeName(detectedSubject),
+        domaine: meta.domaine || (subjectKey === 'maths' ? 'Calcul mental' : subjectKey === 'francais' ? 'Grammaire' : ''),
+        titre: titlePart,
+        detail: meta.detail || detailPart,
+        score: meta.score != null ? meta.score : parsed.score,
+        total: meta.total != null ? meta.total : parsed.total,
+        temps_secondes: meta.temps_secondes != null ? meta.temps_secondes : parsed.timeSeconds,
+        source: meta.source || ('entrainement_' + subjectKey)
       });
     }
 
     if (type === 'ceinture') {
-      // Ancien appel automatique des compteurs/médailles : on l'ignore.
-      if (!meta.actionReelle && !meta.live && !meta.force) {
-        if (legacyMedalText(text)) return null;
+      var parsedBeltScore = fullText.match(/(\d+)\s*\/\s*(\d+)/);
+      var looksLikeLiveBelt = /ceinture/i.test(fullText) && /valid/i.test(fullText) && !!parsedBeltScore;
+
+      // Ancien appel automatique des compteurs/médailles : on l'ignore, sauf vraie phrase de ceinture validée.
+      if (!meta.actionReelle && !meta.live && !meta.force && !looksLikeLiveBelt) {
+        if (legacyMedalText(fullText)) return null;
         return null;
       }
 
       var belt = meta.belt || {};
       var color = clean(belt.colorName || belt.ceinture || meta.ceinture || '');
+      if (!color) {
+        var colorMatch = fullText.match(/ceinture\s+([^:—\-]+?)\s+(maths|fran[cç]ais)?\s*valid/i);
+        color = clean(colorMatch && colorMatch[1]);
+      }
       var label = clean(belt.label || meta.label || '');
+      var subject = meta.matiere || meta.subject || (/fran[cç]ais/i.test(fullText) ? 'Français' : 'Maths');
       return trackEvent({
         type: 'ceinture_validee',
-        matiere: meta.matiere || 'Maths',
-        domaine: meta.domaine || 'Calcul mental',
-        titre: 'Ceinture ' + (color || '') + ' Maths validée',
+        matiere: subject,
+        domaine: meta.domaine || (normalizeKey(subject) === 'maths' ? 'Calcul mental' : 'Grammaire'),
+        titre: 'Ceinture ' + (color || '') + ' ' + subject + ' validée',
         detail: label,
-        score: meta.score,
-        total: meta.total,
+        score: meta.score != null ? meta.score : (parsedBeltScore ? Number(parsedBeltScore[1]) : ''),
+        total: meta.total != null ? meta.total : (parsedBeltScore ? Number(parsedBeltScore[2]) : ''),
         niveau: meta.niveau || meta.medaille || meta.medal,
-        source: meta.source || 'ceinture_maths'
+        source: meta.source || ('ceinture_' + normalizeKey(subject))
       });
     }
 
     return trackEvent({
       type: type || 'activite_terminee',
-      matiere: meta.matiere || '',
+      matiere: meta.matiere || meta.subject || '',
       domaine: meta.domaine || '',
-      titre: clean(text) || 'Activité terminée',
+      titre: fullText || 'Activité terminée',
       detail: meta.detail || '',
       score: meta.score,
       total: meta.total,
@@ -583,7 +619,7 @@
     window.hibouFinalizeMentalRecord = finalizeMentalRecord;
     window.hibouFinalizeMentalRecordV25627 = finalizeMentalRecord;
 
-    ['25219', '25220', '25221', '25222', '25223', '25224', '25225', '25226', '25227', '25228', '25229', '25230', '25632', '25636', '25637', '25638', '25639', '25640', '25641', '25642', '25643', '25644', '25645', '25646', '2570', '2571'].forEach(function (version) {
+    ['25219', '25220', '25221', '25222', '25223', '25224', '25225', '25226', '25227', '25228', '25229', '25230', '25632', '25636', '25637', '25638', '25639', '25640', '25641', '25642', '25643', '25644', '25645', '25646', '2570', '2571', '2572', '2573', '2574', '2575', '2576', '2577', '2578', '2579', '25710', '25711', '25712'].forEach(function (version) {
       window['hibouRecordTrainingSuccessV' + version] = recordTraining;
       window['hibouRecordSuccessV' + version] = recordSuccess;
     });
@@ -620,6 +656,50 @@
     window.openStudentProfileLifeV23417 = wrapped;
   }
 
+  function readQuestionJournalLatest() {
+    try {
+      var rows = JSON.parse(localStorage.getItem('hibou_question_journal') || '[]');
+      return Array.isArray(rows) ? rows[0] : null;
+    } catch (error) { return null; }
+  }
+
+  function wrapQuestionBoxSave() {
+    var original = window.questionBoxSave;
+    if (typeof original !== 'function' || original.__hibouJournalWrapped) return;
+    var wrapped = function () {
+      var before = readQuestionJournalLatest();
+      var beforeKey = before ? clean(before.date + '|' + before.questionCorrigee + '|' + before.questionOriginale) : '';
+      var result = original.apply(this, arguments);
+      setTimeout(function () {
+        var after = readQuestionJournalLatest();
+        if (!after) return;
+        var afterKey = clean(after.date + '|' + after.questionCorrigee + '|' + after.questionOriginale);
+        if (afterKey && afterKey !== beforeKey) {
+          recordQuestion(after.subject || after.matiere || 'Boîte à questions', after.questionCorrigee || after.questionOriginale || after.question || '');
+        }
+      }, 40);
+      return result;
+    };
+    wrapped.__hibouJournalWrapped = true;
+    window.questionBoxSave = wrapped;
+  }
+
+  function wrapLegacyQuestionLogger() {
+    var original = window.logQuestionToJournal;
+    if (typeof original !== 'function' || original.__hibouJournalWrapped) return;
+    var wrapped = function () {
+      var result = original.apply(this, arguments);
+      try {
+        if (result && result.questionCorrigee && !/bloqu/i.test(result.status || '')) {
+          recordQuestion(result.subject || 'Boîte à questions', result.questionCorrigee || result.questionOriginale || result.question);
+        }
+      } catch (error) {}
+      return result;
+    };
+    wrapped.__hibouJournalWrapped = true;
+    window.logQuestionToJournal = wrapped;
+  }
+
   function bindEvents() {
     document.addEventListener('hibou:question-added', function (event) {
       var detail = (event && event.detail) || {};
@@ -628,6 +708,14 @@
     window.addEventListener('hibou:question-added', function (event) {
       var detail = (event && event.detail) || {};
       recordQuestion(detail.matiere || detail.subject || '', detail.questionCorrigee || detail.question || detail.text || '');
+    });
+    window.addEventListener('hibou:track-event', function (event) {
+      var detail = (event && event.detail) || {};
+      trackEvent(detail);
+    });
+    document.addEventListener('hibou:track-event', function (event) {
+      var detail = (event && event.detail) || {};
+      trackEvent(detail);
     });
     window.addEventListener('hibou:bilan-updated', function (event) {
       var detail = (event && event.detail) || {};
@@ -654,6 +742,8 @@
     bindPublicApi();
     bindCard();
     wrapProfilePopup();
+    wrapQuestionBoxSave();
+    wrapLegacyQuestionLogger();
     renderRecentEvent(getCurrentName());
     renderProfileJournal(getCurrentName());
     flushEvents();

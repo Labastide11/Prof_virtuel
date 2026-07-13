@@ -1,4 +1,4 @@
-/* V25.7.9 — Carte Mes progrès : médailles image + zone centrale défilante.
+/* V25.7.10 — Carte Mes progrès : titre unique stable + médailles image + zone centrale défilante.
    Objectif : ne pas modifier le conseil de Maître Hibou ni Mon parcours récent. */
 
 /* V25.7.9 — En-tête compact : portrait + “Tim · mes progrès en CE2” + bouton à droite. */
@@ -327,5 +327,28 @@ body.v21-final .v21-profile-card.v2578-progress-card .v21-change-student-btn{
 @media (min-width:900px) and (max-width:1180px){
   body.v21-final .v21-profile-card.v2578-progress-card .v21-profile-head h3.v2578-progress-title{
     font-size:15.5px !important;
+  }
+}
+
+
+/* V25.7.10 — Titre unique : on masque l'ancien h3 que les anciens scripts peuvent réécrire en “Mes progrès”. */
+body.v21-final .v21-profile-card.v2578-progress-card .v21-profile-head h3.v25710-hidden-old-title,
+body.v21-final .v21-profile-card.v2578-progress-card .v21-profile-head h3.v2578-progress-title{
+  display:none !important;
+}
+body.v21-final .v21-profile-card.v2578-progress-card .v21-profile-head .v25710-compact-title{
+  flex:1 1 auto !important;
+  min-width:0 !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  white-space:nowrap !important;
+  color:#0F2B60 !important;
+  font-size:18px !important;
+  font-weight:1000 !important;
+  line-height:1.05 !important;
+}
+@media (min-width:900px) and (max-width:1180px), (max-height:720px){
+  body.v21-final .v21-profile-card.v2578-progress-card .v21-profile-head .v25710-compact-title{
+    font-size:15px !important;
   }
 }

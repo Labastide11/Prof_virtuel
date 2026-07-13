@@ -1,11 +1,11 @@
-// V25.7.6 — Carte Mes progrès de l'accueil.
+// V25.7.7 — Carte Mes progrès de l'accueil.
 // Module externe : n'alourdit pas index.html et ne touche pas au Conseil de Maître Hibou.
 (function(){
   'use strict';
-  if(window.__hibouProgressCardV2576) return;
-  window.__hibouProgressCardV2576 = true;
+  if(window.__hibouProgressCardV2577) return;
+  window.__hibouProgressCardV2577 = true;
 
-  var VERSION = 'V25.7.6';
+  var VERSION = 'V25.7.7';
   var IMG = {
     or: 'images/medaille_or.jpg',
     argent: 'images/medaille_argent.jpg',
@@ -134,10 +134,10 @@
     return visible;
   }
   function medalTile(kind, label, count){
-    return '<div class="v2576-medal-tile '+kind+'">'
+    return '<div class="v2577-medal-tile '+kind+'">'
       + '<img src="'+IMG[kind]+'" alt="Médaille '+esc(label)+'" loading="lazy">'
-      + '<div class="v2576-medal-count">'+esc(count)+'</div>'
-      + '<div class="v2576-medal-label">'+esc(label)+'</div>'
+      + '<div class="v2577-medal-count">'+esc(count)+'</div>'
+      + '<div class="v2577-medal-label">'+esc(label)+'</div>'
       + '</div>';
   }
   function openMedals(ev){
@@ -150,7 +150,7 @@
     }catch(e){}
   }
   function openProgress(ev){
-    if(ev && ev.target && ev.target.closest && ev.target.closest('.v21-change-student-btn,.v2576-medals-section,button,a,input,select,textarea')) return;
+    if(ev && ev.target && ev.target.closest && ev.target.closest('.v21-change-student-btn,.v2577-medals-section,button,a,input,select,textarea')) return;
     if(typeof window.openStudentProfileLifeV23417 === 'function') window.openStudentProfileLifeV23417(ev);
   }
   function render(){
@@ -165,7 +165,7 @@
     var medals = countMedals(rows);
     var skills = unique(rows.map(skillSentence)).slice(0,10);
 
-    card.classList.add('profile-life-v23417-clickable','v2576-progress-card');
+    card.classList.add('profile-life-v23417-clickable','v2577-progress-card');
     card.setAttribute('aria-label','Mes progrès de '+name+'. Ouvrir pour en savoir plus.');
     card.setAttribute('title','Ouvre pour en savoir plus !');
     card.setAttribute('role','button');
@@ -180,50 +180,50 @@
       hint.className = 'profile-life-v23417-open-hint';
       head.appendChild(hint);
     }
-    hint.classList.add('v2576-open-hint');
+    hint.classList.add('v2577-open-hint');
     hint.textContent = '⌄ Ouvre pour en savoir plus !';
 
     var skillsHtml = skills.length
-      ? skills.slice(0,6).map(function(s){return '<span class="v2576-skill">'+esc(s)+'</span>';}).join('')
-      : '<span class="v2576-empty">Aucune compétence validée pour le moment.</span>';
+      ? skills.slice(0,6).map(function(s){return '<span class="v2577-skill">'+esc(s)+'</span>';}).join('')
+      : '<span class="v2577-empty">Aucune compétence validée pour le moment.</span>';
 
     var html = ''
-      + '<div class="v2576-progress-scroll" tabindex="0" aria-label="Résumé des progrès de '+esc(name)+'">'
-      +   '<section class="v2576-section v2576-medals-section" role="button" tabindex="0" title="Ouvre pour en savoir plus sur les médailles">'
-      +     '<div class="v2576-section-title"><span>🏅 Mes médailles</span><span class="v2576-arrow">›</span></div>'
-      +     '<div class="v2576-medal-grid">'
+      + '<div class="v2577-progress-scroll" tabindex="0" aria-label="Résumé des progrès de '+esc(name)+'">'
+      +   '<section class="v2577-section v2577-medals-section" role="button" tabindex="0" title="Ouvre pour en savoir plus sur les médailles">'
+      +     '<div class="v2577-section-title"><span>🏅 Mes médailles</span><span class="v2577-arrow">›</span></div>'
+      +     '<div class="v2577-medal-grid">'
       +       medalTile('or','Or',medals.or)
       +       medalTile('argent','Argent',medals.argent)
       +       medalTile('bronze','Bronze',medals.bronze)
       +     '</div>'
       +   '</section>'
-      +   '<section class="v2576-section">'
-      +     '<div class="v2576-section-title"><span>🎗️ Mes ceintures</span></div>'
-      +     '<div class="v2576-lines">'
-      +       '<div class="v2576-line"><strong>Maths :</strong><span><span class="v2576-pill">'+esc(beltSummary(rows,'Maths'))+'</span></span></div>'
-      +       '<div class="v2576-line"><strong>Français :</strong><span><span class="v2576-pill">'+esc(beltSummary(rows,'Français'))+'</span></span></div>'
+      +   '<section class="v2577-section">'
+      +     '<div class="v2577-section-title"><span>🎗️ Mes ceintures</span></div>'
+      +     '<div class="v2577-lines">'
+      +       '<div class="v2577-line"><strong>Maths :</strong><span><span class="v2577-pill">'+esc(beltSummary(rows,'Maths'))+'</span></span></div>'
+      +       '<div class="v2577-line"><strong>Français :</strong><span><span class="v2577-pill">'+esc(beltSummary(rows,'Français'))+'</span></span></div>'
       +     '</div>'
       +   '</section>'
-      +   '<section class="v2576-section">'
-      +     '<div class="v2576-section-title"><span>✔ Je sais déjà...</span></div>'
-      +     '<div class="v2576-skills">'+skillsHtml+'</div>'
+      +   '<section class="v2577-section">'
+      +     '<div class="v2577-section-title"><span>✔ Je sais déjà...</span></div>'
+      +     '<div class="v2577-skills">'+skillsHtml+'</div>'
       +   '</section>'
       + '</div>'
       + '<button class="v21-change-student-btn" onclick="changerEleve()" type="button">👤 Changer d’élève / Donner la tablette</button>';
 
-    if(stats.getAttribute('data-v2576-html') !== html){
-      stats.classList.add('v2576-progress-stats');
+    if(stats.getAttribute('data-v2577-html') !== html){
+      stats.classList.add('v2577-progress-stats');
       stats.innerHTML = html;
-      stats.setAttribute('data-v2576-html', html);
-      var med = stats.querySelector('.v2576-medals-section');
+      stats.setAttribute('data-v2577-html', html);
+      var med = stats.querySelector('.v2577-medals-section');
       if(med){
         med.addEventListener('click', openMedals, true);
         med.addEventListener('keydown', function(ev){ if(ev.key === 'Enter' || ev.key === ' '){ openMedals(ev); } }, true);
       }
     }
 
-    if(!card.__v2576OpenBound){
-      card.__v2576OpenBound = true;
+    if(!card.__v2577OpenBound){
+      card.__v2577OpenBound = true;
       card.addEventListener('click', openProgress, true);
       card.addEventListener('keydown', function(ev){
         if(ev.key === 'Enter' || ev.key === ' '){ ev.preventDefault(); openProgress(ev); }

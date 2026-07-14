@@ -1,70 +1,31 @@
-/* V25.7.11 — Carte Mes progrès : titre unique stable + médailles image + zone centrale défilante.
+/* V25.7.6 — Carte Mes progrès : médailles image + zone centrale défilante.
    Objectif : ne pas modifier le conseil de Maître Hibou ni Mon parcours récent. */
-
-/* V25.7.11 — En-tête compact : portrait + “Tim - mes progrès en CE2” + bouton “Voir mes progrès”. */
-body.v21-final .v21-profile-card.v2578-progress-card .v21-profile-head{
-  display:flex !important;
-  align-items:center !important;
-  flex-wrap:nowrap !important;
-  gap:8px !important;
-  width:100% !important;
-}
-body.v21-final .v21-profile-card.v2578-progress-card .v21-profile-head .v21-avatar{
-  flex:0 0 auto !important;
-}
-body.v21-final .v21-profile-card.v2578-progress-card .v21-profile-head .v21-avatar.v2579-student-portrait{
-  overflow:hidden !important;
-  padding:0 !important;
-  background:#EAF5FF !important;
-  border:3px solid #FFFFFF !important;
-  box-shadow:0 5px 12px rgba(16,58,110,.18) !important;
-}
-body.v21-final .v21-profile-card.v2578-progress-card .v21-profile-head .v21-avatar.v2579-student-portrait img{
-  width:100% !important;
-  height:100% !important;
-  display:block !important;
-  object-fit:cover !important;
-  border-radius:50% !important;
-}
-body.v21-final .v21-profile-card.v2578-progress-card .v21-profile-head h3.v2578-progress-title{
-  flex:1 1 auto !important;
-  min-width:0 !important;
-  overflow:hidden !important;
-  text-overflow:ellipsis !important;
-  white-space:nowrap !important;
-  font-size:18px !important;
-  line-height:1.05 !important;
-}
-body.v21-final .v21-profile-card.v2578-progress-card .v21-level{
-  display:none !important;
-}
-
-body.v21-final .v21-profile-card.v2578-progress-card{
+body.v21-final .v21-profile-card.v2576-progress-card{
   display:flex !important;
   flex-direction:column !important;
   overflow:hidden !important;
 }
-body.v21-final .v21-profile-card.v2578-progress-card .v21-profile-head{
+body.v21-final .v21-profile-card.v2576-progress-card .v21-profile-head{
   flex:0 0 auto !important;
   margin-bottom:8px !important;
   gap:10px !important;
 }
-body.v21-final .v21-profile-card.v2578-progress-card .v21-student{
+body.v21-final .v21-profile-card.v2576-progress-card .v21-student{
   min-width:0 !important;
 }
-body.v21-final .v21-profile-card.v2578-progress-card .v21-profile-head h3{
+body.v21-final .v21-profile-card.v2576-progress-card .v21-profile-head h3{
   overflow:hidden !important;
   text-overflow:ellipsis !important;
   white-space:nowrap !important;
 }
-body.v21-final .v21-profile-card.v2578-progress-card .v21-stats.v2578-progress-stats{
+body.v21-final .v21-profile-card.v2576-progress-card .v21-stats.v2576-progress-stats{
   display:flex !important;
   flex-direction:column !important;
   flex:1 1 auto !important;
   min-height:0 !important;
   gap:8px !important;
 }
-.v2578-open-hint{
+.v2576-open-hint{
   display:inline-flex !important;
   align-items:center !important;
   justify-content:center !important;
@@ -81,7 +42,7 @@ body.v21-final .v21-profile-card.v2578-progress-card .v21-stats.v2578-progress-s
   box-shadow:0 3px 8px rgba(26,100,190,.08) !important;
   white-space:nowrap !important;
 }
-.v2578-progress-scroll{
+.v2576-progress-scroll{
   flex:1 1 auto;
   min-height:0;
   overflow-y:auto;
@@ -92,17 +53,17 @@ body.v21-final .v21-profile-card.v2578-progress-card .v21-stats.v2578-progress-s
   padding-right:4px;
   scrollbar-gutter:stable;
 }
-.v2578-progress-scroll::-webkit-scrollbar{width:9px;}
-.v2578-progress-scroll::-webkit-scrollbar-track{background:#EDF6FF;border-radius:999px;}
-.v2578-progress-scroll::-webkit-scrollbar-thumb{background:#9CCBFF;border-radius:999px;border:2px solid #EDF6FF;}
-.v2578-section{
+.v2576-progress-scroll::-webkit-scrollbar{width:9px;}
+.v2576-progress-scroll::-webkit-scrollbar-track{background:#EDF6FF;border-radius:999px;}
+.v2576-progress-scroll::-webkit-scrollbar-thumb{background:#9CCBFF;border-radius:999px;border:2px solid #EDF6FF;}
+.v2576-section{
   background:rgba(255,255,255,.96);
   border:2px solid rgba(174,208,241,.95);
   border-radius:16px;
   padding:8px 10px;
   box-shadow:0 4px 12px rgba(54,94,140,.08);
 }
-.v2578-section-title{
+.v2576-section-title{
   display:flex;
   align-items:center;
   justify-content:space-between;
@@ -113,24 +74,24 @@ body.v21-final .v21-profile-card.v2578-progress-card .v21-stats.v2578-progress-s
   line-height:1.1;
   margin-bottom:6px;
 }
-.v2578-section-title .v2578-arrow{
+.v2576-section-title .v2576-arrow{
   color:#1E8BFF;
   font-size:22px;
   line-height:1;
 }
-.v2578-medals-section{
+.v2576-medals-section{
   cursor:pointer;
 }
-.v2578-medals-section:active{
+.v2576-medals-section:active{
   transform:translateY(1px);
 }
-.v2578-medal-grid{
+.v2576-medal-grid{
   display:grid;
   grid-template-columns:repeat(3,minmax(0,1fr));
   gap:8px;
   align-items:stretch;
 }
-.v2578-medal-tile{
+.v2576-medal-tile{
   min-width:0;
   display:grid;
   grid-template-rows:auto auto auto;
@@ -142,14 +103,14 @@ body.v21-final .v21-profile-card.v2578-progress-card .v21-stats.v2578-progress-s
   background:linear-gradient(180deg,#FFFFFF 0%,#F7FBFF 100%);
   border:2px solid #E4F1FF;
 }
-.v2578-medal-tile img{
+.v2576-medal-tile img{
   width:52px;
   height:52px;
   object-fit:contain;
   display:block;
   filter:drop-shadow(0 4px 4px rgba(0,0,0,.12));
 }
-.v2578-medal-count{
+.v2576-medal-count{
   min-width:34px;
   padding:1px 8px 2px;
   border-radius:999px;
@@ -161,20 +122,20 @@ body.v21-final .v21-profile-card.v2578-progress-card .v21-stats.v2578-progress-s
   line-height:1.05;
   text-align:center;
 }
-.v2578-medal-label{
+.v2576-medal-label{
   color:#4D5F7E;
   font-size:10.5px;
   font-weight:1000;
   line-height:1;
 }
-.v2578-medal-tile.or .v2578-medal-count{border-color:#FFD977;background:#FFF9E3;}
-.v2578-medal-tile.argent .v2578-medal-count{border-color:#BFDFFF;background:#F4FAFF;}
-.v2578-medal-tile.bronze .v2578-medal-count{border-color:#A8E9C1;background:#F4FFF7;}
-.v2578-lines{
+.v2576-medal-tile.or .v2576-medal-count{border-color:#FFD977;background:#FFF9E3;}
+.v2576-medal-tile.argent .v2576-medal-count{border-color:#BFDFFF;background:#F4FAFF;}
+.v2576-medal-tile.bronze .v2576-medal-count{border-color:#A8E9C1;background:#F4FFF7;}
+.v2576-lines{
   display:grid;
   gap:5px;
 }
-.v2578-line{
+.v2576-line{
   display:grid;
   grid-template-columns:auto 1fr;
   gap:7px;
@@ -184,11 +145,11 @@ body.v21-final .v21-profile-card.v2578-progress-card .v21-stats.v2578-progress-s
   font-weight:900;
   line-height:1.2;
 }
-.v2578-line strong{
+.v2576-line strong{
   color:#061F4F;
   font-weight:1000;
 }
-.v2578-pill{
+.v2576-pill{
   display:inline-flex;
   align-items:center;
   gap:4px;
@@ -199,12 +160,12 @@ body.v21-final .v21-profile-card.v2578-progress-card .v21-stats.v2578-progress-s
   color:#102A5D;
   font-weight:1000;
 }
-.v2578-skills{
+.v2576-skills{
   display:flex;
   flex-wrap:wrap;
   gap:5px;
 }
-.v2578-skill{
+.v2576-skill{
   display:inline-flex;
   align-items:center;
   max-width:100%;
@@ -217,138 +178,53 @@ body.v21-final .v21-profile-card.v2578-progress-card .v21-stats.v2578-progress-s
   font-weight:900;
   line-height:1.15;
 }
-.v2578-empty{
+.v2576-empty{
   color:#6F7891;
   font-size:12px;
   font-weight:900;
 }
-body.v21-final .v21-profile-card.v2578-progress-card .v21-change-student-btn{
+body.v21-final .v21-profile-card.v2576-progress-card .v21-change-student-btn{
   flex:0 0 auto !important;
   margin-top:2px !important;
 }
 @media (min-width:900px) and (max-width:1180px), (max-height:720px){
-  .v2578-open-hint{font-size:10.5px !important;padding:5px 8px !important;}
-  .v2578-section{padding:6px 8px;border-radius:14px;}
-  .v2578-section-title{font-size:12px;margin-bottom:4px;}
-  .v2578-medal-grid{gap:5px;}
-  .v2578-medal-tile{padding:3px 2px 4px;border-radius:12px;}
-  .v2578-medal-tile img{width:40px;height:40px;}
-  .v2578-medal-count{font-size:13.5px;min-width:28px;padding:1px 6px;}
-  .v2578-medal-label{font-size:9px;}
-  .v2578-line{font-size:10.5px;gap:5px;}
-  .v2578-skill{font-size:10px;padding:3px 6px;}
+  .v2576-open-hint{font-size:10.5px !important;padding:5px 8px !important;}
+  .v2576-section{padding:6px 8px;border-radius:14px;}
+  .v2576-section-title{font-size:12px;margin-bottom:4px;}
+  .v2576-medal-grid{gap:5px;}
+  .v2576-medal-tile{padding:3px 2px 4px;border-radius:12px;}
+  .v2576-medal-tile img{width:40px;height:40px;}
+  .v2576-medal-count{font-size:13.5px;min-width:28px;padding:1px 6px;}
+  .v2576-medal-label{font-size:9px;}
+  .v2576-line{font-size:10.5px;gap:5px;}
+  .v2576-skill{font-size:10px;padding:3px 6px;}
 }
 @media(max-width:899px){
-  .v2578-medal-tile img{width:48px;height:48px;}
+  .v2576-medal-tile img{width:48px;height:48px;}
 }
 
-
-/* V25.7.9 — Sécurité tablette : la carte ne doit plus agrandir la page.
-   Header fixe + contenu central avec ascenseur + bouton rouge fixe en bas. */
-body.v21-final .v21-profile-card.v2578-progress-card{
-  height:clamp(255px, 31vh, 335px) !important;
-  min-height:0 !important;
-  max-height:335px !important;
-  box-sizing:border-box !important;
-  contain:layout paint !important;
+/* V25.7.31 — Carte Mes progrès : médailles plus grandes et compteurs renforcés. */
+.v2576-medal-tile{
+  padding:3px 4px 4px !important;
+  gap:1px !important;
 }
-body.v21-final .v21-profile-card.v2578-progress-card .v21-profile-head{
-  flex:0 0 auto !important;
+.v2576-medal-tile img{
+  width:66px !important;
+  height:66px !important;
 }
-body.v21-final .v21-profile-card.v2578-progress-card .v21-stats.v2578-progress-stats{
-  flex:1 1 auto !important;
-  min-height:0 !important;
-  height:auto !important;
-  overflow:hidden !important;
-}
-body.v21-final .v21-profile-card.v2578-progress-card .v2578-progress-scroll{
-  flex:1 1 auto !important;
-  min-height:0 !important;
-  overflow-y:auto !important;
-  overflow-x:hidden !important;
-}
-body.v21-final .v21-profile-card.v2578-progress-card .v21-change-student-btn{
-  flex:0 0 auto !important;
-  position:relative !important;
-  z-index:2 !important;
-}
-
-@media (min-width:900px) and (max-height:850px){
-  body.v21-final .v21-profile-card.v2578-progress-card{
-    height:300px !important;
-    max-height:300px !important;
-  }
-}
-@media (min-width:900px) and (max-height:760px){
-  body.v21-final .v21-profile-card.v2578-progress-card{
-    height:265px !important;
-    max-height:265px !important;
-    padding:7px !important;
-  }
-  body.v21-final .v21-profile-card.v2578-progress-card .v21-profile-head{margin-bottom:5px !important;}
-  .v2578-open-hint{font-size:10px !important;padding:5px 7px !important;}
-  .v2578-section{padding:5px 7px !important;border-radius:13px !important;}
-  .v2578-progress-scroll{gap:6px !important;}
-  .v2578-medal-grid{gap:6px !important;}
-  .v2578-medal-tile{padding:3px 2px 4px !important;}
-  .v2578-medal-tile img{width:38px !important;height:38px !important;}
-  .v2578-medal-count{font-size:13px !important;min-width:26px !important;padding:0 6px 1px !important;}
-  .v2578-medal-label{font-size:8.8px !important;}
-  body.v21-final .v21-profile-card.v2578-progress-card .v21-change-student-btn{
-    min-height:30px !important;
-    padding:5px 8px !important;
-    font-size:10.5px !important;
-  }
-}
-@media (min-width:900px) and (max-height:690px){
-  body.v21-final .v21-profile-card.v2578-progress-card{
-    height:230px !important;
-    max-height:230px !important;
-  }
-  .v2578-medal-tile img{width:34px !important;height:34px !important;}
-}
-@media (max-width:899px){
-  body.v21-final .v21-profile-card.v2578-progress-card{
-    height:360px !important;
-    max-height:360px !important;
-  }
-}
-
-/* V25.7.8 — ajustements tablette pour garder l'en-tête sur une seule ligne. */
-@media (min-width:900px) and (max-height:760px){
-  body.v21-final .v21-profile-card.v2578-progress-card .v21-profile-head h3.v2578-progress-title{
-    font-size:14px !important;
-  }
-  .v2578-open-hint{
-    font-size:9.5px !important;
-    padding:5px 7px !important;
-  }
-}
-@media (min-width:900px) and (max-width:1180px){
-  body.v21-final .v21-profile-card.v2578-progress-card .v21-profile-head h3.v2578-progress-title{
-    font-size:15.5px !important;
-  }
-}
-
-
-/* V25.7.11 — Titre unique : on masque l'ancien h3 que les anciens scripts peuvent réécrire en “Mes progrès”. */
-body.v21-final .v21-profile-card.v2578-progress-card .v21-profile-head h3.v25710-hidden-old-title,
-body.v21-final .v21-profile-card.v2578-progress-card .v21-profile-head h3.v2578-progress-title{
-  display:none !important;
-}
-body.v21-final .v21-profile-card.v2578-progress-card .v21-profile-head .v25710-compact-title{
-  flex:1 1 auto !important;
-  min-width:0 !important;
-  overflow:hidden !important;
-  text-overflow:ellipsis !important;
-  white-space:nowrap !important;
-  color:#0F2B60 !important;
+.v2576-medal-count{
+  min-width:38px !important;
+  padding:1px 9px 2px !important;
   font-size:18px !important;
-  font-weight:1000 !important;
-  line-height:1.05 !important;
 }
-@media (min-width:900px) and (max-width:1180px), (max-height:720px){
-  body.v21-final .v21-profile-card.v2578-progress-card .v21-profile-head .v25710-compact-title{
-    font-size:15px !important;
-  }
+.v2576-medal-label{
+  font-size:11.5px !important;
+}
+@media (min-width:900px) and (max-height:760px){
+  .v2576-medal-tile img{width:54px !important;height:54px !important;}
+  .v2576-medal-count{font-size:15.5px !important;min-width:32px !important;}
+  .v2576-medal-label{font-size:9.8px !important;}
+}
+@media(max-width:899px){
+  .v2576-medal-tile img{width:60px !important;height:60px !important;}
 }

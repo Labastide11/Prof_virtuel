@@ -202,3 +202,51 @@ body.v21-final .v21-profile-card.v2576-progress-card .v21-change-student-btn{
 @media(max-width:899px){
   .v2576-medal-tile img{width:48px;height:48px;}
 }
+
+
+/* V25.7.33 — verrouillage définitif de la carte Mes progrès sur tablette. */
+body.v21-final .v21-profile-card.v2576-progress-card{
+  height:clamp(270px, 32vh, 345px) !important;
+  min-height:270px !important;
+  max-height:345px !important;
+  box-sizing:border-box !important;
+  contain:layout paint !important;
+}
+body.v21-final .v21-profile-card.v2576-progress-card .v21-profile-head{
+  flex:0 0 auto !important;
+}
+body.v21-final .v21-profile-card.v2576-progress-card .v21-stats.v2576-progress-stats{
+  flex:1 1 0 !important;
+  height:0 !important;
+  min-height:0 !important;
+  overflow:hidden !important;
+}
+body.v21-final .v21-profile-card.v2576-progress-card .v2576-progress-scroll{
+  flex:1 1 0 !important;
+  height:0 !important;
+  min-height:0 !important;
+  overflow-y:scroll !important;
+  overflow-x:hidden !important;
+  scrollbar-width:auto !important;
+  scrollbar-color:#69AFFF #EAF4FF !important;
+  touch-action:pan-y !important;
+}
+body.v21-final .v21-profile-card.v2576-progress-card .v21-change-student-btn{
+  flex:0 0 auto !important;
+  position:relative !important;
+  z-index:3 !important;
+}
+@media (min-width:900px) and (max-height:760px){
+  body.v21-final .v21-profile-card.v2576-progress-card{
+    height:285px !important;
+    min-height:285px !important;
+    max-height:285px !important;
+  }
+}
+@media (min-width:900px) and (max-height:680px){
+  body.v21-final .v21-profile-card.v2576-progress-card{
+    height:245px !important;
+    min-height:245px !important;
+    max-height:245px !important;
+  }
+}

@@ -5,7 +5,7 @@
   if(window.__hibouProgressCardV2576) return;
   window.__hibouProgressCardV2576 = true;
 
-  var VERSION = 'V25.7.6';
+  var VERSION = 'V25.7.33';
   var IMG = {
     or: 'images/medaille_or.jpg',
     argent: 'images/medaille_argent.jpg',
@@ -230,16 +230,40 @@
       }, true);
     }
   }
-  function schedule(delay){ clearTimeout(schedule.t); schedule.t = setTimeout(render, delay || 0); }
-  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function(){schedule(0);schedule(450);});
-  else { schedule(0); schedule(450); }
-  window.addEventListener('load', function(){ [0,120,500,1200,2500].forEach(schedule); });
-  window.addEventListener('focus', function(){ schedule(100); });
-  document.addEventListener('visibilitychange', function(){ if(!document.hidden) schedule(100); });
+  var lockBusy = false;
+  function schedule(delay){
+    clearTimeout(schedule.t);
+    schedule.t = setTimeout(function(){
+      if(lockBusy) return;
+      lockBusy = true;
+      try{ render(); }finally{ lockBusy = false; }
+    }, delay || 0);
+  }
+  function installPermanentLock(){
+    var card = document.querySelector('.v21-profile-card');
+    if(!card || card.__v25733Observer) return;
+    card.__v25733Observer = new MutationObserver(function(){
+      if(lockBusy) return;
+      var h3 = card.querySelector('.v21-profile-head h3');
+      var hint = card.querySelector('.profile-life-v23417-open-hint');
+      var stats = card.querySelector('.v21-stats');
+      var invalid = !card.classList.contains('v2576-progress-card')
+        || !h3 || h3.textContent !== (currentName() || 'Élève')
+        || !hint || hint.textContent.indexOf('Ouvre pour en savoir plus') === -1
+        || !stats || !stats.querySelector('.v2576-progress-scroll');
+      if(invalid) schedule(0);
+    });
+    card.__v25733Observer.observe(card,{subtree:true,childList:true,characterData:true,attributes:true});
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function(){schedule(0);setTimeout(installPermanentLock,50);});
+  else { schedule(0); setTimeout(installPermanentLock,50); }
+  window.addEventListener('load', function(){ [0,80,250,700,1500,3000].forEach(schedule); setTimeout(installPermanentLock,120); });
+  window.addEventListener('focus', function(){ schedule(0); });
+  document.addEventListener('visibilitychange', function(){ if(!document.hidden) schedule(0); });
   ['hibou:belts-updated','hibou:bilan-updated','hibou:student-event','hibou:student-changed'].forEach(function(type){
-    document.addEventListener(type, function(){ schedule(80); });
+    document.addEventListener(type, function(){ schedule(0); });
   });
-  setInterval(function(){ schedule(0); }, 2200);
+  setInterval(function(){ schedule(0); installPermanentLock(); }, 700);
 
   try{ document.title = '🦉 Maître Hibou '+VERSION; window.MAITRE_HIBOU_VERSION = VERSION; }catch(e){}
 })();

@@ -1,15 +1,15 @@
-/* Maître Hibou V25.7.24 — Vocabulaire modulaire en JSON
+/* Maître Hibou V25.7.28 — Vocabulaire modulaire en JSON
    Activités : familles de mots, synonymes, contraires, mots génériques.
    Contenu pédagogique séparé dans data/vocabulaire.json pour garder index.html léger.
 */
 (function(){
   'use strict';
-  if(window.__hibouVocabulaireV25724) return;
-  window.__hibouVocabulaireV25724 = true;
+  if(window.__hibouVocabulaireV25728) return;
+  window.__hibouVocabulaireV25728 = true;
 
-  var DATA_URL = 'data/vocabulaire.json?v=25724';
-  var CACHE_KEY = 'hibou_vocabulaire_json_v25724';
-  var state = { data:null, activity:null, questions:[], index:0, score:0, total:0, answers:[] };
+  var DATA_URL = 'data/vocabulaire.json?v=25728';
+  var CACHE_KEY = 'hibou_vocabulaire_json_v25728';
+  var state = { data:null, activity:null, questions:[], index:0, score:0, total:0, answers:[], hintsUsed:0, hintsByQuestion:{} };
 
   function $(id){ return document.getElementById(id); }
   function popupInner(){ return $('frenchPopupInnerV2348'); }
@@ -24,21 +24,22 @@
   }
 
   function injectStyle(){
-    if($('hibouVocabulaireV25724Style')) return;
+    if($('hibouVocabulaireV25728Style')) return;
     var css = ''+
-    '.vocab-v25724-menu{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:12px}'+
-    '.vocab-v25724-card{border:2px solid #ddd6fe;background:linear-gradient(135deg,#faf5ff,#ffffff);border-radius:22px;padding:18px 14px;text-align:center;font-family:inherit;font-weight:900;color:#4c1d95;cursor:pointer;box-shadow:0 8px 24px rgba(124,58,237,.12)}'+
-    '.vocab-v25724-card:hover{transform:translateY(-1px);box-shadow:0 12px 28px rgba(124,58,237,.16)}'+
-    '.vocab-v25724-icon{font-size:42px;margin-bottom:8px}.vocab-v25724-title{font-size:20px;color:#4c1d95}.vocab-v25724-desc{font-size:13px;color:#6d28d9;margin-top:5px;line-height:1.25}'+
-    '.vocab-v25724-box{background:#fff;border:2px solid #e9d5ff;border-radius:18px;padding:16px;margin-top:12px}'+
-    '.vocab-v25724-question{background:#faf5ff;border:2px solid #ddd6fe;border-radius:16px;padding:14px;font-size:20px;font-weight:1000;color:#2e1065;margin:10px 0;line-height:1.3}'+
-    '.vocab-v25724-options{display:flex;flex-direction:column;gap:9px;margin-top:10px}.vocab-v25724-option{border:2px solid #e5e7eb;background:#fff;border-radius:14px;padding:12px 14px;text-align:left;font-size:17px;font-weight:900;color:#172554;font-family:inherit;cursor:pointer}'+
-    '.vocab-v25724-option.correct{background:#dcfce7!important;border-color:#22c55e!important;color:#14532d!important}.vocab-v25724-option.wrong{background:#fee2e2!important;border-color:#ef4444!important;color:#7f1d1d!important}'+
-    '.vocab-v25724-feedback{margin-top:12px;border-radius:14px;padding:12px;font-weight:900;text-align:center}.vocab-v25724-feedback.ok{background:#dcfce7;color:#14532d;border:2px solid #86efac}.vocab-v25724-feedback.warn{background:#fff7ed;color:#7c2d12;border:2px solid #fdba74}'+
-    '.vocab-v25724-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}.vocab-v25724-btn{border:0;border-radius:14px;background:#7c3aed;color:#fff;padding:11px 14px;font-weight:1000;font-family:inherit;cursor:pointer}.vocab-v25724-btn.secondary{background:#fff;color:#5b21b6;border:2px solid #ddd6fe}'+
-    '.vocab-v25724-progress{font-size:13px;text-transform:uppercase;font-weight:1000;color:#6d28d9;margin-bottom:8px}'+
-    '@media(max-width:820px){.vocab-v25724-menu{grid-template-columns:1fr}.vocab-v25724-card{padding:14px}.vocab-v25724-icon{font-size:34px}.vocab-v25724-question{font-size:18px}.vocab-v25724-option{font-size:16px}}';
-    var style=document.createElement('style'); style.id='hibouVocabulaireV25724Style'; style.textContent=css; document.head.appendChild(style);
+    '.vocab-v25728-menu{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:12px}'+
+    '.vocab-v25728-card{border:2px solid #ddd6fe;background:linear-gradient(135deg,#faf5ff,#ffffff);border-radius:22px;padding:18px 14px;text-align:center;font-family:inherit;font-weight:900;color:#4c1d95;cursor:pointer;box-shadow:0 8px 24px rgba(124,58,237,.12)}'+
+    '.vocab-v25728-card:hover{transform:translateY(-1px);box-shadow:0 12px 28px rgba(124,58,237,.16)}'+
+    '.vocab-v25728-icon{font-size:42px;margin-bottom:8px}.vocab-v25728-title{font-size:20px;color:#4c1d95}.vocab-v25728-desc{font-size:13px;color:#6d28d9;margin-top:5px;line-height:1.25}'+
+    '.vocab-v25728-box{background:#fff;border:2px solid #e9d5ff;border-radius:18px;padding:16px;margin-top:12px}'+
+    '.vocab-v25728-question{background:#faf5ff;border:2px solid #ddd6fe;border-radius:16px;padding:14px;font-size:20px;font-weight:1000;color:#2e1065;margin:10px 0;line-height:1.3}'+
+    '.vocab-v25728-options{display:flex;flex-direction:column;gap:9px;margin-top:10px}.vocab-v25728-option{border:2px solid #e5e7eb;background:#fff;border-radius:14px;padding:12px 14px;text-align:left;font-size:17px;font-weight:900;color:#172554;font-family:inherit;cursor:pointer}'+
+    '.vocab-v25728-option.correct{background:#dcfce7!important;border-color:#22c55e!important;color:#14532d!important}.vocab-v25728-option.wrong{background:#fee2e2!important;border-color:#ef4444!important;color:#7f1d1d!important}'+
+    '.vocab-v25728-feedback{margin-top:12px;border-radius:14px;padding:12px;font-weight:900;text-align:center}.vocab-v25728-feedback.ok{background:#dcfce7;color:#14532d;border:2px solid #86efac}.vocab-v25728-feedback.warn{background:#fff7ed;color:#7c2d12;border:2px solid #fdba74}'+
+    '.vocab-v25728-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}.vocab-v25728-btn{border:0;border-radius:14px;background:#7c3aed;color:#fff;padding:11px 14px;font-weight:1000;font-family:inherit;cursor:pointer}.vocab-v25728-btn.secondary{background:#fff;color:#5b21b6;border:2px solid #ddd6fe}'+
+    '.vocab-v25728-progress{font-size:13px;text-transform:uppercase;font-weight:1000;color:#6d28d9;margin-bottom:8px}'+
+    '.vocab-v25728-hint-row{margin:10px 0 4px;display:flex;justify-content:center}.vocab-v25728-hint-btn{border:2px dashed #c4b5fd;background:#fff;color:#5b21b6;border-radius:999px;padding:8px 12px;font-weight:1000;font-family:inherit;cursor:pointer}.vocab-v25728-hint-box{display:none;margin:8px 0 10px;background:#fefce8;border:2px solid #fde68a;color:#713f12;border-radius:14px;padding:10px 12px;font-size:15px;font-weight:850;line-height:1.35}.vocab-v25728-hint-box.show{display:block}.vocab-v25728-hints-used{margin-top:10px;background:#faf5ff;border:2px solid #e9d5ff;color:#5b21b6;border-radius:14px;padding:10px;font-weight:900;text-align:center}'+
+    '@media(max-width:820px){.vocab-v25728-menu{grid-template-columns:1fr}.vocab-v25728-card{padding:14px}.vocab-v25728-icon{font-size:34px}.vocab-v25728-box{padding:12px;margin-top:6px}.vocab-v25728-question{font-size:18px;margin:7px 0}.vocab-v25728-option{font-size:16px}.vocab-v25728-exercise-head{grid-template-columns:minmax(0,.9fr) minmax(0,1.2fr) minmax(0,1fr);gap:6px;padding:8px}.vocab-v25728-domain{font-size:15px}.vocab-v25728-subdomain{font-size:16px}.vocab-v25728-return{font-size:13px;padding:7px 8px}}';
+    var style=document.createElement('style'); style.id='hibouVocabulaireV25728Style'; style.textContent=css; document.head.appendChild(style);
   }
 
   function loadData(force){
@@ -67,7 +68,7 @@
     card.classList.remove('is-disabled');
     var soon=card.querySelector('.fr-v25720-domain-soon');
     if(soon){ soon.className='fr-v25720-domain-arrow'; soon.textContent='›'; }
-    card.onclick=function(ev){ ev.preventDefault(); window.openHibouVocabulaireV25724(); };
+    card.onclick=function(ev){ ev.preventDefault(); window.openHibouVocabulaireV25728(); };
   }
 
   function installMenuPatch(){
@@ -91,24 +92,24 @@
     var count = activeItems().length;
     setInner(header('🧩 Vocabulaire','Choisis un entraînement.','Contenu chargé depuis le fichier JSON externe : '+count+' exercice(s) disponible(s).')+
       '<div class="fr-v2348-content"><section class="fr-v2348-panel"><div class="fr-v2348-training-head"><button type="button" class="fr-v2348-back" onclick="renderFrenchDomainMenuV25720()">← Retour au menu Français</button><div class="fr-v2348-training-title">Vocabulaire</div><div></div></div>'+
-      '<div class="vocab-v25724-menu">'+
-      '<button class="vocab-v25724-card" type="button" onclick="startHibouVocabulaireV25724(\'famille\')"><div class="vocab-v25724-icon">🌳</div><div class="vocab-v25724-title">Familles de mots</div><div class="vocab-v25724-desc">Reconnaître les mots qui appartiennent à la même famille.</div></button>'+
-      '<button class="vocab-v25724-card" type="button" onclick="startHibouVocabulaireV25724(\'synonyme\')"><div class="vocab-v25724-icon">🔁</div><div class="vocab-v25724-title">Synonymes</div><div class="vocab-v25724-desc">Trouver un mot de sens proche.</div></button>'+
-      '<button class="vocab-v25724-card" type="button" onclick="startHibouVocabulaireV25724(\'contraire\')"><div class="vocab-v25724-icon">↔️</div><div class="vocab-v25724-title">Contraires</div><div class="vocab-v25724-desc">Trouver un mot de sens opposé.</div></button>'+
-      '<button class="vocab-v25724-card" type="button" onclick="startHibouVocabulaireV25724(\'generique\')"><div class="vocab-v25724-icon">📦</div><div class="vocab-v25724-title">Mots génériques</div><div class="vocab-v25724-desc">Ranger des mots dans une catégorie.</div></button>'+
+      '<div class="vocab-v25728-menu">'+
+      '<button class="vocab-v25728-card" type="button" onclick="startHibouVocabulaireV25728(\'famille\')"><div class="vocab-v25728-icon">🌳</div><div class="vocab-v25728-title">Familles de mots</div><div class="vocab-v25728-desc">Reconnaître les mots qui appartiennent à la même famille.</div></button>'+
+      '<button class="vocab-v25728-card" type="button" onclick="startHibouVocabulaireV25728(\'synonyme\')"><div class="vocab-v25728-icon">🔁</div><div class="vocab-v25728-title">Synonymes</div><div class="vocab-v25728-desc">Trouver un mot de sens proche.</div></button>'+
+      '<button class="vocab-v25728-card" type="button" onclick="startHibouVocabulaireV25728(\'contraire\')"><div class="vocab-v25728-icon">↔️</div><div class="vocab-v25728-title">Contraires</div><div class="vocab-v25728-desc">Trouver un mot de sens opposé.</div></button>'+
+      '<button class="vocab-v25728-card" type="button" onclick="startHibouVocabulaireV25728(\'generique\')"><div class="vocab-v25728-icon">📦</div><div class="vocab-v25728-title">Mots génériques</div><div class="vocab-v25728-desc">Ranger des mots dans une catégorie.</div></button>'+
       '</div></section></div>');
   }
 
-  window.openHibouVocabulaireV25724 = function(){
+  window.openHibouVocabulaireV25728 = function(){
     injectStyle();
     showLoading();
     loadData(false).then(renderMenu);
   };
 
-  window.startHibouVocabulaireV25724 = function(type){
+  window.startHibouVocabulaireV25728 = function(type){
     loadData(false).then(function(){
       var items=shuffle(activeItems(type)).slice(0,10);
-      state.activity=type; state.questions=items; state.index=0; state.score=0; state.total=items.length; state.answers=[];
+      state.activity=type; state.questions=items; state.index=0; state.score=0; state.total=items.length; state.answers=[]; state.hintsUsed=0; state.hintsByQuestion={};
       if(!items.length) return renderNoData(type);
       renderQcm();
     });
@@ -116,8 +117,16 @@
 
   function activityLabel(type){ return type==='famille'?'Familles de mots':type==='synonyme'?'Synonymes':type==='contraire'?'Contraires':type==='generique'?'Mots génériques':'Vocabulaire'; }
 
+  function defaultHint(type){
+    if(type==='famille') return 'Regarde si les mots ont une partie commune ET un sens proche.';
+    if(type==='synonyme') return 'Cherche le mot qui pourrait remplacer le mot demandé dans une phrase.';
+    if(type==='contraire') return 'Cherche le mot qui veut dire l’inverse.';
+    if(type==='generique') return 'Cherche le mot-étiquette qui peut ranger tous les mots ensemble.';
+    return 'Relis bien la question et élimine les réponses impossibles.';
+  }
+
   function renderNoData(type){
-    setInner(header('🧩 Vocabulaire','Aucun exercice trouvé.','Ajoute des lignes actives dans data/vocabulaire.json pour cette activité.')+'<div class="fr-v2348-content"><section class="fr-v2348-panel"><div class="vocab-v25724-feedback warn">Aucun exercice disponible pour : '+esc(activityLabel(type))+'</div><div class="vocab-v25724-actions"><button class="vocab-v25724-btn secondary" onclick="openHibouVocabulaireV25724()">← Retour Vocabulaire</button></div></section></div>');
+    setInner(header('🧩 Vocabulaire','Aucun exercice trouvé.','Ajoute des lignes actives dans data/vocabulaire.json pour cette activité.')+'<div class="fr-v2348-content"><section class="fr-v2348-panel"><div class="vocab-v25728-feedback warn">Aucun exercice disponible pour : '+esc(activityLabel(type))+'</div><div class="vocab-v25728-actions"><button class="vocab-v25728-btn secondary" onclick="openHibouVocabulaireV25728()">← Retour Vocabulaire</button></div></section></div>');
   }
 
   function optionsFor(item){
@@ -128,22 +137,27 @@
     var item=state.questions[state.index];
     if(!item) return renderResult();
     var opts=optionsFor(item);
-    var html=opts.map(function(o){ return '<button type="button" class="vocab-v25724-option" data-ok="'+(o.ok?'1':'0')+'" onclick="answerHibouVocabulaireV25724(this)">'+esc(o.text)+'</button>'; }).join('');
-    setInner(header('🧩 Vocabulaire',activityLabel(state.activity),'Question '+(state.index+1)+' / '+state.total)+
-      '<div class="fr-v2348-content"><section class="fr-v2348-panel"><div class="fr-v2348-training-head"><button type="button" class="fr-v2348-back" onclick="openHibouVocabulaireV25724()">← Retour Vocabulaire</button><div class="fr-v2348-training-title">'+esc(activityLabel(state.activity))+'</div><div></div></div><div class="vocab-v25724-box"><div class="vocab-v25724-progress">Question '+(state.index+1)+' / '+state.total+'</div><div class="vocab-v25724-question">'+esc(item.question||item.consigne||'Choisis la bonne réponse.')+'</div><div class="vocab-v25724-options">'+html+'</div><div id="vocabFeedbackV25724"></div></div></section></div>');
+    var html=opts.map(function(o){ return '<button type="button" class="vocab-v25728-option" data-ok="'+(o.ok?'1':'0')+'" onclick="answerHibouVocabulaireV25728(this)">'+esc(o.text)+'</button>'; }).join('');
+    setInner('<div class="fr-v2348-content"><section class="fr-v2348-panel"><div class="vocab-v25728-exercise-head"><div class="vocab-v25728-domain">🧩 Vocabulaire</div><div class="vocab-v25728-subdomain">'+esc(activityLabel(state.activity))+'</div><button type="button" class="vocab-v25728-return" onclick="openHibouVocabulaireV25728()">← Retour Vocabulaire</button></div><div class="vocab-v25728-box"><div class="vocab-v25728-exercise-progress">Question '+(state.index+1)+' / '+state.total+'</div><div class="vocab-v25728-question">'+esc(item.question||item.consigne||'Choisis la bonne réponse.')+'</div>'+(clean(item.hint||defaultHint(state.activity))?'<div class="vocab-v25728-hint-row"><button type="button" class="vocab-v25728-hint-btn" onclick="showHibouVocabHintV25728()">💡 Besoin d’un indice ?</button></div><div id="vocabHintV25728" class="vocab-v25728-hint-box">💡 '+esc(item.hint||defaultHint(state.activity))+'</div>':'')+'<div class="vocab-v25728-options">'+html+'</div><div id="vocabFeedbackV25728"></div></div></section></div>');
   }
-  window.answerHibouVocabulaireV25724 = function(btn){
+  window.showHibouVocabHintV25728 = function(){
+    var box=$('vocabHintV25728'); if(box) box.classList.add('show');
+    var key=String(state.activity||'')+'_'+String(state.index||0);
+    if(!state.hintsByQuestion[key]){ state.hintsByQuestion[key]=true; state.hintsUsed++; }
+  };
+
+  window.answerHibouVocabulaireV25728 = function(btn){
     var item=state.questions[state.index]; if(!item) return;
-    var buttons=[].slice.call(document.querySelectorAll('.vocab-v25724-option'));
+    var buttons=[].slice.call(document.querySelectorAll('.vocab-v25728-option'));
     var ok=btn.getAttribute('data-ok')==='1';
     buttons.forEach(function(b){ b.disabled=true; if(b.getAttribute('data-ok')==='1') b.classList.add('correct'); });
     if(!ok) btn.classList.add('wrong'); else state.score++;
-    state.answers.push({question:item.question, ok:ok});
-    var fb=$('vocabFeedbackV25724');
+    state.answers.push({question:item.question, ok:ok, hint:!!state.hintsByQuestion[String(state.activity||'')+'_'+String(state.index||0)]});
+    var fb=$('vocabFeedbackV25728');
     var nextLabel = (state.index+1>=state.total) ? 'Voir le résultat' : 'Question suivante';
-    if(fb) fb.innerHTML='<div class="vocab-v25724-feedback '+(ok?'ok':'warn')+'">'+(ok?'✅ Bravo !':'💡 Correction : '+esc(item.bonne_reponse||''))+(item.explication?'<br><small>'+esc(item.explication)+'</small>':'')+'</div><div class="vocab-v25724-actions"><button class="vocab-v25724-btn" onclick="nextHibouVocabulaireQuestionV25724()">'+nextLabel+'</button></div>';
+    if(fb) fb.innerHTML='<div class="vocab-v25728-feedback '+(ok?'ok':'warn')+'">'+(ok?'✅ Bravo !':'💡 Correction : '+esc(item.bonne_reponse||''))+(item.explication?'<br><small>'+esc(item.explication)+'</small>':'')+'</div><div class="vocab-v25728-actions"><button class="vocab-v25728-btn" onclick="nextHibouVocabulaireQuestionV25728()">'+nextLabel+'</button></div>';
   };
-  window.nextHibouVocabulaireQuestionV25724 = function(){
+  window.nextHibouVocabulaireQuestionV25728 = function(){
     state.index++;
     if(state.index>=state.total) renderResult();
     else renderQcm();
@@ -154,13 +168,13 @@
     var pct=Math.round((state.score/total)*100);
     var label=activityLabel(state.activity);
     setInner(header('🧩 Vocabulaire','Entraînement terminé.','Le résultat est ajouté à Mon parcours récent.')+
-      '<div class="fr-v2348-content"><section class="fr-v2348-panel"><div class="fr-v2348-result"><h3>Bravo, entraînement terminé !</h3><div class="fr-v2348-score-grid"><div class="fr-v2348-score-card">Score<b>'+state.score+' / '+total+'</b></div><div class="fr-v2348-score-card">Réussite<b>'+pct+'%</b></div></div><div class="fr-v2348-feedback">'+esc(label)+' · Source : JSON externe</div><div class="fr-v2348-actions"><button type="button" class="fr-v2348-action" onclick="startHibouVocabulaireV25724(\''+esc(state.activity)+'\')">🔁 Refaire</button><button type="button" class="fr-v2348-action secondary" onclick="openHibouVocabulaireV25724()">← Retour Vocabulaire</button><button type="button" class="fr-v2348-action secondary" onclick="renderFrenchDomainMenuV25720()">Menu Français</button></div></div></section></div>');
+      '<div class="fr-v2348-content"><section class="fr-v2348-panel"><div class="fr-v2348-result"><h3>Bravo, entraînement terminé !</h3><div class="fr-v2348-score-grid"><div class="fr-v2348-score-card">Score<b>'+state.score+' / '+total+'</b></div><div class="fr-v2348-score-card">Réussite<b>'+pct+'%</b></div></div><div class="fr-v2348-feedback">'+esc(label)+' · Source : JSON externe</div><div class="vocab-v25728-hints-used">💡 Aides utilisées : '+(state.hintsUsed||0)+'</div><div class="fr-v2348-actions"><button type="button" class="fr-v2348-action" onclick="startHibouVocabulaireV25728(\''+esc(state.activity)+'\')">🔁 Refaire</button><button type="button" class="fr-v2348-action secondary" onclick="openHibouVocabulaireV25728()">← Retour Vocabulaire</button><button type="button" class="fr-v2348-action secondary" onclick="renderFrenchDomainMenuV25720()">Menu Français</button></div></div></section></div>');
     track(label,total);
   }
   function track(label,total){
     try{
       if(typeof window.hibouTrackEvent==='function'){
-        window.hibouTrackEvent({type:'entrainement_vocabulaire_termine', matiere:'Français', domaine:'Vocabulaire', titre:'Entraînement vocabulaire terminé', detail:label+' — '+state.score+'/'+total, score:state.score, total:total, source:'vocabulaire_json'});
+        window.hibouTrackEvent({type:'entrainement_vocabulaire_termine', matiere:'Français', domaine:'Vocabulaire', titre:'Entraînement vocabulaire terminé', detail:label+' — '+state.score+'/'+total+' · aides '+(state.hintsUsed||0), score:state.score, total:total, source:'vocabulaire_json'});
       }else if(typeof window.hibouRecordTrainingSuccess==='function'){
         window.hibouRecordTrainingSuccess('français','Vocabulaire',label+' — '+state.score+' / '+total);
       }

@@ -1,20 +1,20 @@
 /*
- * Maître Hibou — Journal élève modulaire V25.7.12
+ * Maître Hibou — Journal élève modulaire V25.7.13
  * Objectif : une seule porte d'entrée pour le parcours élève : window.hibouTrackEvent(...)
  * L'index.html ne doit plus contenir de moteur lourd pour « Mon parcours récent ».
  */
 (function () {
   'use strict';
 
-  if (window.__hibouJournalEleveV25712) return;
-  window.__hibouJournalEleveV25712 = true;
+  if (window.__hibouJournalEleveV25713) return;
+  window.__hibouJournalEleveV25713 = true;
 
-  var VERSION = 'V25.7.12';
+  var VERSION = 'V25.7.13';
   var API = 'https://script.google.com/macros/s/AKfycbxz1vYS24sv-c3XVja12geWEXIQl6bQyBoQKBx5kg_fwQaj80_Oc7Y34yeBSRN4lF1f/exec';
   var LAST_PREFIX = 'hibou_journal_last_';
   var HISTORY_PREFIX = 'hibou_journal_history_';
-  var QUEUE_KEY = 'hibou_journal_queue_v25712';
-  var RECORD_QUEUE_KEY = 'hibou_records_calcul_queue_v25712';
+  var QUEUE_KEY = 'hibou_journal_queue_v25713';
+  var RECORD_QUEUE_KEY = 'hibou_records_calcul_queue_v25713';
   var DEFAULT_TEXT = 'Ta prochaine réussite apparaîtra ici.';
   var MAX_HISTORY = 20;
   var isRendering = false;
@@ -228,7 +228,7 @@
       total: total,
       niveau: medalFromScore(score, total, raw.niveau || raw.medaille || raw.medal),
       temps_secondes: timeSeconds,
-      source: clean(raw.source || 'maitre_hibou_v25_7_12'),
+      source: clean(raw.source || 'maitre_hibou_v25_7_13'),
       appareil: clean(raw.appareil || getDevice()),
       id_evenement: clean(raw.id_evenement || raw.id || '')
     };
@@ -582,6 +582,48 @@
     });
   }
 
+  function normalizeQuestionBridgePayload(raw) {
+    raw = raw || {};
+    var detail = raw.detail || raw.payload || raw.data || raw;
+    if (detail && detail.detail && typeof detail.detail === 'object') detail = detail.detail;
+    var name = clean(detail.prenom || detail.eleve || detail.name || detail.student) || getCurrentName();
+    var subject = clean(detail.matiere || detail.subject || detail.domaine || detail.domain || 'Curiosité');
+    var question = clean(detail.questionCorrigee || detail.question_corrigee || detail.question || detail.texte || detail.text || detail.detail || detail.questionOriginale || detail.question_originale || '');
+    if (!name) return null;
+    if (!question) question = subject ? 'Question en ' + subject : 'Question de curiosité';
+    return {
+      prenom: name,
+      type: 'question_posee',
+      matiere: subject || 'Curiosité',
+      domaine: 'Boîte à questions',
+      titre: 'Question posée',
+      detail: question,
+      source: clean(detail.source || 'boite_questions'),
+      id_evenement: clean(detail.id_evenement || detail.event_id || detail.id || '')
+    };
+  }
+
+  function receiveQuestionBridgePayload(raw) {
+    var event = normalizeQuestionBridgePayload(raw);
+    if (!event) return null;
+    return trackEvent(event);
+  }
+
+  function readQuestionBridgeEvent() {
+    var keys = ['hibou_question_event_v25713', 'hibou_question_event', 'hibou_question_journal_event'];
+    for (var i = 0; i < keys.length; i++) {
+      try {
+        var raw = localStorage.getItem(keys[i]);
+        if (!raw) continue;
+        var payload = JSON.parse(raw);
+        if (payload && payload.__hibouJournalReadV25713) continue;
+        payload.__hibouJournalReadV25713 = true;
+        localStorage.setItem(keys[i], JSON.stringify(payload));
+        receiveQuestionBridgePayload(payload);
+      } catch (error) {}
+    }
+  }
+
   function finalizeMentalRecord(data) {
     data = data || {};
     var score = data.score == null ? '' : Number(data.score);
@@ -616,10 +658,11 @@
     window.hibouRecordTrainingSuccess = recordTraining;
     window.hibouRecordSuccess = recordSuccess;
     window.hibouRecordQuestionSuccess = recordQuestion;
+    window.hibouReceiveQuestionEvent = receiveQuestionBridgePayload;
     window.hibouFinalizeMentalRecord = finalizeMentalRecord;
     window.hibouFinalizeMentalRecordV25627 = finalizeMentalRecord;
 
-    ['25219', '25220', '25221', '25222', '25223', '25224', '25225', '25226', '25227', '25228', '25229', '25230', '25632', '25636', '25637', '25638', '25639', '25640', '25641', '25642', '25643', '25644', '25645', '25646', '2570', '2571', '2572', '2573', '2574', '2575', '2576', '2577', '2578', '2579', '25710', '25711', '25712'].forEach(function (version) {
+    ['25219', '25220', '25221', '25222', '25223', '25224', '25225', '25226', '25227', '25228', '25229', '25230', '25632', '25636', '25637', '25638', '25639', '25640', '25641', '25642', '25643', '25644', '25645', '25646', '2570', '2571', '2572', '2573', '2574', '2575', '2576', '2577', '2578', '2579', '25710', '25711', '25712', '25713'].forEach(function (version) {
       window['hibouRecordTrainingSuccessV' + version] = recordTraining;
       window['hibouRecordSuccessV' + version] = recordSuccess;
     });
@@ -701,6 +744,22 @@
   }
 
   function bindEvents() {
+    window.addEventListener('message', function (event) {
+      var data = event && event.data;
+      if (!data || typeof data !== 'object') return;
+      var type = clean(data.type || data.eventType || data.kind);
+      if (['hibou_question_posee', 'hibou:question-added', 'question_posee', 'boite_question_posee'].indexOf(type) === -1) return;
+      receiveQuestionBridgePayload(data);
+    });
+    window.addEventListener('storage', function (event) {
+      if (!event || ['hibou_question_event_v25713', 'hibou_question_event', 'hibou_question_journal_event'].indexOf(event.key) === -1) return;
+      readQuestionBridgeEvent();
+    });
+    document.addEventListener('hibou:question-bridge', function (event) {
+      receiveQuestionBridgePayload((event && event.detail) || {});
+    });
+    setInterval(readQuestionBridgeEvent, 1800);
+    readQuestionBridgeEvent();
     document.addEventListener('hibou:question-added', function (event) {
       var detail = (event && event.detail) || {};
       recordQuestion(detail.matiere || detail.subject || '', detail.questionCorrigee || detail.question || detail.text || '');

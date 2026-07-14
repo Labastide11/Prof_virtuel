@@ -202,3 +202,20 @@ body.v21-final .v21-profile-card.v2576-progress-card .v21-change-student-btn{
 @media(max-width:899px){
   .v2576-medal-tile img{width:48px;height:48px;}
 }
+
+/* V25.7.32 — garde-fou contre un ancien portrait disproportionné. */
+body.v21-final .v21-profile-card.v2576-progress-card .v21-avatar,
+body.v21-final .v21-profile-card.v2576-progress-card .v21-avatar img{
+  width:36px !important;
+  height:36px !important;
+  max-width:36px !important;
+  max-height:36px !important;
+  object-fit:contain !important;
+  border-radius:50% !important;
+}
+body.v21-final .v21-profile-card.v2576-progress-card .v21-profile-portrait,
+body.v21-final .v21-profile-card.v2576-progress-card .profile-portrait,
+body.v21-final .v21-profile-card.v2576-progress-card .student-portrait,
+body.v21-final .v21-profile-card.v2576-progress-card .owl-portrait{
+  display:none !important;
+}

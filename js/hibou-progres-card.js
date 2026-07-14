@@ -5,7 +5,7 @@
   if(window.__hibouProgressCardV2576) return;
   window.__hibouProgressCardV2576 = true;
 
-  var VERSION = 'V25.7.33';
+  var VERSION = 'V25.7.34';
   var IMG = {
     or: 'images/medaille_or.jpg',
     argent: 'images/medaille_argent.jpg',
@@ -171,8 +171,12 @@
     card.setAttribute('role','button');
     card.setAttribute('tabindex','0');
 
+    // V25.7.34 : une seule identité visuelle dans l'en-tête.
+    // On conserve le portrait existant et le prénom, et on retire les anciens titres/indices dupliqués.
     var h3 = head.querySelector('h3');
     if(h3) h3.textContent = name;
+    Array.prototype.slice.call(head.querySelectorAll('.profile-life-v23417-open-hint')).slice(1).forEach(function(el){ el.remove(); });
+    Array.prototype.slice.call(head.querySelectorAll('.v24-progress-title,.legacy-progress-title,.v25733-duplicate-title')).forEach(function(el){ el.remove(); });
 
     var hint = head.querySelector('.profile-life-v23417-open-hint');
     if(!hint){
@@ -248,7 +252,7 @@
       var hint = card.querySelector('.profile-life-v23417-open-hint');
       var stats = card.querySelector('.v21-stats');
       var invalid = !card.classList.contains('v2576-progress-card')
-        || !h3 || h3.textContent !== (currentName() || 'Élève')
+        || !h3
         || !hint || hint.textContent.indexOf('Ouvre pour en savoir plus') === -1
         || !stats || !stats.querySelector('.v2576-progress-scroll');
       if(invalid) schedule(0);

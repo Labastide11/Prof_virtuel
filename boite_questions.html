@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<title>Boîte à questions — Maître Hibou V25.4.11</title>
+<title>Boîte à questions — Maître Hibou V25.7.13</title>
 <style>
 :root{
   --navy:#0f1e46; --navy2:#263c7a; --violet:#6d45f5; --violet2:#8b6cff;
@@ -29,7 +29,7 @@ body{min-height:100vh;padding:12px;overflow-x:hidden}.app{width:min(1180px,100%)
       <div class="head"><div><h2>Poser une question</h2><p>Écris comme tu peux. L’IA proposera plusieurs vraies questions, mais elle ne répondra pas à ta question.</p></div><div class="name" id="studentBadge">élève</div></div>
       <div class="steps" id="steps"></div>
       <div id="panel"></div>
-      <div class="note">V25.4.11 · 🔒 La réponse IA n’est pas affichée aux élèves. Elle aide seulement le maître. ⭐ Les questions vedettes seront choisies dans l’espace enseignant.</div>
+      <div class="note">V25.7.13 · 🔒 La réponse IA n’est pas affichée aux élèves. Elle aide seulement le maître. ⭐ Les questions vedettes seront choisies dans l’espace enseignant.</div>
     </main>
   </div>
 </div>
@@ -37,7 +37,7 @@ body{min-height:100vh;padding:12px;overflow-x:hidden}.app{width:min(1180px,100%)
 (function(){
   'use strict';
   var API_URL = 'https://script.google.com/macros/s/AKfycbwGcErZ0he06Dg_bpPDaHtPHa6fAcDQ-31tB7Rlr9w2JZcNaQnP9YIABJYf-CKpFfpF/exec';
-  var DEFAULT_RETURN = 'https://labastide11.github.io/Prof_virtuel/?v=2548';
+  var DEFAULT_RETURN = 'https://labastide11.github.io/Prof_virtuel/?v=25713';
   var qs = new URLSearchParams(location.search || '');
   var state = {
     prenom: clean(qs.get('prenom') || qs.get('eleve') || localStorage.getItem('hibou_last_prenom') || ''),
@@ -54,6 +54,13 @@ body{min-height:100vh;padding:12px;overflow-x:hidden}.app{width:min(1180px,100%)
   function $(id){ return document.getElementById(id); }
   function clean(v){ return String(v == null ? '' : v).replace(/\s+/g,' ').trim(); }
   function esc(v){ return String(v == null ? '' : v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+  function returnUrlWithStudent(){
+    try{
+      var u = new URL(state.returnUrl || DEFAULT_RETURN, location.href);
+      if(state.prenom && !u.searchParams.get('prenom') && !u.searchParams.get('eleve')) u.searchParams.set('prenom', state.prenom);
+      return u.href;
+    }catch(e){ return state.returnUrl || DEFAULT_RETURN; }
+  }
   function log(msg, data){
     var t = new Date().toLocaleTimeString('fr-FR');
     var line = '[' + t + '] ' + msg + (data ? '\n  ' + JSON.stringify(data) : '');
@@ -68,10 +75,10 @@ body{min-height:100vh;padding:12px;overflow-x:hidden}.app{width:min(1180px,100%)
   function btnHtml(){ return ''; }
   function bindDiag(){ }
   function init(){
-    document.title = 'Boîte à questions — Maître Hibou V25.4.11';
-    $('returnLink').href = state.returnUrl;
+    document.title = 'Boîte à questions — Maître Hibou V25.7.13';
+    $('returnLink').href = returnUrlWithStudent();
     $('studentBadge').textContent = state.prenom || 'élève';
-    log('Page GitHub légère prête', {version:'V25.4.11', api: API_URL, prenom: state.prenom || ''});
+    log('Page GitHub légère prête', {version:'V25.7.13', api: API_URL, prenom: state.prenom || ''});
     renderWrite();
   }
   function ensureName(){
@@ -141,7 +148,7 @@ body{min-height:100vh;padding:12px;overflow-x:hidden}.app{width:min(1180px,100%)
     renderWaiting(0);
     var interval = setInterval(function(){ tick = Math.floor((Date.now()-started)/1000); renderWaiting(tick); }, 1000);
     log('Requête IA envoyée via Apps Script', {action:'reformulateQuestion', question: state.original});
-    jsonp({action:'reformulateQuestion', prenom:state.prenom, question:state.original, source:'boite_questions_github_v25_4_11'}, 45000)
+    jsonp({action:'reformulateQuestion', prenom:state.prenom, question:state.original, source:'boite_questions_github_v25_7_13'}, 45000)
       .then(function(data){
         clearInterval(interval);
         log('Réponse IA reçue', {success:data.success, durationMs:data.durationMs || null});
@@ -258,6 +265,35 @@ body{min-height:100vh;padding:12px;overflow-x:hidden}.app{width:min(1180px,100%)
     $('privateBtn').onclick = function(){ submit('privée'); };
     bindDiag();
   }
+  function notifyQuestionJournal(vis, responseData){
+    var payload = {
+      type: 'hibou_question_posee',
+      event_id: 'question-' + clean(state.prenom || 'eleve').toLowerCase() + '-' + Date.now(),
+      prenom: state.prenom || '',
+      matiere: 'Boîte à questions',
+      domaine: 'Boîte à questions',
+      titre: 'Question posée',
+      questionCorrigee: state.corrected || '',
+      questionOriginale: state.original || '',
+      question: state.corrected || state.original || '',
+      visibilite: vis || '',
+      source: 'boite_questions_github_v25_7_13',
+      date_iso: new Date().toISOString()
+    };
+    try{ localStorage.setItem('hibou_last_prenom', state.prenom || ''); }catch(e){}
+    try{ localStorage.setItem('hibou_question_event_v25713', JSON.stringify(payload)); }catch(e){}
+    try{ localStorage.setItem('hibou_question_event', JSON.stringify(payload)); }catch(e){}
+    try{
+      if(window.opener && !window.opener.closed) window.opener.postMessage(payload, '*');
+    }catch(e){}
+    try{
+      if(window.parent && window.parent !== window) window.parent.postMessage(payload, '*');
+    }catch(e){}
+    try{ window.dispatchEvent(new CustomEvent('hibou:question-saved', { detail: payload })); }catch(e){}
+    log('Pont journal élève envoyé', {prenom: payload.prenom, matiere: payload.matiere, question: payload.questionCorrigee});
+    return payload;
+  }
+
   function submit(vis){
     setStep(5);
     setPanel('<section class="panel"><h3>📨 Étape 5 — J’envoie</h3><div class="wait">J’enregistre ta question dans le journal du maître…</div>'+btnHtml()+'</section>'); bindDiag();
@@ -265,10 +301,11 @@ body{min-height:100vh;padding:12px;overflow-x:hidden}.app{width:min(1180px,100%)
     jsonp({
       action:'appendQuestion', prenom:state.prenom, matiere:'Boîte à questions', questionOriginale:state.original,
       questionCorrigee:state.corrected, reponseIA:state.reponseIA, visibilite:vis, statut:'nouvelle', pointsCuriosite:'1',
-      source:'boite_questions_github_v25_4_11'
+      source:'boite_questions_github_v25_7_13'
     }, 30000).then(function(data){
       log('Enregistrement terminé', {success:data.success});
       if(!data || data.success === false) throw new Error(data && data.error ? data.error : 'Erreur pendant l’enregistrement.');
+      notifyQuestionJournal(vis, data);
       renderSuccess(vis);
     }).catch(function(err){
       log('Erreur enregistrement', {message: err.message || String(err)});
@@ -282,7 +319,7 @@ body{min-height:100vh;padding:12px;overflow-x:hidden}.app{width:min(1180px,100%)
     setStep(5);
     setPanel('<section class="panel"><div class="success">✅ Ta question a été enregistrée.<br>Merci, '+esc(state.prenom || 'élève')+' !</div>'+
       '<div class="rule"><b>Question envoyée :</b><br>« '+esc(state.corrected)+' »<br><br><b>Visibilité :</b> '+esc(vis)+'</div>'+
-      '<div class="actions"><button type="button" class="btn primary" id="againBtn">📦 Poser une autre question</button><a class="btn" href="'+esc(state.returnUrl)+'">Retour à Maître Hibou</a></div>'+btnHtml()+'</section>');
+      '<div class="actions"><button type="button" class="btn primary" id="againBtn">📦 Poser une autre question</button><a class="btn" href="'+esc(returnUrlWithStudent())+'">Retour à Maître Hibou</a></div>'+btnHtml()+'</section>');
     $('againBtn').onclick = function(){ state.original=''; state.propositions=[]; state.selected=''; state.corrected=''; renderWrite(); };
     bindDiag();
   }

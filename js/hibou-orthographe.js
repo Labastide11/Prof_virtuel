@@ -1,13 +1,13 @@
-/* Maître Hibou V25.7.21 — Orthographe / dictée modulaire en JSON
-   Contenu pédagogique séparé dans data/orthographe_dictee.json
+/* Maître Hibou V25.7.22 — Orthographe / dictée modulaire en JSON
+   Correction visible jusqu’au clic “Question suivante” ; contenu pédagogique séparé dans data/orthographe_dictee.json
 */
 (function(){
   'use strict';
-  if(window.__hibouOrthographeV25721) return;
-  window.__hibouOrthographeV25721 = true;
+  if(window.__hibouOrthographeV25722) return;
+  window.__hibouOrthographeV25722 = true;
 
-  var DATA_URL = 'data/orthographe_dictee.json?v=25721';
-  var CACHE_KEY = 'hibou_orthographe_dictee_json_v25721';
+  var DATA_URL = 'data/orthographe_dictee.json?v=25722';
+  var CACHE_KEY = 'hibou_orthographe_dictee_json_v25722';
   var state = { data:null, activity:null, questions:[], index:0, score:0, total:0, answers:[], segmentIndex:0, item:null };
 
   function $(id){ return document.getElementById(id); }
@@ -23,7 +23,7 @@
   }
 
   function injectStyle(){
-    if($('hibouOrthographeV25721Style')) return;
+    if($('hibouOrthographeV25722Style')) return;
     var css = ''+
     '.ortho-v25721-menu{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:12px}'+
     '.ortho-v25721-card{border:2px solid #bbf7d0;background:linear-gradient(135deg,#f0fdf4,#ffffff);border-radius:22px;padding:18px 14px;text-align:center;font-family:inherit;font-weight:900;color:#14532d;cursor:pointer;box-shadow:0 8px 24px rgba(22,163,74,.12)}'+
@@ -38,7 +38,7 @@
     '.ortho-v25721-input{width:100%;border:3px solid #bbf7d0;border-radius:16px;padding:13px 14px;font-size:20px;font-weight:900;color:#172554;outline:none}.ortho-v25721-input:focus{box-shadow:0 0 0 4px rgba(34,197,94,.16)}'+
     '.ortho-v25721-model{font-size:15px;color:#64748b;font-weight:850;margin:8px 0}.ortho-v25721-progress{font-size:13px;text-transform:uppercase;font-weight:1000;color:#166534;margin-bottom:8px}'+
     '@media(max-width:820px){.ortho-v25721-menu{grid-template-columns:1fr}.ortho-v25721-card{padding:14px}.ortho-v25721-icon{font-size:34px}.ortho-v25721-question{font-size:18px}.ortho-v25721-option{font-size:16px}}';
-    var style=document.createElement('style'); style.id='hibouOrthographeV25721Style'; style.textContent=css; document.head.appendChild(style);
+    var style=document.createElement('style'); style.id='hibouOrthographeV25722Style'; style.textContent=css; document.head.appendChild(style);
   }
 
   function loadData(force){
@@ -140,8 +140,13 @@
     if(!ok) btn.classList.add('wrong'); else state.score++;
     state.answers.push({question:item.question, ok:ok});
     var fb=$('orthoFeedbackV25721');
-    if(fb) fb.innerHTML='<div class="ortho-v25721-feedback '+(ok?'ok':'warn')+'">'+(ok?'✅ Bravo !':'💡 Correction : '+esc(item.bonne_reponse||''))+(item.explication?'<br><small>'+esc(item.explication)+'</small>':'')+'</div>';
-    setTimeout(function(){ state.index++; if(state.index>=state.total) renderResult(); else renderQcm(); }, ok?650:1200);
+    var nextLabel = (state.index+1>=state.total) ? 'Voir le résultat' : 'Question suivante';
+    if(fb) fb.innerHTML='<div class="ortho-v25721-feedback '+(ok?'ok':'warn')+'">'+(ok?'✅ Bravo !':'💡 Correction : '+esc(item.bonne_reponse||''))+(item.explication?'<br><small>'+esc(item.explication)+'</small>':'')+'</div><div class="ortho-v25721-actions"><button class="ortho-v25721-btn" onclick="nextHibouOrthographeQuestionV25721()">'+nextLabel+'</button></div>';
+  };
+  window.nextHibouOrthographeQuestionV25721 = function(){
+    state.index++;
+    if(state.index>=state.total) renderResult();
+    else renderQcm();
   };
 
   function startSegmented(){

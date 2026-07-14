@@ -1,4 +1,4 @@
-/* Maître Hibou V25.7.25 — Vocabulaire modulaire en JSON
+/* Maître Hibou V25.7.27 — Vocabulaire exercice compact tablette
    Activités : familles de mots, synonymes, contraires, mots génériques.
    Contenu pédagogique séparé dans data/vocabulaire.json pour garder index.html léger.
 */
@@ -7,8 +7,8 @@
   if(window.__hibouVocabulaireV25725) return;
   window.__hibouVocabulaireV25725 = true;
 
-  var DATA_URL = 'data/vocabulaire.json?v=25725';
-  var CACHE_KEY = 'hibou_vocabulaire_json_v25725';
+  var DATA_URL = 'data/vocabulaire.json?v=25727';
+  var CACHE_KEY = 'hibou_vocabulaire_json_v25727';
   var state = { data:null, activity:null, questions:[], index:0, score:0, total:0, answers:[], hintsUsed:0, hintsByQuestion:{} };
 
   function $(id){ return document.getElementById(id); }
@@ -38,7 +38,7 @@
     '.vocab-v25725-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}.vocab-v25725-btn{border:0;border-radius:14px;background:#7c3aed;color:#fff;padding:11px 14px;font-weight:1000;font-family:inherit;cursor:pointer}.vocab-v25725-btn.secondary{background:#fff;color:#5b21b6;border:2px solid #ddd6fe}'+
     '.vocab-v25725-progress{font-size:13px;text-transform:uppercase;font-weight:1000;color:#6d28d9;margin-bottom:8px}'+
     '.vocab-v25725-hint-row{margin:10px 0 4px;display:flex;justify-content:center}.vocab-v25725-hint-btn{border:2px dashed #c4b5fd;background:#fff;color:#5b21b6;border-radius:999px;padding:8px 12px;font-weight:1000;font-family:inherit;cursor:pointer}.vocab-v25725-hint-box{display:none;margin:8px 0 10px;background:#fefce8;border:2px solid #fde68a;color:#713f12;border-radius:14px;padding:10px 12px;font-size:15px;font-weight:850;line-height:1.35}.vocab-v25725-hint-box.show{display:block}.vocab-v25725-hints-used{margin-top:10px;background:#faf5ff;border:2px solid #e9d5ff;color:#5b21b6;border-radius:14px;padding:10px;font-weight:900;text-align:center}'+
-    '@media(max-width:820px){.vocab-v25725-menu{grid-template-columns:1fr}.vocab-v25725-card{padding:14px}.vocab-v25725-icon{font-size:34px}.vocab-v25725-question{font-size:18px}.vocab-v25725-option{font-size:16px}}';
+    '@media(max-width:820px){.vocab-v25725-menu{grid-template-columns:1fr}.vocab-v25725-card{padding:14px}.vocab-v25725-icon{font-size:34px}.vocab-v25725-question{font-size:18px}.vocab-v25725-option{font-size:16px}.vocab-v25727-ex-head{grid-template-columns:auto 1fr;gap:10px;padding:10px 12px}.vocab-v25727-ex-back{grid-column:1 / -1;justify-self:start;padding:8px 12px}.vocab-v25727-ex-owl{width:50px;height:50px;font-size:30px}.vocab-v25727-ex-title h2{font-size:23px}.vocab-v25727-ex-title p{font-size:13px}.vocab-v25727-ex-content{padding-top:8px}.vocab-v25727-ex-content .vocab-v25725-box{padding:12px}.vocab-v25727-ex-content .vocab-v25725-question{font-size:17px}}';
     var style=document.createElement('style'); style.id='hibouVocabulaireV25725Style'; style.textContent=css; document.head.appendChild(style);
   }
 
@@ -138,8 +138,12 @@
     if(!item) return renderResult();
     var opts=optionsFor(item);
     var html=opts.map(function(o){ return '<button type="button" class="vocab-v25725-option" data-ok="'+(o.ok?'1':'0')+'" onclick="answerHibouVocabulaireV25725(this)">'+esc(o.text)+'</button>'; }).join('');
-    setInner(header('🧩 Vocabulaire',activityLabel(state.activity),'Question '+(state.index+1)+' / '+state.total)+
-      '<div class="fr-v2348-content"><section class="fr-v2348-panel"><div class="fr-v2348-training-head"><button type="button" class="fr-v2348-back" onclick="openHibouVocabulaireV25725()">← Retour Vocabulaire</button><div class="fr-v2348-training-title">'+esc(activityLabel(state.activity))+'</div><div></div></div><div class="vocab-v25725-box"><div class="vocab-v25725-progress">Question '+(state.index+1)+' / '+state.total+'</div><div class="vocab-v25725-question">'+esc(item.question||item.consigne||'Choisis la bonne réponse.')+'</div>'+(clean(item.hint||defaultHint(state.activity))?'<div class="vocab-v25725-hint-row"><button type="button" class="vocab-v25725-hint-btn" onclick="showHibouVocabHintV25725()">💡 Besoin d’un indice ?</button></div><div id="vocabHintV25725" class="vocab-v25725-hint-box">💡 '+esc(item.hint||defaultHint(state.activity))+'</div>':'')+'<div class="vocab-v25725-options">'+html+'</div><div id="vocabFeedbackV25725"></div></div></section></div>');
+    var label=activityLabel(state.activity);
+    var qnum='Question '+(state.index+1)+' / '+state.total;
+    setInner(
+      '<div class="vocab-v25727-ex-head"><div class="vocab-v25727-ex-owl">🦉</div><div class="vocab-v25727-ex-title"><h2>🧩 Vocabulaire — '+esc(label)+'</h2><p>'+esc(qnum)+'</p></div><button type="button" class="vocab-v25727-ex-back" onclick="openHibouVocabulaireV25725()">← Retour Vocabulaire</button></div>'+
+      '<div class="fr-v2348-content vocab-v25727-ex-content"><section class="fr-v2348-panel"><div class="vocab-v25725-box"><div class="vocab-v25725-progress">'+esc(qnum)+'</div><div class="vocab-v25725-question">'+esc(item.question||item.consigne||'Choisis la bonne réponse.')+'</div>'+(clean(item.hint||defaultHint(state.activity))?'<div class="vocab-v25725-hint-row"><button type="button" class="vocab-v25725-hint-btn" onclick="showHibouVocabHintV25725()">💡 Besoin d’un indice ?</button></div><div id="vocabHintV25725" class="vocab-v25725-hint-box">💡 '+esc(item.hint||defaultHint(state.activity))+'</div>':'')+'<div class="vocab-v25725-options">'+html+'</div><div id="vocabFeedbackV25725"></div></div></section></div>'
+    );
   }
   window.showHibouVocabHintV25725 = function(){
     var box=$('vocabHintV25725'); if(box) box.classList.add('show');

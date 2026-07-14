@@ -1,18 +1,15 @@
-// V25.7.11 — Carte Mes progrès : bouton stable “Voir mes progrès” + portrait selon sexe.
+// V25.7.6 — Carte Mes progrès de l'accueil.
 // Module externe : n'alourdit pas index.html et ne touche pas au Conseil de Maître Hibou.
 (function(){
   'use strict';
-  if(window.__hibouProgressCardV25711) return;
-  window.__hibouProgressCardV25711 = true;
+  if(window.__hibouProgressCardV2576) return;
+  window.__hibouProgressCardV2576 = true;
 
-  var VERSION = 'V25.7.11';
+  var VERSION = 'V25.7.6';
   var IMG = {
     or: 'images/medaille_or.jpg',
     argent: 'images/medaille_argent.jpg',
-    bronze: 'images/medaille_bronze.jpg',
-    portraitGarcon: 'images/portrait_garcon.png',
-    portraitFille: 'images/portrait_fille.png',
-    portraitNeutre: 'images/portrait_neutre.png'
+    bronze: 'images/medaille_bronze.jpg'
   };
 
   function clean(v){ return String(v == null ? '' : v).replace(/\s+/g,' ').trim(); }
@@ -21,91 +18,17 @@
     return clean(v).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')
       .replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'');
   }
-  function readJSON(key, fallback){
-    try{
-      var raw = localStorage.getItem(key);
-      if(!raw) return fallback;
-      return JSON.parse(raw);
-    }catch(e){ return fallback; }
-  }
-  function currentStudentObject(){
-    var cur = readJSON('hibou_current_student', null);
-    if(cur && typeof cur === 'object') return cur;
-    return null;
-  }
-  function rosterStudentByName(name){
-    var key = norm(name);
-    if(!key) return null;
-    var saved = readJSON('hibou_students_roster_v25617', null);
-    var list = saved && Array.isArray(saved.students) ? saved.students : [];
-    for(var i=0;i<list.length;i++){
-      var st = list[i] || {};
-      if(norm(st.prenom || st.name || st.eleve) === key) return st;
-    }
-    return null;
-  }
-  function currentStudentInfo(){
-    var cur = currentStudentObject();
-    var name = '';
-    try{ if(clean(window.prenomActuel)) name = clean(window.prenomActuel); }catch(e){}
-    if(!name && cur && clean(cur.prenom || cur.name || cur.eleve)) name = clean(cur.prenom || cur.name || cur.eleve);
-    if(!name){
-      var keys = ['hibou_prenom','hibou_last_prenom','maitre_hibou_prenom','prenomEleve','prenomActuel','elevePrenom'];
-      for(var i=0;i<keys.length;i++){
-        try{ var v = clean(localStorage.getItem(keys[i])); if(v){ name = v; break; } }catch(e){}
-      }
-    }
-    var roster = rosterStudentByName(name) || {};
-    var mode = clean((cur && (cur.mode || cur.type)) || localStorage.getItem('hibou_mode') || '');
-    var sexe = clean((cur && (cur.sexe || cur.Sexe || cur.gender)) || roster.sexe || roster.Sexe || roster.gender || '');
-    var invite = !!(cur && (cur.invite || cur.guest)) || norm(mode).indexOf('invite') !== -1 || norm(name) === 'invite';
-    return { prenom:name, sexe:sexe, mode:mode, invite:invite };
-  }
   function currentName(){
-    return currentStudentInfo().prenom || '';
-  }
-  function portraitForStudent(info){
-    info = info || currentStudentInfo();
-    if(info.invite) return IMG.portraitNeutre;
-    var s = norm(info.sexe);
-    if(s === 'g' || s.indexOf('garcon') !== -1 || s.indexOf('masculin') !== -1 || s === 'm') return IMG.portraitGarcon;
-    if(s === 'f' || s.indexOf('fille') !== -1 || s.indexOf('feminin') !== -1 || s === 'female') return IMG.portraitFille;
-    return IMG.portraitNeutre;
-  }
-  function applyStudentPortrait(head, info){
-    var avatar = head && head.querySelector ? head.querySelector('.v21-avatar') : null;
-    if(!avatar) return;
-    var src = portraitForStudent(info);
-    avatar.classList.add('v2579-student-portrait');
-    avatar.setAttribute('aria-hidden','true');
-    if(avatar.getAttribute('data-v2579-src') === src && avatar.querySelector('img')) return;
-    avatar.setAttribute('data-v2579-src', src);
-    avatar.innerHTML = '<img src="'+esc(src)+'" alt="" loading="lazy">';
-    var img = avatar.querySelector('img');
-    if(img){
-      img.onerror = function(){
-        if(this.getAttribute('src') !== IMG.portraitNeutre){
-          this.src = IMG.portraitNeutre;
-        }
-      };
+    try{ if(clean(window.prenomActuel)) return clean(window.prenomActuel); }catch(e){}
+    try{
+      var cur = JSON.parse(localStorage.getItem('hibou_current_student') || 'null');
+      if(cur && clean(cur.prenom)) return clean(cur.prenom);
+    }catch(e){}
+    var keys = ['hibou_prenom','hibou_last_prenom','maitre_hibou_prenom','prenomEleve','prenomActuel','elevePrenom'];
+    for(var i=0;i<keys.length;i++){
+      try{ var v = clean(localStorage.getItem(keys[i])); if(v) return v; }catch(e){}
     }
-  }
-  function ensureCompactHeader(head, name){
-    if(!head || !head.querySelector) return;
-    var oldTitle = head.querySelector('h3');
-    if(oldTitle){
-      oldTitle.classList.add('v25710-hidden-old-title');
-      oldTitle.setAttribute('aria-hidden','true');
-    }
-    var title = head.querySelector('.v25710-compact-title');
-    if(!title){
-      title = document.createElement('div');
-      title.className = 'v25710-compact-title';
-      var hint = head.querySelector('.profile-life-v23417-open-hint');
-      if(hint) head.insertBefore(title, hint);
-      else head.appendChild(title);
-    }
-    title.textContent = (name || 'Élève') + ' - mes progrès en CE2';
+    return '';
   }
   function bestRows(){
     try{
@@ -211,10 +134,10 @@
     return visible;
   }
   function medalTile(kind, label, count){
-    return '<div class="v2578-medal-tile '+kind+'">'
+    return '<div class="v2576-medal-tile '+kind+'">'
       + '<img src="'+IMG[kind]+'" alt="Médaille '+esc(label)+'" loading="lazy">'
-      + '<div class="v2578-medal-count">'+esc(count)+'</div>'
-      + '<div class="v2578-medal-label">'+esc(label)+'</div>'
+      + '<div class="v2576-medal-count">'+esc(count)+'</div>'
+      + '<div class="v2576-medal-label">'+esc(label)+'</div>'
       + '</div>';
   }
   function openMedals(ev){
@@ -227,7 +150,7 @@
     }catch(e){}
   }
   function openProgress(ev){
-    if(ev && ev.target && ev.target.closest && ev.target.closest('.v21-change-student-btn,.v2578-medals-section,button,a,input,select,textarea')) return;
+    if(ev && ev.target && ev.target.closest && ev.target.closest('.v21-change-student-btn,.v2576-medals-section,button,a,input,select,textarea')) return;
     if(typeof window.openStudentProfileLifeV23417 === 'function') window.openStudentProfileLifeV23417(ev);
   }
   function render(){
@@ -237,20 +160,19 @@
     var head = card.querySelector('.v21-profile-head');
     if(!stats || !head) return;
 
-    var info = currentStudentInfo();
-    var name = info.prenom || 'Élève';
+    var name = currentName() || 'Élève';
     var rows = bestRows();
     var medals = countMedals(rows);
     var skills = unique(rows.map(skillSentence)).slice(0,10);
 
-    card.classList.add('profile-life-v23417-clickable','v2578-progress-card');
-    card.setAttribute('aria-label','Mes progrès en CE2 de '+name+'. Voir mes progrès.');
-    card.setAttribute('title','Voir mes progrès');
+    card.classList.add('profile-life-v23417-clickable','v2576-progress-card');
+    card.setAttribute('aria-label','Mes progrès de '+name+'. Ouvrir pour en savoir plus.');
+    card.setAttribute('title','Ouvre pour en savoir plus !');
     card.setAttribute('role','button');
     card.setAttribute('tabindex','0');
 
-    applyStudentPortrait(head, info);
-    ensureCompactHeader(head, name);
+    var h3 = head.querySelector('h3');
+    if(h3) h3.textContent = name;
 
     var hint = head.querySelector('.profile-life-v23417-open-hint');
     if(!hint){
@@ -258,50 +180,50 @@
       hint.className = 'profile-life-v23417-open-hint';
       head.appendChild(hint);
     }
-    hint.classList.add('v2578-open-hint');
-    hint.textContent = 'Voir mes progrès';
+    hint.classList.add('v2576-open-hint');
+    hint.textContent = '⌄ Ouvre pour en savoir plus !';
 
     var skillsHtml = skills.length
-      ? skills.slice(0,6).map(function(s){return '<span class="v2578-skill">'+esc(s)+'</span>';}).join('')
-      : '<span class="v2578-empty">Aucune compétence validée pour le moment.</span>';
+      ? skills.slice(0,6).map(function(s){return '<span class="v2576-skill">'+esc(s)+'</span>';}).join('')
+      : '<span class="v2576-empty">Aucune compétence validée pour le moment.</span>';
 
     var html = ''
-      + '<div class="v2578-progress-scroll" tabindex="0" aria-label="Résumé des progrès de '+esc(name)+'">'
-      +   '<section class="v2578-section v2578-medals-section" role="button" tabindex="0" title="Voir mes progrès">'
-      +     '<div class="v2578-section-title"><span>🏅 Mes médailles</span><span class="v2578-arrow">›</span></div>'
-      +     '<div class="v2578-medal-grid">'
+      + '<div class="v2576-progress-scroll" tabindex="0" aria-label="Résumé des progrès de '+esc(name)+'">'
+      +   '<section class="v2576-section v2576-medals-section" role="button" tabindex="0" title="Ouvre pour en savoir plus sur les médailles">'
+      +     '<div class="v2576-section-title"><span>🏅 Mes médailles</span><span class="v2576-arrow">›</span></div>'
+      +     '<div class="v2576-medal-grid">'
       +       medalTile('or','Or',medals.or)
       +       medalTile('argent','Argent',medals.argent)
       +       medalTile('bronze','Bronze',medals.bronze)
       +     '</div>'
       +   '</section>'
-      +   '<section class="v2578-section">'
-      +     '<div class="v2578-section-title"><span>🎗️ Mes ceintures</span></div>'
-      +     '<div class="v2578-lines">'
-      +       '<div class="v2578-line"><strong>Maths :</strong><span><span class="v2578-pill">'+esc(beltSummary(rows,'Maths'))+'</span></span></div>'
-      +       '<div class="v2578-line"><strong>Français :</strong><span><span class="v2578-pill">'+esc(beltSummary(rows,'Français'))+'</span></span></div>'
+      +   '<section class="v2576-section">'
+      +     '<div class="v2576-section-title"><span>🎗️ Mes ceintures</span></div>'
+      +     '<div class="v2576-lines">'
+      +       '<div class="v2576-line"><strong>Maths :</strong><span><span class="v2576-pill">'+esc(beltSummary(rows,'Maths'))+'</span></span></div>'
+      +       '<div class="v2576-line"><strong>Français :</strong><span><span class="v2576-pill">'+esc(beltSummary(rows,'Français'))+'</span></span></div>'
       +     '</div>'
       +   '</section>'
-      +   '<section class="v2578-section">'
-      +     '<div class="v2578-section-title"><span>✔ Je sais déjà...</span></div>'
-      +     '<div class="v2578-skills">'+skillsHtml+'</div>'
+      +   '<section class="v2576-section">'
+      +     '<div class="v2576-section-title"><span>✔ Je sais déjà...</span></div>'
+      +     '<div class="v2576-skills">'+skillsHtml+'</div>'
       +   '</section>'
       + '</div>'
       + '<button class="v21-change-student-btn" onclick="changerEleve()" type="button">👤 Changer d’élève / Donner la tablette</button>';
 
-    if(stats.getAttribute('data-v2578-html') !== html){
-      stats.classList.add('v2578-progress-stats');
+    if(stats.getAttribute('data-v2576-html') !== html){
+      stats.classList.add('v2576-progress-stats');
       stats.innerHTML = html;
-      stats.setAttribute('data-v2578-html', html);
-      var med = stats.querySelector('.v2578-medals-section');
+      stats.setAttribute('data-v2576-html', html);
+      var med = stats.querySelector('.v2576-medals-section');
       if(med){
         med.addEventListener('click', openMedals, true);
         med.addEventListener('keydown', function(ev){ if(ev.key === 'Enter' || ev.key === ' '){ openMedals(ev); } }, true);
       }
     }
 
-    if(!card.__v2578OpenBound){
-      card.__v2578OpenBound = true;
+    if(!card.__v2576OpenBound){
+      card.__v2576OpenBound = true;
       card.addEventListener('click', openProgress, true);
       card.addEventListener('keydown', function(ev){
         if(ev.key === 'Enter' || ev.key === ' '){ ev.preventDefault(); openProgress(ev); }

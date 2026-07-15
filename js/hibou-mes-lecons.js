@@ -1,9 +1,9 @@
 (function(){
   'use strict';
-  if(window.__hibouMesLeconsV25748) return;
-  window.__hibouMesLeconsV25748 = true;
+  if(window.__hibouMesLeconsV25749) return;
+  window.__hibouMesLeconsV25749 = true;
 
-  var VERSION = '🦉 Maître Hibou V25.7.48';
+  var VERSION = '🦉 Maître Hibou V25.7.49';
 
   function byId(id){ return document.getElementById(id); }
 
@@ -30,9 +30,6 @@
         '</nav>' +
         '<div class="hibou-lessons-content">' +
           '<iframe class="hibou-lessons-frame" id="hibouLessonsFrame" title="Bibliothèque des leçons de français" src="bibliotheque_lecons/index.html"></iframe>' +
-          '<div class="hibou-lessons-maths" id="hibouLessonsMathsPanel">' +
-            '<div class="hibou-lessons-placeholder"><div class="icon">📐</div><h3>Leçons de mathématiques</h3><p>La rubrique est déjà prévue dans la popup. Les fiches de mathématiques seront ajoutées après validation de leur organisation et de leur conformité au programme.</p></div>' +
-          '</div>' +
         '</div>' +
       '</section>';
     document.body.appendChild(overlay);
@@ -50,12 +47,15 @@
     var french = byId('hibouLessonsFrench');
     var maths = byId('hibouLessonsMaths');
     var frame = byId('hibouLessonsFrame');
-    var mathsPanel = byId('hibouLessonsMathsPanel');
     var isMaths = subject === 'maths';
     if(french) french.classList.toggle('active', !isMaths);
     if(maths) maths.classList.toggle('active', isMaths);
-    if(frame) frame.style.display = isMaths ? 'none' : 'block';
-    if(mathsPanel) mathsPanel.classList.toggle('active', isMaths);
+    if(frame){
+      var nextSrc = isMaths ? 'bibliotheque_math/index.html' : 'bibliotheque_lecons/index.html';
+      if(frame.getAttribute('src') !== nextSrc) frame.setAttribute('src', nextSrc);
+      frame.title = isMaths ? 'Bibliothèque des leçons de mathématiques' : 'Bibliothèque des leçons de français';
+      frame.style.display = 'block';
+    }
   }
 
   function openLessons(){

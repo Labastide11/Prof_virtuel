@@ -1,9 +1,9 @@
 (function(){
   'use strict';
-  if(window.__hibouMesLeconsV25747) return;
-  window.__hibouMesLeconsV25747 = true;
+  if(window.__hibouMesLeconsV25748) return;
+  window.__hibouMesLeconsV25748 = true;
 
-  var VERSION = '🦉 Maître Hibou V25.7.47';
+  var VERSION = '🦉 Maître Hibou V25.7.48';
 
   function byId(id){ return document.getElementById(id); }
 
@@ -97,7 +97,7 @@
     var train = byId('v24AdviceTrain');
     var belt = byId('v24AdviceBelt');
     var question = byId('v24AdviceQuestion');
-    [lessons,train,belt,question].forEach(function(btn){ if(btn && btn.parentNode === actions) actions.appendChild(btn); });
+    [train,belt,lessons,question].forEach(function(btn){ if(btn && btn.parentNode === actions) actions.appendChild(btn); });
     return true;
   }
 

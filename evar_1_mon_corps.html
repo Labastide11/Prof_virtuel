@@ -197,6 +197,11 @@ function showResult(){
   else if(score >= items.length - 2) msg = "Bien joué ! Relis les explications pour retenir encore mieux.";
   else msg = "Continue l'entraînement : relis les explications, tu vas progresser.";
   document.getElementById('finalMessage').textContent = msg;
+  try{
+    const payload={type:'hibou-vivre-ensemble-complete',area:'EVAR',title:'Prendre soin de mon corps',score:score,total:items.length,source:'evar_mon_corps'};
+    if(window.parent && window.parent !== window) window.parent.postMessage(payload,'*');
+    if(window.opener) window.opener.postMessage(payload,'*');
+  }catch(e){}
   panel.classList.add('show');
   panel.scrollIntoView({behavior:'smooth', block:'center'});
 }

@@ -104,6 +104,11 @@ btn.addEventListener('click',()=>{
   document.getElementById('certName').textContent=name+' — mission accomplie !';
   document.getElementById('cert').classList.add('show');
   document.getElementById('cert').scrollIntoView({behavior:'smooth',block:'center'});
+  try{
+    const payload={type:'hibou-vivre-ensemble-complete',area:'EVAR',title:"Mes droits d’enfant",detail:'Mission accomplie',source:'evar_droits_enfant'};
+    if(window.parent && window.parent !== window) window.parent.postMessage(payload,'*');
+    if(window.opener) window.opener.postMessage(payload,'*');
+  }catch(e){}
 });
 </script>
 

@@ -341,6 +341,11 @@ function showResult(){
   else if(score >= items.length - 2) msg = "Bien joué, citoyen ! Relis les explications pour affiner encore.";
   else msg = "Continue l'entraînement : relis les explications, chaque question t'apprend un nouveau réflexe.";
   document.getElementById('finalMessage').textContent = msg;
+  try{
+    const payload={type:'hibou-vivre-ensemble-complete',area:'EMC',title:"Le bien commun, c'est quoi ?",score:score,total:items.length,source:'emc_bien_commun'};
+    if(window.parent && window.parent !== window) window.parent.postMessage(payload,'*');
+    if(window.opener) window.opener.postMessage(payload,'*');
+  }catch(e){}
   panel.classList.add('show');
   panel.scrollIntoView({behavior:'smooth', block:'center'});
 }

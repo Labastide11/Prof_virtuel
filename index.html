@@ -36757,5 +36757,149 @@ header .logo-icon img{
 <!-- V25.7.47 — Mes leçons, modification isolée -->
 <link rel="stylesheet" href="css/hibou-mes-lecons.css?v=25749">
 <script src="js/hibou-mes-lecons.js?v=25749"></script>
+
+
+<!-- V25.7.49 — Agrandissement isolé des icônes des 4 boutons, sans modifier leurs dimensions -->
+<style id="hibou-big-action-icons-v25749">
+  .v24-advice-btn.hibou-big-action-icon{
+    display:grid !important;
+    grid-template-columns:44px minmax(0,1fr) !important;
+    grid-template-rows:auto auto !important;
+    column-gap:8px !important;
+    row-gap:1px !important;
+    align-items:center !important;
+    justify-items:start !important;
+    text-align:left !important;
+  }
+  .v24-advice-btn.hibou-big-action-icon .hibou-action-icon{
+    grid-column:1 !important;
+    grid-row:1 / 3 !important;
+    align-self:center !important;
+    justify-self:center !important;
+    width:44px !important;
+    font-size:40px !important;
+    line-height:1 !important;
+    font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif !important;
+    font-weight:400 !important;
+    text-align:center !important;
+    filter:drop-shadow(0 2px 2px rgba(0,0,0,.12));
+  }
+  .v24-advice-btn.hibou-big-action-icon .hibou-action-label{
+    grid-column:2 !important;
+    grid-row:1 !important;
+    min-width:0 !important;
+    width:100% !important;
+    font:inherit !important;
+    line-height:1.05 !important;
+    text-align:center !important;
+  }
+  .v24-advice-btn.hibou-big-action-icon small{
+    grid-column:2 !important;
+    grid-row:2 !important;
+    width:100% !important;
+    margin:0 !important;
+    text-align:center !important;
+  }
+  @media (orientation:landscape) and (max-height:780px){
+    .v24-advice-btn.hibou-big-action-icon{
+      grid-template-columns:38px minmax(0,1fr) !important;
+      column-gap:6px !important;
+    }
+    .v24-advice-btn.hibou-big-action-icon .hibou-action-icon{
+      width:38px !important;
+      font-size:34px !important;
+    }
+  }
+</style>
+<script id="hibou-big-action-icons-v25749-script">
+(function(){
+  if(window.__hibouBigActionIconsV25749) return;
+  window.__hibouBigActionIconsV25749 = true;
+
+  var IDS = ['v24AdviceTrain','v24AdviceBelt','v24AdviceLessons','v24AdviceQuestion'];
+  var FALLBACK = {
+    v24AdviceTrain:'🧠',
+    v24AdviceBelt:'⭐',
+    v24AdviceLessons:'📚',
+    v24AdviceQuestion:'💬'
+  };
+
+  function splitIconAndLabel(id, raw){
+    raw = String(raw || '').replace(/\s+/g,' ').trim();
+    var icon = FALLBACK[id] || '';
+    var label = raw;
+    var known = ['🧠','📖','🧮','⭐','📚','💬'];
+    for(var i=0;i<known.length;i++){
+      if(label.indexOf(known[i]) === 0){
+        icon = known[i];
+        label = label.slice(known[i].length).trim();
+        break;
+      }
+    }
+    return {icon:icon,label:label};
+  }
+
+  function decorate(btn){
+    if(!btn) return;
+    var small = btn.querySelector('small');
+    var subtitle = small ? small.textContent.trim() : '';
+    var clone = btn.cloneNode(true);
+    var cloneSmall = clone.querySelector('small');
+    if(cloneSmall) cloneSmall.remove();
+    var parts = splitIconAndLabel(btn.id, clone.textContent);
+    var signature = parts.icon+'|'+parts.label+'|'+subtitle;
+    if(btn.dataset.hibouIconSignature === signature && btn.querySelector('.hibou-action-icon')) return;
+
+    btn.dataset.hibouIconSignature = signature;
+    btn.classList.add('hibou-big-action-icon');
+    btn.innerHTML = '';
+
+    var icon = document.createElement('span');
+    icon.className = 'hibou-action-icon';
+    icon.setAttribute('aria-hidden','true');
+    icon.textContent = parts.icon;
+
+    var label = document.createElement('span');
+    label.className = 'hibou-action-label';
+    label.textContent = parts.label;
+
+    btn.appendChild(icon);
+    btn.appendChild(label);
+    if(subtitle){
+      var sub = document.createElement('small');
+      sub.textContent = subtitle;
+      btn.appendChild(sub);
+    }
+  }
+
+  function apply(){
+    IDS.forEach(function(id){ decorate(document.getElementById(id)); });
+  }
+
+  var scheduled = false;
+  function schedule(){
+    if(scheduled) return;
+    scheduled = true;
+    requestAnimationFrame(function(){ scheduled=false; apply(); });
+  }
+
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', apply, {once:true});
+  else apply();
+  window.addEventListener('load', apply, {once:true});
+  [100,300,700,1400,2500].forEach(function(ms){ setTimeout(apply,ms); });
+
+  var observer = new MutationObserver(function(mutations){
+    for(var i=0;i<mutations.length;i++){
+      var target = mutations[i].target;
+      if(target && target.closest && target.closest('#v24AdviceTrain,#v24AdviceBelt,#v24AdviceLessons,#v24AdviceQuestion')){
+        schedule(); return;
+      }
+      if(mutations[i].addedNodes && mutations[i].addedNodes.length){ schedule(); return; }
+    }
+  });
+  observer.observe(document.documentElement,{childList:true,subtree:true,characterData:true});
+})();
+</script>
+
 </body>
 </html>

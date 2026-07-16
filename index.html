@@ -36951,3 +36951,73 @@ header .logo-icon img{
   }
 }
 </style>
+
+
+<!-- V25.7.49 — Bouton Changer d'élève réellement hors de la carte Profil -->
+<style id="hibou-change-student-outside-card-v25749">
+@media (orientation:landscape) and (min-width:900px){
+  body.v24-0-5-ready.v21-final:not(.v21-learning-open):not(.competence-mode) .v21-center{
+    grid-template-rows:minmax(0,1fr) auto !important;
+  }
+  body.v24-0-5-ready.v21-final:not(.v21-learning-open):not(.competence-mode) .v21-center > .v21-treasure-card{
+    grid-column:1 !important;
+    grid-row:1 / 3 !important;
+  }
+  body.v24-0-5-ready.v21-final:not(.v21-learning-open):not(.competence-mode) .v21-center > .v21-profile-card{
+    grid-column:2 !important;
+    grid-row:1 !important;
+    height:auto !important;
+    min-height:0 !important;
+  }
+  body.v24-0-5-ready.v21-final:not(.v21-learning-open):not(.competence-mode) .v21-center > .v24-shortcuts-card{
+    grid-column:3 !important;
+    grid-row:1 / 3 !important;
+  }
+  body.v24-0-5-ready.v21-final:not(.v21-learning-open):not(.competence-mode) .v21-center > .v21-change-student-btn.hibou-change-student-outside{
+    grid-column:2 !important;
+    grid-row:2 !important;
+    width:100% !important;
+    margin:10px 0 0 0 !important;
+    align-self:end !important;
+    flex:0 0 auto !important;
+  }
+}
+</style>
+<script id="hibou-change-student-outside-card-v25749-js">
+(function(){
+  if(window.__hibouChangeStudentOutsideV25749) return;
+  window.__hibouChangeStudentOutsideV25749 = true;
+  var busy = false;
+
+  function moveButtonOutside(){
+    if(busy) return;
+    var center = document.querySelector('.v21-center');
+    var profile = center && center.querySelector('.v21-profile-card');
+    if(!center || !profile) return;
+
+    var inside = profile.querySelector('.v21-change-student-btn');
+    var outside = center.querySelector(':scope > .v21-change-student-btn.hibou-change-student-outside');
+
+    if(inside){
+      busy = true;
+      if(outside && outside !== inside) outside.remove();
+      inside.classList.add('hibou-change-student-outside');
+      var shortcuts = center.querySelector(':scope > .v24-shortcuts-card');
+      if(shortcuts) center.insertBefore(inside, shortcuts);
+      else center.appendChild(inside);
+      busy = false;
+    }else if(outside){
+      outside.classList.add('hibou-change-student-outside');
+    }
+  }
+
+  function schedule(){ setTimeout(moveButtonOutside, 0); }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', schedule, {once:true});
+  else schedule();
+  window.addEventListener('load', schedule, {once:true});
+  [100,300,700,1400,2500].forEach(function(ms){ setTimeout(moveButtonOutside, ms); });
+
+  var observer = new MutationObserver(function(){ schedule(); });
+  observer.observe(document.documentElement, {childList:true, subtree:true});
+})();
+</script>

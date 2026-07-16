@@ -64,7 +64,8 @@ body.hibou-lessons-ready .v24-advice-btn{
   background:linear-gradient(135deg,#10233f,#28578e);
   color:#fff;
 }
-.hibou-lessons-header .owl{font-size:42px}
+.hibou-lessons-header .owl{width:58px;height:58px;flex:0 0 58px;display:flex;align-items:center;justify-content:center}
+.hibou-lessons-header .owl img{width:100%;height:100%;object-fit:contain;display:block;border-radius:14px}
 .hibou-lessons-title{min-width:0;flex:1}
 .hibou-lessons-title h2{margin:0;font-size:clamp(24px,3vw,38px)}
 .hibou-lessons-title p{margin:3px 0 0;opacity:.9;font-weight:700;font-size:14px}
@@ -113,7 +114,7 @@ body.hibou-lessons-ready .v24-advice-btn{
   .hibou-lessons-overlay{padding:7px}
   .hibou-lessons-dialog{height:calc(100dvh - 14px);border-radius:22px}
   .hibou-lessons-header{padding:8px 14px}
-  .hibou-lessons-header .owl{font-size:34px}
+  .hibou-lessons-header .owl{width:46px;height:46px;flex-basis:46px}
   .hibou-lessons-title h2{font-size:27px}
   .hibou-lessons-title p{display:none}
   .hibou-lessons-close{width:40px;height:40px;font-size:26px}

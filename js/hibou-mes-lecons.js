@@ -20,7 +20,7 @@
     overlay.innerHTML =
       '<section class="hibou-lessons-dialog" role="dialog" aria-modal="true" aria-labelledby="hibouLessonsTitle">' +
         '<header class="hibou-lessons-header">' +
-          '<div class="owl" aria-hidden="true">🦉</div>' +
+          '<div class="owl" aria-hidden="true"><img src="bibliotheque_lecons/images/logo_lecons_officiel.png?v=25749-logo-officiel-2" alt=""></div>' +
           '<div class="hibou-lessons-title"><h2 id="hibouLessonsTitle">Mes leçons</h2><p>Choisis une matière, recherche une notion puis ouvre la leçon dans cette fenêtre.</p></div>' +
           '<button type="button" class="hibou-lessons-close" id="hibouLessonsClose" aria-label="Fermer">×</button>' +
         '</header>' +

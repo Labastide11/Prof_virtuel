@@ -36909,3 +36909,23 @@ header .logo-icon img{
 
 </body>
 </html>
+
+<!-- V25.7.49 — Accueil tablette : les trois cartes rejoignent le bandeau inférieur -->
+<style id="hibou-home-cards-fill-bottom-v25749">
+@media (orientation:landscape) and (min-width:900px){
+  body.v24-0-5-ready.v21-final:not(.v21-learning-open):not(.competence-mode) .v21-home{
+    padding-bottom:0 !important;
+  }
+  body.v24-0-5-ready.v21-final:not(.v21-learning-open):not(.competence-mode) .v21-center{
+    flex:1 1 auto !important;
+    min-height:0 !important;
+    margin-bottom:0 !important;
+  }
+  body.v24-0-5-ready.v21-final:not(.v21-learning-open):not(.competence-mode) .v21-center > .v21-treasure-card,
+  body.v24-0-5-ready.v21-final:not(.v21-learning-open):not(.competence-mode) .v21-center > .v21-profile-card,
+  body.v24-0-5-ready.v21-final:not(.v21-learning-open):not(.competence-mode) .v21-center > .v24-shortcuts-card{
+    height:100% !important;
+    min-height:0 !important;
+  }
+}
+</style>

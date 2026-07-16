@@ -36929,3 +36929,25 @@ header .logo-icon img{
   }
 }
 </style>
+
+<!-- V25.7.49 — Bouton Changer d'élève placé au bas de la colonne centrale -->
+<style id="hibou-change-student-bottom-v25749">
+@media (orientation:landscape) and (min-width:900px){
+  body.v24-0-5-ready.v21-final:not(.v21-learning-open):not(.competence-mode) .v21-center > .v21-profile-card{
+    height:100% !important;
+    min-height:0 !important;
+    display:flex !important;
+    flex-direction:column !important;
+  }
+  body.v24-0-5-ready.v21-final:not(.v21-learning-open):not(.competence-mode) .v21-profile-card .v21-stats{
+    flex:1 1 auto !important;
+    min-height:0 !important;
+    display:flex !important;
+    flex-direction:column !important;
+  }
+  body.v24-0-5-ready.v21-final:not(.v21-learning-open):not(.competence-mode) .v21-profile-card .v21-change-student-btn{
+    margin-top:auto !important;
+    flex:0 0 auto !important;
+  }
+}
+</style>

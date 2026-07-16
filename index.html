@@ -34066,7 +34066,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
     clearPress();
     try{ sessionStorage.setItem('hibou_teacher_gate_v260','ok'); }catch(e){}
     var url = TEACHER_PAGE + '?v=25612&from=hibou';
-    try{ window.location.href = url; }catch(e){ window.open(url, '_self'); }
+    try{ window.top.location.assign(url); }catch(e){ window.location.assign(url); }
   }
   function start(ev){
     var h = hotspotFromEvent(ev);

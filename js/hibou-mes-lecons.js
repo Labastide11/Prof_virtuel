@@ -3,7 +3,7 @@
   if(window.__hibouMesLeconsV25749) return;
   window.__hibouMesLeconsV25749 = true;
 
-  var VERSION = '🦉 Maître Hibou V25.7.49';
+  var VERSION = '🦉 Maître Hibou V25.7.50';
 
   function byId(id){ return document.getElementById(id); }
 

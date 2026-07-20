@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 Maître Hibou V25.7.50</title>
+<title>🦉 Maître Hibou V25.7.52</title>
 <style>
 
   :root {
@@ -4959,6 +4959,11 @@ html.hibou-device-tablette body.v21-final header .logo-icon img,
 html.hibou-device-smartphone body.v21-final header .logo-icon img{
   object-fit:cover !important;
 }
+</style>
+
+<style id="patch-v25752-maths-competences-css">
+.maths-v2343-competence{margin-top:6px;font-size:.86rem;line-height:1.25;color:#514b70;}
+.maths-v2343-competence b{color:#30285e;}
 </style>
 </head>
 <body class="prenom-mode">
@@ -20552,20 +20557,20 @@ body.v21-final .v2173-activity-btn.soon{
   const MATHS_PROGRESS_PREFIX = "hibou_v222_maths_progress_";
 
   window.MATH_BELTS_V222 = [
-    {ceinture:"blanche", niveau:1, emoji:"⚪", colorName:"blanche", skillId:"maths_blanche_petits_nombres", competence:"petits nombres", label:"Petits nombres"},
-    {ceinture:"jaune", niveau:2, emoji:"🟡", colorName:"jaune", skillId:"maths_jaune_dizaines", competence:"dizaines", label:"Dizaines"},
-    {ceinture:"orange", niveau:3, emoji:"🟠", colorName:"orange", skillId:"maths_orange_sans_retenue", competence:"sans retenue", label:"Sans retenue"},
-    {ceinture:"vert_clair", niveau:4, emoji:"🟢", colorName:"vert clair", skillId:"maths_vert_clair_avec_retenue", competence:"avec retenue", label:"Avec retenue"},
+    {ceinture:"blanche", niveau:1, emoji:"⚪", colorName:"blanche", skillId:"maths_blanche_petits_nombres", competence:"petits nombres", label:"Premiers calculs", competenceEleve:"Je sais effectuer mentalement des additions et des soustractions simples, reconnaître des nombres proches et utiliser les doubles et les moitiés.", progressionCodes:["CAL-P1-01","CAL-P2-01"]},
+    {ceinture:"jaune", niveau:2, emoji:"🟡", colorName:"jaune", skillId:"maths_jaune_dizaines", competence:"dizaines", label:"Dizaines entières", competenceEleve:"Je sais ajouter et retrancher mentalement des dizaines entières.", progressionCodes:["CAL-P1-01"]},
+    {ceinture:"orange", niveau:3, emoji:"🟠", colorName:"orange", skillId:"maths_orange_sans_retenue", competence:"sans retenue", label:"Calculs sans retenue", competenceEleve:"Je sais additionner et soustraire mentalement des nombres sans franchir une dizaine ou une centaine.", progressionCodes:["CAL-P2-03"]},
+    {ceinture:"vert_clair", niveau:4, emoji:"🟢", colorName:"vert clair", skillId:"maths_vert_clair_avec_retenue", competence:"avec retenue", label:"Calculs avec retenue", competenceEleve:"Je sais additionner et soustraire mentalement des nombres en franchissant une dizaine ou une centaine.", progressionCodes:["CAL-P2-03","CAL-P4-02"]},
     {ceinture:"vert_fonce", niveau:5, emoji:"🟢", colorName:"vert foncé", skillId:"maths_vert_fonce_complement_dizaine", competence:"complement dizaine", label:"Complément à la dizaine"},
-    {ceinture:"bleu_clair", niveau:6, emoji:"🔵", colorName:"bleu clair", skillId:"maths_bleu_clair_plus_moins_9", competence:"plus ou moins 9", label:"Ajouter / retrancher 9"},
-    {ceinture:"bleu_fonce", niveau:7, emoji:"🔵", colorName:"bleu foncé", skillId:"maths_bleu_fonce_plus_moins_11", competence:"plus ou moins 11", label:"Ajouter / retrancher 11"},
-    {ceinture:"rose", niveau:8, emoji:"🌸", colorName:"rose", skillId:"maths_rose_centaines", competence:"centaines", label:"Centaines"},
+    {ceinture:"bleu_clair", niveau:6, emoji:"🔵", colorName:"bleu clair", skillId:"maths_bleu_clair_plus_moins_9", competence:"plus ou moins 9", label:"Ajouter ou retrancher 9", competenceEleve:"Je sais ajouter ou retrancher 9 en utilisant une stratégie de calcul mental.", progressionCodes:["CAL-P1-03"]},
+    {ceinture:"bleu_fonce", niveau:7, emoji:"🔵", colorName:"bleu foncé", skillId:"maths_bleu_fonce_plus_moins_11", competence:"plus ou moins 11", label:"Ajouter ou retrancher 11", competenceEleve:"Je sais ajouter ou retrancher 11 en décomposant le calcul.", progressionCodes:["CAL-P4-02"]},
+    {ceinture:"rose", niveau:8, emoji:"🌸", colorName:"rose", skillId:"maths_rose_centaines", competence:"centaines", label:"Centaines entières", competenceEleve:"Je sais ajouter et retrancher mentalement des centaines entières.", progressionCodes:["CAL-P1-01"]},
     {ceinture:"beige", niveau:9, emoji:"🤍", colorName:"beige", skillId:"maths_beige_complement_centaine", competence:"complement centaine", label:"Complément à la centaine"},
-    {ceinture:"violet", niveau:10, emoji:"🟣", colorName:"violet", skillId:"maths_violet_tables_1_2_10", competence:"tables 1 2 10", label:"Tables ×1 ×2 ×10"},
-    {ceinture:"marron", niveau:11, emoji:"🟤", colorName:"marron", skillId:"maths_marron_tables_3_4_5", competence:"tables 3 4 5", label:"Tables ×3 ×4 ×5"},
-    {ceinture:"rouge", niveau:12, emoji:"🔴", colorName:"rouge", skillId:"maths_rouge_tables_6_7", competence:"tables 6 7", label:"Tables ×6 ×7"},
-    {ceinture:"gris", niveau:13, emoji:"⚫", colorName:"gris", skillId:"maths_gris_tables_8_9", competence:"tables 8 9", label:"Tables ×8 ×9"},
-    {ceinture:"noir", niveau:14, emoji:"⚫", colorName:"noir", skillId:"maths_noir_multiplier_10_100_1000", competence:"multiplier par 10 100 1000", label:"×10 ×100 ×1000"}
+    {ceinture:"violet", niveau:10, emoji:"🟣", colorName:"violet", skillId:"maths_violet_tables_1_2_10", competence:"tables 1 2 10", label:"Tables de 1, 2 et 10", competenceEleve:"Je connais et j’utilise les tables de multiplication de 1, 2 et 10.", progressionCodes:["CAL-P3-01"]},
+    {ceinture:"marron", niveau:11, emoji:"🟤", colorName:"marron", skillId:"maths_marron_tables_3_4_5", competence:"tables 3 4 5", label:"Tables de 3, 4 et 5", competenceEleve:"Je connais et j’utilise les tables de multiplication de 3, 4 et 5.", progressionCodes:["CAL-P3-01"]},
+    {ceinture:"rouge", niveau:12, emoji:"🔴", colorName:"rouge", skillId:"maths_rouge_tables_6_7", competence:"tables 6 7", label:"Tables de 6 et 7", competenceEleve:"Je connais et j’utilise les tables de multiplication de 6 et 7.", progressionCodes:["CAL-P3-01"]},
+    {ceinture:"gris", niveau:13, emoji:"⚫", colorName:"gris", skillId:"maths_gris_tables_8_9", competence:"tables 8 9", label:"Tables de 8 et 9", competenceEleve:"Je connais et j’utilise les tables de multiplication de 8 et 9.", progressionCodes:["CAL-P3-01","CAL-P3-02"]},
+    {ceinture:"noir", niveau:14, emoji:"⚫", colorName:"noir", skillId:"maths_noir_multiplier_10_100_1000", competence:"multiplier par 10 100 1000", label:"Multiplier par 10, 100 ou 1 000", competenceEleve:"Je sais multiplier mentalement un nombre entier par 10, 100 ou 1 000.", progressionCodes:["CAL-P2-02"]}
   ];
 
   function esc(value){ return String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c])); }
@@ -21816,7 +21821,7 @@ body.v21-final .v2173-activity-btn.soon{
     const rows = allBelts().map(function(b){
       return '<article class="maths-v2343-belt-card">'
         + '<div class="maths-v2343-dot" style="--belt-color:'+esc(b.color)+';border-color:'+esc(b.border)+'"></div>'
-        + '<div class="maths-v2343-belt-main"><strong>'+esc(b.label)+'</strong><span>'+esc(b.colorName)+'</span></div>'
+        + '<div class="maths-v2343-belt-main"><strong>'+esc(b.label)+'</strong><span>'+esc(b.colorName)+'</span><div class="maths-v2343-competence"><b>Compétence travaillée :</b> '+esc(b.competenceEleve||b.competence||'Calcul mental')+'</div></div>'
         + '<button type="button" class="maths-v2343-train-btn" onclick="startMathsTrainingV2343(\''+esc(b.ceinture)+'\')">🧮 S’entraîner — 10 calculs</button>'
         + '</article>';
     }).join("");
@@ -36113,20 +36118,20 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   function currentStudent(){ try{ return window.prenomActuel || localStorage.getItem('hibou_prenom') || localStorage.getItem('maitreHibouCurrentStudent') || localStorage.getItem('elevePrenom') || 'eleve'; }catch(e){ return 'eleve'; } }
   function studentKey(){ return norm(currentStudent() || 'eleve'); }
   function mathBelts(){ return Array.isArray(window.MATH_BELTS_V222) ? window.MATH_BELTS_V222 : [
-    {ceinture:'blanche',niveau:1,emoji:'⚪',colorName:'blanche',skillId:'maths_blanche_petits_nombres',label:'Petits nombres',competence:'petits nombres'},
-    {ceinture:'jaune',niveau:2,emoji:'🟡',colorName:'jaune',skillId:'maths_jaune_dizaines',label:'Dizaines',competence:'dizaines'},
-    {ceinture:'orange',niveau:3,emoji:'🟠',colorName:'orange',skillId:'maths_orange_sans_retenue',label:'Sans retenue',competence:'sans retenue'},
-    {ceinture:'vert_clair',niveau:4,emoji:'🟢',colorName:'vert clair',skillId:'maths_vert_clair_avec_retenue',label:'Avec retenue',competence:'avec retenue'},
-    {ceinture:'vert_fonce',niveau:5,emoji:'🟢',colorName:'vert foncé',skillId:'maths_vert_fonce_complement_dizaine',label:'Complément à la dizaine',competence:'complément dizaine'},
-    {ceinture:'bleu_clair',niveau:6,emoji:'🔵',colorName:'bleu clair',skillId:'maths_bleu_clair_plus_moins_9',label:'Ajouter / retrancher 9',competence:'plus moins 9'},
-    {ceinture:'bleu_fonce',niveau:7,emoji:'🔵',colorName:'bleu foncé',skillId:'maths_bleu_fonce_plus_moins_11',label:'Ajouter / retrancher 11',competence:'plus moins 11'},
-    {ceinture:'rose',niveau:8,emoji:'🌸',colorName:'rose',skillId:'maths_rose_centaines',label:'Centaines',competence:'centaines'},
-    {ceinture:'beige',niveau:9,emoji:'🤍',colorName:'beige',skillId:'maths_beige_complement_centaine',label:'Complément à la centaine',competence:'complément centaine'},
-    {ceinture:'violet',niveau:10,emoji:'🟣',colorName:'violet',skillId:'maths_violet_tables_1_2_10',label:'Tables ×1 ×2 ×10',competence:'tables 1 2 10'},
-    {ceinture:'marron',niveau:11,emoji:'🟤',colorName:'marron',skillId:'maths_marron_tables_3_4_5',label:'Tables ×3 ×4 ×5',competence:'tables 3 4 5'},
-    {ceinture:'rouge',niveau:12,emoji:'🔴',colorName:'rouge',skillId:'maths_rouge_tables_6_7',label:'Tables ×6 ×7',competence:'tables 6 7'},
-    {ceinture:'gris',niveau:13,emoji:'⚫',colorName:'gris',skillId:'maths_gris_tables_8_9',label:'Tables ×8 ×9',competence:'tables 8 9'},
-    {ceinture:'noir',niveau:14,emoji:'⚫',colorName:'noir',skillId:'maths_noir_multiplier_10_100_1000',label:'×10 ×100 ×1000',competence:'multiplier par 10 100 1000'}
+    {ceinture:'blanche',niveau:1,emoji:'⚪',colorName:'blanche',skillId:'maths_blanche_petits_nombres',label:'Premiers calculs',competence:'petits nombres',competenceEleve:'Je sais effectuer mentalement des additions et des soustractions simples, reconnaître des nombres proches et utiliser les doubles et les moitiés.',progressionCodes:['CAL-P1-01','CAL-P2-01'] },
+    {ceinture:'jaune',niveau:2,emoji:'🟡',colorName:'jaune',skillId:'maths_jaune_dizaines',label:'Dizaines entières',competence:'dizaines',competenceEleve:'Je sais ajouter et retrancher mentalement des dizaines entières.',progressionCodes:['CAL-P1-01'] },
+    {ceinture:'orange',niveau:3,emoji:'🟠',colorName:'orange',skillId:'maths_orange_sans_retenue',label:'Calculs sans retenue',competence:'sans retenue',competenceEleve:'Je sais additionner et soustraire mentalement des nombres sans franchir une dizaine ou une centaine.',progressionCodes:['CAL-P2-03'] },
+    {ceinture:'vert_clair',niveau:4,emoji:'🟢',colorName:'vert clair',skillId:'maths_vert_clair_avec_retenue',label:'Calculs avec retenue',competence:'avec retenue',competenceEleve:'Je sais additionner et soustraire mentalement des nombres en franchissant une dizaine ou une centaine.',progressionCodes:['CAL-P2-03','CAL-P4-02'] },
+    {ceinture:'vert_fonce',niveau:5,emoji:'🟢',colorName:'vert foncé',skillId:'maths_vert_fonce_complement_dizaine',label:'Complément à la dizaine',competence:'complément dizaine',competenceEleve:'Je sais trouver combien il faut ajouter pour atteindre la dizaine suivante.',progressionCodes:['CAL-P1-02'] },
+    {ceinture:'bleu_clair',niveau:6,emoji:'🔵',colorName:'bleu clair',skillId:'maths_bleu_clair_plus_moins_9',label:'Ajouter ou retrancher 9',competence:'plus moins 9',competenceEleve:'Je sais ajouter ou retrancher 9 en utilisant une stratégie de calcul mental.',progressionCodes:['CAL-P1-03'] },
+    {ceinture:'bleu_fonce',niveau:7,emoji:'🔵',colorName:'bleu foncé',skillId:'maths_bleu_fonce_plus_moins_11',label:'Ajouter ou retrancher 11',competence:'plus moins 11',competenceEleve:'Je sais ajouter ou retrancher 11 en décomposant le calcul.',progressionCodes:['CAL-P4-02'] },
+    {ceinture:'rose',niveau:8,emoji:'🌸',colorName:'rose',skillId:'maths_rose_centaines',label:'Centaines entières',competence:'centaines',competenceEleve:'Je sais ajouter et retrancher mentalement des centaines entières.',progressionCodes:['CAL-P1-01'] },
+    {ceinture:'beige',niveau:9,emoji:'🤍',colorName:'beige',skillId:'maths_beige_complement_centaine',label:'Complément à la centaine',competence:'complément centaine',competenceEleve:'Je sais trouver combien il faut ajouter pour atteindre la centaine suivante.',progressionCodes:['CAL-P1-02'] },
+    {ceinture:'violet',niveau:10,emoji:'🟣',colorName:'violet',skillId:'maths_violet_tables_1_2_10',label:'Tables de 1, 2 et 10',competence:'tables 1 2 10',competenceEleve:'Je connais et j’utilise les tables de multiplication de 1, 2 et 10.',progressionCodes:['CAL-P3-01'] },
+    {ceinture:'marron',niveau:11,emoji:'🟤',colorName:'marron',skillId:'maths_marron_tables_3_4_5',label:'Tables de 3, 4 et 5',competence:'tables 3 4 5',competenceEleve:'Je connais et j’utilise les tables de multiplication de 3, 4 et 5.',progressionCodes:['CAL-P3-01'] },
+    {ceinture:'rouge',niveau:12,emoji:'🔴',colorName:'rouge',skillId:'maths_rouge_tables_6_7',label:'Tables de 6 et 7',competence:'tables 6 7',competenceEleve:'Je connais et j’utilise les tables de multiplication de 6 et 7.',progressionCodes:['CAL-P3-01'] },
+    {ceinture:'gris',niveau:13,emoji:'⚫',colorName:'gris',skillId:'maths_gris_tables_8_9',label:'Tables de 8 et 9',competence:'tables 8 9',competenceEleve:'Je connais et j’utilise les tables de multiplication de 8 et 9.',progressionCodes:['CAL-P3-01','CAL-P3-02'] },
+    {ceinture:'noir',niveau:14,emoji:'⚫',colorName:'noir',skillId:'maths_noir_multiplier_10_100_1000',label:'Multiplier par 10, 100 ou 1 000',competence:'multiplier par 10 100 1000',competenceEleve:'Je sais multiplier mentalement un nombre entier par 10, 100 ou 1 000.',progressionCodes:['CAL-P2-02'] }
   ]; }
   function findBelt(id){ var n=norm(id); var list=mathBelts(); return list.filter(function(b){ return norm(b.ceinture)===n || norm(b.skillId)===n || norm(b.label)===n || norm(b.competence)===n; })[0] || list[0]; }
   function optionSet(answer){ answer=Number(answer); var values=[answer], deltas=shuffle([-20,-12,-10,-9,-5,-4,-3,-2,-1,1,2,3,4,5,9,10,12,20]); deltas.forEach(function(d){ var v=answer+d; if(values.length<4 && v>=0 && values.indexOf(v)===-1) values.push(v); }); while(values.length<4){ var extra=answer+rnd(1,30); if(values.indexOf(extra)===-1) values.push(extra); } var opts=shuffle(values.slice(0,4)).map(String); return {options:opts, correct:opts.indexOf(String(answer))}; }
@@ -36160,7 +36165,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
     var opts=(qu.options||[]).map(function(opt,i){ return '<button type="button" class="maths-v2343-option" data-index="'+i+'" onclick="answerMathsTrainingV2343('+i+')">'+esc(opt)+'</button>'; }).join('');
     setMathsInner(mathsHeader()+'<div class="maths-v2343-content"><section class="maths-v2343-panel">'
       +'<div class="maths-v2343-training-head"><button type="button" class="maths-v2343-back" onclick="renderMathsTrainingListV2343()">← Retour aux entraînements</button><div class="maths-v2343-training-title">'+esc(st.belt.label)+'<br><small>'+esc(st.belt.colorName||st.belt.ceinture)+'</small></div><div class="maths-v2343-timer">⏱ <span id="mathsTimerValueV2343">'+fmt(st.elapsed)+'</span></div></div>'
-      +'<div class="maths-v2343-progress">Calcul '+(st.index+1)+' / '+st.questions.length+'</div>'
+      +'<div class="maths-v2343-progress">Calcul '+(st.index+1)+' / '+st.questions.length+'</div><div class="maths-v25224-subtle"><b>Compétence travaillée :</b> '+esc(st.belt.competenceEleve||st.belt.competence||st.belt.label)+'</div>'
       +'<div class="maths-v2343-question">'+esc(qu.q)+'</div><div class="maths-v2343-options">'+opts+'</div><div id="mathsFeedbackV25645"></div>'
       +'</section></div>');
   }
@@ -36182,7 +36187,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   function saveTrainingRecord(st,total){ try{ var key=RECORD_PREFIX+studentKey()+'_'+norm(st.belt.ceinture||st.belt.label); var old=JSON.parse(localStorage.getItem(key)||'null'); if(!old || st.score>Number(old.score||0) || (st.score===Number(old.score||0) && st.elapsed<Number(old.time||Infinity))) localStorage.setItem(key,JSON.stringify({score:st.score,total:total,time:st.elapsed,date:new Date().toISOString()})); }catch(e){} }
   function renderTrainingResult(){
     var st=trainingState; if(!st) return; stopTimer(); var total=st.questions.length||TRAINING_COUNT; saveTrainingRecord(st,total);
-    setMathsInner(mathsHeader()+'<div class="maths-v2343-content"><section class="maths-v2343-panel"><div class="maths-v2343-result"><h3>Bravo, entraînement terminé !</h3><div class="maths-v2343-score-grid"><div class="maths-v2343-score-card">Score<b>'+st.score+' / '+total+'</b></div><div class="maths-v2343-score-card">Temps total<b>'+fmt(st.elapsed)+'</b></div><div class="maths-v2343-score-card">Moyenne<b>'+avg(st.elapsed,total)+'</b></div></div><div class="maths-v2343-record">🦉 Correction de l’entraînement</div>'+reviewHTML(st.answers)+'<div class="maths-v2343-actions"><button type="button" class="maths-v2343-action" onclick="startMathsTrainingV2343(\''+esc(st.belt.ceinture)+'\')">🧮 Refaire 10 calculs</button><button type="button" class="maths-v2343-action secondary" onclick="renderMathsTrainingListV2343()">← Retour aux entraînements</button><button type="button" class="maths-v2343-action secondary" onclick="closeMathsTrainingPopupV2343()">Fermer</button></div></div></section></div>');
+    setMathsInner(mathsHeader()+'<div class="maths-v2343-content"><section class="maths-v2343-panel"><div class="maths-v2343-result"><h3>Bravo, entraînement terminé !</h3><div class="maths-v2343-score-grid"><div class="maths-v2343-score-card">Score<b>'+st.score+' / '+total+'</b></div><div class="maths-v2343-score-card">Temps total<b>'+fmt(st.elapsed)+'</b></div><div class="maths-v2343-score-card">Moyenne<b>'+avg(st.elapsed,total)+'</b></div></div><div class="maths-v25224-subtle"><b>Compétence travaillée :</b> '+esc(st.belt.competenceEleve||st.belt.competence||st.belt.label)+'</div><div class="maths-v2343-record">🦉 Correction de l’entraînement</div>'+reviewHTML(st.answers)+'<div class="maths-v2343-actions"><button type="button" class="maths-v2343-action" onclick="startMathsTrainingV2343(\''+esc(st.belt.ceinture)+'\')">🧮 Refaire 10 calculs</button><button type="button" class="maths-v2343-action secondary" onclick="renderMathsTrainingListV2343()">← Retour aux entraînements</button><button type="button" class="maths-v2343-action secondary" onclick="closeMathsTrainingPopupV2343()">Fermer</button></div></div></section></div>');
     try{ var scoreText='Score '+st.score+' / '+total+' en '+fmt(st.elapsed); if(window.hibouRecordTrainingSuccessV25221) window.hibouRecordTrainingSuccessV25221('maths',st.belt.label,scoreText); else if(window.hibouRecordSuccess) window.hibouRecordSuccess('🧮 Entraînement maths : '+st.belt.label+' — '+scoreText,'entrainement'); }catch(e){}
   }
 
@@ -36202,7 +36207,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   function renderBeltQuestion(){
     var st=beltState, qu=st.questions[st.index]; if(!qu) return renderBeltResult(); st.answered=false;
     var opts=(qu.options||[]).map(function(opt,i){ return '<button type="button" class="v222-math-option" data-index="'+i+'" onclick="answerMathSkillV222('+i+')">'+esc(opt)+'</button>'; }).join('');
-    setBeltInner('<div class="v190-belt-box"><h3>'+esc(st.belt.emoji||'🧮')+' Ceinture '+esc(st.belt.colorName||st.belt.ceinture)+' — '+esc(st.belt.label)+'</h3><div class="v190-rules">Question '+(st.index+1)+' / '+st.questions.length+' · Test : les corrections apparaîtront à la fin.</div><div class="skill-check-question">'+esc(qu.q)+'</div><div class="v222-math-options">'+opts+'</div><div id="mathSkillFeedbackV222" class="v25646-belt-wait"></div></div>');
+    setBeltInner('<div class="v190-belt-box"><h3>'+esc(st.belt.emoji||'🧮')+' Ceinture '+esc(st.belt.colorName||st.belt.ceinture)+' — '+esc(st.belt.label)+'</h3><div class="v190-rules"><b>Compétence travaillée :</b> '+esc(st.belt.competenceEleve||st.belt.competence||st.belt.label)+'<br>Question '+(st.index+1)+' / '+st.questions.length+' · Test : les corrections apparaîtront à la fin.</div><div class="skill-check-question">'+esc(qu.q)+'</div><div class="v222-math-options">'+opts+'</div><div id="mathSkillFeedbackV222" class="v25646-belt-wait"></div></div>');
   }
   window.answerMathSkillV222 = function(choice){
     var st=beltState; if(!st || st.answered) return; st.answered=true; choice=Number(choice); var qu=st.questions[st.index], correct=Number(qu.correct), ok=choice===correct; if(ok) st.score++;
@@ -36217,7 +36222,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   window.nextMathSkillQuestionV222 = function(){ var st=beltState; if(!st) return; st.index++; if(st.index>=st.questions.length) renderBeltResult(); else renderBeltQuestion(); };
   function renderBeltResult(){
     var st=beltState; if(!st) return; var total=st.questions.length||BELT_COUNT, medal=medalFor(st.score); if(medal){ saveBeltSuccess(st,medal); try{ if(typeof window.hibouRecordSuccess==='function') window.hibouRecordSuccess('🏅 Ceinture '+(st.belt.colorName||st.belt.ceinture)+' validée : '+st.belt.label+' ('+st.score+'/'+total+')','ceinture',{matiere:'Maths',belt:st.belt,score:st.score,total:total,actionReelle:true}); }catch(e){} }
-    setBeltInner('<div class="v190-belt-box"><h3>'+(medal?'🎉 Ceinture validée !':'🙂 Encore un peu d’entraînement')+'</h3><div class="v190-score">'+st.score+' / '+total+'</div><div class="v190-medal">'+(medal||'💪')+'</div><div class="v190-rules">'+(medal?'Bravo ! Voici la correction du test.':'Il faut au moins 15 bonnes réponses. Regarde la correction puis entraîne-toi.')+'</div>'+reviewHTML(st.answers)+'<button class="belt-btn secondary" onclick="window.__hibouMathBeltTestActiveV2574=false;openCompetenceValidation()">Retour aux ceintures</button></div>');
+    setBeltInner('<div class="v190-belt-box"><h3>'+(medal?'🎉 Ceinture validée !':'🙂 Encore un peu d’entraînement')+'</h3><div class="v190-score">'+st.score+' / '+total+'</div><div class="v190-medal">'+(medal||'💪')+'</div><div class="v190-rules"><b>Compétence travaillée :</b> '+esc(st.belt.competenceEleve||st.belt.competence||st.belt.label)+'<br>'+(medal?'Bravo ! Voici la correction du test.':'Il faut au moins 15 bonnes réponses. Regarde la correction puis entraîne-toi.')+'</div>'+reviewHTML(st.answers)+'<button class="belt-btn secondary" onclick="window.__hibouMathBeltTestActiveV2574=false;openCompetenceValidation()">Retour aux ceintures</button></div>');
     if(typeof window.refreshV196MedalHeader==='function') setTimeout(window.refreshV196MedalHeader,100);
     if(typeof window.refreshV168BeltCounters==='function') setTimeout(window.refreshV168BeltCounters,120);
     if(typeof window.renderHibouProfile==='function') setTimeout(window.renderHibouProfile,150);

@@ -12,3 +12,5 @@ V25.7.49 — Popup Mes leçons
 - onglet Mathématiques : 48 leçons CE2 programme 2025 ;
 - recherche et filtres propres à chaque matière ;
 - ouverture des fiches dans la même popup plein écran.
+
+V25.7.51 : compétences de grammaire rendues explicites dans les cartes et pendant les entraînements, sans modification des exercices.

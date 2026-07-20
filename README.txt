@@ -1,3 +1,4 @@
+V25.7.53 : numéro de version centralisé et cohérent dans le titre, l’écran de connexion et les scripts actifs.
 
 V25.7.48
 - Carte Conseil : actions en grille 2 × 2.
@@ -13,4 +14,4 @@ V25.7.49 — Popup Mes leçons
 - recherche et filtres propres à chaque matière ;
 - ouverture des fiches dans la même popup plein écran.
 
-V25.7.51 : compétences de grammaire rendues explicites dans les cartes et pendant les entraînements, sans modification des exercices.
+V25.7.53 : compétences de grammaire rendues explicites dans les cartes et pendant les entraînements, sans modification des exercices.

@@ -15,3 +15,5 @@ V25.7.49 — Popup Mes leçons
 - ouverture des fiches dans la même popup plein écran.
 
 V25.7.54 : compétences de grammaire rendues explicites dans les cartes et pendant les entraînements, sans modification des exercices.
+
+V25.7.59 : portrait du profil synchronisé avec la colonne sexe (fille/garçon/neutre).

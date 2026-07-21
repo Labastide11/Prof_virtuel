@@ -1,3 +1,6 @@
+Maître Hibou V25.7.62
+Correctif : synchronisation automatique des ceintures Français et Maths vers Google Sheets.
+
 V25.7.54 : numéro de version centralisé et cohérent dans le titre, l’écran de connexion et les scripts actifs.
 
 V25.7.48

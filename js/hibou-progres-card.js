@@ -5,7 +5,7 @@
   if(window.__hibouProgressCardV2576) return;
   window.__hibouProgressCardV2576 = true;
 
-  var VERSION = 'V25.7.34';
+  var VERSION = 'V25.7.61';
   var IMG = {
     or: 'images/medaille_or.jpg',
     argent: 'images/medaille_argent.jpg',
@@ -141,12 +141,18 @@
       + '</div>';
   }
   function openMedals(ev){
-    if(ev){ ev.preventDefault(); ev.stopPropagation(); }
+    if(ev){
+      ev.preventDefault();
+      ev.stopPropagation();
+      if(typeof ev.stopImmediatePropagation === 'function') ev.stopImmediatePropagation();
+    }
+    /* V25.7.61 : la ligne « Mes médailles » ouvre exactement la même vue fiable
+       que la carte « Ouvre pour en savoir plus ! ». On ne passe plus par les
+       anciennes fenêtres podium qui lisaient une source obsolète. */
     try{
-      if(typeof window.openPodiumCeinturesV1853 === 'function') return window.openPodiumCeinturesV1853();
-      if(typeof window.openPodiumCeinturesV1852 === 'function') return window.openPodiumCeinturesV1852();
-      if(typeof window.openMedalsModalV1842 === 'function') return window.openMedalsModalV1842();
-      if(typeof window.openStudentProfileLifeV23417 === 'function') return window.openStudentProfileLifeV23417(ev);
+      if(typeof window.openStudentProfileLifeV23417 === 'function'){
+        return window.openStudentProfileLifeV23417(ev);
+      }
     }catch(e){}
   }
   function openProgress(ev){

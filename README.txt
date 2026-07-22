@@ -1,9 +1,9 @@
-Maître Hibou V25.7.63
+Maître Hibou V25.7.66
 Correctif : synchronisation automatique des ceintures Français et Maths vers Google Sheets.
 
-V25.7.54 : numéro de version centralisé et cohérent dans le titre, l’écran de connexion et les scripts actifs.
+V25.7.66 : numéro de version centralisé et cohérent dans le titre, l’écran de connexion et les scripts actifs.
 
-V25.7.48
+V25.7.66
 - Carte Conseil : actions en grille 2 × 2.
 - Ligne 1 : M’entraîner / Passer une ceinture.
 - Ligne 2 : Revoir une leçon / Poser une question.
@@ -11,12 +11,14 @@ V25.7.48
 - Aucun autre module modifié.
 
 
-V25.7.49 — Popup Mes leçons
+V25.7.66 — Popup Mes leçons
 - onglet Français : 36 leçons CE2 programme 2025 ;
 - onglet Mathématiques : 48 leçons CE2 programme 2025 ;
 - recherche et filtres propres à chaque matière ;
 - ouverture des fiches dans la même popup plein écran.
 
-V25.7.54 : compétences de grammaire rendues explicites dans les cartes et pendant les entraînements, sans modification des exercices.
+V25.7.66 : compétences de grammaire rendues explicites dans les cartes et pendant les entraînements, sans modification des exercices.
 
-V25.7.59 : portrait du profil synchronisé avec la colonne sexe (fille/garçon/neutre).
+V25.7.66 : portrait du profil synchronisé avec la colonne sexe (fille/garçon/neutre).
+
+V25.7.66 : suppression définitive de l’ancienne popup « Prochains objectifs / Bilans validés ». Une seule vue Mes progrès reste dans le code.

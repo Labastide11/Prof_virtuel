@@ -1,5 +1,5 @@
 /*
- * Maître Hibou — Pont Boîte à questions → Journal élève V25.7.13
+ * Maître Hibou — Pont Boîte à questions → Journal élève V25.7.66
  * À charger dans boite_questions.html, après le code qui enregistre la question.
  * Fonction à appeler uniquement après enregistrement réel dans le journal des questions :
  *   window.hibouQuestionBridgeNotify({ prenom, matiere, questionCorrigee });

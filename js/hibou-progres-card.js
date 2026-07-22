@@ -1,11 +1,11 @@
-// V25.7.6 — Carte Mes progrès de l'accueil.
+// V25.7.66 — Carte Mes progrès de l'accueil.
 // Module externe : n'alourdit pas index.html et ne touche pas au Conseil de Maître Hibou.
 (function(){
   'use strict';
   if(window.__hibouProgressCardV2576) return;
   window.__hibouProgressCardV2576 = true;
 
-  var VERSION = 'V25.7.61';
+  var VERSION = 'V25.7.66';
   var IMG = {
     or: 'images/medaille_or.jpg',
     argent: 'images/medaille_argent.jpg',
@@ -146,7 +146,7 @@
       ev.stopPropagation();
       if(typeof ev.stopImmediatePropagation === 'function') ev.stopImmediatePropagation();
     }
-    /* V25.7.61 : la ligne « Mes médailles » ouvre exactement la même vue fiable
+    /* V25.7.66 : la ligne « Mes médailles » ouvre exactement la même vue fiable
        que la carte « Ouvre pour en savoir plus ! ». On ne passe plus par les
        anciennes fenêtres podium qui lisaient une source obsolète. */
     try{
@@ -177,7 +177,7 @@
     card.setAttribute('role','button');
     card.setAttribute('tabindex','0');
 
-    // V25.7.34 : une seule identité visuelle dans l'en-tête.
+    // V25.7.66 : une seule identité visuelle dans l'en-tête.
     // On conserve le portrait existant et le prénom, et on retire les anciens titres/indices dupliqués.
     var h3 = head.querySelector('h3');
     if(h3) h3.textContent = name;

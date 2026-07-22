@@ -1,4 +1,4 @@
-/* Maître Hibou V25.7.29 — Vocabulaire modulaire en JSON
+/* Maître Hibou V25.7.66 — Vocabulaire modulaire en JSON
    Activités : familles de mots, synonymes, contraires, mots génériques.
    Contenu pédagogique séparé dans data/vocabulaire.json pour garder index.html léger.
 */

@@ -1,4 +1,4 @@
-/* V25.7.6 — Carte Mes progrès : médailles image + zone centrale défilante.
+/* V25.7.66 — Carte Mes progrès : médailles image + zone centrale défilante.
    Objectif : ne pas modifier le conseil de Maître Hibou ni Mon parcours récent. */
 body.v21-final .v21-profile-card.v2576-progress-card{
   display:flex !important;
@@ -204,7 +204,7 @@ body.v21-final .v21-profile-card.v2576-progress-card .v21-change-student-btn{
 }
 
 
-/* V25.7.33 — verrouillage définitif de la carte Mes progrès sur tablette. */
+/* V25.7.66 — verrouillage définitif de la carte Mes progrès sur tablette. */
 body.v21-final .v21-profile-card.v2576-progress-card{
   height:clamp(270px, 32vh, 345px) !important;
   min-height:270px !important;
@@ -252,7 +252,7 @@ body.v21-final .v21-profile-card.v2576-progress-card .v21-change-student-btn{
 }
 
 
-/* V25.7.34 — carte unique : portrait + prénom fixes, contenu central défilant. */
+/* V25.7.66 — carte unique : portrait + prénom fixes, contenu central défilant. */
 body.v21-final .v21-profile-card.v2576-progress-card .v21-profile-head{
   display:flex !important;
   align-items:center !important;

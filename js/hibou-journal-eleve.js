@@ -1,5 +1,5 @@
 /*
- * Maître Hibou — Journal élève modulaire V25.7.63
+ * Maître Hibou — Journal élève modulaire V25.7.66
  * Objectif : une seule porte d'entrée pour le parcours élève : window.hibouTrackEvent(...)
  * L'index.html ne doit plus contenir de moteur lourd pour « Mon parcours récent ».
  */
@@ -9,7 +9,7 @@
   if (window.__hibouJournalEleveV25763) return;
   window.__hibouJournalEleveV25763 = true;
 
-  var VERSION = 'V25.7.63';
+  var VERSION = 'V25.7.66';
   var API = 'https://script.google.com/macros/s/AKfycbxz1vYS24sv-c3XVja12geWEXIQl6bQyBoQKBx5kg_fwQaj80_Oc7Y34yeBSRN4lF1f/exec';
   var LAST_PREFIX = 'hibou_journal_last_';
   var HISTORY_PREFIX = 'hibou_journal_history_';

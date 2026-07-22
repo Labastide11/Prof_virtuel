@@ -1,4 +1,4 @@
-/* Maître Hibou V25.7.30 — Orthographe / dictée modulaire en JSON
+/* Maître Hibou V25.7.66 — Orthographe / dictée modulaire en JSON
    Bandeau compact tablette + exercices fondés sur le guide ministériel CE1,
    adaptés à l'entraînement CE2. Contenu séparé dans data/orthographe_dictee.json.
 */

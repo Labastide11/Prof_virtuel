@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<title>Boîte à questions — Maître Hibou V25.7.13</title>
+<title>Boîte à questions — Maître Hibou V25.7.66</title>
 <style>
 :root{
   --navy:#0f1e46; --navy2:#263c7a; --violet:#6d45f5; --violet2:#8b6cff;
@@ -29,7 +29,7 @@ body{min-height:100vh;padding:12px;overflow-x:hidden}.app{width:min(1180px,100%)
       <div class="head"><div><h2>Poser une question</h2><p>Écris comme tu peux. L’IA proposera plusieurs vraies questions, mais elle ne répondra pas à ta question.</p></div><div class="name" id="studentBadge">élève</div></div>
       <div class="steps" id="steps"></div>
       <div id="panel"></div>
-      <div class="note">V25.7.13 · 🔒 La réponse IA n’est pas affichée aux élèves. Elle aide seulement le maître. ⭐ Les questions vedettes seront choisies dans l’espace enseignant.</div>
+      <div class="note">V25.7.66 · 🔒 La réponse IA n’est pas affichée aux élèves. Elle aide seulement le maître. ⭐ Les questions vedettes seront choisies dans l’espace enseignant.</div>
     </main>
   </div>
 </div>
@@ -75,10 +75,10 @@ body{min-height:100vh;padding:12px;overflow-x:hidden}.app{width:min(1180px,100%)
   function btnHtml(){ return ''; }
   function bindDiag(){ }
   function init(){
-    document.title = 'Boîte à questions — Maître Hibou V25.7.13';
+    document.title = 'Boîte à questions — Maître Hibou V25.7.66';
     $('returnLink').href = returnUrlWithStudent();
     $('studentBadge').textContent = state.prenom || 'élève';
-    log('Page GitHub légère prête', {version:'V25.7.13', api: API_URL, prenom: state.prenom || ''});
+    log('Page GitHub légère prête', {version:'V25.7.66', api: API_URL, prenom: state.prenom || ''});
     renderWrite();
   }
   function ensureName(){

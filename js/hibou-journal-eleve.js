@@ -1,15 +1,15 @@
 /*
- * Maître Hibou — Journal élève modulaire V25.7.13
+ * Maître Hibou — Journal élève modulaire V25.7.63
  * Objectif : une seule porte d'entrée pour le parcours élève : window.hibouTrackEvent(...)
  * L'index.html ne doit plus contenir de moteur lourd pour « Mon parcours récent ».
  */
 (function () {
   'use strict';
 
-  if (window.__hibouJournalEleveV25713) return;
-  window.__hibouJournalEleveV25713 = true;
+  if (window.__hibouJournalEleveV25763) return;
+  window.__hibouJournalEleveV25763 = true;
 
-  var VERSION = 'V25.7.13';
+  var VERSION = 'V25.7.63';
   var API = 'https://script.google.com/macros/s/AKfycbxz1vYS24sv-c3XVja12geWEXIQl6bQyBoQKBx5kg_fwQaj80_Oc7Y34yeBSRN4lF1f/exec';
   var LAST_PREFIX = 'hibou_journal_last_';
   var HISTORY_PREFIX = 'hibou_journal_history_';
@@ -20,7 +20,9 @@
   var isRendering = false;
   var isFlushingEvents = false;
   var isFlushingRecords = false;
-  var DEDUPE_MS = 2200;
+  var DEDUPE_MS = 30000;
+  var RECENT_ID_KEY = 'hibou_journal_recent_event_ids_v25763';
+  var RECENT_ID_TTL = 90000;
   var recentSignatures = {};
 
   function clean(value) {
@@ -186,15 +188,44 @@
     return title + (detail ? ' — ' + detail : '');
   }
 
-  function eventId(event) {
+  function stableEventSignature(event) {
     return [
       normalizeKey(event.prenom),
       normalizeKey(event.type),
       normalizeKey(event.matiere),
+      normalizeKey(event.domaine),
       normalizeKey(event.titre),
-      String(Date.now()),
-      String(Math.random()).slice(2, 7)
-    ].join('-');
+      normalizeKey(event.detail),
+      String(event.score == null ? '' : event.score),
+      String(event.total == null ? '' : event.total)
+    ].join('|');
+  }
+
+  function eventId(event) {
+    var signature = stableEventSignature(event);
+    var now = Date.now();
+    var recent = readJson(RECENT_ID_KEY, {});
+    var entry = recent && recent[signature];
+    if (entry && clean(entry.id) && now - Number(entry.time || 0) < RECENT_ID_TTL) {
+      return clean(entry.id);
+    }
+
+    var randomPart = '';
+    try {
+      if (window.crypto && typeof window.crypto.randomUUID === 'function') {
+        randomPart = window.crypto.randomUUID();
+      }
+    } catch (error) {}
+    if (!randomPart) randomPart = now.toString(36) + '-' + Math.random().toString(36).slice(2, 10);
+
+    var id = 'mh-' + normalizeKey(event.prenom) + '-' + normalizeKey(event.type) + '-' + randomPart;
+    recent = recent && typeof recent === 'object' ? recent : {};
+    recent[signature] = {id: id, time: now};
+    Object.keys(recent).forEach(function (key) {
+      if (now - Number((recent[key] || {}).time || 0) > RECENT_ID_TTL * 2) delete recent[key];
+    });
+    writeJson(RECENT_ID_KEY, recent);
+    return id;
   }
 
   function normalizeEvent(raw) {
@@ -230,7 +261,7 @@
       temps_secondes: timeSeconds,
       source: clean(raw.source || 'maitre_hibou_v25_7_13'),
       appareil: clean(raw.appareil || getDevice()),
-      id_evenement: clean(raw.id_evenement || raw.id || '')
+      id_evenement: clean(raw.id_evenement || raw.event_id || raw.id || '')
     };
 
     event.id_evenement = event.id_evenement || eventId(event);
@@ -268,6 +299,8 @@
 
   function enqueueEvent(event) {
     var queue = readQueue(QUEUE_KEY);
+    var id = clean(event && event.id_evenement);
+    if (id && queue.some(function (item) { return clean(item && item.id_evenement) === id; })) return;
     queue.push(event);
     writeQueue(QUEUE_KEY, queue.slice(-100));
   }
@@ -306,24 +339,30 @@
   }
 
   function eventParams(event) {
+    var result = '';
+    if (/ceinture_validee|bilan_reussi|termine/.test(event.type || '')) result = 'réussi';
     return {
       action: 'enregistrer_parcours',
+      event_id: event.id_evenement,
+      id: event.id_evenement,
       date: event.date_iso,
       heure: event.heure,
       prenom: event.prenom,
       texte: event.affichage,
       type: event.type,
       matiere: event.matiere,
+      activite: clean(event.domaine || event.titre),
       domaine: event.domaine,
       titre: event.titre,
       detail: event.detail,
       score: event.score,
       total: event.total,
+      resultat: result,
+      medaille: event.niveau,
       niveau: event.niveau,
       temps_secondes: event.temps_secondes,
       source: event.source,
       appareil: event.appareil,
-      id_evenement: event.id_evenement,
       version: event.version
     };
   }

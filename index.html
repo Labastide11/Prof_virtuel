@@ -3,12 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🦉 Maître Hibou V25.7.66</title>
-<script id="maitre-hibou-version-source">
-  window.MAITRE_HIBOU_VERSION = 'V25.7.66';
-  window.MAITRE_HIBOU_TITLE = '🦉 Maître Hibou ' + window.MAITRE_HIBOU_VERSION;
-  document.title = window.MAITRE_HIBOU_TITLE;
-</script>
+<title>🦉 Maître Hibou V25.7.51</title>
 <style>
 
   :root {
@@ -3679,14 +3674,6 @@ body.v21-final .v21-profile-card{min-height:235px !important;padding:10px !impor
 body.v21-final .v21-profile-head{margin-bottom:6px !important;}
 body.v21-final .v21-profile-head h3{font-size:22px !important;line-height:1 !important;}
 body.v21-final .v21-avatar{width:42px !important;height:42px !important;font-size:24px !important;}
-body.v21-final .v21-avatar .v21-avatar-img{
-  width:100% !important;
-  height:100% !important;
-  display:block !important;
-  object-fit:cover !important;
-  border-radius:50% !important;
-}
-
 body.v21-final .v21-level{min-width:48px !important;padding:5px 9px !important;font-size:12px !important;border-radius:12px !important;}
 body.v21-final .v21-stats{gap:6px !important;}
 body.v21-final .v21-stat{min-height:38px !important;grid-template-columns:32px 1fr auto !important;padding:6px 9px !important;border-radius:13px !important;}
@@ -3707,7 +3694,7 @@ body.v21-final .subject-btn .subject-label{font-size:18px !important;line-height
 @media (max-width:899px){body.v21-final .v21-center{width:calc(100% - 24px) !important;margin:0 auto 8px !important;grid-template-columns:1fr !important;}body.v21-final .v21-side-owl,body.v21-final .v21-deco-window,body.v21-final .v21-deco-globe,body.v21-final .v21-deco-books{display:none !important;}body.v21-final .subjects-bar{grid-template-columns:repeat(2,minmax(0,1fr)) !important;}}
 </style>
 <script id="patch-v21-4-home-text-and-title">
-(function(){function applyV214(){try{document.title = window.MAITRE_HIBOU_TITLE;var p=document.querySelector('.v21-hero p');if(p) p.textContent='🌟 Que souhaites-tu apprendre aujourd’hui ?';var h2=document.querySelector('.v21-hero h2');if(h2) h2.setAttribute('aria-hidden','true');}catch(e){}}document.addEventListener('DOMContentLoaded',applyV214);setTimeout(applyV214,100);setTimeout(applyV214,500);setTimeout(applyV214,1200);})();
+(function(){function applyV214(){try{document.title = '🦉 Maître Hibou V25.7.51';var p=document.querySelector('.v21-hero p');if(p) p.textContent='🌟 Que souhaites-tu apprendre aujourd’hui ?';var h2=document.querySelector('.v21-hero h2');if(h2) h2.setAttribute('aria-hidden','true');}catch(e){}}document.addEventListener('DOMContentLoaded',applyV214);setTimeout(applyV214,100);setTimeout(applyV214,500);setTimeout(applyV214,1200);})();
 </script>
 
 
@@ -3943,7 +3930,7 @@ body.v21-final .subject-btn{
 (function(){
   function applyV215(){
     try{
-      document.title = window.MAITRE_HIBOU_TITLE;
+      document.title = '🦉 Maître Hibou V25.7.51';
       var p=document.querySelector('.v21-hero p');
       if(p) p.textContent='🌟 Que souhaites-tu apprendre aujourd’hui ?';
       var h2=document.querySelector('.v21-hero h2');
@@ -4188,7 +4175,7 @@ body.v21-final .v21-sublist{
 (function(){
   function cleanV216(){
     try{
-      document.title = window.MAITRE_HIBOU_TITLE;
+      document.title = '🦉 Maître Hibou V25.7.51';
       document.body.classList.add('v21-final');
       var heroP=document.querySelector('.v21-hero p');
       if(heroP) heroP.textContent='🌟 Que souhaites-tu apprendre aujourd’hui ?';
@@ -4484,6 +4471,49 @@ body.v21-final .v21-treasure-card{
 
 <!-- V25.6.16 : ancien CSS supprimé patch-v23421-teacher-questions-safe -->
 
+<style id="patch-v24-0-42-bilans-progres-css">
+.v24-history-assessment-card{grid-column:1 / -1;background:linear-gradient(135deg,#FFFFFF 0%,#F4F2FF 72%,#FFF8D9 100%) !important;}
+.v24-history-skills{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin:8px 0 12px;}
+.v24-history-skill{border:2px solid #D8D4FF;border-radius:14px;background:#fff;padding:8px;font-weight:1000;color:#201C50;line-height:1.1;}
+.v24-history-skill small{display:block;color:#746FA0;font-size:11px;font-weight:900;margin-top:3px;}
+.v24-history-assessment-list{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;}
+.v24-history-skill-group{border:2px solid #D8D4FF;background:#FFFFFF;border-radius:16px;padding:8px;display:flex;flex-direction:column;gap:7px;min-height:0;}
+.v24-history-skill-group h4{margin:0;color:#4D45BF;font-family:"Trebuchet MS", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;font-size:17px;line-height:1.05;}
+.v24-history-skill-group h4 small{display:block;color:#746FA0;font-family:system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;font-size:11px;font-weight:900;margin-top:2px;}
+.v24-history-question{border:2px solid #E7E3FF;background:#fff;border-radius:14px;padding:8px;min-height:0;}
+.v24-history-question b{display:block;color:#4D45BF;font-size:13px;margin-bottom:3px;}
+.v24-history-question p{margin:0 0 6px !important;color:#201C50 !important;font-weight:1000 !important;font-size:13px !important;line-height:1.15 !important;}
+.v24-history-options{display:flex;flex-wrap:wrap;gap:5px;}
+.v24-history-option{appearance:none;border:2px solid #D8D4FF;background:#F9F8FF;color:#201C50;border-radius:999px;padding:6px 8px;font-family:inherit;font-size:12px;font-weight:1000;cursor:pointer;}
+.v24-history-option.selected{border-color:#6C63FF;background:#EAE8FF;color:#332B9A;}
+.v24-history-option.correct{border-color:#45B36B;background:#E9F8EF;color:#1D6635;}
+.v24-history-option.wrong{border-color:#FF6B6B;background:#FFEDED;color:#8A2323;}
+.v24-history-result-btn{margin-top:10px;width:100%;border:0;border-radius:14px;background:#6C63FF;color:#fff;padding:10px 12px;font-family:inherit;font-weight:1000;font-size:15px;cursor:pointer;box-shadow:0 8px 18px rgba(108,99,255,.20);}
+.v24-history-results{margin-top:10px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;}
+.v24-history-result{border:2px solid #E7E3FF;border-radius:14px;background:#fff;padding:8px;font-weight:1000;line-height:1.15;}
+.v24-history-result small{display:block;font-size:11px;margin-top:3px;color:#6E698F;}
+.v24-history-result.green{border-color:#45B36B;background:#E9F8EF;color:#1D6635;}
+.v24-history-result.orange{border-color:#FFB23F;background:#FFF4DD;color:#895500;}
+.v24-history-result.red{border-color:#FF6B6B;background:#FFEDED;color:#8A2323;}
+.v24-history-final-message{margin-top:8px;border-radius:14px;padding:9px 10px;background:#fff;border:2px solid #D8D4FF;color:#201C50;font-weight:1000;}
+.v24-bilan-badges-mini,.v24-bilan-badges-line{display:flex;flex-wrap:wrap;gap:6px;align-items:center;}
+.v24-bilan-badge{display:inline-flex;align-items:center;gap:4px;border:2px solid #E8DEFF;border-radius:999px;background:#FAF8FF;color:#201C50;padding:4px 8px;font-size:12px;font-weight:1000;line-height:1;}
+.v24-bilan-badge.ok{border-color:#6BCB77;background:#EAF8EE;color:#205A2A;}
+.v24-bilan-badge.todo{opacity:.72;}
+.profile-life-v23417-card.v24-progress-compact-card h3{margin-bottom:8px;}
+.v24-progress-score-line{font-weight:1000;color:#201C50;line-height:1.25;}
+.v24-progress-score-line small{display:block;color:#746FA0;font-size:12px;font-weight:900;margin-top:3px;}
+@media (orientation:landscape) and (max-height:780px){
+  .v24-history-skills{grid-template-columns:repeat(5,minmax(0,1fr));}
+  .v24-history-assessment-list{grid-template-columns:repeat(5,minmax(0,1fr));}
+  .v24-history-skill-group{padding:7px;gap:6px;}
+  .v24-history-skill-group h4{font-size:15px;}
+  .v24-history-question{padding:7px;}
+  .v24-history-question p{font-size:12px !important;}
+  .v24-history-option{font-size:11px;padding:5px 7px;}
+}
+@media(max-width:900px){.v24-history-skills,.v24-history-results{grid-template-columns:repeat(2,minmax(0,1fr));}.v24-history-assessment-list{grid-template-columns:1fr;}}
+</style>
 
 
 <style id="patch-v25-6-11-adaptation-ecrans">
@@ -4905,7 +4935,7 @@ html.hibou-device-tablette body.hibou-keyboard-open #prenomOverlay{
   <link rel="stylesheet" href="css/hibou-progres-card.css?v=25738">
 
 <style id="patch-v25715-logo-hibou-image">
-/* V25.7.66 — logo image en haut à gauche */
+/* V25.7.51 — logo image en haut à gauche */
 .logo-icon{
   overflow:hidden !important;
   padding:0 !important;
@@ -4929,11 +4959,6 @@ html.hibou-device-tablette body.v21-final header .logo-icon img,
 html.hibou-device-smartphone body.v21-final header .logo-icon img{
   object-fit:cover !important;
 }
-</style>
-
-<style id="patch-v25752-maths-competences-css">
-.maths-v2343-competence{margin-top:6px;font-size:.86rem;line-height:1.25;color:#514b70;}
-.maths-v2343-competence b{color:#30285e;}
 </style>
 </head>
 <body class="prenom-mode">
@@ -5022,7 +5047,7 @@ html.hibou-device-smartphone body.v21-final header .logo-icon img{
   <div class="prenom-box v2567-start" data-v25617-ready="1">
     <div class="owl">🦉</div>
     <h2>Bienvenue sur Maître Hibou</h2>
-    <p class="v2567-intro"><strong>Version V25.7.66</strong> · Choisis ton mode de connexion.</p>
+    <p class="v2567-intro"><strong>Version V25.7.51</strong> · Choisis ton mode de connexion.</p>
     <input id="prenomInput" class="v2567-hidden-legacy" autocomplete="off" aria-hidden="true" tabindex="-1">
     <div class="v2567-choice-grid">
       <section class="v2567-card student">
@@ -11759,7 +11784,7 @@ header{
   const TRAINING_KEY_PREFIX = "hibou_v168_progress_";
   const BELT_BACKUP_KEY = "hibou_v168_belts_global";
   const ACTIVE_TAB_KEY = "hibou_v168_teacher_tab";
-  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxz1vYS24sv-c3XVja12geWEXIQl6bQyBoQKBx5kg_fwQaj80_Oc7Y34yeBSRN4lF1f/exec";
+  const APPS_SCRIPT_URL = "about:blank";
 
   const SKILLS = [
     {id:"calc_mental", domain:"Maths", label:"Je sais calculer mentalement"},
@@ -12966,7 +12991,7 @@ header{
   if(window.__maitreHibouV16811CompteurSourceUnique) return;
   window.__maitreHibouV16811CompteurSourceUnique = true;
 
-  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxz1vYS24sv-c3XVja12geWEXIQl6bQyBoQKBx5kg_fwQaj80_Oc7Y34yeBSRN4lF1f/exec";
+  const APPS_SCRIPT_URL = "about:blank";
   const CACHE_KEY = "hibou_v16811_sheets_belts_cache";
   const COUNT_KEY_PREFIX = "hibou_v16811_belt_count_";
   let isRendering = false;
@@ -14640,7 +14665,7 @@ sheet.appendRow([
   window.__maitreHibouV1845SyncVerifiee = true;
 
   window.MAITRE_HIBOU_COMPETENCES_SHEETS_URL =
-    "https://script.google.com/macros/s/AKfycbxz1vYS24sv-c3XVja12geWEXIQl6bQyBoQKBx5kg_fwQaj80_Oc7Y34yeBSRN4lF1f/exec";
+    "about:blank";
 
   function h(value){
     return String(value == null ? "" : value)
@@ -15051,7 +15076,7 @@ sheet.appendRow([
   const PROGRESS_PREFIX = "hibou_v168_progress_";
   const BACKUP_KEY = "hibou_v168_belts_global";
   const SHEETS_CACHE_KEY = "hibou_v16811_sheets_belts_cache";
-  const URL = window.MAITRE_HIBOU_COMPETENCES_SHEETS_URL || "https://script.google.com/macros/s/AKfycbxz1vYS24sv-c3XVja12geWEXIQl6bQyBoQKBx5kg_fwQaj80_Oc7Y34yeBSRN4lF1f/exec";
+  const URL = window.MAITRE_HIBOU_COMPETENCES_SHEETS_URL || "about:blank";
 
   const SKILL_CATALOG = {
     calc_mental:{domain:"Maths", label:"Je sais calculer mentalement"},
@@ -16437,7 +16462,6 @@ sheet.appendRow([
     const name=currentStudentName();
     const item={type:"belt", date:new Date().toLocaleString("fr-FR"), skillId:s.belt.skillId, title:"Ceinture "+s.belt.colorName+" - "+s.belt.label, domain:"Grammaire", score:s.score, total:20, pct:pct, medal:result.medal, rank:result.rank, valid:result.valid, source:"google_sheets_v19"};
     const data=loadProgress(name); data.belts.push(item); saveProgress(name,data); backupBelt(name,item);
-    if(result.valid && typeof window.hibouAutoSyncBeltV25762==="function") window.hibouAutoSyncBeltV25762({prenom:name, competence:item.title, domaine:"Français", validations:s.score+"/20", medaille:result.medal, date:new Date().toISOString(), skillId:item.skillId});
     if(result.valid){
       try{ localStorage.setItem("hibou_last_success_" + name, result.medal + " " + item.title + " (" + s.score + "/20)"); }catch(e){}
       if(typeof addScore === "function") addScore(result.bonus, "ceinture " + result.rank + " grammaire");
@@ -16826,7 +16850,6 @@ sheet.appendRow([
     const name=currentStudentName();
     const item={type:"belt", date:new Date().toLocaleString("fr-FR"), skillId:s.belt.skillId, title:"Ceinture "+s.belt.colorName+" - "+s.belt.label, domain:"Grammaire", score:s.score, total:20, pct:pct, medal:result.medal, rank:result.rank, valid:result.valid, source:"google_sheets_v191"};
     const data=loadProgress(name); data.belts.push(item); saveProgress(name,data); backupBelt(name,item);
-    if(result.valid && typeof window.hibouAutoSyncBeltV25762==="function") window.hibouAutoSyncBeltV25762({prenom:name, competence:item.title, domaine:"Français", validations:s.score+"/20", medaille:result.medal, date:new Date().toISOString(), skillId:item.skillId});
     if(result.valid){
       try{ localStorage.setItem("hibou_last_success_" + name, result.medal + " " + item.title + " (" + s.score + "/20)"); }catch(e){}
       if(typeof addScore === "function") addScore(result.bonus, "ceinture " + result.rank + " grammaire");
@@ -17340,7 +17363,7 @@ sheet.appendRow([
     refresh();
   }
 
-  document.addEventListener("click",function(ev){var card=ev.target&&ev.target.closest&&ev.target.closest("#mockupCompetencesCard"); if(card){ev.preventDefault();ev.stopPropagation();ev.stopImmediatePropagation();var fn=window.openStudentBeltsV25758||window.openStudentBeltsV25758;if(typeof fn==="function")fn();else open();}},true);
+  document.addEventListener("click",function(ev){var card=ev.target&&ev.target.closest&&ev.target.closest("#mockupCompetencesCard"); if(card){ev.preventDefault();ev.stopImmediatePropagation();open();}},true);
   document.addEventListener("DOMContentLoaded",attach);
   window.addEventListener("load",attach);
   window.addEventListener("focus",function(){setTimeout(refresh,20);setTimeout(refresh,400);});
@@ -18703,7 +18726,7 @@ body.v21-final .quick-btn{
         <article class="v21-profile-card" aria-label="Profil rapide de l'élève">
           <div class="v21-profile-head">
             <div class="v21-student">
-              <div class="v21-avatar" aria-hidden="true"><img src="images/portrait_neutre.png" alt="" class="v21-avatar-img"></div>
+              <div class="v21-avatar" aria-hidden="true">👦</div>
               <h3>Mon profil / vie de classe</h3>
             </div>
             <div class="v21-level">CE2</div>
@@ -18842,38 +18865,7 @@ body.v21-final .quick-btn{
     window.updateQuickQuestions.__v21HistoryPatched = true;
   }
 
-  function v21CurrentStudentData(){
-    try{
-      var student = JSON.parse(localStorage.getItem("hibou_current_student") || "{}");
-      return student && typeof student === "object" ? student : {};
-    }catch(e){ return {}; }
-  }
-  function v21PortraitSrc(){
-    var student = v21CurrentStudentData();
-    var mode = String(student.mode || localStorage.getItem("hibou_mode") || "").toLowerCase();
-    if(mode === "invite" || student.invite === true) return "images/portrait_neutre.png";
-    var sexe = String(student.sexe || "").trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-    if(["fille","feminin","feminine","female","f"].indexOf(sexe) !== -1) return "images/portrait_fille.png";
-    if(["garcon","masculin","male","m","g"].indexOf(sexe) !== -1) return "images/portrait_garcon.png";
-    return "images/portrait_neutre.png";
-  }
-  function syncV21Portrait(){
-    var avatar = document.querySelector(".v21-avatar");
-    if(!avatar) return;
-    var img = avatar.querySelector("img.v21-avatar-img");
-    if(!img){
-      avatar.textContent = "";
-      img = document.createElement("img");
-      img.className = "v21-avatar-img";
-      img.alt = "";
-      avatar.appendChild(img);
-    }
-    var src = v21PortraitSrc();
-    if(img.getAttribute("src") !== src) img.setAttribute("src", src);
-  }
-
   function syncV21Texts(){
-    syncV21Portrait();
     const name = currentName();
     const headerName = document.getElementById("v21HeaderName");
     const heroName = document.getElementById("v21HeroName");
@@ -20314,7 +20306,7 @@ body.v21-final .v2173-activity-btn.soon{
 (function(){
   if(window.__maitreHibouV2173TitresVerrouilles) return;
   window.__maitreHibouV2173TitresVerrouilles = true;
-  const VERSION_TITLE = window.MAITRE_HIBOU_TITLE;
+  const VERSION_TITLE = '🦉 Maître Hibou V25.7.51';
   const SUBJECTS = {
     francais:{label:'Français', icon:'📖', color:'#FF3B57', color2:'#FF6E82', soft:'#FFECEF', border:'#FFD3DA', shadow:'rgba(255,59,87,.24)', items:[
       {label:'Nom commun', names:['startNomCommun','showNomCommunLesson']},
@@ -20547,7 +20539,7 @@ body.v21-final .v2173-activity-btn.soon{
 </style>
 
 <script id="patch-v22-2-maths-google-sheets">
-/* V25.7.66 - Ceintures Maths robustes : Google Sheets si disponible, banque locale sinon.
+/* V25.7.3 - Ceintures Maths robustes : Google Sheets si disponible, banque locale sinon.
    Objectif : la ceinture blanche Maths ne doit jamais afficher "aucune question".
    Le mode élève n'attend pas le réseau : en cas de réponse absente, CORS, HTML ou JSON invalide,
    Maître Hibou utilise immédiatement une banque locale CE2 de 20 questions. */
@@ -20560,20 +20552,20 @@ body.v21-final .v2173-activity-btn.soon{
   const MATHS_PROGRESS_PREFIX = "hibou_v222_maths_progress_";
 
   window.MATH_BELTS_V222 = [
-    {ceinture:"blanche", niveau:1, emoji:"⚪", colorName:"blanche", skillId:"maths_blanche_petits_nombres", competence:"petits nombres", label:"Premiers calculs", competenceEleve:"Je sais effectuer mentalement des additions et des soustractions simples, reconnaître des nombres proches et utiliser les doubles et les moitiés.", progressionCodes:["CAL-P1-01","CAL-P2-01"]},
-    {ceinture:"jaune", niveau:2, emoji:"🟡", colorName:"jaune", skillId:"maths_jaune_dizaines", competence:"dizaines", label:"Dizaines entières", competenceEleve:"Je sais ajouter et retrancher mentalement des dizaines entières.", progressionCodes:["CAL-P1-01"]},
-    {ceinture:"orange", niveau:3, emoji:"🟠", colorName:"orange", skillId:"maths_orange_sans_retenue", competence:"sans retenue", label:"Calculs sans retenue", competenceEleve:"Je sais additionner et soustraire mentalement des nombres sans franchir une dizaine ou une centaine.", progressionCodes:["CAL-P2-03"]},
-    {ceinture:"vert_clair", niveau:4, emoji:"🟢", colorName:"vert clair", skillId:"maths_vert_clair_avec_retenue", competence:"avec retenue", label:"Calculs avec retenue", competenceEleve:"Je sais additionner et soustraire mentalement des nombres en franchissant une dizaine ou une centaine.", progressionCodes:["CAL-P2-03","CAL-P4-02"]},
+    {ceinture:"blanche", niveau:1, emoji:"⚪", colorName:"blanche", skillId:"maths_blanche_petits_nombres", competence:"petits nombres", label:"Petits nombres"},
+    {ceinture:"jaune", niveau:2, emoji:"🟡", colorName:"jaune", skillId:"maths_jaune_dizaines", competence:"dizaines", label:"Dizaines"},
+    {ceinture:"orange", niveau:3, emoji:"🟠", colorName:"orange", skillId:"maths_orange_sans_retenue", competence:"sans retenue", label:"Sans retenue"},
+    {ceinture:"vert_clair", niveau:4, emoji:"🟢", colorName:"vert clair", skillId:"maths_vert_clair_avec_retenue", competence:"avec retenue", label:"Avec retenue"},
     {ceinture:"vert_fonce", niveau:5, emoji:"🟢", colorName:"vert foncé", skillId:"maths_vert_fonce_complement_dizaine", competence:"complement dizaine", label:"Complément à la dizaine"},
-    {ceinture:"bleu_clair", niveau:6, emoji:"🔵", colorName:"bleu clair", skillId:"maths_bleu_clair_plus_moins_9", competence:"plus ou moins 9", label:"Ajouter ou retrancher 9", competenceEleve:"Je sais ajouter ou retrancher 9 en utilisant une stratégie de calcul mental.", progressionCodes:["CAL-P1-03"]},
-    {ceinture:"bleu_fonce", niveau:7, emoji:"🔵", colorName:"bleu foncé", skillId:"maths_bleu_fonce_plus_moins_11", competence:"plus ou moins 11", label:"Ajouter ou retrancher 11", competenceEleve:"Je sais ajouter ou retrancher 11 en décomposant le calcul.", progressionCodes:["CAL-P4-02"]},
-    {ceinture:"rose", niveau:8, emoji:"🌸", colorName:"rose", skillId:"maths_rose_centaines", competence:"centaines", label:"Centaines entières", competenceEleve:"Je sais ajouter et retrancher mentalement des centaines entières.", progressionCodes:["CAL-P1-01"]},
+    {ceinture:"bleu_clair", niveau:6, emoji:"🔵", colorName:"bleu clair", skillId:"maths_bleu_clair_plus_moins_9", competence:"plus ou moins 9", label:"Ajouter / retrancher 9"},
+    {ceinture:"bleu_fonce", niveau:7, emoji:"🔵", colorName:"bleu foncé", skillId:"maths_bleu_fonce_plus_moins_11", competence:"plus ou moins 11", label:"Ajouter / retrancher 11"},
+    {ceinture:"rose", niveau:8, emoji:"🌸", colorName:"rose", skillId:"maths_rose_centaines", competence:"centaines", label:"Centaines"},
     {ceinture:"beige", niveau:9, emoji:"🤍", colorName:"beige", skillId:"maths_beige_complement_centaine", competence:"complement centaine", label:"Complément à la centaine"},
-    {ceinture:"violet", niveau:10, emoji:"🟣", colorName:"violet", skillId:"maths_violet_tables_1_2_10", competence:"tables 1 2 10", label:"Tables de 1, 2 et 10", competenceEleve:"Je connais et j’utilise les tables de multiplication de 1, 2 et 10.", progressionCodes:["CAL-P3-01"]},
-    {ceinture:"marron", niveau:11, emoji:"🟤", colorName:"marron", skillId:"maths_marron_tables_3_4_5", competence:"tables 3 4 5", label:"Tables de 3, 4 et 5", competenceEleve:"Je connais et j’utilise les tables de multiplication de 3, 4 et 5.", progressionCodes:["CAL-P3-01"]},
-    {ceinture:"rouge", niveau:12, emoji:"🔴", colorName:"rouge", skillId:"maths_rouge_tables_6_7", competence:"tables 6 7", label:"Tables de 6 et 7", competenceEleve:"Je connais et j’utilise les tables de multiplication de 6 et 7.", progressionCodes:["CAL-P3-01"]},
-    {ceinture:"gris", niveau:13, emoji:"⚫", colorName:"gris", skillId:"maths_gris_tables_8_9", competence:"tables 8 9", label:"Tables de 8 et 9", competenceEleve:"Je connais et j’utilise les tables de multiplication de 8 et 9.", progressionCodes:["CAL-P3-01","CAL-P3-02"]},
-    {ceinture:"noir", niveau:14, emoji:"⚫", colorName:"noir", skillId:"maths_noir_multiplier_10_100_1000", competence:"multiplier par 10 100 1000", label:"Multiplier par 10, 100 ou 1 000", competenceEleve:"Je sais multiplier mentalement un nombre entier par 10, 100 ou 1 000.", progressionCodes:["CAL-P2-02"]}
+    {ceinture:"violet", niveau:10, emoji:"🟣", colorName:"violet", skillId:"maths_violet_tables_1_2_10", competence:"tables 1 2 10", label:"Tables ×1 ×2 ×10"},
+    {ceinture:"marron", niveau:11, emoji:"🟤", colorName:"marron", skillId:"maths_marron_tables_3_4_5", competence:"tables 3 4 5", label:"Tables ×3 ×4 ×5"},
+    {ceinture:"rouge", niveau:12, emoji:"🔴", colorName:"rouge", skillId:"maths_rouge_tables_6_7", competence:"tables 6 7", label:"Tables ×6 ×7"},
+    {ceinture:"gris", niveau:13, emoji:"⚫", colorName:"gris", skillId:"maths_gris_tables_8_9", competence:"tables 8 9", label:"Tables ×8 ×9"},
+    {ceinture:"noir", niveau:14, emoji:"⚫", colorName:"noir", skillId:"maths_noir_multiplier_10_100_1000", competence:"multiplier par 10 100 1000", label:"×10 ×100 ×1000"}
   ];
 
   function esc(value){ return String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c])); }
@@ -20733,7 +20725,6 @@ body.v21-final .v2173-activity-btn.soon{
         const data=loadMathProgress(); data.belts=data.belts||[];
         data.belts.push({skillId:belt.skillId, ceinture:belt.ceinture, label:belt.label, score:score, medal:medal, date:new Date().toISOString()});
         saveMathProgress(data);
-        if(typeof window.hibouAutoSyncBeltV25762==="function") window.hibouAutoSyncBeltV25762({prenom:(window.prenomActuel||""), competence:belt.label, domaine:"Maths", validations:score+"/20", medaille:medal, date:new Date().toISOString(), skillId:belt.skillId, ceinture:belt.ceinture});
         try{ if(typeof window.hibouRecordSuccess==='function') window.hibouRecordSuccess('🏅 Ceinture '+belt.colorName+' validée : '+belt.label+' ('+score+'/20)','ceinture',{matiere:'Maths',belt:belt,score:score,total:20}); }catch(e){}
       }
       b.innerHTML='<div class="v190-belt-box">'+
@@ -21706,10 +21697,8 @@ body.v21-final .v2173-activity-btn.soon{
         border:fb.border || "#EAE8FF",
         label:b.label || fb.label || b.competence || b.ceinture,
         colorName:(b.ceinture === "noir") ? "Mélange des compétences de la blanche à la marron" : (fb.colorName || ("Ceinture " + (b.colorName || b.ceinture))),
-        competence:b.competence || fb.competence || fb.label || "",
-        competenceEleve:b.competenceEleve || fb.competenceEleve || b.competence || fb.competence || "",
-        progressionCodes:Array.isArray(b.progressionCodes) ? b.progressionCodes : (Array.isArray(fb.progressionCodes) ? fb.progressionCodes : []),
-        skillId:b.skillId || fb.skillId || ("maths_"+b.ceinture)
+        competence:b.competence || fb.label || "",
+        skillId:b.skillId || ("maths_"+b.ceinture)
       };
     }).sort(function(a,b){ return (a.niveau||0)-(b.niveau||0); });
   }
@@ -21827,7 +21816,7 @@ body.v21-final .v2173-activity-btn.soon{
     const rows = allBelts().map(function(b){
       return '<article class="maths-v2343-belt-card">'
         + '<div class="maths-v2343-dot" style="--belt-color:'+esc(b.color)+';border-color:'+esc(b.border)+'"></div>'
-        + '<div class="maths-v2343-belt-main"><strong>'+esc(b.label)+'</strong><span>'+esc(b.colorName)+'</span><div class="maths-v2343-competence"><b>Compétence travaillée :</b> '+esc(b.competenceEleve||b.competence||'Calcul mental')+'</div></div>'
+        + '<div class="maths-v2343-belt-main"><strong>'+esc(b.label)+'</strong><span>'+esc(b.colorName)+'</span></div>'
         + '<button type="button" class="maths-v2343-train-btn" onclick="startMathsTrainingV2343(\''+esc(b.ceinture)+'\')">🧮 S’entraîner — 10 calculs</button>'
         + '</article>';
     }).join("");
@@ -22316,7 +22305,7 @@ body.v21-final .v2173-activity-btn.soon{
 </style>
 <script id="patch-v2347-title-js">
 (function(){
-  try{ document.title = window.MAITRE_HIBOU_TITLE; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.7.51'; }catch(e){}
 })();
 </script>
 
@@ -22694,7 +22683,7 @@ body.v21-final .v2173-activity-btn.soon{
 (function(){
   if(window.__maitreHibouFrancaisPopupV2348) return;
   window.__maitreHibouFrancaisPopupV2348 = true;
-  try{ document.title = window.MAITRE_HIBOU_TITLE; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.7.51'; }catch(e){}
 
   const TRAINING_COUNT = 10;
   let frState = {activity:null, questions:[], index:0, score:0, answered:false};
@@ -22938,7 +22927,7 @@ body.v21-final .v2173-activity-btn.soon{
 (function(){
   if(window.__maitreHibouFrancaisSheetGrammaireV23410) return;
   window.__maitreHibouFrancaisSheetGrammaireV23410 = true;
-  try{ document.title = window.MAITRE_HIBOU_TITLE; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.7.51'; }catch(e){}
 
   const BASE_URL = 'https://script.google.com/macros/s/AKfycbyzfRPrUV7xKgeXUM0LjbOsOne5DieRjDYxmuVbBBUIGL-F9ahMmJZSfpUDYmBaZIOpvQ/exec';
   const SHEET_NAME = 'grammaire';
@@ -23508,7 +23497,7 @@ body.v21-final .v2173-activity-btn.soon{
 (function(){
   if(window.__maitreHibouFrancaisCeinturesV23411) return;
   window.__maitreHibouFrancaisCeinturesV23411 = true;
-  try{ document.title = window.MAITRE_HIBOU_TITLE; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.7.51'; }catch(e){}
 
   const BASE_URL = 'https://script.google.com/macros/s/AKfycbyzfRPrUV7xKgeXUM0LjbOsOne5DieRjDYxmuVbBBUIGL-F9ahMmJZSfpUDYmBaZIOpvQ/exec';
   const SHEET_NAME = 'grammaire';
@@ -23925,7 +23914,7 @@ body.v21-final .v2173-activity-btn.soon{
 (function(){
   if(window.__maitreHibouFrancaisSectionsV23412) return;
   window.__maitreHibouFrancaisSectionsV23412 = true;
-  try{ document.title = window.MAITRE_HIBOU_TITLE; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.7.51'; }catch(e){}
 
   const GRAMMAR_BELTS = [
     {id:'blanche', title:'Phrase affirmative / négative', label:'Ceinture blanche', desc:'Reconnaître et transformer les phrases.', color:'radial-gradient(circle at 35% 25%,#FFFFFF,#EDE7FF 68%,#C8B8F2)'},
@@ -24004,7 +23993,7 @@ body.v21-final .v2173-activity-btn.soon{
 }
 </style>
 <script id="patch-v23413-version-title">
-(function(){ try{ document.title = window.MAITRE_HIBOU_TITLE; }catch(e){} })();
+(function(){ try{ document.title = '🦉 Maître Hibou V25.7.51'; }catch(e){} })();
 </script>
 
 
@@ -24360,7 +24349,7 @@ body.v21-final .v21-deco-globe::after{
   window.__v23415GlobeDedicatedWindow = true;
 
   function prepareDedicatedLinks(){
-    try{ document.title = window.MAITRE_HIBOU_TITLE; }catch(e){}
+    try{ document.title = '🦉 Maître Hibou V25.7.51'; }catch(e){}
 
     const overlay = document.getElementById('v23ShortcutsOverlay');
     if(!overlay) return;
@@ -24474,7 +24463,7 @@ body.v23-shortcuts-open{
   window.__v23416GlobePopupFixed = true;
 
   function forcePopupLayout(){
-    try{ document.title = window.MAITRE_HIBOU_TITLE; }catch(e){}
+    try{ document.title = '🦉 Maître Hibou V25.7.51'; }catch(e){}
     var overlay = document.getElementById('v23ShortcutsOverlay');
     if(!overlay) return null;
 
@@ -24869,9 +24858,9 @@ body.v21-final .v21-profile-card .profile-life-v23417-open-hint{
 (function(){
   if(window.__maitreHibouProfileLifeV23417) return;
   window.__maitreHibouProfileLifeV23417 = true;
-  try{ document.title = window.MAITRE_HIBOU_TITLE; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.7.51'; }catch(e){}
 
-  var STUDENTS_URL = 'https://script.google.com/macros/s/AKfycbxz1vYS24sv-c3XVja12geWEXIQl6bQyBoQKBx5kg_fwQaj80_Oc7Y34yeBSRN4lF1f/exec';
+  var STUDENTS_URL = 'about:blank';
   var QUESTIONS_URL = 'https://script.google.com/macros/s/AKfycbwGcErZ0he06Dg_bpPDaHtPHa6fAcDQ-31tB7Rlr9w2JZcNaQnP9YIABJYf-CKpFfpF/exec';
   var MATH_TOTAL = 14;
   var FRENCH_TOTAL = 8;
@@ -25359,7 +25348,7 @@ body.v21-final .v21-profile-card .profile-life-v23417-open-hint{
 <!-- PATCH V23.4.23 - Titre d'onglet stabilisé : neutralise les anciens patches qui changeaient document.title -->
 <script id="patch-title-stabilise-v23423">
 (function(){
-  var HIBOU_FINAL_TITLE = '🦉 Maître Hibou V25.7.66';
+  var HIBOU_FINAL_TITLE = '🦉 Maître Hibou V25.7.51';
   function setFinalTitle(){
     try{
       if(document.title !== HIBOU_FINAL_TITLE) document.title = HIBOU_FINAL_TITLE;
@@ -26234,7 +26223,7 @@ body.v21-final .v21-profile-card .profile-life-v23417-open-hint{
   if(window.__maitreHibouV2403Ready) return;
   window.__maitreHibouV2403Ready = true;
 
-  var VERSION_TITLE = window.MAITRE_HIBOU_TITLE;
+  var VERSION_TITLE = '🦉 Maître Hibou V25.7.51';
   var ORDER = ['francais','maths','anglais','sciences','geographie','histoire'];
 
   var SUBJECTS = {
@@ -26526,7 +26515,7 @@ body.v21-final .v21-profile-card .profile-life-v23417-open-hint{
       wrap.appendChild(card);
     });
 
-    /* V25.7.66 — Anglais : logique validée des Sciences pour les séances 1 à 5. */
+    /* V25.7.51 — Anglais : logique validée des Sciences pour les séances 1 à 5. */
     if(s.id >= 1 && s.id <= 5){
       var exerciseCards = Array.prototype.slice.call(wrap.querySelectorAll('.v24-english-exo'));
       var finishBox = document.createElement('section');
@@ -27067,7 +27056,7 @@ body.v21-final .v21-profile-card .profile-life-v23417-open-hint{
       wrap.appendChild(card);
     });
 
-    /* V25.7.66 — Sciences : même logique validée pour les séances 1 à 6. */
+    /* V25.7.51 — Sciences : même logique validée pour les séances 1 à 6. */
     if(s.id >= 1 && s.id <= 6){
       var exerciseCount = s.exos.length;
       var finishBox = document.createElement('section');
@@ -27277,7 +27266,7 @@ body.v21-final .v21-profile-card .profile-life-v23417-open-hint{
           logged = true;
         }
       }catch(error){
-        try{ console.error('Journal Sciences V25.7.66', error); }catch(ignore){}
+        try{ console.error('Journal Sciences V25.7.51', error); }catch(ignore){}
       }
 
       saveBilanResult('sciences', {
@@ -27559,7 +27548,7 @@ body.v21-final .v21-profile-card .profile-life-v23417-open-hint{
       wrap.appendChild(card);
     });
 
-    /* V25.7.66 — Géographie : même logique validée que Sciences et Anglais pour les 6 séances. */
+    /* V25.7.51 — Géographie : même logique validée que Sciences et Anglais pour les 6 séances. */
     if(s.id >= 1 && s.id <= 6){
       var exerciseCards = Array.prototype.slice.call(wrap.querySelectorAll('.v24-english-exo'));
       var finishBox = document.createElement('section');
@@ -27751,7 +27740,7 @@ body.v21-final .v21-profile-card .profile-life-v23417-open-hint{
       data[subject] = payload;
       localStorage.setItem(key, JSON.stringify(data));
 
-      /* V25.7.66 : connexion directe et fiable à « Mon parcours récent ».
+      /* V25.7.51 : connexion directe et fiable à « Mon parcours récent ».
          Le journal est alimenté sans dépendre uniquement de l'événement bilan-updated. */
       if(!payload.__hibouJournalLogged && typeof window.hibouTrackEvent === 'function' && payload.score != null && payload.total != null){
         var subjectLabel = String(payload.subject || subject || 'Bilan').trim();
@@ -27892,7 +27881,7 @@ body.v21-final .v21-profile-card .profile-life-v23417-open-hint{
       wrap.appendChild(card);
     });
 
-    /* V25.7.66 — Histoire : logique validée pour les séances 1 à 5 ; la séance 6 reste le bilan. */
+    /* V25.7.51 — Histoire : logique validée pour les séances 1 à 5 ; la séance 6 reste le bilan. */
     if(s.id >= 1 && s.id <= 5){
       var exerciseCards = Array.prototype.slice.call(wrap.querySelectorAll('.v24-english-exo'));
       var finishBox = document.createElement('section');
@@ -28555,7 +28544,7 @@ body.v21-final .v21-profile-card .profile-life-v23417-open-hint{
   if(window.__maitreHibouV2404Conseil) return;
   window.__maitreHibouV2404Conseil = true;
 
-  var VERSION_TITLE = window.MAITRE_HIBOU_TITLE;
+  var VERSION_TITLE = '🦉 Maître Hibou V25.7.51';
 
   function byId(id){ return document.getElementById(id); }
 
@@ -29107,7 +29096,7 @@ body.v21-final .v21-profile-card .profile-life-v23417-open-hint{
   if(window.__maitreHibouV2405TroisCartes) return;
   window.__maitreHibouV2405TroisCartes = true;
 
-  var VERSION_TITLE = window.MAITRE_HIBOU_TITLE;
+  var VERSION_TITLE = '🦉 Maître Hibou V25.7.51';
 
   function byId(id){ return document.getElementById(id); }
 
@@ -29226,7 +29215,7 @@ body.v21-final .v21-profile-card .profile-life-v23417-open-hint{
   if(window.__maitreHibouV2406TrainingLikeBelts) return;
   window.__maitreHibouV2406TrainingLikeBelts = true;
 
-  var VERSION_TITLE = window.MAITRE_HIBOU_TITLE;
+  var VERSION_TITLE = '🦉 Maître Hibou V25.7.51';
 
   function byId(id){ return document.getElementById(id); }
 
@@ -30377,7 +30366,7 @@ body.v21-final #v21TreasureCard.v24-know-card .v24-know-source{
   }
 }
 </style>
-<!-- V25.7.66 — Mini-leçons : cache renouvelé et secours équilibré entre grandes familles. -->
+<!-- V25.7.51 — Mini-leçons : cache renouvelé et secours équilibré entre grandes familles. -->
 <script id="patch-v24-0-26-le-savais-tu-js">
 (function(){
   if(window.__hibouLeSavaisTuV24026) return;
@@ -30461,7 +30450,7 @@ body.v21-final #v21TreasureCard.v24-know-card .v24-know-source{
     return arrayRows(data).map(normalizeRow).filter(Boolean);
   }
   function readCache(){ return []; }
-  function writeCache(rows){ /* V25.7.66 : aucun cache de banque. */ }
+  function writeCache(rows){ /* V25.7.51 : aucun cache de banque. */ }
   function fetchJson(url){
     return fetch(url, {cache:"no-store"}).then(function(res){
       if(!res.ok) throw new Error("HTTP " + res.status);
@@ -30629,7 +30618,7 @@ body.v21-final #v21TreasureCard.v24-know-card .v24-know-source{
     return card;
   }
   function install(){
-    try{ document.title = window.MAITRE_HIBOU_TITLE; }catch(e){}
+    try{ document.title = "🦉 Maître Hibou V25.7.51"; }catch(e){}
     var existing = byId("v21TreasureCard");
     if(!existing) return;
     var card = prepareCard(existing);
@@ -30663,6 +30652,197 @@ body.v21-final #v21TreasureCard.v24-know-card .v24-know-source{
 </script>
 
 
+<script id="patch-v24-0-42-progress-bilans-js">
+(function(){
+  if(window.__hibouProgressBilansV24042) return;
+  window.__hibouProgressBilansV24042 = true;
+
+  var SUBJECT_BILANS = [
+    {id:'francais', label:'Français', icon:'📖'},
+    {id:'maths', label:'Maths', icon:'🧮'},
+    {id:'anglais', label:'Anglais', icon:'🇬🇧'},
+    {id:'sciences', label:'Sciences', icon:'🧪'},
+    {id:'geographie', label:'Géographie', icon:'🌍'},
+    {id:'histoire', label:'Histoire', icon:'🏛️'}
+  ];
+  var MATH_LABELS = {
+    blanc:'Petits nombres', jaune_clair:'Dizaines', jaune_fonce:'Sans retenue', orange_clair:'Avec retenue', orange_fonce:'Complément à la dizaine', vert_clair:'Ajouter / retrancher 9', vert_fonce:'Ajouter / retrancher 11', bleu_clair:'Centaines', bleu_fonce:'Tables x2 x5 x10', rose:'Tables x3 x4', beige:'Tables x6 x7', violet:'Tables x8 x9', marron:'Moitiés et doubles', rouge:'Bilan calcul'
+  };
+  function byId(id){return document.getElementById(id);}
+  function esc(v){return String(v == null ? '' : v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function txt(v){return String(v == null ? '' : v).trim();}
+  function norm(v){return String(v||'').trim().toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]/g,'');}
+  function currentName(){
+    try{return txt(window.prenomActuel || localStorage.getItem('hibou_prenom') || localStorage.getItem('hibou_last_prenom') || localStorage.getItem('elevePrenom') || 'Élève') || 'Élève';}
+    catch(e){return 'Élève';}
+  }
+  function studentKey(){return norm(currentName()) || 'eleve';}
+  function readJSON(key, fallback){try{var v=localStorage.getItem(key);return v?JSON.parse(v):fallback;}catch(e){return fallback;}}
+  function bilans(){return readJSON('hibou_bilans_' + studentKey(), {});}
+  function medalCounts(){
+    var counts = {or:0, argent:0, bronze:0};
+    var rows = [];
+    try{
+      if(typeof window.hibouV195BestRows === 'function') rows = window.hibouV195BestRows() || [];
+      else if(typeof window.hibouV194BestBeltRows === 'function') rows = window.hibouV194BestBeltRows() || [];
+    }catch(e){ rows = []; }
+    if(rows && rows.length){
+      rows.forEach(function(r){
+        var m = String((r && (r.medal || r.medaille || r.ceinture)) || '').toLowerCase();
+        if(m.indexOf('or') !== -1 || m.indexOf('🥇') !== -1) counts.or++;
+        else if(m.indexOf('argent') !== -1 || m.indexOf('🥈') !== -1) counts.argent++;
+        else if(m.indexOf('bronze') !== -1 || m.indexOf('🥉') !== -1) counts.bronze++;
+      });
+      return counts;
+    }
+    var text = txt((byId('mockupCompetencesCard') || {}).textContent || '');
+    counts.or = Number((text.match(/🥇\s*(\d+)/) || [,'0'])[1]) || 0;
+    counts.argent = Number((text.match(/🥈\s*(\d+)/) || [,'0'])[1]) || 0;
+    counts.bronze = Number((text.match(/🥉\s*(\d+)/) || [,'0'])[1]) || 0;
+    return counts;
+  }
+  function medalSummaryHTML(){
+    var counts = medalCounts();
+    return '<div class="v24-progress-medals-mini" aria-label="Médailles"><span>🥇 '+esc(counts.or)+'</span><span>🥈 '+esc(counts.argent)+'</span><span>🥉 '+esc(counts.bronze)+'</span></div>';
+  }
+  function successfulBilanBadgesHTML(){
+    var data = bilans();
+    var ok = SUBJECT_BILANS.filter(function(s){return data[s.id] && data[s.id].validated;});
+    if(!ok.length) return '<span class="v24-bilan-badge todo">Aucun bilan validé</span>';
+    return '<div class="v24-bilan-badges-mini">'+ok.map(function(s){return '<span class="v24-bilan-badge ok">'+esc(s.icon)+' '+esc(s.label)+' ✓</span>';}).join('')+'</div>';
+  }
+  function allBilansHTML(){
+    var data = bilans();
+    return '<div class="v24-bilan-badges-line">'+SUBJECT_BILANS.map(function(s){
+      var r = data[s.id];
+      if(r && r.validated) return '<span class="v24-bilan-badge ok">'+esc(s.icon)+' '+esc(s.label)+' ✓ '+esc(r.score)+'/'+esc(r.total)+'</span>';
+      if(r) return '<span class="v24-bilan-badge todo">'+esc(s.icon)+' '+esc(s.label)+' '+esc(r.score)+'/'+esc(r.total)+'</span>';
+      return '<span class="v24-bilan-badge todo">'+esc(s.icon)+' '+esc(s.label)+' à faire</span>';
+    }).join('')+'</div>';
+  }
+  function latestBilan(){
+    var data = bilans();
+    var out = null;
+    SUBJECT_BILANS.forEach(function(s){
+      var r = data[s.id];
+      if(!r) return;
+      var t = Date.parse(r.date || '') || 0;
+      if(!out || t > out.t) out = {subject:s, result:r, t:t};
+    });
+    return out;
+  }
+  function nextBilanAdvice(){
+    var data = bilans();
+    var order = ['histoire','anglais','sciences','geographie','francais','maths'];
+    for(var i=0;i<order.length;i++){
+      var id = order[i];
+      if(!data[id] || !data[id].validated){
+        var s = SUBJECT_BILANS.filter(function(x){return x.id===id;})[0];
+        return s ? s.icon + ' Bilan ' + s.label : 'Choisis un bilan';
+      }
+    }
+    return 'Tous les bilans disponibles sont validés';
+  }
+  function lastSuccessText(){
+    var raw = txt((byId('hibouLastSuccess') || {}).textContent || '');
+    return raw && raw.indexOf('première réussite') < 0 ? raw : 'Prêt pour une première réussite !';
+  }
+  function mathRecords(){
+    var key = studentKey();
+    var prefix = 'hibou_v2343_maths_training_record_' + key + '_';
+    var out = [];
+    try{
+      for(var i=0;i<localStorage.length;i++){
+        var k = localStorage.key(i);
+        if(k && k.indexOf(prefix) === 0){
+          var id = k.slice(prefix.length);
+          var data = readJSON(k, null);
+          if(data) out.push({id:id,label:MATH_LABELS[id] || ('Ceinture ' + id.replace(/_/g,' ')),score:Number(data.score||0),total:Number(data.total||10),time:Number(data.time||0)});
+        }
+      }
+    }catch(e){}
+    out.sort(function(a,b){return (b.score-a.score) || (a.time-b.time);});
+    return out.slice(0,3);
+  }
+  function fmtTime(ms){
+    ms = Math.max(0, Number(ms || 0));
+    if(!ms) return '—';
+    var total = Math.floor(ms/1000), m = Math.floor(total/60), s = total%60;
+    return String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+  }
+  function recordsHTML(){
+    var records = mathRecords();
+    if(!records.length) return '<div class="profile-life-v23417-empty">Aucun record de calcul pour le moment.</div>';
+    return '<div class="profile-life-v23417-list">'+records.map(function(r){return '<div class="profile-life-v23417-item"><span>⏱️</span><div><b>'+esc(r.label)+'</b>'+esc(r.score)+' / '+esc(r.total)+' en '+esc(fmtTime(r.time))+'<small>Record d’entraînement</small></div></div>';}).join('')+'</div>';
+  }
+  function localQuestions(){
+    var n = studentKey();
+    var logs = readJSON('hibou_question_journal', []);
+    if(!Array.isArray(logs)) logs=[];
+    return logs.filter(function(q){return norm(q && (q.student || q.prenom || q.eleve || q['Prénom'])) === n;}).slice(0,3);
+  }
+  function questionsHTML(){
+    var list = localQuestions();
+    if(!list.length) return '<div class="profile-life-v23417-empty">Aucune question enregistrée pour le moment.</div>';
+    return '<div class="profile-life-v23417-list">'+list.map(function(q){
+      var question = txt(q.questionCorrigee || q['Question corrigée'] || q.questionOriginale || q.question || 'Question');
+      return '<div class="profile-life-v23417-item"><span>💬</span><div><b>'+esc(question)+'</b><small>Question de curiosité</small></div></div>';
+    }).join('')+'</div>';
+  }
+  function curiositySummary(){
+    var pts = txt((byId('scoreVal') || {}).textContent || '0');
+    var q = localQuestions().length;
+    return pts + ' points · ' + q + ' question' + (q>1?'s':'');
+  }
+  function refreshProgressCardV42(){ return; }
+  function patchProgressCardV42(){ return; }
+  function ensureOverlay(){
+    var ov = byId('studentProfileLifeOverlayV23417');
+    if(ov) return ov;
+    ov = document.createElement('div');
+    ov.id = 'studentProfileLifeOverlayV23417';
+    ov.className = 'hidden';
+    ov.innerHTML = '<div class="profile-life-v23417-popup" role="dialog" aria-modal="true" aria-label="Mes progrès"><div class="profile-life-v23417-topbar"><div class="profile-life-v23417-chip">📊 Mes progrès</div><button class="profile-life-v23417-close" type="button" onclick="closeStudentProfileLifeV23417()" aria-label="Fermer la popup Mes progrès">×</button></div><div id="studentProfileLifeInnerV23417"></div></div>';
+    document.body.appendChild(ov);
+    ov.addEventListener('click', function(ev){ if(ev.target === ov) window.closeStudentProfileLifeV23417(); });
+    return ov;
+  }
+  function renderProgressPopupV42(){
+    var inner = byId('studentProfileLifeInnerV23417');
+    if(!inner) return;
+    var latest = latestBilan();
+    var latestHTML = latest ? '<div class="v24-progress-score-line">'+esc(latest.subject.icon)+' '+esc(latest.subject.label)+' : '+esc(latest.result.score)+' / '+esc(latest.result.total)+'<small>'+(latest.result.validated?'Bilan validé':'Bilan terminé, à revoir')+'</small></div>' : '<div class="profile-life-v23417-empty">Aucun bilan terminé pour le moment.</div>';
+    inner.innerHTML =
+      '<div class="profile-life-v23417-header"><div class="profile-life-v23417-owl">🦉</div><div class="profile-life-v23417-title"><h2>Mes progrès</h2><p>Objectifs, bilans, records et questions en un coup d’œil.</p></div></div>'+
+      '<div class="profile-life-v23417-body">'+
+      '<section class="profile-life-v23417-card wide"><h3>🎯 Prochains objectifs</h3><div class="profile-life-v23417-objectives"><div class="profile-life-v23417-objective"><b>Objectif de travail</b>'+esc(lastSuccessText())+'</div><div class="profile-life-v23417-objective"><b>Prochain bilan conseillé</b>'+esc(nextBilanAdvice())+'</div></div></section>'+
+      '<section class="profile-life-v23417-card v24-progress-compact-card"><h3>✅ Bilans validés par matière</h3>'+allBilansHTML()+'</section>'+
+      '<section class="profile-life-v23417-card v24-progress-compact-card"><h3>📌 Dernier score</h3>'+latestHTML+'</section>'+
+      '<section class="profile-life-v23417-card"><h3>🧮 Records de calcul</h3>'+recordsHTML()+'</section>'+
+      '<section class="profile-life-v23417-card"><h3>💬 Questions de curiosité</h3><div class="v24-progress-score-line">'+esc(curiositySummary())+'</div>'+questionsHTML()+'</section>'+
+      '</div>';
+  }
+  window.openStudentProfileLifeV23417 = function(ev){
+    if(ev){ev.preventDefault();ev.stopPropagation();}
+    var ov = ensureOverlay();
+    ov.classList.remove('hidden');
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+    renderProgressPopupV42();
+  };
+  window.closeStudentProfileLifeV23417 = function(){
+    var ov = byId('studentProfileLifeOverlayV23417');
+    if(ov) ov.classList.add('hidden');
+    document.documentElement.style.overflow = '';
+    document.body.style.overflow = '';
+  };
+  function install(){patchProgressCardV42(); refreshProgressCardV42();}
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', install); else install();
+  window.addEventListener('load', function(){[0,100,350,900,1800,3500].forEach(function(ms){setTimeout(install,ms);});});
+  window.addEventListener('hibou:bilan-updated', install);
+  setInterval(install, 1500);
+})();
+</script>
 
 
 
@@ -30794,7 +30974,7 @@ body.v21-final #eleveBadge{
   if(window.__hibouTitleLockAndBalancedHeaderV25634) return;
   window.__hibouTitleLockAndBalancedHeaderV25634 = true;
   function apply(){
-    try{ document.title = window.MAITRE_HIBOU_TITLE; }catch(e){}
+    try{ document.title = "🦉 Maître Hibou V25.7.51"; }catch(e){}
     var header=document.querySelector("body.v21-final header, body.v21-final header.mockup-header");
     if(header) header.classList.add("v25-1-3-balanced-header");
   }
@@ -31107,7 +31287,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 (function(){
   if(window.__maitreHibouV2516GrandirEnsemble) return;
   window.__maitreHibouV2516GrandirEnsemble = true;
-  var TITLE = window.MAITRE_HIBOU_TITLE;
+  var TITLE = '🦉 Maître Hibou V25.7.51';
 
   function setTitle(){ try{ document.title = TITLE; }catch(e){} }
   function byId(id){ return document.getElementById(id); }
@@ -31445,7 +31625,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   if(window.__maitreHibouV2517EmiGrow) return;
   window.__maitreHibouV2517EmiGrow = true;
 
-  var TITLE = window.MAITRE_HIBOU_TITLE;
+  var TITLE = '🦉 Maître Hibou V25.7.51';
   var stateBySession = {};
 
   var SESSIONS = [
@@ -31658,7 +31838,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
               source:'emi_'+session.id
             });
           }
-        }catch(error){ try{ console.error('Journal EMI V25.7.66', error); }catch(ignore){} }
+        }catch(error){ try{ console.error('Journal EMI V25.7.51', error); }catch(ignore){} }
       }
       var final = b.querySelector('[data-mh-emi-final]');
       if(final){
@@ -31901,7 +32081,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   if(window.__maitreHibouV2518Evar) return;
   window.__maitreHibouV2518Evar = true;
 
-  var TITLE = window.MAITRE_HIBOU_TITLE;
+  var TITLE = '🦉 Maître Hibou V25.7.51';
   var EVAR_PAGES = [
     {id:'corps', icon:'💛', title:'Prendre soin de mon corps', subtitle:'Mon corps, mon bien-être : écouter ses besoins et demander de l’aide.', file:'evar_1_mon_corps.html'},
     {id:'consentement', icon:'🤝', title:'Le consentement', subtitle:'Dire oui, dire non, respecter la réponse de l’autre.', file:'evar_2_consentement.html'},
@@ -32206,7 +32386,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   if(window.__maitreHibouV2519Emc) return;
   window.__maitreHibouV2519Emc = true;
 
-  var TITLE = window.MAITRE_HIBOU_TITLE;
+  var TITLE = '🦉 Maître Hibou V25.7.51';
   var EMC_PAGES = [
     {id:'bien-commun', icon:'🏛️', title:"Le bien commun, c'est quoi ?", subtitle:'Intérêt général, écogestes et projets communs.', file:'emc_1_bien_commun.html'},
     {id:'services-publics', icon:'🚒', title:'Des métiers au service de tous', subtitle:'Pompiers, police, maire, école et services publics.', file:'emc_2_services_publics.html'},
@@ -32423,7 +32603,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 (function(){
   if(window.__mhV2528ShortcutsReadingLayout) return;
   window.__mhV2528ShortcutsReadingLayout = true;
-  var TITLE = window.MAITRE_HIBOU_TITLE;
+  var TITLE = '🦉 Maître Hibou V25.7.51';
   try{ document.title = TITLE; }catch(e){}
 
   function esc(s){
@@ -32519,7 +32699,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   if(window.__maitreHibouV25213DirectTrainingLaunch) return;
   window.__maitreHibouV25213DirectTrainingLaunch = true;
 
-  var VERSION_TITLE = window.MAITRE_HIBOU_TITLE;
+  var VERSION_TITLE = '🦉 Maître Hibou V25.7.51';
 
   function byId(id){ return document.getElementById(id); }
   function norm(v){
@@ -32611,7 +32791,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 (function(){
   if(window.__maitreHibouV25215PreloadExercises) return;
   window.__maitreHibouV25215PreloadExercises = true;
-  try{ document.title = window.MAITRE_HIBOU_TITLE; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.7.51'; }catch(e){}
   function warm(){
     try{
       if(typeof window.preloadFrenchGrammarRowsV23411 === 'function'){
@@ -32634,7 +32814,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 (function(){
   if(window.__maitreHibouV25216PreloadMaths) return;
   window.__maitreHibouV25216PreloadMaths = true;
-  try{ document.title = window.MAITRE_HIBOU_TITLE; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.7.51'; }catch(e){}
   function warm(){
     try{
       if(typeof window.preloadMathsRowsV2343 === 'function'){
@@ -32669,7 +32849,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 (function(){
   if(window.__maitreHibouV25222FrancaisProgressionStable) return;
   window.__maitreHibouV25222FrancaisProgressionStable = true;
-  try{ document.title = window.MAITRE_HIBOU_TITLE; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.7.51'; }catch(e){}
 
   var BASE_URL = 'https://script.google.com/macros/s/AKfycbyzfRPrUV7xKgeXUM0LjbOsOne5DieRjDYxmuVbBBUIGL-F9ahMmJZSfpUDYmBaZIOpvQ/exec';
   var SHEET_NAME = 'grammaire';
@@ -32876,7 +33056,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
     note = note || 'Un seul espace Français : grammaire, production d’écrit, vocabulaire et orthographe.';
     return '<div class="fr-v2348-header"><div class="fr-v2348-owl">🦉</div><div class="fr-v2348-title"><h2>'+esc(title)+'</h2><p>'+esc(subtitle)+'</p><div class="fr-v23411-grammar-note">'+esc(note)+'</div></div></div>';
   }
-  function rowHTML(belt){ var isIdeas=belt.id==='idees'; var competence=belt.competenceEleve||belt.desc||''; return '<div class="fr-v23411-row '+(isIdeas?'fr-v23411-ideas-row':'')+'"><div class="fr-v23411-dot" style="background:'+esc(belt.color)+'"></div><div class="fr-v23411-main"><strong>'+esc(belt.title)+'</strong><span>'+esc(belt.label)+'</span><div class="fr-v23411-mode"><b>Compétence travaillée :</b> '+esc(competence)+'</div></div><button type="button" class="fr-v23411-train-btn" onclick="startFrenchTrainingV2348(\''+esc(belt.id)+'\')">'+(isIdeas?'✏️ S’entraîner':'📖 S’entraîner — 10 questions')+'</button></div>'; }
+  function rowHTML(belt){ var isIdeas=belt.id==='idees'; return '<div class="fr-v23411-row '+(isIdeas?'fr-v23411-ideas-row':'')+'"><div class="fr-v23411-dot" style="background:'+esc(belt.color)+'"></div><div class="fr-v23411-main"><strong>'+esc(belt.title)+'</strong><span>'+esc(belt.label)+'</span><div class="fr-v23411-mode">'+esc(belt.desc)+'</div></div><button type="button" class="fr-v23411-train-btn" onclick="startFrenchTrainingV2348(\''+esc(belt.id)+'\')">'+(isIdeas?'✏️ S’entraîner':'📖 S’entraîner — 10 questions')+'</button></div>'; }
   function domainCardHTML(cfg){
     var disabled = !!cfg.disabled;
     var action = disabled ? '' : ' onclick="'+cfg.onclick+'"';
@@ -32914,11 +33094,11 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
     state.answered=false;
     var opts=q.options.map(function(opt,i){ return '<button type="button" class="fr-v2348-option" data-index="'+i+'">'+esc(opt)+'</button>'; }).join('');
     var meta='<div class="fr-v23411-question-meta"><span class="fr-v23411-pill">'+esc(state.belt.label)+'</span><span class="fr-v23411-pill">Source : '+esc(state.source)+'</span>'+(q.mode?'<span class="fr-v23411-pill">Mode : '+esc(q.mode)+'</span>':'')+'</div>';
-    setInner(headerHTML('📘 Grammaire','Réponds aux questions.','Compétence travaillée : '+(state.belt.competenceEleve||state.belt.title))+'<div class="fr-v2348-content"><section class="fr-v2348-panel"><div class="fr-v2348-training-head"><button type="button" class="fr-v2348-back" onclick="renderFrenchGrammarListV25720()">← Retour aux ceintures</button><div class="fr-v2348-training-title">'+esc(state.belt.title)+'</div><div></div></div>'+meta+'<div class="fr-v2348-progress">Question '+(state.index+1)+' / '+state.questions.length+'</div><div class="fr-v2348-question">'+esc(q.q)+'</div><div class="fr-v2348-options">'+opts+'</div><div id="frFeedbackV2348" class="fr-v2348-feedback"></div></section></div>');
+    setInner(headerHTML('📘 Grammaire','Réponds aux questions.','Entraînement de grammaire : correction après chaque réponse.')+'<div class="fr-v2348-content"><section class="fr-v2348-panel"><div class="fr-v2348-training-head"><button type="button" class="fr-v2348-back" onclick="renderFrenchGrammarListV25720()">← Retour aux ceintures</button><div class="fr-v2348-training-title">'+esc(state.belt.title)+'</div><div></div></div>'+meta+'<div class="fr-v2348-progress">Question '+(state.index+1)+' / '+state.questions.length+'</div><div class="fr-v2348-question">'+esc(q.q)+'</div><div class="fr-v2348-options">'+opts+'</div><div id="frFeedbackV2348" class="fr-v2348-feedback"></div></section></div>');
   }
   function renderResult(){
     var total=state.questions.length || TRAINING_COUNT; var pct=Math.round((state.score/total)*100);
-    setInner(headerHTML('📘 Grammaire','Entraînement terminé.','Compétence travaillée : '+(state.belt.competenceEleve||state.belt.title))+'<div class="fr-v2348-content"><section class="fr-v2348-panel"><div class="fr-v2348-result"><h3>Bravo, entraînement terminé !</h3><div class="fr-v2348-score-grid"><div class="fr-v2348-score-card">Score<b>'+state.score+' / '+total+'</b></div><div class="fr-v2348-score-card">Réussite<b>'+pct+'%</b></div></div><div class="fr-v2348-feedback">'+esc(state.belt.label)+' · Source : '+esc(state.source)+'</div><div class="fr-v2348-actions"><button type="button" class="fr-v2348-action" onclick="startFrenchTrainingV2348(\''+esc(state.belt.id)+'\')">🔁 Refaire l’entraînement</button><button type="button" class="fr-v2348-action secondary" onclick="renderFrenchGrammarListV25720()">← Retour aux ceintures</button><button type="button" class="fr-v2348-action secondary" onclick="renderFrenchDomainMenuV25720()">Menu Français</button><button type="button" class="fr-v2348-action secondary" onclick="closeFrenchTrainingPopupV2348()">Fermer</button></div></div></section></div>');
+    setInner(headerHTML('📘 Grammaire','Entraînement terminé.','Tu peux refaire l’entraînement ou revenir au menu Français.')+'<div class="fr-v2348-content"><section class="fr-v2348-panel"><div class="fr-v2348-result"><h3>Bravo, entraînement terminé !</h3><div class="fr-v2348-score-grid"><div class="fr-v2348-score-card">Score<b>'+state.score+' / '+total+'</b></div><div class="fr-v2348-score-card">Réussite<b>'+pct+'%</b></div></div><div class="fr-v2348-feedback">'+esc(state.belt.label)+' · Source : '+esc(state.source)+'</div><div class="fr-v2348-actions"><button type="button" class="fr-v2348-action" onclick="startFrenchTrainingV2348(\''+esc(state.belt.id)+'\')">🔁 Refaire l’entraînement</button><button type="button" class="fr-v2348-action secondary" onclick="renderFrenchGrammarListV25720()">← Retour aux ceintures</button><button type="button" class="fr-v2348-action secondary" onclick="renderFrenchDomainMenuV25720()">Menu Français</button><button type="button" class="fr-v2348-action secondary" onclick="closeFrenchTrainingPopupV2348()">Fermer</button></div></div></section></div>');
     try{ var label=(state.belt && (state.belt.title || state.belt.label || state.belt.id)) || 'grammaire'; var score='Score '+state.score+' / '+total+' — '+pct+'%'; if(window.hibouFrenchTrackV25717) window.hibouFrenchTrackV25717({type:'entrainement_grammaire_termine',domaine:'Grammaire',titre:'Entraînement grammaire terminé',detail:label+' — '+score,score:state.score,total:total,source:'entrainement_grammaire'}); else if(window.hibouRecordTrainingSuccessV25221) window.hibouRecordTrainingSuccessV25221('français', label, score); else if(window.hibouRecordTrainingSuccessV25220) window.hibouRecordTrainingSuccessV25220('français', label, score); }catch(e){}
   }
   function renderIdea(){ var item=shuffle(LOCAL_IDEAS)[0]; setInner(headerHTML('✍️ Production d’écrit','Trouve une idée et écris.','L’événement est ajouté au parcours seulement quand tu cliques sur J’ai terminé mon écrit.')+'<div class="fr-v2348-content"><section class="fr-v2348-panel"><div class="fr-v2348-training-head"><button type="button" class="fr-v2348-back" onclick="renderFrenchDomainMenuV25720()">← Retour au menu Français</button><div class="fr-v2348-training-title">✏️ Idées pour écrire</div><div></div></div><div class="fr-v2348-idea-box"><div class="fr-v2348-progress">Idée d’écriture</div><div class="fr-v2348-idea-card">'+esc(item.prompt)+'</div><div class="fr-v2348-example"><strong>Pour t’aider :</strong><br>'+esc(item.example)+'</div><textarea class="fr-v2348-textarea" placeholder="Écris ici ta phrase ou ton début d’histoire..."></textarea><div class="fr-v2348-actions"><button type="button" class="fr-v2348-action" onclick="window.hibouFrenchWritingDoneV25717&&window.hibouFrenchWritingDoneV25717(this)">✅ J’ai terminé mon écrit</button><button type="button" class="fr-v2348-action" onclick="startFrenchTrainingV2348(\'idees\')">🎲 Nouvelle idée</button><button type="button" class="fr-v2348-action secondary" onclick="renderFrenchDomainMenuV25720()">← Retour au menu Français</button></div></div></section></div>'); }
@@ -33033,7 +33213,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 (function(){
   if(window.__maitreHibouV25224MathsFluid) return;
   window.__maitreHibouV25224MathsFluid = true;
-  try{ document.title = window.MAITRE_HIBOU_TITLE; }catch(e){}
+  try{ document.title='🦉 Maître Hibou V25.7.51'; }catch(e){}
 
   var TRAINING_COUNT = 10;
   var BLACK_SYNTHESIS_BELTS = ['blanche','jaune','orange','vert_clair','vert_fonce','bleu_clair','bleu_fonce','rose','beige','violet','marron','rouge','gris'];
@@ -33230,7 +33410,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 (function(){
   if(window.__maitreHibouV25225FrancaisPrechargeRapide) return;
   window.__maitreHibouV25225FrancaisPrechargeRapide = true;
-  try{ document.title = window.MAITRE_HIBOU_TITLE; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.7.51'; }catch(e){}
 
   var BASE_URL = 'https://script.google.com/macros/s/AKfycbyzfRPrUV7xKgeXUM0LjbOsOne5DieRjDYxmuVbBBUIGL-F9ahMmJZSfpUDYmBaZIOpvQ/exec';
   var SHEET_NAME = 'grammaire';
@@ -33246,14 +33426,14 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   var state = {belt:null, questions:[], index:0, score:0, answered:false, source:'banque locale'};
 
   var BELTS = [
-    {id:'blanche', ceinture:'blanche', title:'Phrase affirmative ou négative', label:'Ceinture blanche', competenceEleve:'Je sais reconnaître une phrase affirmative ou négative et passer de l’une à l’autre.', progressionCodes:['GRA-P1-02','GRA-P1-03'], emoji:'⚪', color:'radial-gradient(circle at 35% 25%,#FFFFFF,#EDE7FF 68%,#C8B8F2)', skills:['phrase','affirmative','negative','négative','negation','forme']},
-    {id:'jaune', ceinture:'jaune', title:'Le verbe conjugué', label:'Ceinture jaune', competenceEleve:'Je sais repérer le verbe conjugué dans une phrase simple.', progressionCodes:['GRA-P1-04'], emoji:'🟡', color:'radial-gradient(circle at 35% 25%,#FFF7B0,#FFD93D 62%,#D9A900)', skills:['verbe']},
-    {id:'orange', ceinture:'orange', title:'Le sujet du verbe', label:'Ceinture orange', competenceEleve:'Je sais trouver qui fait l’action et repérer le sujet du verbe.', progressionCodes:['GRA-P1-06'], emoji:'🟠', color:'radial-gradient(circle at 35% 25%,#FFD9BF,#FF8A5B 62%,#E75F2B)', skills:['sujet']},
-    {id:'verte', ceinture:'verte', title:'Le nom commun', label:'Ceinture verte', competenceEleve:'Je sais reconnaître un nom commun parmi plusieurs mots.', progressionCodes:['GRA-P2-01'], emoji:'🟢', color:'radial-gradient(circle at 35% 25%,#BDF6C8,#4FD46C 62%,#229B43)', skills:['nom','nom_commun','nomcommun']},
-    {id:'bleue', ceinture:'bleue', title:'Le déterminant', label:'Ceinture bleue', competenceEleve:'Je sais reconnaître le déterminant placé devant un nom.', progressionCodes:['GRA-P3-01'], emoji:'🔵', color:'radial-gradient(circle at 35% 25%,#CDEAFF,#5AA9FF 62%,#2169CF)', skills:['determinant','déterminant','determiner']},
-    {id:'marron', ceinture:'marron', title:'L’infinitif du verbe', label:'Ceinture marron', competenceEleve:'Je sais retrouver l’infinitif d’un verbe conjugué.', progressionCodes:['GRA-P1-05'], emoji:'🟤', color:'radial-gradient(circle at 35% 25%,#F0D1A7,#C08143 62%,#8B5526)', skills:['infinitif']},
-    {id:'noire', ceinture:'noire', title:'L’adjectif', label:'Ceinture noire', competenceEleve:'Je sais reconnaître un adjectif qui donne une précision sur un nom.', progressionCodes:['GRA-P3-02'], emoji:'⚫', color:'radial-gradient(circle at 35% 25%,#777,#222 66%,#050505)', skills:['adjectif']},
-    {id:'rouge', ceinture:'rouge', title:'Le groupe nominal', label:'Ceinture rouge', competenceEleve:'Je sais reconnaître un groupe nominal formé autour d’un nom.', progressionCodes:['GRA-P3-03'], emoji:'🔴', color:'radial-gradient(circle at 35% 25%,#FF9FA8,#E52837 64%,#A90F1D)', skills:['groupe_nominal','groupe nominal','gn']}
+    {id:'blanche', ceinture:'blanche', title:'Phrase affirmative / négative', label:'Ceinture blanche', desc:'Reconnaître et transformer les phrases.', emoji:'⚪', color:'radial-gradient(circle at 35% 25%,#FFFFFF,#EDE7FF 68%,#C8B8F2)', skills:['phrase','affirmative','negative','négative','negation','forme']},
+    {id:'jaune', ceinture:'jaune', title:'Le verbe', label:'Ceinture jaune', desc:'Trouver le verbe conjugué.', emoji:'🟡', color:'radial-gradient(circle at 35% 25%,#FFF7B0,#FFD93D 62%,#D9A900)', skills:['verbe']},
+    {id:'orange', ceinture:'orange', title:'Le sujet', label:'Ceinture orange', desc:'Identifier le sujet du verbe.', emoji:'🟠', color:'radial-gradient(circle at 35% 25%,#FFD9BF,#FF8A5B 62%,#E75F2B)', skills:['sujet']},
+    {id:'verte', ceinture:'verte', title:'Le nom commun', label:'Ceinture verte', desc:'Reconnaître les noms communs.', emoji:'🟢', color:'radial-gradient(circle at 35% 25%,#BDF6C8,#4FD46C 62%,#229B43)', skills:['nom','nom_commun','nomcommun']},
+    {id:'bleue', ceinture:'bleue', title:'Le déterminant', label:'Ceinture bleue', desc:'Associer et repérer les déterminants.', emoji:'🔵', color:'radial-gradient(circle at 35% 25%,#CDEAFF,#5AA9FF 62%,#2169CF)', skills:['determinant','déterminant','determiner']},
+    {id:'marron', ceinture:'marron', title:'L’infinitif', label:'Ceinture marron', desc:'Retrouver l’infinitif d’un verbe.', emoji:'🟤', color:'radial-gradient(circle at 35% 25%,#F0D1A7,#C08143 62%,#8B5526)', skills:['infinitif']},
+    {id:'noire', ceinture:'noire', title:'L’adjectif', label:'Ceinture noire', desc:'Reconnaître les adjectifs.', emoji:'⚫', color:'radial-gradient(circle at 35% 25%,#777,#222 66%,#050505)', skills:['adjectif']},
+    {id:'rouge', ceinture:'rouge', title:'Le groupe nominal', label:'Ceinture rouge', desc:'Repérer et enrichir le groupe nominal.', emoji:'🔴', color:'radial-gradient(circle at 35% 25%,#FF9FA8,#E52837 64%,#A90F1D)', skills:['groupe_nominal','groupe nominal','gn']}
   ];
   var IDEAS_CARD = {id:'idees', title:'Idées pour écrire', label:'Entraînement d’écriture', desc:'Tirer une idée et écrire une phrase ou un début d’histoire.', color:'radial-gradient(circle at 35% 25%,#FFF6A8,#FFD93D 62%,#E0A900)'};
 
@@ -33496,7 +33676,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
     note = note || 'Choisis un domaine.';
     return '<div class="fr-v2348-header"><div class="fr-v2348-owl">🦉</div><div class="fr-v2348-title"><h2>'+esc(title)+'</h2><p>'+esc(subtitle)+'</p><div class="fr-v23411-grammar-note">'+esc(note)+'</div></div></div>';
   }
-  function rowHTML(belt){ var isIdeas=belt.id==='idees'; var competence=belt.competenceEleve||belt.desc||''; return '<div class="fr-v23411-row '+(isIdeas?'fr-v23411-ideas-row':'')+'"><div class="fr-v23411-dot" style="background:'+esc(belt.color)+'"></div><div class="fr-v23411-main"><strong>'+esc(belt.title)+'</strong><span>'+esc(belt.label)+'</span><div class="fr-v23411-mode"><b>Compétence travaillée :</b> '+esc(competence)+'</div></div><button type="button" class="fr-v23411-train-btn" onclick="startFrenchTrainingV2348(\''+esc(belt.id)+'\')">'+(isIdeas?'✏️ S’entraîner':'📖 S’entraîner — 10 questions')+'</button></div>'; }
+  function rowHTML(belt){ var isIdeas=belt.id==='idees'; return '<div class="fr-v23411-row '+(isIdeas?'fr-v23411-ideas-row':'')+'"><div class="fr-v23411-dot" style="background:'+esc(belt.color)+'"></div><div class="fr-v23411-main"><strong>'+esc(belt.title)+'</strong><span>'+esc(belt.label)+'</span><div class="fr-v23411-mode">'+esc(belt.desc)+'</div></div><button type="button" class="fr-v23411-train-btn" onclick="startFrenchTrainingV2348(\''+esc(belt.id)+'\')">'+(isIdeas?'✏️ S’entraîner':'📖 S’entraîner — 10 questions')+'</button></div>'; }
   function domainCardHTML(cfg){
     var disabled = !!cfg.disabled;
     var action = disabled ? '' : ' onclick="'+cfg.onclick+'"';
@@ -33533,13 +33713,13 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
     state.answered=false;
     var opts=(q.options||[]).map(function(opt,i){ return '<button type="button" class="fr-v2348-option" data-index="'+i+'">'+esc(opt)+'</button>'; }).join('');
     var meta='<div class="fr-v23411-question-meta"><span class="fr-v23411-pill">'+esc(state.belt.label)+'</span><span class="fr-v23411-pill">Source : '+esc(state.source)+'</span>'+(q.mode?'<span class="fr-v23411-pill">Mode : '+esc(q.mode)+'</span>':'')+'</div>';
-    setInner(headerHTML('📘 Grammaire','Réponds aux questions.','Compétence travaillée : '+(state.belt.competenceEleve||state.belt.title))+'<div class="fr-v2348-content"><section class="fr-v2348-panel"><div class="fr-v2348-training-head"><button type="button" class="fr-v2348-back" onclick="renderFrenchGrammarListV25720()">← Retour aux ceintures</button><div class="fr-v2348-training-title">'+esc(state.belt.title)+'</div><div></div></div>'+meta+'<div class="fr-v2348-progress">Question '+(state.index+1)+' / '+state.questions.length+'</div><div class="fr-v2348-question">'+esc(q.q)+'</div><div class="fr-v2348-options">'+opts+'</div><div id="frFeedbackV2348" class="fr-v2348-feedback"></div></section></div>');
+    setInner(headerHTML('📘 Grammaire','Réponds aux questions.','Entraînement de grammaire : correction après chaque réponse.')+'<div class="fr-v2348-content"><section class="fr-v2348-panel"><div class="fr-v2348-training-head"><button type="button" class="fr-v2348-back" onclick="renderFrenchGrammarListV25720()">← Retour aux ceintures</button><div class="fr-v2348-training-title">'+esc(state.belt.title)+'</div><div></div></div>'+meta+'<div class="fr-v2348-progress">Question '+(state.index+1)+' / '+state.questions.length+'</div><div class="fr-v2348-question">'+esc(q.q)+'</div><div class="fr-v2348-options">'+opts+'</div><div id="frFeedbackV2348" class="fr-v2348-feedback"></div></section></div>');
   }
   function renderResult(){
     try{ clearTimeout(state.nextTimer); }catch(e){}
     var total=state.questions.length || TRAINING_COUNT;
     var pct=Math.round((state.score/total)*100);
-    setInner(headerHTML('📘 Grammaire','Entraînement terminé.','Compétence travaillée : '+(state.belt.competenceEleve||state.belt.title))+'<div class="fr-v2348-content"><section class="fr-v2348-panel"><div class="fr-v2348-result"><h3>Bravo, entraînement terminé !</h3><div class="fr-v2348-score-grid"><div class="fr-v2348-score-card">Score<b>'+state.score+' / '+total+'</b></div><div class="fr-v2348-score-card">Réussite<b>'+pct+'%</b></div></div><div class="fr-v2348-feedback">'+esc(state.belt.label)+' · Source : '+esc(state.source)+'</div><div class="fr-v2348-actions"><button type="button" class="fr-v2348-action" onclick="startFrenchTrainingV2348(\''+esc(state.belt.id)+'\')">🔁 Refaire l’entraînement</button><button type="button" class="fr-v2348-action secondary" onclick="renderFrenchGrammarListV25720()">← Retour aux ceintures</button><button type="button" class="fr-v2348-action secondary" onclick="renderFrenchDomainMenuV25720()">Menu Français</button><button type="button" class="fr-v2348-action secondary" onclick="closeFrenchTrainingPopupV2348()">Fermer</button></div></div></section></div>');
+    setInner(headerHTML('📘 Grammaire','Entraînement terminé.','Tu peux refaire l’entraînement ou revenir au menu Français.')+'<div class="fr-v2348-content"><section class="fr-v2348-panel"><div class="fr-v2348-result"><h3>Bravo, entraînement terminé !</h3><div class="fr-v2348-score-grid"><div class="fr-v2348-score-card">Score<b>'+state.score+' / '+total+'</b></div><div class="fr-v2348-score-card">Réussite<b>'+pct+'%</b></div></div><div class="fr-v2348-feedback">'+esc(state.belt.label)+' · Source : '+esc(state.source)+'</div><div class="fr-v2348-actions"><button type="button" class="fr-v2348-action" onclick="startFrenchTrainingV2348(\''+esc(state.belt.id)+'\')">🔁 Refaire l’entraînement</button><button type="button" class="fr-v2348-action secondary" onclick="renderFrenchGrammarListV25720()">← Retour aux ceintures</button><button type="button" class="fr-v2348-action secondary" onclick="renderFrenchDomainMenuV25720()">Menu Français</button><button type="button" class="fr-v2348-action secondary" onclick="closeFrenchTrainingPopupV2348()">Fermer</button></div></div></section></div>');
     try{ var label=(state.belt && (state.belt.title || state.belt.label || state.belt.id)) || 'grammaire'; var score='Score '+state.score+' / '+total+' — '+pct+'%'; if(window.hibouFrenchTrackV25717) window.hibouFrenchTrackV25717({type:'entrainement_grammaire_termine',domaine:'Grammaire',titre:'Entraînement grammaire terminé',detail:label+' — '+score,score:state.score,total:total,source:'entrainement_grammaire'}); else if(window.hibouRecordTrainingSuccessV25221) window.hibouRecordTrainingSuccessV25221('français', label, score); else if(window.hibouRecordTrainingSuccessV25220) window.hibouRecordTrainingSuccessV25220('français', label, score); }catch(e){}
   }
   function renderIdea(){ var item=shuffle(LOCAL_IDEAS)[0]; setInner(headerHTML('✍️ Production d’écrit','Trouve une idée et écris.','L’événement est ajouté au parcours seulement quand tu cliques sur J’ai terminé mon écrit.')+'<div class="fr-v2348-content"><section class="fr-v2348-panel"><div class="fr-v2348-training-head"><button type="button" class="fr-v2348-back" onclick="renderFrenchDomainMenuV25720()">← Retour au menu Français</button><div class="fr-v2348-training-title">✏️ Idées pour écrire</div><div></div></div><div class="fr-v2348-idea-box"><div class="fr-v2348-progress">Idée d’écriture</div><div class="fr-v2348-idea-card">'+esc(item.prompt)+'</div><div class="fr-v2348-example"><strong>Pour t’aider :</strong><br>'+esc(item.example)+'</div><textarea class="fr-v2348-textarea" placeholder="Écris ici ta phrase ou ton début d’histoire..."></textarea><div class="fr-v2348-actions"><button type="button" class="fr-v2348-action" onclick="window.hibouFrenchWritingDoneV25717&&window.hibouFrenchWritingDoneV25717(this)">✅ J’ai terminé mon écrit</button><button type="button" class="fr-v2348-action" onclick="startFrenchTrainingV2348(\'idees\')">🎲 Nouvelle idée</button><button type="button" class="fr-v2348-action secondary" onclick="renderFrenchDomainMenuV25720()">← Retour au menu Français</button></div></div></section></div>'); }
@@ -33697,8 +33877,8 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 (function(){
   if(window.__hibouQuestionGithubPageV2548) return;
   window.__hibouQuestionGithubPageV2548 = true;
-  try{ document.title = window.MAITRE_HIBOU_TITLE; }catch(e){}
-  try{ window.MAITRE_HIBOU_VERSION = window.MAITRE_HIBOU_VERSION || 'V25.7.66'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.7.51'; }catch(e){}
+  try{ window.MAITRE_HIBOU_VERSION = 'V25.7.51'; }catch(e){}
 
   // V25.6.16 : la boîte à questions n'est plus affichée par Apps Script.
   // Elle devient une page HTML légère séparée, hébergée sur GitHub.
@@ -33861,8 +34041,8 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   'use strict';
   if(window.__hibouTeacherSeparateV25612) return;
   window.__hibouTeacherSeparateV25612 = true;
-  try{ document.title = window.MAITRE_HIBOU_TITLE; }catch(e){}
-  try{ window.MAITRE_HIBOU_VERSION = window.MAITRE_HIBOU_VERSION || 'V25.7.66'; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.7.51'; }catch(e){}
+  try{ window.MAITRE_HIBOU_VERSION = 'V25.7.51'; }catch(e){}
 
   var LONG_PRESS_MS = 3000;
   var TEACHER_PAGE = 'https://script.google.com/macros/s/AKfycbwXa4M0UdjpGqF-ik2IS5JgFAoujyxdaqs3M85msXioBP4GQZO0C_YcJp9p60EQu8kY7w/exec';
@@ -33957,7 +34137,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
     - vérification parallèle par prénom + liste des élèves actifs ;
     - délai adapté aux tablettes, cache local de la liste et bouton toujours réactivé.
   */
-  var STUDENTS_API_URL = 'https://script.google.com/macros/s/AKfycbxz1vYS24sv-c3XVja12geWEXIQl6bQyBoQKBx5kg_fwQaj80_Oc7Y34yeBSRN4lF1f/exec';
+  var STUDENTS_API_URL = 'about:blank';
   var VERIFY_TIMEOUT_MS = 18000;
   var ROSTER_TIMEOUT_MS = 22000;
   var CACHE_KEY = 'hibou_students_roster_v25617';
@@ -34282,8 +34462,6 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
       }
     }catch(e){}
 
-    if(typeof syncV21Portrait === 'function'){ try{ syncV21Portrait(); }catch(e){} }
-
     if(typeof addStudentToRoster === 'function' && mode === 'eleve'){
       try{ addStudentToRoster(name); }catch(e){}
     }
@@ -34431,7 +34609,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
       box.innerHTML =
         '<div class="owl">🦉</div>' +
         '<h2>Bienvenue sur Maître Hibou</h2>' +
-        '<p class="v2567-intro"><strong>Version V25.7.66</strong> · Choisis ton mode de connexion.</p>' +
+        '<p class="v2567-intro"><strong>Version V25.7.51</strong> · Choisis ton mode de connexion.</p>' +
         '<input id="prenomInput" class="v2567-hidden-legacy" autocomplete="off" aria-hidden="true" tabindex="-1">' +
         '<div class="v2567-choice-grid">' +
           '<section class="v2567-card student">' +
@@ -34512,8 +34690,8 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   else install();
 
   try{
-    document.title = window.MAITRE_HIBOU_TITLE;
-    window.MAITRE_HIBOU_VERSION = window.MAITRE_HIBOU_VERSION || 'V25.7.66';
+    document.title = '🦉 Maître Hibou V25.7.51';
+    window.MAITRE_HIBOU_VERSION = 'V25.7.51';
   }catch(e){}
 })();
 </script>
@@ -34596,14 +34774,14 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 })();
 </script>
 
-<!-- PATCH V25.7.66 - Restauration robuste des ceintures dans Mes progrès et Valider une compétence -->
+<!-- PATCH V25.7.51 - Restauration robuste des ceintures dans Mes progrès et Valider une compétence -->
 <script id="patch-v25-6-20-ceintures-eleve-robustes">
 (function(){
   'use strict';
   if(window.__hibouV25620BeltsRobust) return;
   window.__hibouV25620BeltsRobust = true;
 
-  var API_URL = 'https://script.google.com/macros/s/AKfycbxz1vYS24sv-c3XVja12geWEXIQl6bQyBoQKBx5kg_fwQaj80_Oc7Y34yeBSRN4lF1f/exec';
+  var API_URL = 'about:blank';
   var CACHE_KEY = 'hibou_v16811_sheets_belts_cache';
   var CACHE_DATE_KEY = 'hibou_v25620_belts_cache_date';
   var PROGRESS_PREFIX = 'hibou_v168_progress_';
@@ -34665,7 +34843,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 
   function stableSkillId(row){
     row=row||{};
-    var explicit=clean(first(row,['skillId','skill_id','skill','id_competence','identifiant_competence']));
+    var explicit=clean(first(row,['skillId','skill_id','skill','id_competence']));
     var competence=clean(first(row,['competence','Compétence','Competence','title','titre','label','libelle','Libellé']));
     var domain=canonicalDomain(first(row,['domaine','Domaine','domain','matiere','Matière','Matiere']));
     var belt=clean(first(row,['couleur','Couleur','ceinture','Ceinture']));
@@ -34680,20 +34858,20 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
     if(raw.indexOf('grammaire_noire')!==-1 || raw.indexOf('adjectif')!==-1) return 'grammaire_noire_adjectif';
     if(raw.indexOf('grammaire_rouge')!==-1 || raw.indexOf('groupe_nominal')!==-1) return 'grammaire_rouge_groupe_nominal';
 
-    if(raw.indexOf('maths_blanche')!==-1 || raw.indexOf('petits_nombres')!==-1 || raw.indexOf('premiers_calculs')!==-1) return 'maths_blanche_petits_nombres';
-    if(raw.indexOf('maths_jaune')!==-1 || raw.indexOf('dizaines')!==-1 || raw.indexOf('dizaines_entieres')!==-1) return 'maths_jaune_dizaines';
-    if(raw.indexOf('maths_orange')!==-1 || raw.indexOf('sans_retenue')!==-1 || raw.indexOf('calculs_sans_retenue')!==-1) return 'maths_orange_sans_retenue';
-    if(raw.indexOf('maths_vert_clair')!==-1 || raw.indexOf('avec_retenue')!==-1 || raw.indexOf('calculs_avec_retenue')!==-1) return 'maths_vert_clair_avec_retenue';
+    if(raw.indexOf('maths_blanche')!==-1 || raw.indexOf('petits_nombres')!==-1) return 'maths_blanche_petits_nombres';
+    if(raw.indexOf('maths_jaune')!==-1 || raw.indexOf('dizaines')!==-1) return 'maths_jaune_dizaines';
+    if(raw.indexOf('maths_orange')!==-1 || raw.indexOf('sans_retenue')!==-1) return 'maths_orange_sans_retenue';
+    if(raw.indexOf('maths_vert_clair')!==-1 || raw.indexOf('avec_retenue')!==-1) return 'maths_vert_clair_avec_retenue';
     if(raw.indexOf('maths_vert_fonce')!==-1 || raw.indexOf('complement_a_la_dizaine')!==-1 || raw.indexOf('complement_dizaine')!==-1) return 'maths_vert_fonce_complement_dizaine';
     if(raw.indexOf('maths_bleu_clair')!==-1 || raw.indexOf('plus_ou_moins_9')!==-1 || raw.indexOf('retrancher_9')!==-1) return 'maths_bleu_clair_plus_moins_9';
     if(raw.indexOf('maths_bleu_fonce')!==-1 || raw.indexOf('plus_ou_moins_11')!==-1 || raw.indexOf('retrancher_11')!==-1) return 'maths_bleu_fonce_plus_moins_11';
-    if(raw.indexOf('maths_rose')!==-1 || raw.indexOf('centaines_entieres')!==-1 || raw.indexOf('centaines')!==-1 && raw.indexOf('complement')===-1) return 'maths_rose_centaines';
+    if(raw.indexOf('maths_rose')!==-1 || raw.indexOf('centaines')!==-1 && raw.indexOf('complement')===-1) return 'maths_rose_centaines';
     if(raw.indexOf('maths_beige')!==-1 || raw.indexOf('complement_a_la_centaine')!==-1 || raw.indexOf('complement_centaine')!==-1) return 'maths_beige_complement_centaine';
-    if(raw.indexOf('maths_violet')!==-1 || raw.indexOf('tables_1_2_10')!==-1 || raw.indexOf('tables_de_1_2_et_10')!==-1) return 'maths_violet_tables_1_2_10';
-    if(raw.indexOf('maths_marron')!==-1 || raw.indexOf('tables_3_4_5')!==-1 || raw.indexOf('tables_de_3_4_et_5')!==-1) return 'maths_marron_tables_3_4_5';
-    if(raw.indexOf('maths_rouge')!==-1 || raw.indexOf('tables_6_7')!==-1 || raw.indexOf('tables_de_6_et_7')!==-1) return 'maths_rouge_tables_6_7';
-    if(raw.indexOf('maths_gris')!==-1 || raw.indexOf('tables_8_9')!==-1 || raw.indexOf('tables_de_8_et_9')!==-1) return 'maths_gris_tables_8_9';
-    if(raw.indexOf('maths_noir')!==-1 || raw.indexOf('multiplier_par_10_100_1000')!==-1 || raw.indexOf('multiplier_par_10_100_ou_1_000')!==-1 || raw.indexOf('x10_x100_x1000')!==-1) return 'maths_noir_multiplier_10_100_1000';
+    if(raw.indexOf('maths_violet')!==-1 || raw.indexOf('tables_1_2_10')!==-1) return 'maths_violet_tables_1_2_10';
+    if(raw.indexOf('maths_marron')!==-1 || raw.indexOf('tables_3_4_5')!==-1) return 'maths_marron_tables_3_4_5';
+    if(raw.indexOf('maths_rouge')!==-1 || raw.indexOf('tables_6_7')!==-1) return 'maths_rouge_tables_6_7';
+    if(raw.indexOf('maths_gris')!==-1 || raw.indexOf('tables_8_9')!==-1) return 'maths_gris_tables_8_9';
+    if(raw.indexOf('maths_noir')!==-1 || raw.indexOf('multiplier_par_10_100_1000')!==-1 || raw.indexOf('x10_x100_x1000')!==-1) return 'maths_noir_multiplier_10_100_1000';
 
     return explicit || norm(competence) || 'competence';
   }
@@ -34792,7 +34970,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   }
 
   async function fetchRows(){
-    var actions=['ceintures','competences'];
+    var actions=['competences','ceintures'];
     var errors=[];
     for(var i=0;i<actions.length;i++){
       try{
@@ -34913,7 +35091,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
     if(!force && cache.length) return cache;
     if(inflight) return inflight;
     inflight=fetchRows().then(function(rows){hydrateCurrent(rows);refreshUI();return rows;})
-      .catch(function(err){console.warn('V25.7.66 : ceintures non rechargées, données locales conservées',err);refreshUI();return cachedRows();})
+      .catch(function(err){console.warn('V25.7.51 : ceintures non rechargées, données locales conservées',err);refreshUI();return cachedRows();})
       .finally(function(){inflight=null;});
     return inflight;
   }
@@ -34958,10 +35136,10 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
     if(key && key!==lastStudentKey){lastStudentKey=key;refresh(true);}
   },800);
 
-  try{ document.title = window.MAITRE_HIBOU_TITLE; window.MAITRE_HIBOU_VERSION = window.MAITRE_HIBOU_VERSION || 'V25.7.66'; }catch(e){}
+  try{ document.title='🦉 Maître Hibou V25.7.51'; window.MAITRE_HIBOU_VERSION='V25.7.51'; }catch(e){}
 })();
 </script>
-<!-- PATCH V25.7.66 - Mes progrès : médailles et compétences acquises avec ascenseur -->
+<!-- PATCH V25.7.51 - Mes progrès : médailles et compétences acquises avec ascenseur -->
 <style id="patch-v25621-progress-achievements">
 .profile-life-v23417-header.v25621-progress-header{
   grid-template-columns:auto minmax(250px,.9fr) minmax(440px,1.25fr);
@@ -35163,7 +35341,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',watchOverlay);
   else watchOverlay();
   window.addEventListener('load',function(){watchOverlay();scheduleRender(150);});
-  try{document.title = window.MAITRE_HIBOU_TITLE;}catch(e){}
+  try{document.title='🦉 Maître Hibou V25.7.51';}catch(e){}
 })();
 </script>
 
@@ -35252,7 +35430,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
     wrapped.__v25623Wrapped = true;
     window.openStudentProfileLifeV23417 = wrapped;
   }
-  try{ document.title = window.MAITRE_HIBOU_TITLE; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.7.51'; }catch(e){}
 })();
 </script>
 
@@ -35355,20 +35533,20 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
     window.openStudentProfileLifeV23417=wrapped;
   }
   document.addEventListener('hibou:question-added',function(){setTimeout(refresh,100);});
-  try{document.title = window.MAITRE_HIBOU_TITLE;}catch(e){}
+  try{document.title='🦉 Maître Hibou V25.7.51';}catch(e){}
 })();
 </script>
 
 
-<!-- V25.7.66 : ancien moteur parcours/records supprimé -->
+<!-- V25.7.51 : ancien moteur parcours/records supprimé -->
 
 
-<!-- V25.7.66 : une seule carte de parcours dans le bandeau.
+<!-- V25.7.51 : une seule carte de parcours dans le bandeau.
      L'ancien bloc de réussite a été supprimé du HTML et des reconstructions JavaScript.
      Le journal compacte les doublons avant stockage, synchronisation et affichage. -->
 
-<!-- V25.7.66 : ancien moteur parcours/records supprimé -->
-<!-- PATCH V25.7.66 - Mes progrès : médailles et compétences acquises avec ascenseur -->
+<!-- V25.7.51 : ancien moteur parcours/records supprimé -->
+<!-- PATCH V25.7.51 - Mes progrès : médailles et compétences acquises avec ascenseur -->
 <style id="patch-v25621-progress-achievements">
 .profile-life-v23417-header.v25621-progress-header{
   grid-template-columns:auto minmax(250px,.9fr) minmax(440px,1.25fr);
@@ -35570,7 +35748,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',watchOverlay);
   else watchOverlay();
   window.addEventListener('load',function(){watchOverlay();scheduleRender(150);});
-  try{document.title = window.MAITRE_HIBOU_TITLE;}catch(e){}
+  try{document.title='🦉 Maître Hibou V25.7.51';}catch(e){}
 })();
 </script>
 
@@ -35659,7 +35837,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
     wrapped.__v25623Wrapped = true;
     window.openStudentProfileLifeV23417 = wrapped;
   }
-  try{ document.title = window.MAITRE_HIBOU_TITLE; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.7.51'; }catch(e){}
 })();
 </script>
 
@@ -35762,24 +35940,24 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
     window.openStudentProfileLifeV23417=wrapped;
   }
   document.addEventListener('hibou:question-added',function(){setTimeout(refresh,100);});
-  try{document.title = window.MAITRE_HIBOU_TITLE;}catch(e){}
+  try{document.title='🦉 Maître Hibou V25.7.51';}catch(e){}
 })();
 </script>
 
 
-<!-- V25.7.66 : ancien moteur parcours/records supprimé -->
+<!-- V25.7.51 : ancien moteur parcours/records supprimé -->
 
 
-<!-- V25.7.66 : une seule carte de parcours dans le bandeau.
+<!-- V25.7.51 : une seule carte de parcours dans le bandeau.
      L'ancien bloc de réussite a été supprimé du HTML et des reconstructions JavaScript.
      Le journal compacte les doublons avant stockage, synchronisation et affichage. -->
 
-<!-- V25.7.66 : ancien moteur parcours/records supprimé -->
+<!-- V25.7.51 : ancien moteur parcours/records supprimé -->
 
 
 
 <style id="patch-v25644-maths-ceinture-answer-css">
-/* V25.7.66 — les réponses des ceintures Maths n'utilisent plus .quiz-option.
+/* V25.7.3 — les réponses des ceintures Maths n'utilisent plus .quiz-option.
    Un ancien correctif global interceptait .quiz-option et appelait answerQuiz(), ce qui bloquait les ceintures Maths. */
 .v222-math-options{display:flex;flex-direction:column;gap:8px;margin-top:10px;}
 .v222-math-option{
@@ -35819,18 +35997,18 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
     if(btn.__hibouV25644ClickLock) return;
     btn.__hibouV25644ClickLock = true;
     try{ window.answerMathSkillV222(idx); }
-    catch(e){ console.error('Erreur réponse ceinture Maths V25.7.66', e); }
+    catch(e){ console.error('Erreur réponse ceinture Maths V25.7.3', e); }
     finally{ setTimeout(function(){ btn.__hibouV25644ClickLock = false; }, 900); }
   }, true);
 
-  try{ document.title = window.MAITRE_HIBOU_TITLE; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.7.51'; }catch(e){}
 })();
 </script>
 
 
 
 <style id="patch-v25646-maths-training-vs-belt-css">
-/* V25.7.66 — Règle pédagogique :
+/* V25.7.3 — Règle pédagogique :
    entraînement = correction après chaque calcul ; ceinture = corrections seulement à la fin. */
 #mathsTrainingOverlayV2343 .v25646-feedback{
   margin-top:12px;
@@ -35909,105 +36087,6 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   .v25646-review-row span:nth-child(3)::before{content:'Réponse : '; color:#6C63A8;}
   .v25646-review-row span:nth-child(4)::before{content:'Correction : '; color:#6C63A8;}
 }
-
-#mathsTrainingOverlayV2343 .maths-v25755-competence-compact{
-  margin:.25rem auto .55rem;
-  max-width:980px;
-  text-align:center;
-  color:#5d559d;
-  font-weight:700;
-}
-#mathsTrainingOverlayV2343 .maths-v25755-competence-line{
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  font-size:clamp(.88rem,1.35vw,1.05rem);
-  line-height:1.25;
-}
-#mathsTrainingOverlayV2343 .maths-v25755-competence-details{
-  margin:.12rem auto 0;
-  width:min(760px,96%);
-  font-weight:600;
-}
-#mathsTrainingOverlayV2343 .maths-v25755-competence-details summary{
-  display:inline-block;
-  cursor:pointer;
-  color:#6557d9;
-  font-size:.86rem;
-  text-decoration:underline;
-  list-style:none;
-}
-#mathsTrainingOverlayV2343 .maths-v25755-competence-details summary::-webkit-details-marker{display:none}
-#mathsTrainingOverlayV2343 .maths-v25755-competence-details>div{
-  margin:.35rem auto 0;
-  padding:.45rem .7rem;
-  border-radius:12px;
-  background:#f6f3ff;
-  border:1px solid #ddd7ff;
-  font-size:.9rem;
-  line-height:1.35;
-}
-#mathsTrainingOverlayV2343 .maths-v2343-training-head{margin-bottom:.25rem!important}
-#mathsTrainingOverlayV2343 .maths-v2343-progress{margin:.15rem 0!important}
-#mathsTrainingOverlayV2343 .maths-v2343-question{margin-top:.45rem!important}
-/* V25.7.66 — Mode exercice compact : le grand en-tête disparaît pendant les 10 calculs. */
-#mathsTrainingOverlayV2343 .maths-v25756-exercise-header{
-  display:grid;
-  grid-template-columns:auto minmax(0,1fr) auto;
-  align-items:center;
-  gap:14px;
-  margin:0 0 .3rem;
-  padding:.2rem .15rem .45rem;
-  border-bottom:1px solid #e8e4ff;
-}
-#mathsTrainingOverlayV2343 .maths-v25756-exercise-main{
-  min-width:0;
-  text-align:center;
-}
-#mathsTrainingOverlayV2343 .maths-v25756-exercise-title{
-  color:#1684ef;
-  font-size:clamp(1rem,1.9vw,1.35rem);
-  font-weight:1000;
-  line-height:1.15;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-#mathsTrainingOverlayV2343 .maths-v25756-exercise-meta{
-  margin-top:.12rem;
-  color:#746ca2;
-  font-size:clamp(.78rem,1.25vw,.94rem);
-  font-weight:900;
-}
-#mathsTrainingOverlayV2343 .maths-v25756-exercise-header .maths-v2343-back{
-  margin:0!important;
-  padding:.55rem .85rem!important;
-}
-#mathsTrainingOverlayV2343 .maths-v25756-exercise-header .maths-v2343-timer{
-  margin:0!important;
-  min-width:112px;
-  padding:.55rem .85rem!important;
-}
-#mathsTrainingOverlayV2343 .maths-v25756-exercise-layout .maths-v2343-content{
-  padding-top:.55rem!important;
-}
-#mathsTrainingOverlayV2343 .maths-v25756-exercise-layout .maths-v2343-panel{
-  padding-top:.55rem!important;
-  padding-bottom:.65rem!important;
-}
-#mathsTrainingOverlayV2343 .maths-v25756-exercise-layout .maths-v2343-progress{
-  display:none!important;
-}
-#mathsTrainingOverlayV2343 .maths-v25756-exercise-layout .maths-v25755-competence-compact{
-  margin:.15rem auto .25rem!important;
-}
-#mathsTrainingOverlayV2343 .maths-v25756-exercise-layout .maths-v2343-question{
-  margin-top:.35rem!important;
-}
-@media(max-width:900px){
-  #mathsTrainingOverlayV2343 .maths-v25755-competence-line{white-space:normal;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;}
-  #mathsTrainingOverlayV2343 .maths-v25755-competence-compact{margin:.15rem auto .4rem;}
-}
 </style>
 <script id="patch-v25646-maths-training-vs-belt-js">
 (function(){
@@ -36034,47 +36113,22 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   function currentStudent(){ try{ return window.prenomActuel || localStorage.getItem('hibou_prenom') || localStorage.getItem('maitreHibouCurrentStudent') || localStorage.getItem('elevePrenom') || 'eleve'; }catch(e){ return 'eleve'; } }
   function studentKey(){ return norm(currentStudent() || 'eleve'); }
   function mathBelts(){ return Array.isArray(window.MATH_BELTS_V222) ? window.MATH_BELTS_V222 : [
-    {ceinture:'blanche',niveau:1,emoji:'⚪',colorName:'blanche',skillId:'maths_blanche_petits_nombres',label:'Premiers calculs',competence:'petits nombres',competenceEleve:'Je sais effectuer mentalement des additions et des soustractions simples, reconnaître des nombres proches et utiliser les doubles et les moitiés.',progressionCodes:['CAL-P1-01','CAL-P2-01'] },
-    {ceinture:'jaune',niveau:2,emoji:'🟡',colorName:'jaune',skillId:'maths_jaune_dizaines',label:'Dizaines entières',competence:'dizaines',competenceEleve:'Je sais ajouter et retrancher mentalement des dizaines entières.',progressionCodes:['CAL-P1-01'] },
-    {ceinture:'orange',niveau:3,emoji:'🟠',colorName:'orange',skillId:'maths_orange_sans_retenue',label:'Calculs sans retenue',competence:'sans retenue',competenceEleve:'Je sais additionner et soustraire mentalement des nombres sans franchir une dizaine ou une centaine.',progressionCodes:['CAL-P2-03'] },
-    {ceinture:'vert_clair',niveau:4,emoji:'🟢',colorName:'vert clair',skillId:'maths_vert_clair_avec_retenue',label:'Calculs avec retenue',competence:'avec retenue',competenceEleve:'Je sais additionner et soustraire mentalement des nombres en franchissant une dizaine ou une centaine.',progressionCodes:['CAL-P2-03','CAL-P4-02'] },
-    {ceinture:'vert_fonce',niveau:5,emoji:'🟢',colorName:'vert foncé',skillId:'maths_vert_fonce_complement_dizaine',label:'Complément à la dizaine',competence:'complément dizaine',competenceEleve:'Je sais trouver combien il faut ajouter pour atteindre la dizaine suivante.',progressionCodes:['CAL-P1-02'] },
-    {ceinture:'bleu_clair',niveau:6,emoji:'🔵',colorName:'bleu clair',skillId:'maths_bleu_clair_plus_moins_9',label:'Ajouter ou retrancher 9',competence:'plus moins 9',competenceEleve:'Je sais ajouter ou retrancher 9 en utilisant une stratégie de calcul mental.',progressionCodes:['CAL-P1-03'] },
-    {ceinture:'bleu_fonce',niveau:7,emoji:'🔵',colorName:'bleu foncé',skillId:'maths_bleu_fonce_plus_moins_11',label:'Ajouter ou retrancher 11',competence:'plus moins 11',competenceEleve:'Je sais ajouter ou retrancher 11 en décomposant le calcul.',progressionCodes:['CAL-P4-02'] },
-    {ceinture:'rose',niveau:8,emoji:'🌸',colorName:'rose',skillId:'maths_rose_centaines',label:'Centaines entières',competence:'centaines',competenceEleve:'Je sais ajouter et retrancher mentalement des centaines entières.',progressionCodes:['CAL-P1-01'] },
-    {ceinture:'beige',niveau:9,emoji:'🤍',colorName:'beige',skillId:'maths_beige_complement_centaine',label:'Complément à la centaine',competence:'complément centaine',competenceEleve:'Je sais trouver combien il faut ajouter pour atteindre la centaine suivante.',progressionCodes:['CAL-P1-02'] },
-    {ceinture:'violet',niveau:10,emoji:'🟣',colorName:'violet',skillId:'maths_violet_tables_1_2_10',label:'Tables de 1, 2 et 10',competence:'tables 1 2 10',competenceEleve:'Je connais et j’utilise les tables de multiplication de 1, 2 et 10.',progressionCodes:['CAL-P3-01'] },
-    {ceinture:'marron',niveau:11,emoji:'🟤',colorName:'marron',skillId:'maths_marron_tables_3_4_5',label:'Tables de 3, 4 et 5',competence:'tables 3 4 5',competenceEleve:'Je connais et j’utilise les tables de multiplication de 3, 4 et 5.',progressionCodes:['CAL-P3-01'] },
-    {ceinture:'rouge',niveau:12,emoji:'🔴',colorName:'rouge',skillId:'maths_rouge_tables_6_7',label:'Tables de 6 et 7',competence:'tables 6 7',competenceEleve:'Je connais et j’utilise les tables de multiplication de 6 et 7.',progressionCodes:['CAL-P3-01'] },
-    {ceinture:'gris',niveau:13,emoji:'⚫',colorName:'gris',skillId:'maths_gris_tables_8_9',label:'Tables de 8 et 9',competence:'tables 8 9',competenceEleve:'Je connais et j’utilise les tables de multiplication de 8 et 9.',progressionCodes:['CAL-P3-01','CAL-P3-02'] },
-    {ceinture:'noir',niveau:14,emoji:'⚫',colorName:'noir',skillId:'maths_noir_multiplier_10_100_1000',label:'Multiplier par 10, 100 ou 1 000',competence:'multiplier par 10 100 1000',competenceEleve:'Je sais multiplier mentalement un nombre entier par 10, 100 ou 1 000.',progressionCodes:['CAL-P2-02'] }
+    {ceinture:'blanche',niveau:1,emoji:'⚪',colorName:'blanche',skillId:'maths_blanche_petits_nombres',label:'Petits nombres',competence:'petits nombres'},
+    {ceinture:'jaune',niveau:2,emoji:'🟡',colorName:'jaune',skillId:'maths_jaune_dizaines',label:'Dizaines',competence:'dizaines'},
+    {ceinture:'orange',niveau:3,emoji:'🟠',colorName:'orange',skillId:'maths_orange_sans_retenue',label:'Sans retenue',competence:'sans retenue'},
+    {ceinture:'vert_clair',niveau:4,emoji:'🟢',colorName:'vert clair',skillId:'maths_vert_clair_avec_retenue',label:'Avec retenue',competence:'avec retenue'},
+    {ceinture:'vert_fonce',niveau:5,emoji:'🟢',colorName:'vert foncé',skillId:'maths_vert_fonce_complement_dizaine',label:'Complément à la dizaine',competence:'complément dizaine'},
+    {ceinture:'bleu_clair',niveau:6,emoji:'🔵',colorName:'bleu clair',skillId:'maths_bleu_clair_plus_moins_9',label:'Ajouter / retrancher 9',competence:'plus moins 9'},
+    {ceinture:'bleu_fonce',niveau:7,emoji:'🔵',colorName:'bleu foncé',skillId:'maths_bleu_fonce_plus_moins_11',label:'Ajouter / retrancher 11',competence:'plus moins 11'},
+    {ceinture:'rose',niveau:8,emoji:'🌸',colorName:'rose',skillId:'maths_rose_centaines',label:'Centaines',competence:'centaines'},
+    {ceinture:'beige',niveau:9,emoji:'🤍',colorName:'beige',skillId:'maths_beige_complement_centaine',label:'Complément à la centaine',competence:'complément centaine'},
+    {ceinture:'violet',niveau:10,emoji:'🟣',colorName:'violet',skillId:'maths_violet_tables_1_2_10',label:'Tables ×1 ×2 ×10',competence:'tables 1 2 10'},
+    {ceinture:'marron',niveau:11,emoji:'🟤',colorName:'marron',skillId:'maths_marron_tables_3_4_5',label:'Tables ×3 ×4 ×5',competence:'tables 3 4 5'},
+    {ceinture:'rouge',niveau:12,emoji:'🔴',colorName:'rouge',skillId:'maths_rouge_tables_6_7',label:'Tables ×6 ×7',competence:'tables 6 7'},
+    {ceinture:'gris',niveau:13,emoji:'⚫',colorName:'gris',skillId:'maths_gris_tables_8_9',label:'Tables ×8 ×9',competence:'tables 8 9'},
+    {ceinture:'noir',niveau:14,emoji:'⚫',colorName:'noir',skillId:'maths_noir_multiplier_10_100_1000',label:'×10 ×100 ×1000',competence:'multiplier par 10 100 1000'}
   ]; }
   function findBelt(id){ var n=norm(id); var list=mathBelts(); return list.filter(function(b){ return norm(b.ceinture)===n || norm(b.skillId)===n || norm(b.label)===n || norm(b.competence)===n; })[0] || list[0]; }
-  function shortCompetence(belt){
-    var key=norm((belt&&belt.ceinture)+' '+(belt&&belt.skillId));
-    var labels={
-      blanche:'premiers automatismes de calcul mental',
-      jaune:'ajouter et retrancher des dizaines entières',
-      orange:'calculer sans franchir une dizaine ou une centaine',
-      vert_clair:'calculer en franchissant une dizaine ou une centaine',
-      vert_fonce:'trouver le complément à la dizaine suivante',
-      bleu_clair:'ajouter ou retrancher 9',
-      bleu_fonce:'ajouter ou retrancher 11',
-      rose:'ajouter et retrancher des centaines entières',
-      beige:'trouver le complément à la centaine suivante',
-      violet:'utiliser les tables de 1, 2 et 10',
-      marron:'utiliser les tables de 3, 4 et 5',
-      rouge:'utiliser les tables de 6 et 7',
-      gris:'utiliser les tables de 8 et 9',
-      noir:'multiplier par 10, 100 ou 1 000'
-    };
-    for(var id in labels){ if(key.indexOf(id)!==-1) return labels[id]; }
-    return clean((belt&&belt.label)||(belt&&belt.competence)||'calcul mental');
-  }
-  function competenceCompactHTML(belt){
-    var detail=esc((belt&&belt.competenceEleve)||(belt&&belt.competence)||(belt&&belt.label)||'Calcul mental');
-    return '<div class="maths-v25755-competence-compact"><div class="maths-v25755-competence-line"><b>🎯 Compétence :</b> '+esc(shortCompetence(belt))+'</div><details class="maths-v25755-competence-details"><summary>Voir le détail</summary><div>'+detail+'</div></details></div>';
-  }
   function optionSet(answer){ answer=Number(answer); var values=[answer], deltas=shuffle([-20,-12,-10,-9,-5,-4,-3,-2,-1,1,2,3,4,5,9,10,12,20]); deltas.forEach(function(d){ var v=answer+d; if(values.length<4 && v>=0 && values.indexOf(v)===-1) values.push(v); }); while(values.length<4){ var extra=answer+rnd(1,30); if(values.indexOf(extra)===-1) values.push(extra); } var opts=shuffle(values.slice(0,4)).map(String); return {options:opts, correct:opts.indexOf(String(answer))}; }
   function q(text, answer){ var o=optionSet(answer); return {q:text, answer:Number(answer), options:o.options, correct:o.correct}; }
   function makeOneQuestion(belt){
@@ -36099,15 +36153,16 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   function makeQuestions(belt, count){ var arr=[]; for(var i=0;i<count;i++) arr.push(makeOneQuestion(belt)); return arr; }
   function setMathsInner(html){ var inner=byId('mathsPopupInnerV2343'); if(inner) inner.innerHTML=html; }
   function mathsHeader(){ return '<div class="maths-v2343-header"><div class="maths-v2343-owl">🦉</div><div class="maths-v2343-title"><h2>🧮 Entraînements de calcul</h2><p>Entraînement = correction après chaque calcul.</p><div class="maths-v2343-note">La ceinture, elle, garde les corrections pour la fin du test.</div></div></div>'; }
-  function mathsExerciseHeader(st){ return '<div class="maths-v25756-exercise-header"><button type="button" class="maths-v2343-back" onclick="renderMathsTrainingListV2343()">← Retour</button><div class="maths-v25756-exercise-main"><div class="maths-v25756-exercise-title">🧮 '+esc(st.belt.label)+' · Ceinture '+esc(st.belt.colorName||st.belt.ceinture)+'</div><div class="maths-v25756-exercise-meta">Calcul '+(st.index+1)+' / '+st.questions.length+' · 🎯 '+esc(shortCompetence(st.belt))+' · <a href="#" onclick="var d=document.getElementById(\'mathsCompetenceDetailsV25756\');if(d){d.hidden=!d.hidden;}return false;">Voir le détail</a></div><div id="mathsCompetenceDetailsV25756" class="maths-v25755-competence-details" hidden><div>'+esc(st.belt.competenceEleve||st.belt.competence||st.belt.label)+'</div></div></div><div class="maths-v2343-timer">⏱ <span id="mathsTimerValueV2343">'+fmt(st.elapsed)+'</span></div></div>'; }
   function startTimer(){ clearInterval(timerId); trainingState.started=Date.now(); trainingState.elapsed=0; timerId=setInterval(function(){ trainingState.elapsed=Date.now()-trainingState.started; var el=byId('mathsTimerValueV2343'); if(el) el.textContent=fmt(trainingState.elapsed); },250); }
   function stopTimer(){ if(trainingState && trainingState.started) trainingState.elapsed=Date.now()-trainingState.started; clearInterval(timerId); timerId=null; }
   function renderTrainingQuestion(){
     var st=trainingState, qu=st.questions[st.index]; if(!qu) return renderTrainingResult(); st.answered=false;
     var opts=(qu.options||[]).map(function(opt,i){ return '<button type="button" class="maths-v2343-option" data-index="'+i+'" onclick="answerMathsTrainingV2343('+i+')">'+esc(opt)+'</button>'; }).join('');
-    setMathsInner('<div class="maths-v25756-exercise-layout">'+mathsExerciseHeader(st)+'<div class="maths-v2343-content"><section class="maths-v2343-panel">'
+    setMathsInner(mathsHeader()+'<div class="maths-v2343-content"><section class="maths-v2343-panel">'
+      +'<div class="maths-v2343-training-head"><button type="button" class="maths-v2343-back" onclick="renderMathsTrainingListV2343()">← Retour aux entraînements</button><div class="maths-v2343-training-title">'+esc(st.belt.label)+'<br><small>'+esc(st.belt.colorName||st.belt.ceinture)+'</small></div><div class="maths-v2343-timer">⏱ <span id="mathsTimerValueV2343">'+fmt(st.elapsed)+'</span></div></div>'
+      +'<div class="maths-v2343-progress">Calcul '+(st.index+1)+' / '+st.questions.length+'</div>'
       +'<div class="maths-v2343-question">'+esc(qu.q)+'</div><div class="maths-v2343-options">'+opts+'</div><div id="mathsFeedbackV25645"></div>'
-      +'</section></div></div>');
+      +'</section></div>');
   }
   window.startMathsTrainingV2343 = function(beltId){ var belt=findBelt(beltId); trainingState={belt:belt,questions:makeQuestions(belt,TRAINING_COUNT),index:0,score:0,answers:[],answered:false,started:0,elapsed:0}; startTimer(); renderTrainingQuestion(); };
   window.answerMathsTrainingV2343 = function(choice){
@@ -36127,7 +36182,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   function saveTrainingRecord(st,total){ try{ var key=RECORD_PREFIX+studentKey()+'_'+norm(st.belt.ceinture||st.belt.label); var old=JSON.parse(localStorage.getItem(key)||'null'); if(!old || st.score>Number(old.score||0) || (st.score===Number(old.score||0) && st.elapsed<Number(old.time||Infinity))) localStorage.setItem(key,JSON.stringify({score:st.score,total:total,time:st.elapsed,date:new Date().toISOString()})); }catch(e){} }
   function renderTrainingResult(){
     var st=trainingState; if(!st) return; stopTimer(); var total=st.questions.length||TRAINING_COUNT; saveTrainingRecord(st,total);
-    setMathsInner(mathsHeader()+'<div class="maths-v2343-content"><section class="maths-v2343-panel"><div class="maths-v2343-result"><h3>Bravo, entraînement terminé !</h3><div class="maths-v2343-score-grid"><div class="maths-v2343-score-card">Score<b>'+st.score+' / '+total+'</b></div><div class="maths-v2343-score-card">Temps total<b>'+fmt(st.elapsed)+'</b></div><div class="maths-v2343-score-card">Moyenne<b>'+avg(st.elapsed,total)+'</b></div></div><div class="maths-v25224-subtle"><b>Compétence travaillée :</b> '+esc(st.belt.competenceEleve||st.belt.competence||st.belt.label)+'</div><div class="maths-v2343-record">🦉 Correction de l’entraînement</div>'+reviewHTML(st.answers)+'<div class="maths-v2343-actions"><button type="button" class="maths-v2343-action" onclick="startMathsTrainingV2343(\''+esc(st.belt.ceinture)+'\')">🧮 Refaire 10 calculs</button><button type="button" class="maths-v2343-action secondary" onclick="renderMathsTrainingListV2343()">← Retour aux entraînements</button><button type="button" class="maths-v2343-action secondary" onclick="closeMathsTrainingPopupV2343()">Fermer</button></div></div></section></div>');
+    setMathsInner(mathsHeader()+'<div class="maths-v2343-content"><section class="maths-v2343-panel"><div class="maths-v2343-result"><h3>Bravo, entraînement terminé !</h3><div class="maths-v2343-score-grid"><div class="maths-v2343-score-card">Score<b>'+st.score+' / '+total+'</b></div><div class="maths-v2343-score-card">Temps total<b>'+fmt(st.elapsed)+'</b></div><div class="maths-v2343-score-card">Moyenne<b>'+avg(st.elapsed,total)+'</b></div></div><div class="maths-v2343-record">🦉 Correction de l’entraînement</div>'+reviewHTML(st.answers)+'<div class="maths-v2343-actions"><button type="button" class="maths-v2343-action" onclick="startMathsTrainingV2343(\''+esc(st.belt.ceinture)+'\')">🧮 Refaire 10 calculs</button><button type="button" class="maths-v2343-action secondary" onclick="renderMathsTrainingListV2343()">← Retour aux entraînements</button><button type="button" class="maths-v2343-action secondary" onclick="closeMathsTrainingPopupV2343()">Fermer</button></div></div></section></div>');
     try{ var scoreText='Score '+st.score+' / '+total+' en '+fmt(st.elapsed); if(window.hibouRecordTrainingSuccessV25221) window.hibouRecordTrainingSuccessV25221('maths',st.belt.label,scoreText); else if(window.hibouRecordSuccess) window.hibouRecordSuccess('🧮 Entraînement maths : '+st.belt.label+' — '+scoreText,'entrainement'); }catch(e){}
   }
 
@@ -36147,7 +36202,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   function renderBeltQuestion(){
     var st=beltState, qu=st.questions[st.index]; if(!qu) return renderBeltResult(); st.answered=false;
     var opts=(qu.options||[]).map(function(opt,i){ return '<button type="button" class="v222-math-option" data-index="'+i+'" onclick="answerMathSkillV222('+i+')">'+esc(opt)+'</button>'; }).join('');
-    setBeltInner('<div class="v190-belt-box"><h3>'+esc(st.belt.emoji||'🧮')+' Ceinture '+esc(st.belt.colorName||st.belt.ceinture)+' — '+esc(st.belt.label)+'</h3><div class="v190-rules"><b>Compétence travaillée :</b> '+esc(st.belt.competenceEleve||st.belt.competence||st.belt.label)+'<br>Question '+(st.index+1)+' / '+st.questions.length+' · Test : les corrections apparaîtront à la fin.</div><div class="skill-check-question">'+esc(qu.q)+'</div><div class="v222-math-options">'+opts+'</div><div id="mathSkillFeedbackV222" class="v25646-belt-wait"></div></div>');
+    setBeltInner('<div class="v190-belt-box"><h3>'+esc(st.belt.emoji||'🧮')+' Ceinture '+esc(st.belt.colorName||st.belt.ceinture)+' — '+esc(st.belt.label)+'</h3><div class="v190-rules">Question '+(st.index+1)+' / '+st.questions.length+' · Test : les corrections apparaîtront à la fin.</div><div class="skill-check-question">'+esc(qu.q)+'</div><div class="v222-math-options">'+opts+'</div><div id="mathSkillFeedbackV222" class="v25646-belt-wait"></div></div>');
   }
   window.answerMathSkillV222 = function(choice){
     var st=beltState; if(!st || st.answered) return; st.answered=true; choice=Number(choice); var qu=st.questions[st.index], correct=Number(qu.correct), ok=choice===correct; if(ok) st.score++;
@@ -36161,8 +36216,8 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   };
   window.nextMathSkillQuestionV222 = function(){ var st=beltState; if(!st) return; st.index++; if(st.index>=st.questions.length) renderBeltResult(); else renderBeltQuestion(); };
   function renderBeltResult(){
-    var st=beltState; if(!st) return; var total=st.questions.length||BELT_COUNT, medal=medalFor(st.score); if(medal){ saveBeltSuccess(st,medal); if(typeof window.hibouAutoSyncBeltV25762==="function") window.hibouAutoSyncBeltV25762({prenom:(window.prenomActuel||""), competence:(st.belt.label||st.belt.competenceEleve||st.belt.competence), domaine:"Maths", validations:st.score+"/"+total, medaille:medal, date:new Date().toISOString(), skillId:st.belt.skillId, ceinture:st.belt.ceinture}); try{ if(typeof window.hibouRecordSuccess==='function') window.hibouRecordSuccess('🏅 Ceinture '+(st.belt.colorName||st.belt.ceinture)+' validée : '+st.belt.label+' ('+st.score+'/'+total+')','ceinture',{matiere:'Maths',belt:st.belt,score:st.score,total:total,actionReelle:true}); }catch(e){} }
-    setBeltInner('<div class="v190-belt-box"><h3>'+(medal?'🎉 Ceinture validée !':'🙂 Encore un peu d’entraînement')+'</h3><div class="v190-score">'+st.score+' / '+total+'</div><div class="v190-medal">'+(medal||'💪')+'</div><div class="v190-rules"><b>Compétence travaillée :</b> '+esc(st.belt.competenceEleve||st.belt.competence||st.belt.label)+'<br>'+(medal?'Bravo ! Voici la correction du test.':'Il faut au moins 15 bonnes réponses. Regarde la correction puis entraîne-toi.')+'</div>'+reviewHTML(st.answers)+'<button class="belt-btn secondary" onclick="window.__hibouMathBeltTestActiveV2574=false;openCompetenceValidation()">Retour aux ceintures</button></div>');
+    var st=beltState; if(!st) return; var total=st.questions.length||BELT_COUNT, medal=medalFor(st.score); if(medal){ saveBeltSuccess(st,medal); try{ if(typeof window.hibouRecordSuccess==='function') window.hibouRecordSuccess('🏅 Ceinture '+(st.belt.colorName||st.belt.ceinture)+' validée : '+st.belt.label+' ('+st.score+'/'+total+')','ceinture',{matiere:'Maths',belt:st.belt,score:st.score,total:total,actionReelle:true}); }catch(e){} }
+    setBeltInner('<div class="v190-belt-box"><h3>'+(medal?'🎉 Ceinture validée !':'🙂 Encore un peu d’entraînement')+'</h3><div class="v190-score">'+st.score+' / '+total+'</div><div class="v190-medal">'+(medal||'💪')+'</div><div class="v190-rules">'+(medal?'Bravo ! Voici la correction du test.':'Il faut au moins 15 bonnes réponses. Regarde la correction puis entraîne-toi.')+'</div>'+reviewHTML(st.answers)+'<button class="belt-btn secondary" onclick="window.__hibouMathBeltTestActiveV2574=false;openCompetenceValidation()">Retour aux ceintures</button></div>');
     if(typeof window.refreshV196MedalHeader==='function') setTimeout(window.refreshV196MedalHeader,100);
     if(typeof window.refreshV168BeltCounters==='function') setTimeout(window.refreshV168BeltCounters,120);
     if(typeof window.renderHibouProfile==='function') setTimeout(window.renderHibouProfile,150);
@@ -36185,19 +36240,19 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   installBeltCloseGuardV2574();
 
   window.__maitreHibouV25645MathsAudit = {
-    version:'V25.7.66',
+    version:'V25.7.51',
     entrainement:'correction affichée après chaque calcul',
     ceinture:'réponses enregistrées sans correction immédiate, correction complète en fin de test',
     delai_ceinture_maths:'40 ms + verrou anti-rerendu popup'
   };
-  try{ document.title = window.MAITRE_HIBOU_TITLE; }catch(e){}
+  try{ document.title='🦉 Maître Hibou V25.7.51'; }catch(e){}
 })();
 </script>
 
 
 
 <style id="patch-v25718-francais-production-visible">
-/* V25.7.66 — Français : Idées pour écrire visible en haut de la popup */
+/* V25.7.51 — Français : Idées pour écrire visible en haut de la popup */
 #frenchTrainingOverlayV2348 .fr-v25718-section-writing{
   margin-top:0 !important;
   color:#FF3B57;
@@ -36221,7 +36276,7 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
   #frenchTrainingOverlayV2348 .fr-v25718-section-grammar{ margin-top:10px !important; }
 }
 
-/* V25.7.66 — Production d'écrit : pas d'ascenseur inutile sur la carte unique */
+/* V25.7.51 — Production d'écrit : pas d'ascenseur inutile sur la carte unique */
 #frenchTrainingOverlayV2348 .fr-v25718-writing-list{
   flex:0 0 auto !important;
   min-height:auto !important;
@@ -36239,13 +36294,13 @@ body.v21-final .birthday-top-card-v2414 .birthday-summary-v2414{
 }
 </style>
 
-<!-- V25.7.66 : correction stabilité ceintures Maths tablette + journal élève externe. -->
-  <script src="js/hibou-journal-eleve.js?v=25763"></script>
+<!-- V25.7.51 : correction stabilité ceintures Maths tablette + journal élève externe. -->
+  <script src="js/hibou-journal-eleve.js?v=25738"></script>
   <script src="js/hibou-progres-card.js?v=25738"></script>
 
 
 <style id="patch-v25716-logo-hibou-definitif">
-/* V25.7.66 — logo hibou définitif en haut à gauche */
+/* V25.7.51 — logo hibou définitif en haut à gauche */
 body.v21-final header .logo-icon,
 header .logo-icon{
   overflow:hidden !important;
@@ -36295,11 +36350,11 @@ header .logo-icon img{
   setTimeout(applyLogo,600);
 })();
 </script>
-<!-- V25.7.66 : logo hibou image appliqué aussi après reconstruction du header. -->
+<!-- V25.7.51 : logo hibou image appliqué aussi après reconstruction du header. -->
 
 
 
-<!-- V25.7.66 : branchement Français vers le journal élève centralisé -->
+<!-- V25.7.51 : branchement Français vers le journal élève centralisé -->
 <script id="patch-v25717-francais-journal">
 (function(){
   'use strict';
@@ -36355,7 +36410,7 @@ header .logo-icon img{
         window.hibouRecordSuccess(texte, type, payload);
       }
     }catch(err){
-      try{ console.warn('Journal Français V25.7.66 non alimenté', err); }catch(e){}
+      try{ console.warn('Journal Français V25.7.51 non alimenté', err); }catch(e){}
     }
   };
 
@@ -36381,17 +36436,17 @@ header .logo-icon img{
         button.textContent = '✅ Écrit enregistré dans mon parcours';
       }
     }catch(err){
-      try{ console.warn('Production écrit V25.7.66 non enregistrée', err); }catch(e){}
+      try{ console.warn('Production écrit V25.7.51 non enregistrée', err); }catch(e){}
     }
   };
 
-  try{ document.title = window.MAITRE_HIBOU_TITLE; }catch(e){}
+  try{ document.title = '🦉 Maître Hibou V25.7.51'; }catch(e){}
 })();
 </script>
 
 
 <style id="patch-v25720-francais-domaines-css">
-/* V25.7.66 — popup Français par domaines, uniquement pour le bouton Français du bandeau du bas */
+/* V25.7.51 — popup Français par domaines, uniquement pour le bouton Français du bandeau du bas */
 #frenchTrainingOverlayV2348 .fr-v25720-domain-panel{
   padding:18px !important;
 }
@@ -36506,7 +36561,7 @@ header .logo-icon img{
 
 
 <style id="patch-v25726-francais-domaines-compact-tablette">
-/* V25.7.66 — Cartes domaines compactes tablette
+/* V25.7.51 — Cartes domaines compactes tablette
    Objectif : les 4 domaines du bouton Français tiennent en paysage tablette sans scroll obligatoire. */
 #frenchTrainingOverlayV2348 .fr-v25720-domain-panel{
   padding:12px !important;
@@ -36651,7 +36706,7 @@ header .logo-icon img{
   <script src="js/hibou-orthographe.js?v=25738"></script>
 
 
-<!-- PATCH V25.7.66 - Vivre ensemble relié à Mon parcours récent -->
+<!-- PATCH V25.7.51 - Vivre ensemble relié à Mon parcours récent -->
 <script id="patch-v25746-vivre-ensemble-parcours">
 (function(){
   if(window.__hibouVivreEnsembleV25746) return;
@@ -36686,7 +36741,7 @@ header .logo-icon img{
         window.hibouRecordSuccess('🤝 '+payload.titre+' — '+payload.detail, payload.type, payload);
       }
       try{ document.dispatchEvent(new CustomEvent('hibou:student-event',{detail:payload})); }catch(e){}
-    }catch(error){ try{ console.error('Journal Vivre ensemble V25.7.66',error); }catch(ignore){} }
+    }catch(error){ try{ console.error('Journal Vivre ensemble V25.7.51',error); }catch(ignore){} }
   }
   window.hibouRecordVivreEnsembleV25746 = record;
   window.addEventListener('message', function(event){
@@ -36694,17 +36749,17 @@ header .logo-icon img{
     if(!data || data.type !== 'hibou-vivre-ensemble-complete') return;
     record(data);
   });
-  try{ document.title = window.MAITRE_HIBOU_TITLE; window.MAITRE_HIBOU_VERSION = window.MAITRE_HIBOU_VERSION || 'V25.7.66'; }catch(e){}
+  try{ document.title='🦉 Maître Hibou V25.7.51'; window.MAITRE_HIBOU_VERSION='V25.7.51'; }catch(e){}
 })();
 </script>
 
 
-<!-- V25.7.66 — Mes leçons, modification isolée -->
+<!-- V25.7.47 — Mes leçons, modification isolée -->
 <link rel="stylesheet" href="css/hibou-mes-lecons.css?v=25749">
 <script src="js/hibou-mes-lecons.js?v=25749"></script>
 
 
-<!-- V25.7.66 — Agrandissement isolé des icônes des 4 boutons, sans modifier leurs dimensions -->
+<!-- V25.7.51 — Agrandissement isolé des icônes des 4 boutons, sans modifier leurs dimensions -->
 <style id="hibou-big-action-icons-v25749">
   .v24-advice-btn.hibou-big-action-icon{
     display:grid !important;
@@ -36854,7 +36909,7 @@ header .logo-icon img{
 
 
 
-<!-- V25.7.66 — Carte Mini-leçon étirée jusqu'au bas du bouton rouge -->
+<!-- V25.7.51 — Carte Mini-leçon étirée jusqu'au bas du bouton rouge -->
 <style id="hibou-mini-lesson-align-bottom-v25749">
 @media (orientation:landscape) and (min-width:900px){
   body.v24-0-5-ready.v21-final:not(.v21-learning-open):not(.competence-mode) .v21-center > #v21TreasureCard.v24-know-card,
@@ -36869,158 +36924,10 @@ header .logo-icon img{
 }
 </style>
 
-
-<script id="maitre-hibou-version-guard">
-(function(){
-  function applyOfficialVersion(){
-    window.MAITRE_HIBOU_VERSION = 'V25.7.66';
-    window.MAITRE_HIBOU_TITLE = '🦉 Maître Hibou ' + window.MAITRE_HIBOU_VERSION;
-    if (document.title !== window.MAITRE_HIBOU_TITLE) document.title = window.MAITRE_HIBOU_TITLE;
-  }
-  applyOfficialVersion();
-  document.addEventListener('DOMContentLoaded', applyOfficialVersion);
-  setTimeout(applyOfficialVersion, 250);
-  setTimeout(applyOfficialVersion, 1200);
-})();
-</script>
-
-<!-- PATCH V25.7.66 - Fenêtre Mes ceintures validées reliée à la source unifiée -->
-<script id="patch-v25758-ceintures-unifiees">
-(function(){
-  if(window.__patchV25758CeinturesUnifiees) return;
-  window.__patchV25758CeinturesUnifiees=true;
-
-  function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
-  function norm(v){return String(v||'').trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');}
-  function medalKey(v){var s=norm(v);if(s.indexOf('or')>=0||s.indexOf('gold')>=0||s.indexOf('🥇')>=0)return'or';if(s.indexOf('argent')>=0||s.indexOf('silver')>=0||s.indexOf('🥈')>=0)return'argent';if(s.indexOf('bronze')>=0||s.indexOf('🥉')>=0)return'bronze';return'';}
-  function currentName(){
-    var c=[window.currentStudentName,window.currentStudent,window.eleveActuel,window.prenomEleve];
-    for(var i=0;i<c.length;i++){if(typeof c[i]==='string'&&c[i].trim())return c[i].trim();}
-    try{var keys=['prenom','studentName','eleve','currentStudentName','hibou_prenom'];for(var j=0;j<keys.length;j++){var v=localStorage.getItem(keys[j]);if(v&&v.trim())return v.trim();}}catch(e){}
-    var el=document.querySelector('#mockupProfileName,.profile-name,[data-student-name]');return el?String(el.textContent||'').trim():'';
-  }
-  function rows(){
-    var r=[];
-    try{if(typeof window.hibouV195BestRows==='function')r=window.hibouV195BestRows()||[];}catch(e){}
-    return Array.isArray(r)?r:[];
-  }
-  function close(){var el=document.getElementById('podiumV25758Overlay');if(el)el.remove();}
-  function render(){
-    close();
-    var name=currentName()||'élève';
-    var data=rows();
-    var counts={or:0,argent:0,bronze:0};
-    data.forEach(function(r){var k=medalKey(r.medal||r.medaille||r.rank);if(counts[k]!=null)counts[k]++;});
-    var table=data.map(function(r){
-      var score=r.validations||(r.score!=null&&r.total!=null?r.score+'/'+r.total:(r.score!=null?r.score:''));
-      return '<tr><td><strong>'+esc(r.domaine||r.domain||'-')+'</strong></td><td>'+esc(r.competence||r.title||'Compétence')+'</td><td>'+esc(r.medaille||r.medal||'🏅')+'</td><td>'+esc(score)+'</td></tr>';
-    }).join('');
-    var ov=document.createElement('div');
-    ov.id='podiumV25758Overlay';ov.className='podium-v1853-overlay';
-    ov.innerHTML='<div class="podium-v1853-modal" role="dialog" aria-modal="true"><button class="podium-v1853-close" type="button" aria-label="Fermer">×</button><div class="podium-v1853-title">🏆 Mes ceintures validées</div><div class="podium-v1853-subtitle">Un tableau personnel : pas de classement, pas de compétition.</div>'+
-      (data.length?'<div class="podium-v1853-hero"><div class="podium-v1853-cup">🏆</div><div class="podium-v1853-student">Bravo '+esc(name)+' !</div><div class="podium-v1853-total">⭐ Total : '+data.length+' ceinture'+(data.length>1?'s':'')+' validée'+(data.length>1?'s':'')+'</div></div><div class="podium-v1853-medals"><div class="podium-v1853-medal"><span class="emoji">🥇</span><div class="label">Or</div><div class="count">'+counts.or+'</div></div><div class="podium-v1853-medal"><span class="emoji">🥈</span><div class="label">Argent</div><div class="count">'+counts.argent+'</div></div><div class="podium-v1853-medal"><span class="emoji">🥉</span><div class="label">Bronze</div><div class="count">'+counts.bronze+'</div></div></div><div class="podium-v1853-list"><div class="podium-v1853-list-title">🎖️ Les meilleures réussites de '+esc(name)+'</div><table class="podium-v1853-table"><thead><tr><th>Domaine</th><th>Compétence</th><th>Médaille</th><th>Résultat</th></tr></thead><tbody>'+table+'</tbody></table></div><div class="podium-v1853-footer">🦉 Si tu repasses une ceinture, seule ta meilleure médaille est comptée.</div>':'<div class="podium-v1853-empty">🥋 '+esc(name)+', tu n’as pas encore de ceinture validée.<br>Continue les entraînements : tes réussites apparaîtront ici.</div>')+'</div>';
-    ov.querySelector('.podium-v1853-close').onclick=close;
-    ov.addEventListener('click',function(e){if(e.target===ov)close();});
-    document.body.appendChild(ov);
-  }
-  function open(){
-    render();
-    try{if(typeof window.refreshStudentBeltsV25620==='function'){window.refreshStudentBeltsV25620(true).then(render);}}catch(e){}
-  }
-  document.addEventListener('click',function(e){var card=e.target&&e.target.closest&&e.target.closest('#mockupCompetencesCard');if(!card)return;e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();open();},true);
-  document.addEventListener('keydown',function(e){var card=e.target&&e.target.closest&&e.target.closest('#mockupCompetencesCard');if(!card||(e.key!=='Enter'&&e.key!==' '))return;e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();open();},true);
-  window.openStudentBeltsV25758=open;
-})();
-</script>
-
-
-<!-- PATCH V25.7.66 - Synchronisation automatique des ceintures Français et Maths -->
-<script id="patch-v25762-auto-sync-belts">
-(function(){
-  'use strict';
-  if(window.__hibouAutoSyncBeltsV25762) return;
-  window.__hibouAutoSyncBeltsV25762=true;
-  var API_URL='https://script.google.com/macros/s/AKfycbxz1vYS24sv-c3XVja12geWEXIQl6bQyBoQKBx5kg_fwQaj80_Oc7Y34yeBSRN4lF1f/exec';
-  var QUEUE_KEY='hibou_v25762_pending_belts';
-  function clean(v){return String(v==null?'':v).replace(/\s+/g,' ').trim();}
-  function currentName(){
-    var n=clean(window.prenomActuel);
-    if(n) return n;
-    try{var c=JSON.parse(localStorage.getItem('hibou_current_student')||'{}');if(clean(c.prenom))return clean(c.prenom);}catch(e){}
-    var keys=['hibou_prenom','prenomEleve','hibou_last_prenom','maitre_hibou_prenom'];
-    for(var i=0;i<keys.length;i++){try{n=clean(localStorage.getItem(keys[i]));if(n)return n;}catch(e){}}
-    return '';
-  }
-  function readQueue(){try{var q=JSON.parse(localStorage.getItem(QUEUE_KEY)||'[]');return Array.isArray(q)?q:[];}catch(e){return [];}}
-  function writeQueue(q){try{localStorage.setItem(QUEUE_KEY,JSON.stringify(q));}catch(e){}}
-  function signature(r){return [clean(r.prenom).toLowerCase(),clean(r.skillId||r.competence).toLowerCase(),clean(r.date),clean(r.medaille)].join('|');}
-  function normalize(row){
-    row=row||{};
-    return {
-      date:clean(row.date)||new Date().toISOString(),
-      prenom:clean(row.prenom)||currentName(),
-      competence:clean(row.competence)||clean(row.label)||clean(row.skillId)||'Compétence',
-      domaine:clean(row.domaine)||clean(row.matiere)||'Maths',
-      validations:clean(row.validations)||((row.score!=null?row.score:'')+(row.total?'/'+row.total:'')),
-      medaille:clean(row.medaille)||clean(row.medal),
-      appareil:/Android|Mobile|Tablet/i.test(navigator.userAgent||'')?'Tablette / mobile':'PC',
-      skillId:clean(row.skillId),
-      ceinture:clean(row.ceinture)
-    };
-  }
-  async function send(row){
-    var payload={source:'maitre_hibou_v25_7_64_auto',generated_at:new Date().toISOString(),appareil:row.appareil,competences_quiz:[],competences_validees:[row]};
-    await fetch(API_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload),cache:'no-store'});
-    return true;
-  }
-  async function flush(){
-    if(!navigator.onLine) return false;
-    var q=readQueue(); if(!q.length) return true;
-    var remain=[];
-    for(var i=0;i<q.length;i++){
-      try{await send(q[i]);}catch(e){remain.push(q[i]);}
-    }
-    writeQueue(remain);
-    return !remain.length;
-  }
-  window.hibouAutoSyncBeltV25762=function(row){
-    var item=normalize(row);
-    if(!item.prenom || !item.medaille) return Promise.resolve(false);
-    var q=readQueue(),sig=signature(item);
-    if(!q.some(function(x){return signature(x)===sig;})){q.push(item);writeQueue(q);}
-    return flush();
-  };
-  window.hibouFlushPendingBeltsV25762=flush;
-  window.addEventListener('online',function(){setTimeout(flush,100);});
-  window.addEventListener('load',function(){setTimeout(flush,700);});
-  document.addEventListener('visibilitychange',function(){if(!document.hidden)setTimeout(flush,100);});
-  setInterval(flush,60000);
-  try{window.MAITRE_HIBOU_VERSION='V25.7.66';window.MAITRE_HIBOU_TITLE='🦉 Maître Hibou V25.7.66';document.title=window.MAITRE_HIBOU_TITLE;}catch(e){}
-})();
-</script>
-
-
-<!-- PATCH V25.7.66 - Autorité Google Sheets et consolidation identique sur tous les appareils -->
-<script id="patch-v25764-sheet-authority-belts">
-(function(){
-  'use strict';
-  if(window.__hibouSheetAuthorityBeltsV25764) return;
-  window.__hibouSheetAuthorityBeltsV25764=true;
-  function refresh(){
-    try{if(typeof window.refreshStudentBeltsV25620==='function')window.refreshStudentBeltsV25620(true);}catch(e){}
-  }
-  window.addEventListener('pageshow',function(){setTimeout(refresh,250);});
-  window.addEventListener('focus',function(){setTimeout(refresh,150);});
-  document.addEventListener('visibilitychange',function(){if(!document.hidden)setTimeout(refresh,150);});
-  document.addEventListener('hibou:student-connected',function(){setTimeout(refresh,100);});
-  setTimeout(refresh,900);
-})();
-</script>
-
 </body>
 </html>
 
-<!-- V25.7.66 — Accueil tablette : les trois cartes rejoignent le bandeau inférieur -->
+<!-- V25.7.51 — Accueil tablette : les trois cartes rejoignent le bandeau inférieur -->
 <style id="hibou-home-cards-fill-bottom-v25749">
 @media (orientation:landscape) and (min-width:900px){
   body.v24-0-5-ready.v21-final:not(.v21-learning-open):not(.competence-mode) .v21-home{
@@ -37040,7 +36947,7 @@ header .logo-icon img{
 }
 </style>
 
-<!-- V25.7.66 — Bouton Changer d'élève placé au bas de la colonne centrale -->
+<!-- V25.7.51 — Bouton Changer d'élève placé au bas de la colonne centrale -->
 <style id="hibou-change-student-bottom-v25749">
 @media (orientation:landscape) and (min-width:900px){
   body.v24-0-5-ready.v21-final:not(.v21-learning-open):not(.competence-mode) .v21-center > .v21-profile-card{
@@ -37063,7 +36970,7 @@ header .logo-icon img{
 </style>
 
 
-<!-- V25.7.66 — Bouton Changer d'élève réellement hors de la carte Profil -->
+<!-- V25.7.51 — Bouton Changer d'élève réellement hors de la carte Profil -->
 <style id="hibou-change-student-outside-card-v25749">
 @media (orientation:landscape) and (min-width:900px){
   body.v24-0-5-ready.v21-final:not(.v21-learning-open):not(.competence-mode) .v21-center{
@@ -37129,91 +37036,5 @@ header .logo-icon img{
 
   var observer = new MutationObserver(function(){ schedule(); });
   observer.observe(document.documentElement, {childList:true, subtree:true});
-})();
-</script>
-
-
-<!-- PATCH V25.7.66 - Mes progrès : ancienne popup Bilans supprimée du code.
-     Une seule vue finale est construite avant affichage. -->
-<style id="patch-v25766-single-progress-popup-css">
-#studentProfileLifeOverlayV23417.hibou-progress-preparing-v25766{
-  opacity:0 !important;
-  visibility:hidden !important;
-  pointer-events:none !important;
-}
-#studentProfileLifeOverlayV23417{
-  transition:opacity .10s ease !important;
-}
-</style>
-<script id="patch-v25766-single-progress-popup-js">
-(function(){
-  'use strict';
-  if(window.__hibouSingleProgressPopupV25766) return;
-  window.__hibouSingleProgressPopupV25766=true;
-
-  var opening=false;
-  var revealTimer=0;
-  var previousOpen=window.openStudentProfileLifeV23417;
-  if(typeof previousOpen!=='function') return;
-
-  function overlay(){return document.getElementById('studentProfileLifeOverlayV23417');}
-  function prepare(){
-    var ov=overlay();
-    if(ov) ov.classList.add('hibou-progress-preparing-v25766');
-  }
-  function reveal(){
-    clearTimeout(revealTimer);
-    var ov=overlay();
-    if(ov){
-      ov.classList.remove('hibou-progress-preparing-v25766');
-      ov.setAttribute('data-hibou-progress-view','final-v25766');
-    }
-    opening=false;
-  }
-
-  window.openStudentProfileLifeV23417=function(ev){
-    if(ev){
-      ev.preventDefault();
-      ev.stopPropagation();
-    }
-    if(opening) return false;
-    opening=true;
-    prepare();
-    var result;
-    try{ result=previousOpen.apply(this,arguments); }
-    catch(err){ opening=false; reveal(); throw err; }
-
-    /* Les enrichissements médailles, compétences et parcours travaillent déjà
-       de façon asynchrone. On garde la fenêtre invisible jusqu'à leur fin. */
-    try{document.dispatchEvent(new CustomEvent('hibou:belts-updated'));}catch(e){}
-    revealTimer=setTimeout(reveal,420);
-    return result;
-  };
-  window.openStudentProfileLifeV23417.__v25766SingleFinal=true;
-
-  /* Évite qu'un double clic rapide déclenche deux constructions concurrentes. */
-  document.addEventListener('click',function(ev){
-    var trigger=ev.target&&ev.target.closest&&ev.target.closest('.profile-life-v23417-open-hint');
-    if(trigger && opening){
-      ev.preventDefault();
-      ev.stopPropagation();
-      if(ev.stopImmediatePropagation) ev.stopImmediatePropagation();
-    }
-  },true);
-
-  document.addEventListener('keydown',function(ev){
-    if(ev.key==='Escape'){
-      opening=false;
-      clearTimeout(revealTimer);
-      var ov=overlay();
-      if(ov) ov.classList.remove('hibou-progress-preparing-v25766');
-    }
-  },true);
-
-  try{
-    window.MAITRE_HIBOU_VERSION='V25.7.66';
-    window.MAITRE_HIBOU_TITLE='🦉 Maître Hibou V25.7.66';
-    document.title=window.MAITRE_HIBOU_TITLE;
-  }catch(e){}
 })();
 </script>

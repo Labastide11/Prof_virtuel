@@ -1,17 +1,17 @@
 /*
- * Maître Hibou — Journal élève modulaire V25.7.51
+ * Maître Hibou — Journal élève modulaire V25.7.52 — mode local sécurisé
  * Objectif : une seule porte d'entrée pour le parcours élève : window.hibouTrackEvent(...)
  * L'index.html ne doit plus contenir de moteur lourd pour « Mon parcours récent ».
  */
 (function () {
   'use strict';
 
-  if (window.__hibouJournalEleveV25751) return;
-  window.__hibouJournalEleveV25751 = true;
+  if (window.__hibouJournalEleveV25752) return;
+  window.__hibouJournalEleveV25752 = true;
 
-  var VERSION = 'V25.7.51';
+  var VERSION = 'V25.7.52';
   var API = '';
-  var REMOTE_SYNC_ENABLED = false; // V25.7.51 : ancien déploiement archivé, conservation locale uniquement.
+  var REMOTE_SYNC_ENABLED = false; // V25.7.52 : aucune synchronisation automatique depuis le navigateur.
   var LAST_PREFIX = 'hibou_journal_last_';
   var HISTORY_PREFIX = 'hibou_journal_history_';
   var QUEUE_KEY = 'hibou_journal_queue_v25713';
@@ -462,8 +462,6 @@
     renderProfileJournal(event.prenom);
     enqueueEvent(event);
     enqueueRecord(event);
-    flushEvents();
-    flushRecords();
     return event;
   }
 
@@ -799,6 +797,32 @@
     });
   }
 
+  function exportLocalData() {
+    var payload = {
+      application: 'Maître Hibou',
+      version: VERSION,
+      mode: 'local_securise',
+      exported_at: nowIso(),
+      queued_events: readQueue(QUEUE_KEY),
+      queued_records: readQueue(RECORD_QUEUE_KEY)
+    };
+    var json = JSON.stringify(payload, null, 2);
+    var blob = new Blob([json], {type: 'application/json;charset=utf-8'});
+    var url = URL.createObjectURL(blob);
+    var link = document.createElement('a');
+    link.href = url;
+    link.download = 'maitre-hibou-traces-locales-' + new Date().toISOString().replace(/[:.]/g, '-') + '.json';
+    document.body.appendChild(link);
+    link.click();
+    setTimeout(function () {
+      try { document.body.removeChild(link); } catch (error) {}
+      try { URL.revokeObjectURL(url); } catch (error) {}
+    }, 100);
+    return payload;
+  }
+
+  window.hibouExportLocalData = exportLocalData;
+
   window.hibouJournalSyncStatus = function () {
     return {
       version: VERSION,
@@ -817,8 +841,6 @@
     wrapLegacyQuestionLogger();
     renderRecentEvent(getCurrentName());
     renderProfileJournal(getCurrentName());
-    flushEvents();
-    flushRecords();
   }
 
   bindPublicApi();
@@ -826,6 +848,5 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
   else boot();
   window.addEventListener('load', boot);
-  window.addEventListener('online', function () { flushEvents(); flushRecords(); });
   document.addEventListener('visibilitychange', function () { if (!document.hidden) boot(); });
 })();

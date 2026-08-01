@@ -1,5 +1,5 @@
 /*
- * Maître Hibou — Journal élève modulaire V25.7.53 — mode local sécurisé
+ * Maître Hibou — Journal élève modulaire V25.7.54 — mode local sécurisé
  * Objectif : une seule porte d'entrée pour le parcours élève : window.hibouTrackEvent(...)
  * L'index.html ne doit plus contenir de moteur lourd pour « Mon parcours récent ».
  */
@@ -9,9 +9,9 @@
   if (window.__hibouJournalEleveV25752) return;
   window.__hibouJournalEleveV25752 = true;
 
-  var VERSION = 'V25.7.53';
+  var VERSION = 'V25.7.54';
   var API = '';
-  var REMOTE_SYNC_ENABLED = false; // V25.7.53 : aucune synchronisation automatique depuis le navigateur.
+  var REMOTE_SYNC_ENABLED = false; // V25.7.54 : aucune synchronisation automatique depuis le navigateur.
   var LAST_PREFIX = 'hibou_journal_last_';
   var HISTORY_PREFIX = 'hibou_journal_history_';
   var QUEUE_KEY = 'hibou_journal_queue_v25713';

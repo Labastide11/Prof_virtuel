@@ -1,10 +1,10 @@
-/* Maître Hibou V25.7.55 — synchronisation hybride contrôlée */
+/* Maître Hibou V25.7.60 — synchronisation avec accusé de réception */
 (function(){
   'use strict';
   if(window.__hibouSyncV25754) return;
   window.__hibouSyncV25754 = true;
 
-  var VERSION = 'V25.7.55';
+  var VERSION = 'V25.7.60';
   var CFG_URL = 'hibou_sync_api_url_v25754';
   var CFG_KEY = 'hibou_sync_device_key_v25754';
   var LAST_SYNC = 'hibou_sync_last_success_v25754';
@@ -53,6 +53,40 @@
   function nextDelay(){ return Math.min(15*60*1000, AUTO_DELAY_MS*Math.pow(2,Math.min(failures,5))); }
   function schedule(delay){ clearTimeout(timer); timer=setTimeout(function(){syncNow(false);}, delay==null?AUTO_DELAY_MS:delay); }
 
+  function makeBatchId(){
+    return 'hibou-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,12);
+  }
+  function itemKey(item){
+    return clean(item&&(item.id_evenement||item.event_id||item.id)) || JSON.stringify(item||{});
+  }
+  function removeConfirmedItems(queueKey, sentItems){
+    var counts={};
+    sentItems.forEach(function(item){var k=itemKey(item);counts[k]=(counts[k]||0)+1;});
+    var current=read(queueKey,[]);
+    var kept=current.filter(function(item){
+      var k=itemKey(item);
+      if(counts[k]>0){counts[k]--;return false;}
+      return true;
+    });
+    write(queueKey,kept);
+  }
+  function sleep(ms){return new Promise(function(resolve){setTimeout(resolve,ms);});}
+  async function waitForBatchConfirmation(c,batchId){
+    var last=null;
+    for(var attempt=0;attempt<10;attempt++){
+      if(attempt) await sleep(Math.min(3500,900+attempt*350));
+      try{
+        var url=c.url+'?action=batch_status&device_key='+encodeURIComponent(c.key)+'&batch_id='+encodeURIComponent(batchId);
+        last=await jsonp(url);
+        if(last&&last.status==='confirmed') return last;
+        if(last&&last.status==='failed') throw new Error(last.error||'Le serveur a refusé le lot.');
+      }catch(err){
+        if(attempt===9) throw err;
+      }
+    }
+    throw new Error('Aucune confirmation reçue pour le lot '+batchId+'. Les données sont conservées localement.');
+  }
+
   async function syncNow(manual){
     if(busy) return {ok:false,error:'Synchronisation déjà en cours.'};
     if(!configured()){
@@ -68,23 +102,25 @@
     busy=true; updateButtons();
     var c=config();
     var ev=q.events.slice(0,BATCH_SIZE), rec=q.records.slice(0,BATCH_SIZE);
-    var payload={device_key:c.key,source:'maitre_hibou_v25_7_55',version:VERSION,appareil:device(),
+    var batchId=makeBatchId();
+    var payload={device_key:c.key,batch_id:batchId,source:'maitre_hibou_v25_7_60',version:VERSION,appareil:device(),
       parcours_eleves:ev.map(eventToParcours),records_calcul:rec.map(eventToRecord)};
     try{
       await fetch(c.url,{method:'POST',mode:'no-cors',cache:'no-store',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});
-      write(QUEUE_EVENTS,q.events.slice(ev.length));
-      write(QUEUE_RECORDS,q.records.slice(rec.length));
-      archive({events:ev,records:rec});
+      var ack=await waitForBatchConfirmation(c,batchId);
+      removeConfirmedItems(QUEUE_EVENTS,ev);
+      removeConfirmedItems(QUEUE_RECORDS,rec);
+      archive({events:ev,records:rec,batch_id:batchId,ack:ack});
       set(LAST_SYNC,new Date().toISOString()); set(LAST_ERROR,''); failures=0;
       busy=false; updateButtons();
       var remain=queues();
-      if(manual) alert('Synchronisation envoyée : '+ev.length+' parcours et '+rec.length+' record(s). Restent '+remain.events.length+' parcours et '+remain.records.length+' record(s).');
+      if(manual) alert('Synchronisation confirmée : '+ev.length+' parcours et '+rec.length+' record(s). Restent '+remain.events.length+' parcours et '+remain.records.length+' record(s).');
       if(remain.events.length||remain.records.length) schedule(AUTO_DELAY_MS); else schedule(5*60*1000);
-      return {ok:true,events:ev.length,records:rec.length};
+      return {ok:true,confirmed:true,batch_id:batchId,events:ev.length,records:rec.length};
     }catch(err){
       failures++; set(LAST_ERROR,String(err&&err.message||err)); busy=false; updateButtons(); schedule(nextDelay());
-      if(manual) alert('Synchronisation impossible. Les données restent sur la tablette.\n'+String(err&&err.message||err));
-      return {ok:false,error:String(err&&err.message||err)};
+      if(manual) alert('Synchronisation non confirmée. Les données restent sur la tablette.\n'+String(err&&err.message||err));
+      return {ok:false,error:String(err&&err.message||err),batch_id:batchId};
     }
   }
 
@@ -128,7 +164,7 @@
   function updateButtons(){
     var s=status();
     document.querySelectorAll('[data-hibou-sync-status]').forEach(function(el){el.textContent=(s.syncing?'Synchronisation…':'☁️ Synchroniser maintenant')+' ('+(s.queuedEvents+s.queuedRecords)+' en attente)';});
-    document.querySelectorAll('[data-hibou-sync-info]').forEach(function(el){el.textContent='Dernier envoi : '+fmt(s.lastSync)+' · Élèves : '+fmt(s.lastRoster)+(s.lastError?' · Erreur : '+s.lastError:'');});
+    document.querySelectorAll('[data-hibou-sync-info]').forEach(function(el){el.textContent='Dernier envoi confirmé : '+fmt(s.lastSync)+' · Élèves : '+fmt(s.lastRoster)+(s.lastError?' · Erreur : '+s.lastError:'');});
   }
   function injectTeacherButtons(){
     var actions=document.querySelector('.teacher-fullscreen-actions'); if(!actions)return;

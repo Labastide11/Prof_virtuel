@@ -1,10 +1,10 @@
-/* Maître Hibou V25.7.54 — synchronisation hybride contrôlée */
+/* Maître Hibou V25.7.55 — synchronisation hybride contrôlée */
 (function(){
   'use strict';
   if(window.__hibouSyncV25754) return;
   window.__hibouSyncV25754 = true;
 
-  var VERSION = 'V25.7.54';
+  var VERSION = 'V25.7.55';
   var CFG_URL = 'hibou_sync_api_url_v25754';
   var CFG_KEY = 'hibou_sync_device_key_v25754';
   var LAST_SYNC = 'hibou_sync_last_success_v25754';
@@ -68,7 +68,7 @@
     busy=true; updateButtons();
     var c=config();
     var ev=q.events.slice(0,BATCH_SIZE), rec=q.records.slice(0,BATCH_SIZE);
-    var payload={device_key:c.key,source:'maitre_hibou_v25_7_54',version:VERSION,appareil:device(),
+    var payload={device_key:c.key,source:'maitre_hibou_v25_7_55',version:VERSION,appareil:device(),
       parcours_eleves:ev.map(eventToParcours),records_calcul:rec.map(eventToRecord)};
     try{
       await fetch(c.url,{method:'POST',mode:'no-cors',cache:'no-store',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});

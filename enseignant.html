@@ -4,27 +4,53 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow,noarchive">
-<title>🦉 Accès enseignant protégé — Maître Hibou</title>
+<title>🦉 Maître Hibou V25.7.55 — synchronisation enseignant</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;background:linear-gradient(135deg,#eceaff,#fff7d7 52%,#eef7ff);color:#25234d}
-main{width:min(620px,100%);text-align:center;background:#fff;border:3px solid #d9d3ff;border-radius:26px;padding:30px;box-shadow:0 18px 48px rgba(45,35,110,.16)}
-.owl{font-size:68px;line-height:1}
-h1{margin:12px 0 8px;color:#5146d8;font-size:clamp(25px,5vw,38px)}
-p{font-weight:750;line-height:1.45;color:#615d82}
-a{display:inline-flex;align-items:center;justify-content:center;margin-top:14px;min-height:50px;padding:12px 20px;border-radius:16px;background:linear-gradient(135deg,#6c63ff,#5146d8);color:#fff;text-decoration:none;font-weight:950;box-shadow:0 10px 24px rgba(81,70,216,.25)}
-small{display:block;margin-top:14px;color:#807c9d;font-weight:700}
+body{margin:0;min-height:100vh;padding:22px;font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;background:linear-gradient(135deg,#eceaff,#fff7d7 52%,#eef7ff);color:#25234d}
+main{width:min(900px,100%);margin:auto;background:#fff;border:3px solid #d9d3ff;border-radius:26px;padding:26px;box-shadow:0 18px 48px rgba(45,35,110,.16)}
+.header{display:flex;align-items:center;gap:16px;border-bottom:2px solid #ece9ff;padding-bottom:18px}.owl{font-size:58px}.header h1{margin:0;color:#5146d8;font-size:clamp(24px,4vw,36px)}.header p{margin:5px 0 0;color:#6b678d;font-weight:750}
+.panel{margin-top:22px;padding:20px;border:2px solid #ddd8ff;border-radius:20px;background:#faf9ff}.panel h2{margin:0 0 8px;color:#5146d8}.panel p{margin:7px 0;color:#615d82;font-weight:650;line-height:1.45}
+.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:18px}.teacher-btn,a.teacher-btn{appearance:none;border:0;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:12px 18px;border-radius:15px;background:linear-gradient(135deg,#6c63ff,#5146d8);color:#fff;text-decoration:none;font-weight:900;box-shadow:0 8px 18px rgba(81,70,216,.2)}.teacher-btn.secondary{background:#fff;color:#5146d8;border:2px solid #cec8ff;box-shadow:none}.teacher-btn.green{background:linear-gradient(135deg,#24a86b,#188c58)}
+.sync-info{display:block;margin-top:14px;padding:12px 14px;border-radius:13px;background:#eef7ff;color:#314f73;font-weight:750;line-height:1.45}.notice{margin-top:18px;padding:14px;border-radius:14px;background:#fff6d9;border:1px solid #f0d46c;color:#654b00;font-weight:750}
+@media(max-width:650px){body{padding:10px}main{padding:18px}.actions{display:grid}.teacher-btn,a.teacher-btn{width:100%}}
 </style>
-<meta http-equiv="refresh" content="1;url=https://script.google.com/macros/s/AKfycbwXa4M0UdjpGqF-ik2IS5JgFAoujyxdaqs3M85msXioBP4GQZO0C_YcJp9p60EQu8kY7w/exec">
 </head>
 <body>
 <main>
-<div class="owl" aria-hidden="true">🦉</div>
-<h1>Espace enseignant protégé</h1>
-<p>Redirection vers l’espace privé sécurisé par votre compte Google.</p>
-<a href="https://script.google.com/macros/s/AKfycbwXa4M0UdjpGqF-ik2IS5JgFAoujyxdaqs3M85msXioBP4GQZO0C_YcJp9p60EQu8kY7w/exec">Ouvrir l’espace enseignant</a>
-<small>Une connexion au compte Google autorisé est obligatoire.</small>
+  <div class="header"><div class="owl" aria-hidden="true">🦉</div><div><h1>Espace enseignant</h1><p>Maître Hibou V25.7.55 — synchronisation contrôlée</p></div></div>
+
+  <section class="panel">
+    <h2>☁️ Synchronisation tablette</h2>
+    <p>Les réussites sont enregistrées localement, puis envoyées par petits lots uniquement lorsque la synchronisation est déclenchée.</p>
+    <div class="actions teacher-fullscreen-actions">
+      <button class="teacher-btn green" type="button" data-hibou-sync-status>☁️ Synchroniser maintenant</button>
+      <button class="teacher-btn secondary" type="button" id="refreshRosterBtn">👥 Actualiser les élèves</button>
+      <button class="teacher-btn secondary" type="button" id="configureSyncBtn">⚙️ Configurer la synchronisation</button>
+    </div>
+    <span class="sync-info" data-hibou-sync-info>Chargement de l’état de synchronisation…</span>
+  </section>
+
+  <section class="panel">
+    <h2>🔐 Gestion pédagogique protégée</h2>
+    <p>Après la synchronisation, ouvre l’espace privé Google pour consulter les questions, le suivi des élèves, les récompenses et les progressions.</p>
+    <div class="actions">
+      <a class="teacher-btn" href="https://script.google.com/macros/s/AKfycbwXa4M0UdjpGqF-ik2IS5JgFAoujyxdaqs3M85msXioBP4GQZO0C_YcJp9p60EQu8kY7w/exec">Ouvrir l’espace enseignant protégé</a>
+      <a class="teacher-btn secondary" href="index.html">🦉 Retour à Maître Hibou</a>
+    </div>
+  </section>
+  <div class="notice">La clé tablette et l’URL API sont enregistrées uniquement dans le navigateur de cet appareil. Elles ne sont pas envoyées dans le dépôt GitHub.</div>
 </main>
-<script>location.replace('https://script.google.com/macros/s/AKfycbwXa4M0UdjpGqF-ik2IS5JgFAoujyxdaqs3M85msXioBP4GQZO0C_YcJp9p60EQu8kY7w/exec');</script>
+<script src="js/hibou-sync-v25754.js?v=25.7.55"></script>
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+  var sync=document.querySelector('[data-hibou-sync-status]');
+  var roster=document.getElementById('refreshRosterBtn');
+  var cfg=document.getElementById('configureSyncBtn');
+  if(sync)sync.addEventListener('click',function(){if(window.hibouSyncNow)window.hibouSyncNow(true);});
+  if(roster)roster.addEventListener('click',function(){if(window.hibouRefreshRoster)window.hibouRefreshRoster(true);});
+  if(cfg)cfg.addEventListener('click',function(){if(window.hibouOpenSyncSettings)window.hibouOpenSyncSettings();});
+});
+</script>
 </body>
 </html>

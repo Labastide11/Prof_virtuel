@@ -1,5 +1,5 @@
 /*
- * Maître Hibou — Journal élève modulaire V25.7.57 — mode local sécurisé
+ * Maître Hibou — Journal élève modulaire V25.7.59 — mode local sécurisé
  * Objectif : une seule porte d'entrée pour le parcours élève : window.hibouTrackEvent(...)
  * L'index.html ne doit plus contenir de moteur lourd pour « Mon parcours récent ».
  */
@@ -9,7 +9,7 @@
   if (window.__hibouJournalEleveV25752) return;
   window.__hibouJournalEleveV25752 = true;
 
-  var VERSION = 'V25.7.57';
+  var VERSION = 'V25.7.59';
   var API = '';
   var REMOTE_SYNC_ENABLED = false; // V25.7.57 : aucune synchronisation automatique depuis le navigateur.
   var LAST_PREFIX = 'hibou_journal_last_';
@@ -94,7 +94,9 @@
     var candidates = [];
 
     try { candidates.push(window.prenomActuel); } catch (error) {}
-    try { candidates.push(window.currentStudentName); } catch (error) {}
+    try {
+      candidates.push(typeof window.currentStudentName === 'function' ? window.currentStudentName() : window.currentStudentName);
+    } catch (error) {}
     try { candidates.push(window.__hibouCurrentStudent); } catch (error) {}
     try { candidates.push((document.getElementById('eleveNom') || {}).textContent); } catch (error) {}
     try {
@@ -205,7 +207,7 @@
 
     var type = normalizeKey(raw.type || raw.kind || 'activite_terminee');
     if (type === 'entrainement') type = 'entrainement_termine';
-    if (type === 'ceinture') type = 'ceinture_validee';
+    if (type === 'ceinture' || type === 'ceinture_francais_validee' || type === 'ceinture_maths_validee') type = 'ceinture_validee';
     if (type === 'question') type = 'question_posee';
     if (type === 'bilan') type = 'bilan_reussi';
 

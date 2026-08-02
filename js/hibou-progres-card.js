@@ -1,7 +1,7 @@
-/* Maître Hibou V25.7.61 — Carte centrale consolidée */
+/* Maître Hibou V25.7.62 — Carte centrale consolidée */
 (function(){
 'use strict';if(window.__hibouProgressCardV25761)return;window.__hibouProgressCardV25761=true;
-var VERSION='V25.7.61',latest=null,timer=null;
+var VERSION='V25.7.62',latest=null,timer=null;
 function clean(v){return String(v==null?'':v).replace(/\s+/g,' ').trim();}
 function esc(v){return clean(v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 function norm(v){return clean(v).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'_');}
@@ -17,7 +17,7 @@ var html='<div class="v2576-progress-scroll"><section class="v2576-section"><div
 '<section class="v2576-section"><div class="v2576-section-title">🎗️ Mes ceintures</div><div class="v2576-lines"><div class="v2576-line"><strong>Maths :</strong><span>'+esc(summary(belts,'Maths'))+'</span></div><div class="v2576-line"><strong>Français :</strong><span>'+esc(summary(belts,'Français'))+'</span></div></div></section>'+
 '<section class="v2576-section"><div class="v2576-section-title">⭐ Mes dernières réussites</div><div class="v2576-skills">'+(successes.length?successes.map(function(e){return'<span class="v2576-skill">'+esc(e.affichage)+'</span>';}).join(''):'<span class="v2576-empty">Aucune réussite enregistrée.</span>')+'</div></section>'+
 (errors.length?'<section class="v2576-section"><div class="v2576-section-title">🎯 À reprendre</div><div class="v2576-skills"><span class="v2576-skill">'+esc(errors[0].affichage)+'</span></div></section>':'')+'</div><button class="v21-change-student-btn" onclick="changerEleve()" type="button">👤 Changer d’élève / Donner la tablette</button>';
-stats.innerHTML=html;card.classList.add('v2576-progress-card','profile-life-v23417-clickable');card.onclick=function(e){if(e.target.closest('button,a,input,select,textarea'))return;if(typeof window.openStudentProfileLifeV23417==='function')window.openStudentProfileLifeV23417(e);};}
+stats.innerHTML=html;card.classList.add('v2576-progress-card','hibou-progress-consolidated-clickable');card.classList.remove('profile-life-v23417-clickable');card.onclick=function(e){if(e.target.closest('button,a,input,select,textarea'))return;if(typeof window.openHibouProgressConsolidatedV25762==='function')window.openHibouProgressConsolidatedV25762(e);};}
 function tile(k,l,n){return'<div class="v2576-medal-tile '+k+'"><img src="images/medaille_'+k+'.jpg" alt="Médaille '+l+'"><div class="v2576-medal-count">'+n+'</div><div class="v2576-medal-label">'+l+'</div></div>';}
 function schedule(){clearTimeout(timer);timer=setTimeout(render,30);}
 document.addEventListener('hibou:student-snapshot',function(e){latest=e.detail&&e.detail.snapshot;schedule();});['hibou:student-event','hibou:student-changed','hibou:belts-updated'].forEach(function(t){document.addEventListener(t,schedule);});

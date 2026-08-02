@@ -1,5 +1,5 @@
 /*
- * Maître Hibou V25.7.61 — Journal élève consolidé
+ * Maître Hibou V25.7.62 — Journal élève consolidé
  * Source unique pour le parcours, l'historique local, la file de synchronisation
  * et le chargement du dossier distant d'un élève.
  */
@@ -8,7 +8,7 @@
   if(window.__hibouStudentSystemV25761) return;
   window.__hibouStudentSystemV25761=true;
 
-  var VERSION='V25.7.61';
+  var VERSION='V25.7.62';
   var LAST_PREFIX='hibou_journal_last_';
   var HISTORY_PREFIX='hibou_journal_history_';
   var SNAPSHOT_PREFIX='hibou_student_snapshot_';
@@ -119,7 +119,7 @@
     params=params||{};params.device_key=c.key;params.tablet_key=c.key;params.callback=cb;params._=Date.now();s.src=c.url+'?'+Object.keys(params).map(function(k){return encodeURIComponent(k)+'='+encodeURIComponent(params[k]);}).join('&');document.head.appendChild(s);});}
   function loadSnapshot(name,force){
     name=cap(name||currentName());if(!name)return Promise.resolve(null);var nk=norm(name);if(inflight[nk])return inflight[nk];var cached=read(key(SNAPSHOT_PREFIX,name),null);if(cached&&!force&&Date.now()-Date.parse(cached.loaded_at||0)<60000){mergeRemote(name,cached.reussites||[]);renderRecent(name);return Promise.resolve(cached);}
-    inflight[nk]=jsonp({action:'student_snapshot',prenom:name,limit:300}).then(function(d){var snap=d&&d.snapshot?d.snapshot:d;snap=snap||{};snap.loaded_at=now();write(key(SNAPSHOT_PREFIX,name),snap);mergeRemote(name,snap.reussites||[]);renderRecent(name);dispatch('hibou:student-snapshot',{student:name,snapshot:snap});return snap;}).catch(function(err){console.warn('V25.7.61 snapshot',err);return cached;}).finally(function(){delete inflight[nk];});return inflight[nk];
+    inflight[nk]=jsonp({action:'student_snapshot',prenom:name,limit:300}).then(function(d){var snap=d&&d.snapshot?d.snapshot:d;snap=snap||{};snap.loaded_at=now();write(key(SNAPSHOT_PREFIX,name),snap);mergeRemote(name,snap.reussites||[]);renderRecent(name);dispatch('hibou:student-snapshot',{student:name,snapshot:snap});return snap;}).catch(function(err){console.warn('V25.7.62 snapshot',err);return cached;}).finally(function(){delete inflight[nk];});return inflight[nk];
   }
   function recordSuccess(text,type,meta){meta=meta||{};return track(Object.assign({},meta,{type:type||meta.type||'activite_terminee',titre:text||meta.titre,resultat:meta.resultat||'reussite'}));}
   function recordError(text,type,meta){meta=meta||{};return track(Object.assign({},meta,{type:type||meta.type||'activite_terminee',titre:text||meta.titre,resultat:'erreur'}));}

@@ -1,7 +1,7 @@
-/* Maître Hibou V25.7.61 — synchronisation confirmée par accusé de réception */
+/* Maître Hibou V25.7.62 — synchronisation confirmée par accusé de réception */
 (function(){
 'use strict';if(window.__hibouSyncV25761)return;window.__hibouSyncV25761=true;
-var VERSION='V25.7.61',CFG_URL='hibou_sync_api_url_v25754',CFG_KEY='hibou_sync_device_key_v25754',LAST_SYNC='hibou_sync_last_success_v25761',LAST_ERROR='hibou_sync_last_error_v25761',QE='hibou_journal_queue_v25713',QR='hibou_records_calcul_queue_v25713',BATCH=25,busy=false,timer=null,failures=0;
+var VERSION='V25.7.62',CFG_URL='hibou_sync_api_url_v25754',CFG_KEY='hibou_sync_device_key_v25754',LAST_SYNC='hibou_sync_last_success_v25761',LAST_ERROR='hibou_sync_last_error_v25761',QE='hibou_journal_queue_v25713',QR='hibou_records_calcul_queue_v25713',BATCH=25,busy=false,timer=null,failures=0;
 function get(k){try{return localStorage.getItem(k)||'';}catch(e){return'';}}function set(k,v){try{localStorage.setItem(k,String(v));}catch(e){}}function read(k,f){try{var x=JSON.parse(get(k)||'null');return x==null?f:x;}catch(e){return f;}}function write(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}function clean(v){return String(v==null?'':v).trim();}
 function cfg(){return{url:clean(get(CFG_URL)),key:clean(get(CFG_KEY))};}function configured(){var c=cfg();return /^https:\/\/script\.google\.com\/macros\/s\/.+\/exec$/.test(c.url)&&c.key.length>=16;}function q(){return{events:read(QE,[]),records:read(QR,[])};}function device(){return /Android|iPad|Tablet|Mobile/i.test(navigator.userAgent||'')?'tablette':'pc';}
 function parcours(e){return{event_id:e.id_evenement,date:e.date_iso,prenom:e.prenom,type:e.type,texte:e.affichage||e.titre,score:e.score,total:e.total,temps_secondes:e.temps_secondes,appareil:e.appareil||device(),source:e.source||'maitre_hibou',matiere:e.matiere,activite:e.domaine||e.titre,resultat:e.resultat,medaille:e.medaille,version:VERSION,synchronise:'oui'};}
